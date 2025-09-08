@@ -111,7 +111,7 @@ export const renderSystemNote = (note: SystemNote): TimelineItem['html'] => {
   let reason = rejectionReasonDetails || rejectionReason
   const withdrawalStatus = isWithdrawn ? 'Yes' : 'No'
 
-  if (reason === 'Another reason (please add)') {
+  if (reason === 'Remanded in custody or detained') {
     reason = 'Another reason'
   }
 

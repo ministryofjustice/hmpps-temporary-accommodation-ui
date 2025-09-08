@@ -383,7 +383,7 @@ describe('AssessmentsController', () => {
       const referralRejectionReasons = [
         referenceDataFactory.build({ id: 'reason-one-id' }),
         referenceDataFactory.build({ id: 'reason-two-id' }),
-        referenceDataFactory.build({ id: 'other-reason-id', name: 'Another reason (please add)' }),
+        referenceDataFactory.build({ id: 'other-reason-id', name: 'Remanded in custody or detained' }),
       ]
       assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
     })

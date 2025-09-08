@@ -1,30 +1,62 @@
 [
   {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d480",
+    "name": "CAS1/AP alternative suitable accommodation provided"
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d481",
+    "name": "CAS2 alternative accommodation provided"
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d482",
+    "name": "Changes to booking - new booking not required"
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d487",
+    "name": "Changes to booking - new booking required (e.g. new release date)"
+  },
+  {
     "id": "3d57413f-ca94-424a-b026-bf9e99ed28fe",
-    "name": "Alternative suitable accommodation provided by Local Authority"
+    "name": "Local authority alternative suitable accommodation provided"
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d483",
+    "name": "No single occupancy bedspace is available"
   },
   {
     "id": "f023aab7-4bd8-42a3-9f80-7aab3d4f40b8",
-    "name": "Alternative suitable accommodation provided - Other (inc. AP, CAS2, friends/family etc.)"
+    "name": "Other alternative accommodation provided (e.g. friends or family)"
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d484",
+    "name": "Person on probation failed to arrive (alternative accommodation)"
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d489",
+    "name": "Person on probation failed to arrive (gate arrest/recall)"
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d490",
+    "name": "Person on probation failed to arrive (other reason)"
   },
   {
     "id": "edd09efb-ef83-42da-a15c-750afd057eb3",
     "name": "Person on probation rejected placement"
   },
   {
-    "id": "7c54c8f5-14df-4836-af9c-c66a6021a375",
-    "name": "Person on probation failed to arrive"
-  },
-  {
-    "id": "8afe2dc8-f024-4ab1-a98d-0e321e317b19",
-    "name": "Withdrawn by referrer (e.g. recalled, further custody, placement related risk concern)"
-  },
-  {
     "id": "d2a0d037-53db-4bb2-b9f7-afa07948a3f5",
-    "name": "Administrative error"
+    "name": "Recording Error (e.g. a data entry error)"
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d486",
+    "name": "Risk or needs cannot be safely managed in CAS3 – new booking not required"
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d485",
+    "name": "Risk or needs cannot be safely managed in CAS3 – new booking required"
   },
   {
     "id": "2a7fc443-2f31-4501-90c4-435a6e8e59d3",
-    "name": "Supplier unable to accommodate (Please explain in notes)"
+    "name": "Supplier unable to accommodate (explain)"
   }
 ]

@@ -109,7 +109,7 @@
   },
   {
     "id": "f47ac10b-58cc-4372-a567-0e02b2c3d481",
-    "name": "Supplier unable to accommodate (e.g. arson needs cannot be met)",
+    "name": "Remanded in custody or detained",
     "serviceScope": "temporary-accommodation",
     "isActive": true
   }

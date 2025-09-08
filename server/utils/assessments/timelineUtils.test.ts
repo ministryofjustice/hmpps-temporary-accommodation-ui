@@ -242,7 +242,7 @@ describe('timelineUtils', () => {
           category: 'rejected',
           message: '',
           messageDetails: {
-            rejectionReason: 'Another reason (please add)',
+            rejectionReason: 'Remanded in custody or detained',
             rejectionReasonDetails: 'Some details',
             isWithdrawn: false,
           },
@@ -261,7 +261,7 @@ describe('timelineUtils', () => {
             category: 'rejected',
             message: '',
             messageDetails: {
-              rejectionReason: 'Another reason (please add)',
+              rejectionReason: 'Remanded in custody or detained',
               isWithdrawn: false,
             },
           })

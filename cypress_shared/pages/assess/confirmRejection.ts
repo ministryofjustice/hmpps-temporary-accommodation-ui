@@ -8,7 +8,7 @@ export default class AssessmentRejectionConfirmPage extends Page {
   }
 
   completeForm() {
-    this.checkRadioByNameAndLabel('referralRejectionReasonId', 'Another reason (please add)')
+    this.checkRadioByNameAndLabel('referralRejectionReasonId', 'Remanded in custody or detained')
     this.completeTextArea('referralRejectionReasonDetail', 'Details about the rejection reason')
     this.checkRadioByNameAndLabel('ppRequestedWithdrawal', 'Yes')
   }

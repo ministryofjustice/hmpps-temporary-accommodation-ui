@@ -51,7 +51,7 @@ export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: st
   },
 }
 
-export const referralRejectionReasonOtherMatch = 'Another reason (please add)'
+export const referralRejectionReasonOtherMatch = 'Remanded in custody or detained'
 
 export default class AssessmentsController {
   constructor(

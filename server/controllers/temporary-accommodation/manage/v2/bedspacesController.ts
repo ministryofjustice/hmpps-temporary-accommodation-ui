@@ -20,7 +20,7 @@ import {
 // eslint-disable-next-line import/named
 import { bedspaceActions, setDefaultStartDate } from '../../../../utils/v2/bedspaceUtils'
 import { isPremiseScheduledToBeArchived } from '../../../../utils/v2/premisesUtils'
-import { DateFormats } from '../../../../utils/dateUtils'
+import { DateFormats, dateIsInFuture } from '../../../../utils/dateUtils'
 import { BookingService } from '../../../../services'
 
 export default class BedspacesController {
@@ -44,7 +44,7 @@ export default class BedspacesController {
 
       const hasScheduledArchive = !!(
         premises.endDate &&
-        new Date(premises.endDate) > new Date() &&
+        dateIsInFuture(premises.endDate) &&
         premises.status === 'online'
       )
 

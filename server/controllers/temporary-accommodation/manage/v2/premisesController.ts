@@ -370,7 +370,7 @@ export default class PremisesController {
         const parsedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, 'restartDate')
         restartDate = parsedDate.restartDate
       } else {
-        errors.today = 'Select a date for the premises go online'
+        errors.today = 'Select a date for the property go online'
       }
 
       if (Object.keys(errors).length > 0) {

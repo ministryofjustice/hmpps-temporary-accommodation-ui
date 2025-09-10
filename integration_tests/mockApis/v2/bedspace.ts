@@ -248,6 +248,37 @@ const stubBedspaceUnarchiveV2WithError = (args: { premisesId: string; bedspaceId
     },
   })
 
+const stubBedspaceCancelUnarchive = (args: BedspaceArguments) =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      url: paths.cas3.premises.bedspaces.cancelUnarchive({ premisesId: args.premisesId, bedspaceId: args.bedspace.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: args.bedspace,
+    },
+  })
+
+const stubBedspaceCancelUnarchiveError = (args: BedspaceArguments) =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      url: paths.cas3.premises.bedspaces.cancelUnarchive({ premisesId: args.premisesId, bedspaceId: args.bedspace.id }),
+    },
+    response: {
+      status: 400,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        title: 'Bad Request',
+        status: 400,
+        detail: 'This bedspace is not scheduled to be made online',
+        'invalid-params': [{ propertyName: '$.bedspaceId', errorType: 'bedspaceAlreadyOnline' }],
+      },
+    },
+  })
+
 const stubBedspaceCanArchiveV2 = (args: { premisesId: string; bedspaceId: string }) =>
   stubFor({
     request: {
@@ -303,6 +334,8 @@ export default {
   stubBedspaceUpdate,
   stubBedspaceCancelArchive,
   stubBedspaceCancelArchiveError,
+  stubBedspaceCancelUnarchive,
+  stubBedspaceCancelUnarchiveError,
   verifyBedspaceUpdate,
   stubBedspaceUpdateErrors,
   stubBedspaceArchiveV2,

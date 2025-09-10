@@ -122,12 +122,12 @@ describe('bedspaceV2Utils', () => {
 
       const actions = bedspaceActions(premises, bedspace, placeContext)
 
-      expect(actions).toHaveLength(1)
-      // expect(actions).toContainEqual({
-      //   text: 'Cancel scheduled bedspace online date',
-      //   href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-      //   classes: 'govuk-button--secondary',
-      // })
+      expect(actions).toHaveLength(2)
+      expect(actions).toContainEqual({
+        text: 'Cancel scheduled bedspace online date',
+        href: paths.premises.bedspaces.cancelUnarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
         href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),

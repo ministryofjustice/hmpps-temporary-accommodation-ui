@@ -17,12 +17,12 @@ export function bedspaceActions(
 const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> => {
   const actions: Array<PageHeadingBarItem> = []
 
-  if (bedspace.startDate && new Date(bedspace.startDate) > new Date()) {
-    // actions.push({
-    //   text: 'Cancel scheduled bedspace online date',
-    //   href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-    //   classes: 'govuk-button--secondary',
-    // })
+  if (bedspace.scheduleUnarchiveDate && new Date(bedspace.scheduleUnarchiveDate) > new Date()) {
+    actions.push({
+      text: 'Cancel scheduled bedspace online date',
+      href: paths.premises.bedspaces.cancelUnarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      classes: 'govuk-button--secondary',
+    })
   } else {
     actions.push({
       text: 'Make bedspace online',

@@ -92,6 +92,11 @@ export default class BedspaceShowPage extends Page {
     cy.get('main .govuk-notification-banner--success').contains('Bedspace edited')
   }
 
+  confirmCancelArchive() {
+    cy.get('main').contains('Yes').click()
+    cy.get('main').contains('Submit').click()
+  }
+
   shouldShowCancelArchive(bedspace: Cas3Bedspace): void {
     const endDate = DateFormats.isoDateToUIDate(bedspace.endDate)
 
@@ -101,9 +106,18 @@ export default class BedspaceShowPage extends Page {
     cy.get('main').contains('Submit')
   }
 
-  confirmCancelArchive() {
+  confirmCancelUnarchive() {
     cy.get('main').contains('Yes').click()
     cy.get('main').contains('Submit').click()
+  }
+
+  shouldShowCancelUnarchive(bedspace: Cas3Bedspace): void {
+    const scheduleUnarchiveDate = DateFormats.isoDateToUIDate(bedspace.scheduleUnarchiveDate)
+
+    cy.get('main').contains(`Are you sure you want to cancel the scheduled online date of ${scheduleUnarchiveDate}?`)
+    cy.get('main').contains('Yes, I want to cancel it')
+    cy.get('main').contains('No')
+    cy.get('main').contains('Submit')
   }
 
   clickArchiveLink(): void {

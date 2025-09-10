@@ -3,6 +3,7 @@ import { getBedspace, getProperty } from '../../../utils/manage'
 import { signIn } from '../../../steps/signIn'
 import {
   archiveBedspace,
+  cancelUnarchiveBedspace,
   createBedspace,
   createProperty,
   editBedspace,
@@ -74,5 +75,20 @@ test('Unarchive a bedspace', async ({ page, assessor }) => {
   await createBedspace(page, property, bedspace)
   await showBedspace(page, property, bedspace)
   await archiveBedspace(page, property, bedspace)
-  await unarchiveBedspace(page, property, bedspace)
+  await unarchiveBedspace(page, bedspace)
+})
+
+test('Cancel unarchive a bedspace', async ({ page, assessor }) => {
+  const property = getProperty()
+  const bedspace = getBedspace()
+  await signIn(page, assessor)
+  await visitListPropertiesPage(page)
+  await createProperty(page, property)
+  await createBedspace(page, property, bedspace)
+  await showBedspace(page, property, bedspace)
+  await archiveBedspace(page, property, bedspace)
+
+  const unarchiveDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000)
+  await unarchiveBedspace(page, bedspace, { date: unarchiveDate })
+  await cancelUnarchiveBedspace(page, bedspace, { date: unarchiveDate })
 })

@@ -11,7 +11,7 @@ Given('I mark the booking as arrived', () => {
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, this.booking)
     bookingShowPage.clickMarkArrivedBookingButton()
 
-    const newArrival = newArrivalFactory.build()
+    const newArrival = newArrivalFactory.build({ expectedDepartureDate: this.booking.departureDate })
     const arrival = arrivalFactory.build({
       ...newArrival,
     })
@@ -92,7 +92,7 @@ Then('I should see a list of the problems encountered whilst changing the bookin
 
 When('I enter change booking data correctly', () => {
   cy.then(function _() {
-    const newArrival = newArrivalFactory.build()
+    const newArrival = newArrivalFactory.build({ expectedDepartureDate: this.booking.departureDate })
 
     const bookingArrivalPage = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.bedspace, this.booking)
     bookingArrivalPage.shouldShowBookingDetails()

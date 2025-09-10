@@ -21,6 +21,8 @@ import {
 import {
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
+  generateErrorMessages,
+  generateErrorSummary,
   generateMergeParameters,
 } from '../../../../utils/validation'
 import extractCallConfig from '../../../../utils/restUtils'
@@ -645,7 +647,6 @@ describe('BedspacesController', () => {
         params,
         errors: {},
         errorSummary: [],
-        archiveOption: 'today',
       })
     })
 
@@ -871,6 +872,28 @@ describe('BedspacesController', () => {
         undefined,
       )
     })
+
+    it('should show an error when the user has not selected a date option', async () => {
+      request.params.premisesId = premisesId
+      request.params.bedspaceId = bedspaceId
+      request.body = {}
+
+      const errorMessage = 'Select a date to archive the bedspace'
+
+      ;(generateErrorMessages as jest.Mock).mockReturnValue([{ today: { text: errorMessage } }])
+      ;(generateErrorSummary as jest.Mock).mockReturnValue([{ text: errorMessage, href: '#today' }])
+
+      const requestHandler = bedspacesController.archiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      const expectedErrors = [{ today: { text: 'Select a date to archive the bedspace' } }]
+      const expectedErrorSummary = [{ text: 'Select a date to archive the bedspace', href: '#today' }]
+
+      expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
+      expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
+    })
   })
 
   describe('unarchive', () => {
@@ -894,7 +917,6 @@ describe('BedspacesController', () => {
         params: request.params,
         errors: {},
         errorSummary: [],
-        unarchiveOption: 'today',
       })
     })
   })
@@ -1006,6 +1028,28 @@ describe('BedspacesController', () => {
       expect(bedspaceService.unarchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId, futureDate)
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property updated')
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('should show an error when the user has not selected a date option', async () => {
+      request.params.premisesId = premisesId
+      request.params.bedspaceId = bedspaceId
+      request.body = {}
+
+      const errorMessage = 'Select a date to make the bedspace online'
+
+      ;(generateErrorMessages as jest.Mock).mockReturnValue([{ today: { text: errorMessage } }])
+      ;(generateErrorSummary as jest.Mock).mockReturnValue([{ text: errorMessage, href: '#today' }])
+
+      const requestHandler = bedspacesController.unarchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      const expectedErrors = [{ today: { text: 'Select a date to make the bedspace online' } }]
+      const expectedErrorSummary = [{ text: 'Select a date to make the bedspace online', href: '#today' }]
+
+      expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
+      expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }))
     })
   })
 })

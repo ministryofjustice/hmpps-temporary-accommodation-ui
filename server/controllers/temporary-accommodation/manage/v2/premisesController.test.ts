@@ -24,6 +24,8 @@ import { filterProbationRegions } from '../../../../utils/userUtils'
 import {
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
+  generateErrorMessages,
+  generateErrorSummary,
   generateMergeParameters,
 } from '../../../../utils/validation'
 import BedspaceService from '../../../../services/v2/bedspaceService'
@@ -1288,7 +1290,6 @@ describe('PremisesController', () => {
         premises,
         errors: {},
         errorSummary: [],
-        archiveOption: 'today',
       })
     })
 
@@ -1306,7 +1307,6 @@ describe('PremisesController', () => {
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
-        archiveOption: 'today',
       })
     })
 
@@ -1403,6 +1403,27 @@ describe('PremisesController', () => {
 
       expect(generateMergeParameters).toHaveBeenCalled()
     })
+
+    it('should show an error when the user has not selected a date option', async () => {
+      request.params.premisesId = premises.id
+      request.body = {}
+
+      const errorMessage = 'Select a date to archive the property'
+
+      ;(generateErrorMessages as jest.Mock).mockReturnValue([{ today: { text: errorMessage } }])
+      ;(generateErrorSummary as jest.Mock).mockReturnValue([{ text: errorMessage, href: '#today' }])
+
+      const requestHandler = premisesController.archiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      const expectedErrors = [{ today: { text: 'Select a date to archive the property' } }]
+      const expectedErrorSummary = [{ text: 'Select a date to archive the property', href: '#today' }]
+
+      expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
+      expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.archive({ premisesId: premises.id }))
+    })
   })
 
   describe('unarchive', () => {
@@ -1423,7 +1444,6 @@ describe('PremisesController', () => {
         premises,
         errors: {},
         errorSummary: [],
-        unarchiveOption: 'today',
       })
     })
 
@@ -1441,7 +1461,6 @@ describe('PremisesController', () => {
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
-        unarchiveOption: 'today',
       })
     })
   })
@@ -1501,6 +1520,27 @@ describe('PremisesController', () => {
         paths.premises.unarchive({ premisesId: premises.id }),
         'premisesUnarchive',
       )
+    })
+
+    it('should show an error when the user has not selected a date option', async () => {
+      request.params.premisesId = premises.id
+      request.body = {}
+
+      const errorMessage = 'Select a date for the property go online'
+
+      ;(generateErrorMessages as jest.Mock).mockReturnValue([{ today: { text: errorMessage } }])
+      ;(generateErrorSummary as jest.Mock).mockReturnValue([{ text: errorMessage, href: '#today' }])
+
+      const requestHandler = premisesController.unarchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      const expectedErrors = [{ today: { text: 'Select a date for the property go online' } }]
+      const expectedErrorSummary = [{ text: 'Select a date for the property go online', href: '#today' }]
+
+      expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
+      expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.unarchive({ premisesId: premises.id }))
     })
   })
 })

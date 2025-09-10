@@ -6,6 +6,10 @@ export default class PremisesUnarchivePage extends Page {
     super(`When should ${premises.addressLine1} go online?`)
   }
 
+  selectToday(): void {
+    cy.get('label').contains('Today').click()
+  }
+
   enterDate(date: string): void {
     cy.get('label').contains('Another date').click()
     this.completeDateInputsByLegend('Enter a date within the last 7 days or the next 7 days', date)

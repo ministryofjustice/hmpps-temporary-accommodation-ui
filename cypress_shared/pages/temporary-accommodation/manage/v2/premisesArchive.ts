@@ -6,6 +6,10 @@ export default class PremisesArchivePage extends Page {
     super(`When should ${premises.addressLine1} be archived?`)
   }
 
+  selectToday(): void {
+    cy.get('label').contains('Today').click()
+  }
+
   enterDate(date: string): void {
     cy.get('label').contains('Another date').click()
     this.completeDateInputsByLegend('Enter a date within the last 7 days or the next 3 months', date)

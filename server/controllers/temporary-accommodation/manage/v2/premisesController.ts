@@ -13,6 +13,8 @@ import {
   InvalidParams,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
+  generateErrorMessages,
+  generateErrorSummary,
   generateMergeParameters,
 } from '../../../../utils/validation'
 import { filterProbationRegions } from '../../../../utils/userUtils'
@@ -263,14 +265,11 @@ export default class PremisesController {
         })
       }
 
-      const archiveOption = userInput.archiveOption || 'today'
-
       return res.render('temporary-accommodation/v2/premises/archive', {
         premises,
         errors,
         errorSummary,
         ...userInput,
-        archiveOption,
       })
     }
   }
@@ -291,11 +290,12 @@ export default class PremisesController {
         const parsedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate')
         endDate = parsedDate.endDate
       } else {
-        errors.archiveOption = 'Select a date to archive the premises'
+        errors.today = 'Select a date to archive the property'
       }
 
       if (Object.keys(errors).length > 0) {
-        req.flash('errors', errors)
+        req.flash('errors', generateErrorMessages(errors))
+        req.flash('errorSummary', generateErrorSummary(errors))
         req.flash('userInput', req.body)
         return res.redirect(paths.premises.archive({ premisesId }))
       }
@@ -344,14 +344,12 @@ export default class PremisesController {
       const { premisesId } = req.params
 
       const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
-      const unarchiveOption = userInput.unarchiveOption || 'today'
 
       return res.render('temporary-accommodation/v2/premises/unarchive', {
         premises,
         errors,
         errorSummary,
         ...userInput,
-        unarchiveOption,
       })
     }
   }
@@ -372,11 +370,12 @@ export default class PremisesController {
         const parsedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, 'restartDate')
         restartDate = parsedDate.restartDate
       } else {
-        errors.unarchiveOption = 'Select a date for the premises go online'
+        errors.today = 'Select a date for the property go online'
       }
 
       if (Object.keys(errors).length > 0) {
-        req.flash('errors', errors)
+        req.flash('errors', generateErrorMessages(errors))
+        req.flash('errorSummary', generateErrorSummary(errors))
         req.flash('userInput', req.body)
         return res.redirect(paths.premises.unarchive({ premisesId }))
       }

@@ -116,7 +116,10 @@ export default class BedspaceService {
 
   private formatArchiveHistory(archiveHistory: Array<Cas3BedspaceArchiveAction>): string {
     return archiveHistory
-      .map(action => `<div>${action.status} date ${this.formatBedspaceDate(action.date)}</div>`)
+      .map(action => {
+        const verb = action.status === 'archived' ? 'Archive' : convertToTitleCase(action.status)
+        return `<div>${verb} date ${this.formatBedspaceDate(action.date)}</div>`
+      })
       .join('')
   }
 

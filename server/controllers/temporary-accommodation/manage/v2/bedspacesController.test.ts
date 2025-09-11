@@ -82,8 +82,8 @@ describe('BedspacesController', () => {
   })
 
   describe('new', () => {
-    it('renders the form', async () => {
-      const premises = cas3PremisesFactory.build()
+    it('renders the form without scheduled archive warning when premises has not a future archive date', async () => {
+      const premises = cas3PremisesFactory.build({ endDate: null, status: 'online' })
       const today = new Date()
       const userInput = {
         'startDate-day': String(today.getDate()),
@@ -106,6 +106,43 @@ describe('BedspacesController', () => {
         allCharacteristics: referenceData.characteristics,
         characteristicIds: [],
         premises,
+        hasScheduledArchive: false,
+        errors: {},
+        errorSummary: [],
+        ...userInput,
+      })
+    })
+
+    it('renders the form with scheduled archive warning when premises has future archive date', async () => {
+      const futureDate = new Date()
+      futureDate.setDate(futureDate.getDate() + 7) // 7 days in the future
+      const premises = cas3PremisesFactory.build({
+        endDate: futureDate.toISOString(),
+        status: 'online',
+      })
+      const today = new Date()
+      const userInput = {
+        'startDate-day': String(today.getDate()),
+        'startDate-month': String(today.getMonth() + 1),
+        'startDate-year': String(today.getFullYear()),
+      }
+
+      bedspaceService.getReferenceData.mockResolvedValue(referenceData)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+
+      const requestHandler = bedspacesController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params = { premisesId: premises.id }
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/new', {
+        allCharacteristics: referenceData.characteristics,
+        characteristicIds: [],
+        premises,
+        hasScheduledArchive: true,
         errors: {},
         errorSummary: [],
         ...userInput,

@@ -20,7 +20,7 @@ import {
 // eslint-disable-next-line import/named
 import { bedspaceActions, setDefaultStartDate } from '../../../../utils/v2/bedspaceUtils'
 import { isPremiseScheduledToBeArchived } from '../../../../utils/v2/premisesUtils'
-import { DateFormats } from '../../../../utils/dateUtils'
+import { DateFormats, dateIsInFuture } from '../../../../utils/dateUtils'
 import { BookingService } from '../../../../services'
 
 export default class BedspacesController {
@@ -42,10 +42,17 @@ export default class BedspacesController {
       const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(callConfig)
       const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
 
+      const hasScheduledArchive = !!(
+        premises.endDate &&
+        dateIsInFuture(premises.endDate) &&
+        premises.status === 'online'
+      )
+
       return res.render('temporary-accommodation/v2/bedspaces/new', {
         allCharacteristics: allCharacteristics.filter(c => c.propertyName !== 'other'),
         characteristicIds: [],
         premises,
+        hasScheduledArchive,
         errors,
         errorSummary,
         ...userInput,

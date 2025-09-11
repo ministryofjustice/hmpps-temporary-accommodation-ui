@@ -201,6 +201,36 @@ context('Bedspace', () => {
       bedspaceShowPage.shouldShowBanner('Bedspace added')
     })
 
+    it('shows warning message when premises has scheduled archive', () => {
+      // Given a premises with a scheduled archive date
+      const futureDate = new Date()
+      futureDate.setDate(futureDate.getDate() + 7)
+      const premisesWithScheduledArchive = { ...premises, endDate: futureDate.toISOString(), status: 'online' as const }
+
+      cy.task('stubSinglePremisesV2', premisesWithScheduledArchive)
+
+      // When I visit the new bedspace page
+      BedspaceNewPage.visit(premisesWithScheduledArchive)
+
+      // Then I should see the warning message
+      cy.contains('The scheduled archive of the property will be cancelled when this bedspace is added.')
+    })
+
+    it('does not show warning message when premises has no scheduled archive', () => {
+      // Given a premises without a scheduled archive date
+      const premisesWithoutScheduledArchive = { ...premises, endDate: null, status: 'online' as const }
+
+      cy.task('stubSinglePremisesV2', premisesWithoutScheduledArchive)
+
+      // When I visit the new bedspace page
+      BedspaceNewPage.visit(premisesWithoutScheduledArchive)
+
+      // Then I should not see the warning message
+      cy.contains('The scheduled archive of the property will be cancelled when this bedspace is added.').should(
+        'not.exist',
+      )
+    })
+
     it('should allow me to navigate to the new bedspace page from a premises with no bedspaces', () => {
       // And there is an online premises with no bedspaces in the database
       premises = cas3PremisesFactory.build({

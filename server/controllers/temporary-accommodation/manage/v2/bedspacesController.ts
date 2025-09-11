@@ -185,16 +185,29 @@ export default class BedspacesController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
       const { premisesId, bedspaceId } = req.params
-      const { bedspaceId: cancelArchive } = req.body
+      const { bedspaceId: cancelArchive, premisesScheduledForArchive } = req.body
+
+      if (!cancelArchive) {
+        const errors = { bedspaceId: 'Select yes if you want to cancel the scheduled archive' }
+        req.flash('errors', generateErrorMessages(errors))
+        req.flash('errorSummary', generateErrorSummary(errors))
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }))
+      }
+
       try {
         if (cancelArchive === 'yes') {
           await this.bedspaceService.cancelArchiveBedspace(callConfig, premisesId, bedspaceId)
-          req.flash('success', 'Bedspace archive cancelled')
+          if (premisesScheduledForArchive === 'true') {
+            req.flash('success', 'Bedspace and property archive cancelled')
+          } else {
+            req.flash('success', 'Bedspace archive cancelled')
+          }
         }
 
-        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+        return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(
+        return catchValidationErrorOrPropogate(
           req,
           res,
           err,
@@ -215,7 +228,7 @@ export default class BedspacesController {
       ])
 
       const bedspaceEndDate = DateFormats.isoDateToUIDate(bedspace.endDate)
-      const scheduledForArchive = isPremiseScheduledToBeArchived(premiseTotals)
+      const premisesScheduledForArchive = isPremiseScheduledToBeArchived(premiseTotals)
 
       const errorsAndUserInput = fetchErrorsAndUserInput(req)
       const { errors, errorSummary } = errorsAndUserInput
@@ -224,7 +237,7 @@ export default class BedspacesController {
         premisesId,
         bedspaceId,
         bedspaceEndDate,
-        scheduledForArchive,
+        premisesScheduledForArchive,
         errors,
         errorSummary,
       })

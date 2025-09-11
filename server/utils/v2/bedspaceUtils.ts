@@ -71,11 +71,11 @@ const onlineBedspaceActions = (
     },
   ]
   if (bedspace.endDate) {
-    // actions.push({
-    //   text: 'Cancel scheduled bedspace archive',
-    //   href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-    //   classes: 'govuk-button--secondary',
-    // })
+    actions.push({
+      text: 'Cancel scheduled bedspace archive',
+      href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      classes: 'govuk-button--secondary',
+    })
   } else {
     actions.push({
       text: 'Archive bedspace',

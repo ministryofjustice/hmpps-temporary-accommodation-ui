@@ -2,9 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type ReferralRejectionReason = {
-    id: string;
-    isActive: boolean;
-    name: string;
+export type Cas3VoidBedspaceCancellation = {
+    cancellationNotes?: string;
 };
 

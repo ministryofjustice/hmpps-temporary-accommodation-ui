@@ -3,6 +3,7 @@ import { getBedspace, getProperty } from '../../../utils/manage'
 import { signIn } from '../../../steps/signIn'
 import {
   archiveBedspace,
+  cancelArchiveBedspace,
   createBedspace,
   createProperty,
   editBedspace,
@@ -58,7 +59,21 @@ test('Archive a bedspace', async ({ page, assessor }) => {
   await createProperty(page, property)
   await createBedspace(page, property, bedspace)
   await showBedspace(page, property, bedspace)
-  await archiveBedspace(page, property, bedspace)
+  await archiveBedspace(page, bedspace)
+})
+
+test('Cancel archive of a bedspace', async ({ page, assessor }) => {
+  const property = getProperty()
+  const bedspace = getBedspace()
+  await signIn(page, assessor)
+  await visitListPropertiesPage(page)
+  await createProperty(page, property)
+  await createBedspace(page, property, bedspace)
+  await showBedspace(page, property, bedspace)
+
+  const archiveDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000)
+  await archiveBedspace(page, bedspace, { date: archiveDate })
+  await cancelArchiveBedspace(page, bedspace, { date: archiveDate })
 })
 
 // TODO: Add a test case when we cannot archive a bedspace with blocking booking/void
@@ -73,6 +88,6 @@ test('Unarchive a bedspace', async ({ page, assessor }) => {
   await createProperty(page, property)
   await createBedspace(page, property, bedspace)
   await showBedspace(page, property, bedspace)
-  await archiveBedspace(page, property, bedspace)
+  await archiveBedspace(page, bedspace)
   await unarchiveBedspace(page, property, bedspace)
 })

@@ -577,6 +577,17 @@ describe('BedspacesController', () => {
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
     })
 
+    it('shows the correct success message when premisesScheduledForArchive is true', async () => {
+      request.body = { bedspaceId: 'yes', premisesScheduledForArchive: 'true' }
+      bedspaceService.cancelArchiveBedspace.mockResolvedValue(undefined)
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.cancelArchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property archive cancelled')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
     it('redirects to the bedspace page without cancelling if "no" is selected', async () => {
       request.body = { bedspaceId: 'no' }
 
@@ -625,7 +636,7 @@ describe('BedspacesController', () => {
         premisesId,
         bedspaceId,
         bedspaceEndDate: DateFormats.isoDateToUIDate(bedspace.endDate),
-        scheduledForArchive: false,
+        premisesScheduledForArchive: false,
         errors: {},
         errorSummary: [],
       })
@@ -647,7 +658,7 @@ describe('BedspacesController', () => {
         premisesId,
         bedspaceId,
         bedspaceEndDate: DateFormats.isoDateToUIDate(bedspace.endDate),
-        scheduledForArchive: false,
+        premisesScheduledForArchive: false,
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
       })

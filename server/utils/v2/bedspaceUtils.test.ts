@@ -49,7 +49,7 @@ describe('bedspaceV2Utils', () => {
 
       const actions = bedspaceActions(premises, bedspace, placeContext)
 
-      expect(actions).toHaveLength(3)
+      expect(actions).toHaveLength(4)
       expect(actions).toContainEqual({
         text: 'Book bedspace',
         href: `${paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id })}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
@@ -60,11 +60,11 @@ describe('bedspaceV2Utils', () => {
         href: paths.lostBeds.new({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
-      // expect(actions).toContainEqual({
-      //   text: 'Cancel scheduled bedspace archive',
-      //   href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-      //   classes: 'govuk-button--secondary',
-      // })
+      expect(actions).toContainEqual({
+        text: 'Cancel scheduled bedspace archive',
+        href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
         href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),

@@ -420,149 +420,6 @@ context('Bedspace', () => {
       page.shouldShowAdditionalDetails()
     })
 
-    describe('cancel archive', () => {
-      it.skip('allows cancelling of an upcoming archive', () => {
-        // And there is an active premises in the database
-        const premises = cas3PremisesFactory.build({ status: 'online' })
-        // And there is an online bedspace in the database scheduled for archive
-        const bedspace = cas3BedspaceFactory.build({
-          status: 'online',
-          startDate: '2024-02-03',
-          endDate: '2026-08-01',
-        })
-        const bookings = bookingFactory
-          .params({
-            bed: bedFactory.build({ id: bedspace.id }),
-          })
-          .buildList(5)
-        const lostBeds = lostBedFactory
-          .active()
-          .params({
-            bedId: bedspace.id,
-          })
-          .buildList(5)
-        cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-        cy.task('stubSinglePremisesV2', premises)
-        cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
-        cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
-
-        // And the premises totals are stubbed
-        const totals = { premisesEndDate: null, status: 'online' } as Cas3PremisesBedspaceTotals
-        cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
-
-        // When I visit the show bedspace page
-        const page = BedspaceShowPage.visit(premises, bedspace)
-
-        // When I click the cancel archive action
-        page.clickAction('Cancel scheduled bedspace archive')
-
-        // Then I should see the cancel archive confirmation page
-        page.shouldShowCancelArchive(bedspace)
-
-        // And when I confirm cancellation
-        cy.task('stubBedspaceCancelArchive', { premisesId: premises.id, bedspace })
-        cy.task('stubBedspaceV2', {
-          premisesId: premises.id,
-          bedspace: { ...bedspace, status: 'online', endDate: undefined },
-        })
-        page.confirmCancelArchive()
-
-        // Then I should be redirected to the bedspace page with the archive cancelled
-        const updatedBedspace = { ...bedspace, status: 'online' as Cas3BedspaceStatus, endDate: undefined }
-        Page.verifyOnPage(BedspaceShowPage, premises, updatedBedspace)
-        page.shouldShowBanner('Bedspace archive cancelled')
-      })
-
-      it.skip('shows the premise archive message if the premises is scheduled to be archived', () => {
-        // And there is an active premises in the database
-        const premises = cas3PremisesFactory.build({ status: 'online' })
-        // And there is an online bedspace in the database scheduled for archive
-        const bedspace = cas3BedspaceFactory.build({
-          status: 'online',
-          startDate: '2024-02-03',
-          endDate: '2026-08-01',
-        })
-        const bookings = bookingFactory
-          .params({
-            bed: bedFactory.build({ id: bedspace.id }),
-          })
-          .buildList(5)
-        const lostBeds = lostBedFactory
-          .active()
-          .params({
-            bedId: bedspace.id,
-          })
-          .buildList(5)
-
-        cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-        cy.task('stubSinglePremisesV2', premises)
-        cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
-        cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
-
-        // And the premises totals are stubbed
-        const totals = { premisesEndDate: '2126-08-01', status: 'online' } as Cas3PremisesBedspaceTotals
-        cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
-
-        // When I visit the show bedspace page
-        const page = BedspaceShowPage.visit(premises, bedspace)
-
-        // And I click the cancel archive action
-        page.clickAction('Cancel scheduled bedspace archive')
-
-        // Then I should see the cancel archive confirmation page
-        page.shouldShowCancelArchive(bedspace)
-
-        // And I should see the extra archive message
-        cy.get('main').contains('The scheduled archive of the property and any other bedspaces will also be cancelled.')
-      })
-
-      it.skip('shows an error if cancelling the archive fails', () => {
-        // And there is an active premises in the database
-        const premises = cas3PremisesFactory.build({ status: 'online' })
-        // And there is an online bedspace in the database scheduled for archive
-        const bedspace = cas3BedspaceFactory.build({
-          status: 'online',
-          startDate: '2024-02-03',
-          endDate: '2126-08-01',
-        })
-        const bookings = bookingFactory
-          .params({
-            bed: bedFactory.build({ id: bedspace.id }),
-          })
-          .buildList(5)
-        const lostBeds = lostBedFactory
-          .active()
-          .params({
-            bedId: bedspace.id,
-          })
-          .buildList(5)
-
-        cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-        cy.task('stubSinglePremisesV2', premises)
-        cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
-        cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
-
-        // And the premises totals are stubbed
-        const totals = { premisesEndDate: null, status: 'online' } as Cas3PremisesBedspaceTotals
-        cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
-
-        const page = BedspaceShowPage.visit(premises, bedspace)
-
-        // When I click the cancel archive action
-        page.clickAction('Cancel scheduled bedspace archive')
-
-        // Then I should see the cancel archive confirmation page
-        page.shouldShowCancelArchive(bedspace)
-
-        // And when I confirm cancellation
-        cy.task('stubBedspaceCancelArchiveError', { premisesId: premises.id, bedspace })
-        page.confirmCancelArchive()
-
-        // Then I should see error messages
-        page.shouldShowErrorMessagesForFields(['bedspaceId'], 'bedspaceNotScheduledToArchive')
-      })
-    })
-
     it('shows an upcoming bedspace', () => {
       // And there is an active premises in the database
       const premises = cas3PremisesFactory.build({ status: 'online' })
@@ -1023,6 +880,201 @@ context('Bedspace', () => {
 
       // Then I should see the validation error based on the API response
       archivePage.shouldShowError('The date is not within the next 3 months')
+    })
+  })
+
+  describe('cancel archive', () => {
+    it('allows cancelling of a scheduled archive', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an online bedspace in the database scheduled for archive
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'online',
+        startDate: '2024-02-03',
+        endDate: '2026-08-01',
+      })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // And the premises totals are stubbed
+      const totals = { premisesEndDate: null, status: 'online' } as Cas3PremisesBedspaceTotals
+      cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
+
+      // When I visit the show bedspace page
+      const page = BedspaceShowPage.visit(premises, bedspace)
+
+      // When I click the cancel archive action
+      page.clickAction('Cancel scheduled bedspace archive')
+
+      // Then I should see the cancel archive confirmation page
+      page.shouldShowCancelArchive(bedspace)
+
+      // And when I confirm cancellation
+      cy.task('stubBedspaceCancelArchive', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspaceV2', {
+        premisesId: premises.id,
+        bedspace: { ...bedspace, status: 'online', endDate: undefined },
+      })
+      page.confirmCancelArchive()
+
+      // Then I should be redirected to the bedspace page with the archive cancelled
+      const updatedBedspace = { ...bedspace, status: 'online' as Cas3BedspaceStatus, endDate: undefined }
+      Page.verifyOnPage(BedspaceShowPage, premises, updatedBedspace)
+      page.shouldShowBanner('Bedspace archive cancelled')
+    })
+
+    it('shows the correct banner when cancelling a scheduled archive, with the premises also scheduled for archive', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an online bedspace in the database scheduled for archive
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'online',
+        startDate: '2024-02-03',
+        endDate: '2026-08-01',
+      })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // And the premises totals are stubbed with a future premisesEndDate (scheduled for archive)
+      const totals = { premisesEndDate: '2126-08-01', status: 'online' } as Cas3PremisesBedspaceTotals
+      cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
+
+      // When I visit the show bedspace page
+      const page = BedspaceShowPage.visit(premises, bedspace)
+
+      // When I click the cancel archive action
+      page.clickAction('Cancel scheduled bedspace archive')
+
+      // Then I should see the cancel archive confirmation page
+      page.shouldShowCancelArchive(bedspace)
+
+      // And when I confirm cancellation
+      cy.task('stubBedspaceCancelArchive', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspaceV2', {
+        premisesId: premises.id,
+        bedspace: { ...bedspace, status: 'online', endDate: undefined },
+      })
+      page.confirmCancelArchive()
+
+      // Then I should be redirected to the bedspace page with the correct banner
+      const updatedBedspace = { ...bedspace, status: 'online' as Cas3BedspaceStatus, endDate: undefined }
+      Page.verifyOnPage(BedspaceShowPage, premises, updatedBedspace)
+      page.shouldShowBanner('Bedspace and property archive cancelled')
+    })
+
+    it('shows the premise archive message if the premises is scheduled to be archived', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an online bedspace in the database scheduled for archive
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'online',
+        startDate: '2024-02-03',
+        endDate: '2026-08-01',
+      })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // And the premises totals are stubbed
+      const totals = { premisesEndDate: '2126-08-01', status: 'online' } as Cas3PremisesBedspaceTotals
+      cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
+
+      // When I visit the show bedspace page
+      const page = BedspaceShowPage.visit(premises, bedspace)
+
+      // And I click the cancel archive action
+      page.clickAction('Cancel scheduled bedspace archive')
+
+      // Then I should see the cancel archive confirmation page
+      page.shouldShowCancelArchive(bedspace)
+
+      // And I should see the extra archive message
+      cy.get('main').contains('The scheduled archive of the property and any other bedspaces will also be cancelled.')
+    })
+
+    it('shows an error if cancelling the archive fails', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an online bedspace in the database scheduled for archive
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'online',
+        startDate: '2024-02-03',
+        endDate: '2126-08-01',
+      })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // And the premises totals are stubbed
+      const totals = { premisesEndDate: null, status: 'online' } as Cas3PremisesBedspaceTotals
+      cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
+
+      const page = BedspaceShowPage.visit(premises, bedspace)
+
+      // When I click the cancel archive action
+      page.clickAction('Cancel scheduled bedspace archive')
+
+      // Then I should see the cancel archive confirmation page
+      page.shouldShowCancelArchive(bedspace)
+
+      // And when I confirm cancellation
+      cy.task('stubBedspaceCancelArchiveError', { premisesId: premises.id, bedspace })
+      page.confirmCancelArchive()
+
+      // Then I should see error messages
+      page.shouldShowErrorMessagesForFields(['bedspaceId'], 'bedspaceNotScheduledToArchive')
     })
   })
 

@@ -350,7 +350,7 @@ describe('BedspaceService', () => {
     it('includes scheduled online date in the status row for archived bedspaces with future startDate (scheduled online)', () => {
       const bedspace = cas3BedspaceFactory.build({
         status: 'archived',
-        startDate: '2125-08-20',
+        scheduleUnarchiveDate: '2125-08-20',
       })
 
       const summary = service.summaryList(bedspace)

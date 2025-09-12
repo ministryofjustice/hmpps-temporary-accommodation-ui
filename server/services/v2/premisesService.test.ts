@@ -504,7 +504,7 @@ describe('PremisesService', () => {
     it('includes scheduled online date in the status row for archived premises with future startDate (scheduled online)', () => {
       const premises = cas3PremisesFactory.build({
         status: 'archived',
-        startDate: '2125-08-20',
+        scheduleUnarchiveDate: '2125-08-20',
       })
 
       const summary = service.summaryList(premises)

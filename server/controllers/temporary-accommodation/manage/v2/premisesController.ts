@@ -432,11 +432,12 @@ export default class PremisesController {
       const errors: Record<string, string> = {}
 
       if (!cancelArchive) {
-        errors.cancelArchive = 'Select yes if you want to cancel the scheduled archive'
+        errors.cancelArchive = 'You need to choose an option to proceed'
       }
 
       if (Object.keys(errors).length > 0) {
-        req.flash('errors', errors)
+        req.flash('errors', generateErrorMessages(errors))
+        req.flash('errorSummary', generateErrorSummary(errors))
         req.flash('userInput', req.body)
         return res.redirect(paths.premises.cancelArchive({ premisesId }))
       }

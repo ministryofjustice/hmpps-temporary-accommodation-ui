@@ -1928,7 +1928,7 @@ context('Premises', () => {
 
       // Then I should see an error message
       cancelArchivePage = Page.verifyOnPage(PremisesCancelArchivePage, premises)
-      cancelArchivePage.shouldShowGivenErrorMessagesForField('premisesId', 'Premises are not scheduled to be archived')
+      cancelArchivePage.shouldShowGivenErrorMessagesForField('premisesId', 'Property is not scheduled to be archived')
     })
   })
 })

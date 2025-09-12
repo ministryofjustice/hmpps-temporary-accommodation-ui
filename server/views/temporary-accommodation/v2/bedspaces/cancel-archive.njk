@@ -29,6 +29,7 @@
         <div class="govuk-grid-column-two-thirds">
             <form action="{{ paths.premises.bedspaces.cancelArchive({ premisesId: premisesId, bedspaceId: bedspaceId })}}?_method=PUT" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="premisesScheduledForArchive" value="{{ premisesScheduledForArchive }}">
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -51,7 +52,7 @@
                     ) }}
                     </fieldset>
                 </div>
-                {% if scheduledForArchive %}
+                {% if premisesScheduledForArchive %}
                     <p class="govuk-body">The scheduled archive of the property and any other bedspaces will also be cancelled.</p>
                 {% endif %}
                 {{ govukButton({

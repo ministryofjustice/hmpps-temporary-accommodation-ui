@@ -92,7 +92,8 @@
       "invalidStartDateInTheFuture": "Date must be within the past 7 days or the next 7 days",
       "invalidStartDateInThePast": "Date must be within the past 7 days or the next 7 days",
       "voidStartDateAfterBedspaceEndDate": "Void start date must be on or earlier than bedspace end date",
-      "voidStartDateBeforeBedspaceStartDate": "Void start date must be on or after bedspace start date"
+      "voidStartDateBeforeBedspaceStartDate": "Void start date must be on or after bedspace start date",
+      "startDateBeforePremisesStartDate": "Start date must be same as or later than :premisesStartDate"
     },
     "endDate": {
       "empty": "You must enter an end date",
@@ -220,10 +221,14 @@
       "existingBookings": "Earliest archive date is :earliestDate because of a booking",
       "existingVoid": "Earliest archive date is :earliestDate because of a void period",
       "existingTurnaround": "Earliest archive date is :earliestDate because of a turnaround",
-      "endDateOverlapPreviousBedspaceArchiveEndDate": "Archive conflicts with an earlier archive ending on :endDate"
+      "endDateOverlapPreviousBedspaceArchiveEndDate": "Archive conflicts with an earlier archive ending on :endDate",
+      "endDateBeforeBedspaceStartDate": "Archive date must be later than start date on :startDate"
     }
   },
   "bedspaceUnarchive": {
+    "bedspaceId": {
+      "bedspaceNotArchived": "The bedspace is not archived"
+    },
     "restartDate": {
       "empty": "You must enter a date",
       "invalid": "You must enter a real date",
@@ -343,10 +348,13 @@
       "existingVoid": "Earliest archive date is :earliestDate because of a void period",
       "existingTurnaround": "Earliest archive date is :earliestDate because of a turnaround",
       "endDateOverlapPreviousPremisesArchiveEndDate": "Archive conflicts with an earlier archive ending on :endDate",
-      "endDateBeforePremisesStartDate": "Archive date must be later than start date"
+      "endDateBeforePremisesStartDate": "Archive date must be later than start date on :startDate"
     }
   },
   "premisesUnarchive": {
+    "premisesId": {
+      "premisesNotArchived": "The property is not archived"
+    },
     "restartDate": {
       "empty": "You must enter a date",
       "invalid": "You must enter a real date",

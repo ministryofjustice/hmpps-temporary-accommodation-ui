@@ -103,7 +103,22 @@ export default class BedspacesController {
         req.flash('success', 'Bedspace added')
         res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.new({ premisesId }))
+        const transform = (params: InvalidParams) => ({
+          premisesStartDate: DateFormats.isoDateToUIDate(params.value),
+        })
+
+        const mergeVariables = generateMergeParameters(err, [
+          { errorType: 'startDateBeforePremisesStartDate', transform },
+        ])
+
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.bedspaces.new({ premisesId }),
+          undefined,
+          mergeVariables,
+        )
       }
     }
   }
@@ -305,6 +320,12 @@ export default class BedspacesController {
             errorType: 'endDateOverlapPreviousBedspaceArchiveEndDate',
             transform: (params: InvalidParams) => ({
               endDate: DateFormats.isoDateToUIDate(params.value),
+            }),
+          },
+          {
+            errorType: 'endDateBeforeBedspaceStartDate',
+            transform: (params: InvalidParams) => ({
+              startDate: DateFormats.isoDateToUIDate(params.value),
             }),
           },
         ])

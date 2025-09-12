@@ -323,6 +323,12 @@ export default class PremisesController {
               endDate: DateFormats.isoDateToUIDate(params.value),
             }),
           },
+          {
+            errorType: 'endDateBeforePremisesStartDate',
+            transform: (params: InvalidParams) => ({
+              startDate: DateFormats.isoDateToUIDate(params.value),
+            }),
+          },
         ])
 
         return catchValidationErrorOrPropogate(

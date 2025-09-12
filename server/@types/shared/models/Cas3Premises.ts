@@ -21,6 +21,7 @@ export type Cas3Premises = {
     probationDeliveryUnit: ProbationDeliveryUnit;
     probationRegion: ProbationRegion;
     reference: string;
+    scheduleUnarchiveDate?: string;
     startDate: string;
     status: Cas3PremisesStatus;
     totalArchivedBedspaces: number;

@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas3UpdateVoidBedspace = {
+export type Cas3VoidBedspaceRequest = {
     endDate: string;
     notes?: string;
     reasonId: string;

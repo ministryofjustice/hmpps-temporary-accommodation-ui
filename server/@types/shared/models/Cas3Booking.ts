@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Cas3Arrival } from './Cas3Arrival';
-import type { Cas3Bedspace } from './Cas3Bedspace';
+import type { Cas3BedspaceSummary } from './Cas3BedspaceSummary';
 import type { Cas3BookingPremisesSummary } from './Cas3BookingPremisesSummary';
 import type { Cas3BookingStatus } from './Cas3BookingStatus';
 import type { Cas3Cancellation } from './Cas3Cancellation';
@@ -20,7 +20,7 @@ export type Cas3Booking = {
     arrival?: Cas3Arrival;
     arrivalDate: string;
     assessmentId?: string;
-    bedspace: Cas3Bedspace;
+    bedspace: Cas3BedspaceSummary;
     /**
      * The latest version of the cancellation, if it exists
      */

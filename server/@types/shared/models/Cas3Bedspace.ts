@@ -14,7 +14,8 @@ export type Cas3Bedspace = {
     id: string;
     notes?: string;
     reference: string;
-    startDate: string;
+    scheduleUnarchiveDate?: string;
+    startDate?: string;
     status: Cas3BedspaceStatus;
 };
 

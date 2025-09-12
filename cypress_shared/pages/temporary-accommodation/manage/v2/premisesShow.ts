@@ -193,4 +193,13 @@ export default class PremisesShowPage extends Page {
   shouldShowPropertyAndBedspacesOnlineBanner(): void {
     cy.get('main .govuk-notification-banner--success').contains('Property and bedspaces online')
   }
+
+  clickCancelArchiveButton(): void {
+    cy.get('button').contains('Actions').parent().click()
+    cy.get('button').contains('Actions').parent().siblings('ul').contains('Cancel scheduled property archive').click()
+  }
+
+  shouldShowScheduledArchiveCancelledBanner(): void {
+    cy.get('main .govuk-notification-banner--success').contains('Scheduled archive cancelled')
+  }
 }

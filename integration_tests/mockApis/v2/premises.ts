@@ -229,6 +229,45 @@ const stubPremisesBedspaceTotalsV2 = ({
     },
   })
 
+const stubPremisesCancelArchiveV2 = (premises: Cas3Premises) =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      url: paths.cas3.premises.cancelArchive({ premisesId: premises.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: premises,
+    },
+  })
+
+const verifyPremisesCancelArchiveV2 = async (premisesId: string) =>
+  (
+    await getMatchingRequests({
+      method: 'PUT',
+      url: paths.cas3.premises.cancelArchive({ premisesId }),
+    })
+  ).body.requests
+
+const stubPremisesCancelArchiveErrorsV2 = (params: { premisesId: string; params: Array<string> }) =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      url: paths.cas3.premises.cancelArchive({ premisesId: params.premisesId }),
+    },
+    response: {
+      status: 400,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        'invalid-params': params.params.map(errorType => ({
+          propertyName: '$.premisesId',
+          errorType,
+        })),
+      },
+    },
+  })
+
 export default {
   stubPremisesSearchV2,
   stubSinglePremisesV2,
@@ -247,4 +286,7 @@ export default {
   stubPremisesUnarchiveV2,
   verifyPremisesUnarchiveV2,
   stubPremisesUnarchiveErrorsV2,
+  stubPremisesCancelArchiveV2,
+  verifyPremisesCancelArchiveV2,
+  stubPremisesCancelArchiveErrorsV2,
 }

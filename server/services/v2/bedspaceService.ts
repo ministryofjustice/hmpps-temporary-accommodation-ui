@@ -93,8 +93,8 @@ export default class BedspaceService {
 
     if (bedspace.status === 'online' && bedspace.endDate) {
       html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled archive date ${this.formatBedspaceDate(bedspace.endDate)}</span>`
-    } else if (bedspace.status === 'archived' && new Date(bedspace.startDate) > new Date()) {
-      html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled online date ${this.formatBedspaceDate(bedspace.startDate)}</span>`
+    } else if (bedspace.status === 'archived' && new Date(bedspace.scheduleUnarchiveDate) > new Date()) {
+      html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled online date ${this.formatBedspaceDate(bedspace.scheduleUnarchiveDate)}</span>`
     }
 
     return html

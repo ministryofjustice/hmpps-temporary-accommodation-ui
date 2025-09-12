@@ -396,8 +396,8 @@ export default class PremisesService {
 
     if (premises.status === 'online' && premises.endDate) {
       html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled archive date ${this.formatDate(premises.endDate)}</span>`
-    } else if (premises.status === 'archived' && new Date(premises.startDate) > new Date()) {
-      html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled online date ${this.formatDate(premises.startDate)}</span>`
+    } else if (premises.status === 'archived' && new Date(premises.scheduleUnarchiveDate) > new Date()) {
+      html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled online date ${this.formatDate(premises.scheduleUnarchiveDate)}</span>`
     }
 
     return html

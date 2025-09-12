@@ -134,6 +134,11 @@ export default class PremisesService {
     return premisesClient.unarchive(premisesId, unarchivePayload)
   }
 
+  async cancelArchivePremises(callConfig: CallConfig, premisesId: string) {
+    const premisesClient = this.premisesClientFactory(callConfig)
+    return premisesClient.cancelArchive(premisesId)
+  }
+
   tableRows(
     premises: Cas3PremisesSearchResults,
     placeContext: PlaceContext,

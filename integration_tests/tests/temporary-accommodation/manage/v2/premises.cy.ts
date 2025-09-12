@@ -28,6 +28,7 @@ import PremisesArchivePage from '../../../../../cypress_shared/pages/temporary-a
 import PremisesUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesUnarchive'
 import { DateFormats } from '../../../../../server/utils/dateUtils'
 import PremisesCannotArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesCannotArchive'
+import PremisesCancelArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesCancelArchive'
 import BedspaceShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceShow'
 
 context('Premises', () => {
@@ -1475,8 +1476,7 @@ context('Premises', () => {
       archivePage.enterDate(tomorrow)
 
       // When the backend responds with 200 ok
-      const expectedPremises: Cas3Premises = premises
-      expectedPremises.endDate = tomorrow
+      const expectedPremises: Cas3Premises = { ...premises, endDate: tomorrow }
       cy.task('stubPremisesArchiveV2', expectedPremises)
       cy.task('stubSinglePremisesV2', expectedPremises)
 
@@ -1804,6 +1804,131 @@ context('Premises', () => {
         'restartDate',
         'The date cannot be more than 7 days in the future',
       )
+    })
+  })
+
+  describe('cancel scheduled archive', () => {
+    beforeEach(() => {
+      cy.signIn()
+    })
+
+    it('should be able to cancel a scheduled archive', () => {
+      // Given there is a premises with a scheduled archive
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const tomorrowIso = DateFormats.dateObjToIsoDate(tomorrow)
+
+      const premises = cas3PremisesFactory.build({
+        status: 'online',
+        endDate: tomorrowIso,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      let showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Cancel archive" action
+      showPage.clickCancelArchiveButton()
+
+      // Then I should see the cancel archive premises page
+      const cancelArchivePage = Page.verifyOnPage(PremisesCancelArchivePage, premises)
+
+      // When I select "Yes" to confirm cancellation
+      cancelArchivePage.selectYes()
+
+      // When the backend responds with 200 ok
+      const expectedPremises: Cas3Premises = {
+        ...premises,
+        endDate: undefined,
+      }
+      cy.task('stubPremisesCancelArchiveV2', expectedPremises)
+      cy.task('stubSinglePremisesV2', expectedPremises)
+
+      // And I submit the form
+      cancelArchivePage.clickSubmit()
+
+      // Then the premises should have had its archive cancelled in the backend
+      cy.task('verifyPremisesCancelArchiveV2', premises.id).then(requests => {
+        expect(requests).to.have.length(1)
+      })
+
+      // And I should be redirected to the show premises page
+      showPage = Page.verifyOnPage(PremisesShowPage, expectedPremises)
+
+      // And I should see the 'Scheduled archive cancelled' banner
+      showPage.shouldShowScheduledArchiveCancelledBanner()
+    })
+
+    it('should redirect to show premises page when user selects no', () => {
+      // Given there is a premises with a scheduled archive
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const tomorrowIso = DateFormats.dateObjToIsoDate(tomorrow)
+
+      const premises = cas3PremisesFactory.build({
+        status: 'online',
+        endDate: tomorrowIso,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      const showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Cancel archive" action
+      showPage.clickCancelArchiveButton()
+
+      // Then I should see the cancel archive premises page
+      const cancelArchivePage = Page.verifyOnPage(PremisesCancelArchivePage, premises)
+
+      // When I select "No"
+      cancelArchivePage.selectNo()
+
+      // And I submit the form
+      cancelArchivePage.clickSubmit()
+
+      // Then I should be redirected to the show premises page without any API call
+      Page.verifyOnPage(PremisesShowPage, premises)
+    })
+
+    it('should handle API errors when cancelling archive', () => {
+      // Given there is a premises with a scheduled archive
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const tomorrowIso = DateFormats.dateObjToIsoDate(tomorrow)
+
+      const premises = cas3PremisesFactory.build({
+        status: 'online',
+        endDate: tomorrowIso,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      const showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Cancel archive" action
+      showPage.clickCancelArchiveButton()
+
+      // Then I should see the cancel archive premises page
+      let cancelArchivePage = Page.verifyOnPage(PremisesCancelArchivePage, premises)
+
+      // When I select "Yes" to confirm cancellation
+      cancelArchivePage.selectYes()
+
+      // When the backend responds with an error
+      cy.task('stubPremisesCancelArchiveErrorsV2', {
+        premisesId: premises.id,
+        params: ['premisesNotScheduledToArchive'],
+      })
+
+      // And I submit the form
+      cancelArchivePage.clickSubmit()
+
+      // Then I should see an error message
+      cancelArchivePage = Page.verifyOnPage(PremisesCancelArchivePage, premises)
+      cancelArchivePage.shouldShowGivenErrorMessagesForField('premisesId', 'Premises are not scheduled to be archived')
     })
   })
 })

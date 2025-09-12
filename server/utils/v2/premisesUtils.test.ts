@@ -4,8 +4,8 @@ import { isPremiseScheduledToBeArchived, premisesActions } from './premisesUtils
 
 describe('premisesV2Utils', () => {
   describe('premisesActions', () => {
-    it('returns actions for an online premises', () => {
-      const premises = cas3PremisesFactory.build({ status: 'online' })
+    it('returns actions for an online premises without scheduled archive', () => {
+      const premises = cas3PremisesFactory.build({ status: 'online', endDate: null })
       const actions = premisesActions(premises)
 
       expect(actions).toEqual([
@@ -18,6 +18,29 @@ describe('premisesV2Utils', () => {
           text: 'Archive property',
           classes: 'govuk-button--secondary',
           href: paths.premises.archive({ premisesId: premises.id }),
+        },
+        {
+          text: 'Edit property details',
+          classes: 'govuk-button--secondary',
+          href: paths.premises.edit({ premisesId: premises.id }),
+        },
+      ])
+    })
+
+    it('returns actions for an online premises with scheduled archive', () => {
+      const premises = cas3PremisesFactory.build({ status: 'online', endDate: '2025-12-31' })
+      const actions = premisesActions(premises)
+
+      expect(actions).toEqual([
+        {
+          text: 'Add a bedspace',
+          classes: 'govuk-button--secondary',
+          href: paths.premises.bedspaces.new({ premisesId: premises.id }),
+        },
+        {
+          text: 'Cancel scheduled property archive',
+          classes: 'govuk-button--secondary',
+          href: paths.premises.cancelArchive({ premisesId: premises.id }),
         },
         {
           text: 'Edit property details',

@@ -63,6 +63,11 @@ export class ViewPropertyPage extends BasePage {
     await this.page.getByText('Make property online').click()
   }
 
+  async clickCancelScheduledArchiveButton() {
+    await this.page.getByRole('button').getByText('Actions').click()
+    await this.page.getByText('Cancel scheduled property archive').click()
+  }
+
   async shouldShowPropertyStatus(status: string) {
     await expect(this.getRowTextByLabel('Property status')).toContainText(status)
   }

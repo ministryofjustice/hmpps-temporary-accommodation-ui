@@ -7,7 +7,6 @@ import {
   newPremisesFactory,
   premisesFactory,
   premisesSummaryFactory,
-  staffMemberFactory,
   updatePremisesFactory,
 } from '../testutils/factories'
 import PremisesClient from './premisesClient'
@@ -79,21 +78,6 @@ describe('PremisesClient', () => {
 
       const output = await premisesClient.find(premises.id)
       expect(output).toEqual(premises)
-    })
-  })
-
-  describe('getStaffMembers', () => {
-    const premises = premisesFactory.build()
-    const staffMembers = staffMemberFactory.buildList(5)
-
-    it('should return a list of staff members', async () => {
-      fakeApprovedPremisesApi
-        .get(paths.premises.staffMembers.index({ premisesId: premises.id }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, staffMembers)
-
-      const output = await premisesClient.getStaffMembers(premises.id)
-      expect(output).toEqual(staffMembers)
     })
   })
 

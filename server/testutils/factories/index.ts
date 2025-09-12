@@ -76,7 +76,6 @@ import referralHistorySystemNoteFactory from './referralHistorySystemNote'
 import referralHistoryUserNoteFactory from './referralHistoryUserNote'
 import risksFactory from './risks'
 import roshRisksFactory from './roshRisks'
-import staffMemberFactory from './staffMember'
 import tierEnvelopeFactory from './tierEnvelopeFactory'
 import { timelineEventsFactory } from './timelineEvents'
 import turnaroundFactory from './turnaround'
@@ -165,7 +164,6 @@ export {
   risksFactory,
   roshRisksFactory,
   roshSummaryFactory,
-  staffMemberFactory,
   tierEnvelopeFactory,
   timelineEventsFactory,
   turnaroundFactory,

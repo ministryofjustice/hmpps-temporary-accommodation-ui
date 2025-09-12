@@ -12,7 +12,6 @@ import {
   placeContextFactory,
   premisesFactory,
   probationRegionFactory,
-  staffMemberFactory,
   updatePremisesFactory,
 } from '../testutils/factories'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
@@ -38,26 +37,11 @@ describe('PremisesService', () => {
   const service = new PremisesService(premisesClientFactory, referenceDataClientFactory)
 
   const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
-  const premisesId = 'premisesId'
 
   beforeEach(() => {
     jest.resetAllMocks()
     premisesClientFactory.mockReturnValue(premisesClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
-  })
-
-  describe('getStaffMembers', () => {
-    it('on success returns the person given their CRN', async () => {
-      const staffMembers = staffMemberFactory.buildList(5)
-      premisesClient.getStaffMembers.mockResolvedValue(staffMembers)
-
-      const result = await service.getStaffMembers(callConfig, premisesId)
-
-      expect(result).toEqual(staffMembers)
-
-      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.getStaffMembers).toHaveBeenCalledWith(premisesId)
-    })
   })
 
   describe('getReferenceData', () => {

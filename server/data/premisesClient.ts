@@ -2,7 +2,6 @@ import type {
   NewPremises,
   TemporaryAccommodationPremises as Premises,
   Cas3PremisesSummary as PremisesSummary,
-  StaffMember,
   UpdatePremises,
 } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
@@ -30,12 +29,6 @@ export default class PremisesClient {
   async find(id: string) {
     return this.restClient.get<Premises>({
       path: paths.premises.show({ premisesId: id }),
-    })
-  }
-
-  async getStaffMembers(premisesId: string) {
-    return this.restClient.get<Array<StaffMember>>({
-      path: paths.premises.staffMembers.index({ premisesId }),
     })
   }
 

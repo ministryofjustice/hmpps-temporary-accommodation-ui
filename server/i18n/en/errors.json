@@ -365,8 +365,9 @@
   },
   "premisesCancelArchive": {
     "premisesId": {
-      "premisesNotScheduledToArchive": "Premises are not scheduled to be archived",
-      "premisesAlreadyArchived": "Premises have already been archived"
+      "premisesNotScheduledToArchive": "Property is not scheduled to be archived",
+      "premisesAlreadyArchived": "Property has already been archived",
+      "premisesArchiveDateInThePast": "Property archive date is in the past"
     }
   }
 }

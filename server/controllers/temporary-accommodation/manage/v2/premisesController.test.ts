@@ -1603,13 +1603,17 @@ describe('PremisesController', () => {
       request.params.premisesId = premises.id
       request.body = {}
 
+      const errorMessage = 'You need to choose an option to proceed'
+
+      ;(generateErrorMessages as jest.Mock).mockReturnValue([{ cancelArchive: { text: errorMessage } }])
+      ;(generateErrorSummary as jest.Mock).mockReturnValue([{ text: errorMessage, href: '#cancelArchive' }])
+
       const requestHandler = premisesController.cancelArchiveSubmit()
 
       await requestHandler(request, response, next)
 
-      expect(request.flash).toHaveBeenCalledWith('errors', {
-        cancelArchive: 'Select yes if you want to cancel the scheduled archive',
-      })
+      expect(request.flash).toHaveBeenCalledWith('errors', [{ cancelArchive: { text: errorMessage } }])
+      expect(request.flash).toHaveBeenCalledWith('errorSummary', [{ text: errorMessage, href: '#cancelArchive' }])
       expect(request.flash).toHaveBeenCalledWith('userInput', {})
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.cancelArchive({ premisesId: premises.id }))
     })

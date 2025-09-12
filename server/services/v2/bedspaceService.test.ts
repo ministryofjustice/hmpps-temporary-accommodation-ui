@@ -12,6 +12,7 @@ import {
 } from '../../testutils/factories'
 import { filterCharacteristics } from '../../utils/characteristicUtils'
 import { CallConfig } from '../../data/restClient'
+import { convertToTitleCase } from '../../utils/utils'
 
 jest.mock('../../data/v2/bedspaceClient')
 jest.mock('../../data/referenceDataClient')
@@ -94,7 +95,12 @@ describe('BedspaceService', () => {
         rows.push({
           key: { text: 'Archive history' },
           value: {
-            html: bedspace.archiveHistory.map(archive => `<div>${archive.status} date ${formattedDate}</div>`).join(''),
+            html: bedspace.archiveHistory
+              .map(archive => {
+                const verb = archive.status === 'archived' ? 'Archive' : convertToTitleCase(archive.status)
+                return `<div>${verb} date ${formattedDate}</div>`
+              })
+              .join(''),
           },
         })
       }

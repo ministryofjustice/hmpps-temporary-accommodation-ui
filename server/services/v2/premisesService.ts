@@ -337,7 +337,8 @@ export default class PremisesService {
             ...(index !== 0 ? ['govuk-!-padding-top-0'] : []),
             ...(index !== arr.length - 1 ? ['govuk-!-padding-bottom-0'] : []),
           ].join(' ')
-          return `<div class="${classes}">${convertToTitleCase(action.status)} date ${this.formatDate(action.date)}</div>`
+          const verb = action.status === 'online' ? 'Online' : 'Archive'
+          return `<div class="${classes}">${verb} date ${this.formatDate(action.date)}</div>`
         })
         .join('')
 

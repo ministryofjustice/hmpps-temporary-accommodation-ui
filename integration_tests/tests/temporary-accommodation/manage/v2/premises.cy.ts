@@ -327,7 +327,7 @@ context('Premises', () => {
       const page = PremisesListPage.visitArchived()
 
       // Then I should see all the archived premises listed
-      page.shouldShowPremises(searchResults.results)
+      page.shouldShowArchivedPremises(searchResults.results)
 
       // And I should see the correct archived property count
       cy.contains('4 archived properties').should('exist')
@@ -376,13 +376,13 @@ context('Premises', () => {
       const page = PremisesListPage.visitArchived()
 
       // Then I should see all the archived premises listed
-      page.shouldShowPremises(allSearchResults.results)
+      page.shouldShowArchivedPremises(allSearchResults.results)
 
       // When I search for the postcode
       page.search(postcode)
 
       // Then only archived premises matching that postcode should be listed
-      page.shouldShowOnlyPremises(matchingSearchResults.results)
+      page.shouldShowOnlyArchivedPremises(matchingSearchResults.results)
 
       // And I should see the count with search term
       cy.contains(`2 archived properties matching ‘${postcode}’`).should('exist')
@@ -391,7 +391,7 @@ context('Premises', () => {
       page.clearSearch()
 
       // Then all the archived premises should be listed again
-      page.shouldShowPremises(allSearchResults.results)
+      page.shouldShowArchivedPremises(allSearchResults.results)
     })
 
     it('should show no results when searching archived properties with no matches', () => {
@@ -425,20 +425,20 @@ context('Premises', () => {
       const page = PremisesListPage.visitArchived()
 
       // Then I should see all the archived premises listed
-      page.shouldShowPremises(searchResults.results)
+      page.shouldShowArchivedPremises(searchResults.results)
 
       // When I search for a postcode with no results
       page.search('NOTFOUND')
 
       // Then a 'no results' message should be shown
-      page.shouldShowOnlyPremises([])
+      page.shouldShowOnlyArchivedPremises([])
       page.shouldShowMessages(['0 archived properties matching ‘NOTFOUND’'])
 
       // When I clear the search field and search again
       page.clearSearch()
 
       // Then all the archived premises should be listed again
-      page.shouldShowPremises(searchResults.results)
+      page.shouldShowArchivedPremises(searchResults.results)
     })
 
     it('should display archived property counts', () => {

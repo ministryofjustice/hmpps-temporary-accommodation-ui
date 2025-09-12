@@ -54,7 +54,7 @@ export default class PremisesService {
 
     return {
       ...premises,
-      tableRows: this.tableRows(premises, placeContext, premisesSortBy),
+      tableRows: this.tableRows(premises, placeContext, status, premisesSortBy),
     }
   }
 
@@ -137,14 +137,15 @@ export default class PremisesService {
   tableRows(
     premises: Cas3PremisesSearchResults,
     placeContext: PlaceContext,
+    status: Cas3PremisesStatus,
     premisesSortBy: Cas3PremisesSortBy = 'pdu',
   ): Array<TableRow> {
     return premises.results === undefined
       ? []
       : premises.results.map(entry => {
           return [
-            this.htmlValue(this.formatAddress(entry)),
-            this.htmlValue(this.formatBedspaces(entry, placeContext)),
+            this.htmlValue(this.formatAddress(entry, status)),
+            this.htmlValue(this.formatBedspaces(entry, placeContext, status)),
             this.textValue(premisesSortBy === 'pdu' ? entry.pdu : entry.localAuthorityAreaName),
             this.htmlValue(this.formatPremisesManageLink(entry, placeContext)),
           ]
@@ -229,13 +230,24 @@ export default class PremisesService {
     return { html: value }
   }
 
-  private formatAddress(premises: {
-    addressLine1: string
-    addressLine2?: string
-    town?: string
-    postcode: string
-  }): string {
-    return [premises.addressLine1, premises.addressLine2, premises.town, premises.postcode]
+  private formatAddress(
+    premises: {
+      addressLine1: string
+      addressLine2?: string
+      town?: string
+      postcode: string
+    },
+    status: Cas3PremisesStatus = 'online',
+  ): string {
+    const arr = [premises.addressLine1, premises.addressLine2, premises.town, premises.postcode]
+
+    if (status === 'archived') {
+      arr.push(
+        `<strong class="govuk-tag govuk-tag--grey govuk-!-margin-top-1 govuk-!-margin-bottom-1">${convertToTitleCase(status)}</strong>`,
+      )
+    }
+
+    return arr
       .filter(line => line !== undefined && line !== null)
       .map(line => line.trim())
       .filter(line => line !== '')
@@ -272,7 +284,20 @@ export default class PremisesService {
     return `<a href="${showBedspaceLinkWithPlaceContext}">${bedspace.reference}</a>${statusTag}`
   }
 
-  private formatBedspaces(premises: Cas3PremisesSearchResult, placeContext: PlaceContext): string {
+  private formatBedspaces(
+    premises: Cas3PremisesSearchResult,
+    placeContext: PlaceContext,
+    status: Cas3PremisesStatus,
+  ): string {
+    if (status === 'archived') {
+      const bedspaceCount = premises.bedspaces === undefined ? 0 : premises.bedspaces.length
+
+      const count = bedspaceCount === 0 ? 'No' : `${bedspaceCount}`
+      const noun = bedspaceCount !== 1 ? 'bedspaces' : 'bedspace'
+
+      return `${count} ${noun}`
+    }
+
     if (premises.bedspaces === undefined || premises.bedspaces.length === 0) {
       return `No bedspaces<br /><a href="${paths.premises.bedspaces.new({ premisesId: premises.id })}">Add a bedspace</a>`
     }

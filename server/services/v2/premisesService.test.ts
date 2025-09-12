@@ -155,7 +155,7 @@ describe('PremisesService', () => {
     ])('returns table view of the premises for Temporary Accommodation', (searchResults, expectedResults) => {
       const premises = cas3PremisesSearchResultsFactory.build({ results: searchResults })
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
-      const rows = service.tableRows(premises, placeContext)
+      const rows = service.tableRows(premises, placeContext, 'online')
 
       const expectedRows = expectedResults.map(prem => {
         const address = [prem.addressLine1, prem.addressLine2, prem.town, prem.postcode]
@@ -212,7 +212,7 @@ describe('PremisesService', () => {
       const premises = cas3PremisesSearchResultsFactory.build({ results: [searchResult] })
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
 
-      const rows = service.tableRows(premises, placeContext, 'la')
+      const rows = service.tableRows(premises, placeContext, 'online', 'la')
 
       const address = [searchResult.addressLine1, searchResult.addressLine2, searchResult.town, searchResult.postcode]
         .filter(s => s !== undefined && s !== '')

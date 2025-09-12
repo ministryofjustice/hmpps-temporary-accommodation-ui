@@ -54,9 +54,40 @@ export default class PremisesListPage extends Page {
     })
   }
 
+  shouldShowArchivedPremises(premises: Array<Cas3PremisesSearchResult>, sortBy: Cas3PremisesSortBy = 'pdu'): void {
+    premises.forEach((item: Cas3PremisesSearchResult) => {
+      cy.contains(item.addressLine1)
+        .contains(item.addressLine2)
+        .contains(item.town)
+        .contains(item.postcode)
+        .contains('Archived')
+        .parent()
+        .parent()
+        .within(() => {
+          if (item.bedspaces.length === 0) {
+            cy.get('td').eq(1).contains('No bedspaces')
+          } else if (item.bedspaces.length === 1) {
+            cy.get('td').eq(1).contains('1 bedspace')
+          } else {
+            cy.get('td').eq(1).contains(`${item.bedspaces.length} bedspaces`)
+          }
+
+          cy.get('td')
+            .eq(2)
+            .contains(sortBy === 'pdu' ? item.pdu : item.localAuthorityAreaName)
+          cy.get('td').eq(3).contains('Manage').should('have.attr', 'href', `/properties/${item.id}`)
+        })
+    })
+  }
+
   shouldShowOnlyPremises(premises: Array<Cas3PremisesSearchResult>): void {
     cy.get('main table tbody tr').should('have.length', premises.length)
     this.shouldShowPremises(premises)
+  }
+
+  shouldShowOnlyArchivedPremises(premises: Array<Cas3PremisesSearchResult>): void {
+    cy.get('main table tbody tr').should('have.length', premises.length)
+    this.shouldShowArchivedPremises(premises)
   }
 
   search(query: string) {

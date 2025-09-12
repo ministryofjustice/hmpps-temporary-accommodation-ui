@@ -14,7 +14,6 @@ import type { FullPerson } from './FullPerson';
 import type { Nonarrival } from './Nonarrival';
 import type { RestrictedPerson } from './RestrictedPerson';
 import type { ServiceName } from './ServiceName';
-import type { StaffMember } from './StaffMember';
 import type { Turnaround } from './Turnaround';
 import type { UnknownPerson } from './UnknownPerson';
 export type Booking = {
@@ -45,10 +44,6 @@ export type Booking = {
     effectiveEndDate?: string;
     extensions: Array<Extension>;
     id: string;
-    /**
-     * KeyWorker is a legacy field only used by CAS1. It is not longer being captured or populated
-     */
-    keyWorker?: StaffMember;
     nonArrival?: Nonarrival;
     originalArrivalDate: string;
     originalDepartureDate: string;

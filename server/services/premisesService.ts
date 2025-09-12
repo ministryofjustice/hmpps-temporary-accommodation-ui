@@ -3,7 +3,6 @@ import type {
   LocalAuthorityArea,
   NewPremises,
   TemporaryAccommodationPremises as Premises,
-  StaffMember,
   UpdatePremises,
 } from '@approved-premises/api'
 import { PlaceContext, PremisesSearchParameters, ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
@@ -28,14 +27,6 @@ export default class PremisesService {
     private readonly premisesClientFactory: RestClientBuilder<PremisesClient>,
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
-
-  async getStaffMembers(callConfig: CallConfig, premisesId: string): Promise<Array<StaffMember>> {
-    const premisesClient = this.premisesClientFactory(callConfig)
-
-    const staffMembers = await premisesClient.getStaffMembers(premisesId)
-
-    return staffMembers
-  }
 
   async getReferenceData(callConfig: CallConfig): Promise<PremisesReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)

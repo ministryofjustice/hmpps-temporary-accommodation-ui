@@ -18,11 +18,19 @@ export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarIte
       href: paths.premises.bedspaces.new({ premisesId: premises.id }),
     })
 
-    actions.push({
-      text: 'Archive property',
-      classes: 'govuk-button--secondary',
-      href: paths.premises.archive({ premisesId: premises.id }),
-    })
+    if (premises.endDate) {
+      actions.push({
+        text: 'Cancel scheduled property archive',
+        classes: 'govuk-button--secondary',
+        href: paths.premises.cancelArchive({ premisesId: premises.id }),
+      })
+    } else {
+      actions.push({
+        text: 'Archive property',
+        classes: 'govuk-button--secondary',
+        href: paths.premises.archive({ premisesId: premises.id }),
+      })
+    }
   } else if (premises.status === 'archived') {
     actions.push({
       text: 'Make property online',

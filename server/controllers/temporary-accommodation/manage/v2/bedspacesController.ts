@@ -181,56 +181,6 @@ export default class BedspacesController {
     }
   }
 
-  submitCancelArchive(): RequestHandler {
-    return async (req: Request, res: Response) => {
-      const callConfig = extractCallConfig(req)
-      const { premisesId, bedspaceId } = req.params
-      const { bedspaceId: cancelArchive } = req.body
-      try {
-        if (cancelArchive === 'yes') {
-          await this.bedspaceService.cancelArchiveBedspace(callConfig, premisesId, bedspaceId)
-          req.flash('success', 'Bedspace archive cancelled')
-        }
-
-        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
-      } catch (err) {
-        catchValidationErrorOrPropogate(
-          req,
-          res,
-          err,
-          paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
-        )
-      }
-    }
-  }
-
-  cancelArchive(): RequestHandler {
-    return async (req: Request, res: Response) => {
-      const callConfig = extractCallConfig(req)
-      const { premisesId, bedspaceId } = req.params
-
-      const [bedspace, premiseTotals] = await Promise.all([
-        this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
-        this.premisesService.getSinglePremisesBedspaceTotals(callConfig, premisesId),
-      ])
-
-      const bedspaceEndDate = DateFormats.isoDateToUIDate(bedspace.endDate)
-      const scheduledForArchive = isPremiseScheduledToBeArchived(premiseTotals)
-
-      const errorsAndUserInput = fetchErrorsAndUserInput(req)
-      const { errors, errorSummary } = errorsAndUserInput
-
-      return res.render('temporary-accommodation/v2/bedspaces/cancel-archive', {
-        premisesId,
-        bedspaceId,
-        bedspaceEndDate,
-        scheduledForArchive,
-        errors,
-        errorSummary,
-      })
-    }
-  }
-
   archive(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
@@ -410,6 +360,110 @@ export default class BedspacesController {
           err,
           paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }),
           'bedspaceUnarchive',
+        )
+      }
+    }
+  }
+
+  cancelArchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const [bedspace, premiseTotals] = await Promise.all([
+        this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
+        this.premisesService.getSinglePremisesBedspaceTotals(callConfig, premisesId),
+      ])
+
+      const bedspaceEndDate = DateFormats.isoDateToUIDate(bedspace.endDate)
+      const scheduledForArchive = isPremiseScheduledToBeArchived(premiseTotals)
+
+      const errorsAndUserInput = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary } = errorsAndUserInput
+
+      return res.render('temporary-accommodation/v2/bedspaces/cancel-archive', {
+        premisesId,
+        bedspaceId,
+        bedspaceEndDate,
+        scheduledForArchive,
+        errors,
+        errorSummary,
+      })
+    }
+  }
+
+  submitCancelArchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+      const { bedspaceId: cancelArchive } = req.body
+      try {
+        if (cancelArchive === 'yes') {
+          await this.bedspaceService.cancelArchiveBedspace(callConfig, premisesId, bedspaceId)
+          req.flash('success', 'Bedspace archive cancelled')
+        }
+
+        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+        )
+      }
+    }
+  }
+
+  cancelUnarchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
+
+      const scheduleUnarchiveDate = DateFormats.isoDateToUIDate(bedspace.scheduleUnarchiveDate)
+
+      const errorsAndUserInput = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary } = errorsAndUserInput
+
+      return res.render('temporary-accommodation/v2/bedspaces/cancel-unarchive', {
+        premisesId,
+        bedspaceId,
+        scheduleUnarchiveDate,
+        errors,
+        errorSummary,
+      })
+    }
+  }
+
+  submitCancelUnarchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+      const { bedspaceId: cancelUnarchive } = req.body
+
+      if (!cancelUnarchive) {
+        const errors = { bedspaceId: 'Select yes if you want to cancel the scheduled online date' }
+        req.flash('errors', generateErrorMessages(errors))
+        req.flash('errorSummary', generateErrorSummary(errors))
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.bedspaces.cancelUnarchive({ premisesId, bedspaceId }))
+      }
+
+      try {
+        if (cancelUnarchive === 'yes') {
+          await this.bedspaceService.cancelUnarchiveBedspace(callConfig, premisesId, bedspaceId)
+          req.flash('success', 'Bedspace online date cancelled')
+        }
+
+        return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      } catch (err) {
+        return catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.bedspaces.cancelUnarchive({ premisesId, bedspaceId }),
         )
       }
     }

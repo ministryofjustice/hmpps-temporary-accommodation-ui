@@ -153,9 +153,34 @@ export default class BedspaceService {
     return bedspaceClient.update(premisesId, bedspaceId, updatedBedspace)
   }
 
+  async archiveBedspace(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+    endDate: string,
+  ): Promise<void> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+    return bedspaceClient.archive(premisesId, bedspaceId, { endDate })
+  }
+
+  async unarchiveBedspace(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+    restartDate: string,
+  ): Promise<void> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+    return bedspaceClient.unarchive(premisesId, bedspaceId, { restartDate })
+  }
+
   async cancelArchiveBedspace(callConfig: CallConfig, premisesId: string, bedspaceId: string): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
     return bedspaceClient.cancelArchive(premisesId, bedspaceId)
+  }
+
+  async cancelUnarchiveBedspace(callConfig: CallConfig, premisesId: string, bedspaceId: string): Promise<Cas3Bedspace> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+    return bedspaceClient.cancelUnarchive(premisesId, bedspaceId)
   }
 
   async canArchiveBedspace(
@@ -165,16 +190,6 @@ export default class BedspaceService {
   ): Promise<{ date?: string; entityId?: string; entityReference?: string }> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
     return bedspaceClient.canArchive(premisesId, bedspaceId)
-  }
-
-  async archiveBedspace(
-    callConfig: CallConfig,
-    premisesId: string,
-    bedspaceId: string,
-    endDate: string,
-  ): Promise<void> {
-    const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return bedspaceClient.archive(premisesId, bedspaceId, { endDate })
   }
 
   summaryListForBedspaceStatus(bedspace: Cas3Bedspace): SummaryList {
@@ -212,15 +227,5 @@ export default class BedspaceService {
 
   private htmlValue(value: string) {
     return { html: value }
-  }
-
-  async unarchiveBedspace(
-    callConfig: CallConfig,
-    premisesId: string,
-    bedspaceId: string,
-    restartDate: string,
-  ): Promise<void> {
-    const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return bedspaceClient.unarchive(premisesId, bedspaceId, { restartDate })
   }
 }

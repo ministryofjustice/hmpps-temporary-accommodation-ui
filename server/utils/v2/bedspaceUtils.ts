@@ -9,28 +9,42 @@ export function bedspaceActions(
   bedspace: Cas3Bedspace,
   placeContext: PlaceContext,
 ): Array<PageHeadingBarItem> {
-  return bedspace.status === 'online'
-    ? onlineBedspaceActions(premises, bedspace, placeContext)
-    : archivedBedspaceActions(premises, bedspace)
+  if (bedspace.status === 'online') {
+    return onlineBedspaceActions(premises, bedspace, placeContext)
+  }
+  if (bedspace.status === 'archived') {
+    return archivedBedspaceActions(premises, bedspace)
+  }
+  return upcomingBedspaceActions(premises, bedspace)
 }
 
 const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> => {
   const actions: Array<PageHeadingBarItem> = []
 
-  if (bedspace.startDate && new Date(bedspace.startDate) > new Date()) {
+  actions.push({
+    text: 'Make bedspace online',
+    href: paths.premises.bedspaces.unarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    classes: 'govuk-button--secondary',
+  })
+
+  actions.push({
+    text: 'Edit bedspace details',
+    href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    classes: 'govuk-button--secondary',
+  })
+  return actions
+}
+
+const upcomingBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> => {
+  const actions: Array<PageHeadingBarItem> = []
+
+  if (bedspace.archiveHistory.length >= 1) {
     // actions.push({
     //   text: 'Cancel scheduled bedspace online date',
     //   href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
     //   classes: 'govuk-button--secondary',
     // })
-  } else {
-    actions.push({
-      text: 'Make bedspace online',
-      href: paths.premises.bedspaces.unarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-      classes: 'govuk-button--secondary',
-    })
   }
-
   actions.push({
     text: 'Edit bedspace details',
     href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),

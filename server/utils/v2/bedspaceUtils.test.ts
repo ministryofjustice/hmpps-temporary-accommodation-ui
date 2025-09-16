@@ -91,9 +91,34 @@ describe('bedspaceV2Utils', () => {
       })
     })
 
-    it('returns correct actions for an archived bedspace with scheduled online', () => {
+    it('returns correct actions for an upcoming new bedspace', () => {
       const premises = cas3PremisesFactory.build()
-      const bedspace = cas3BedspaceFactory.build({ status: 'archived', startDate: '2125-08-20' })
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'upcoming',
+        archiveHistory: [],
+      })
+
+      const actions = bedspaceActions(premises, bedspace, placeContext)
+
+      expect(actions).toHaveLength(1)
+      expect(actions).toContainEqual({
+        text: 'Edit bedspace details',
+        href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+    })
+
+    it('returns correct actions for an upcoming bedspace that was previously archived', () => {
+      const premises = cas3PremisesFactory.build()
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'upcoming',
+        archiveHistory: [
+          {
+            date: '2024-01-01',
+            status: 'archived',
+          },
+        ],
+      })
 
       const actions = bedspaceActions(premises, bedspace, placeContext)
 

@@ -54,10 +54,11 @@ const paths: Record<string, any> = {
       create: bedspacesV2Path,
       list: bedspacesV2Path,
       edit: singleBedspaceV2Path.path('edit'),
-      cancelArchive: singleBedspaceV2Path.path('cancel-archive'),
-      update: singleBedspaceV2Path,
       archive: singleBedspaceV2Path.path('archive'),
       unarchive: singleBedspaceV2Path.path('unarchive'),
+      cancelArchive: singleBedspaceV2Path.path('cancel-archive'),
+      cancelUnarchive: singleBedspaceV2Path.path('cancel-unarchive'),
+      update: singleBedspaceV2Path,
     },
   },
   bookings: {

@@ -325,7 +325,8 @@ describe('BedspacesController', () => {
     const upcomingBedspace = cas3BedspaceFactory.build({
       id: bedspaceId,
       status: 'upcoming',
-      startDate: '2025-09-21',
+      scheduleUnarchiveDate: '2125-09-21',
+      archiveHistory: [{ status: 'archived', date: '2024-01-01' }],
       characteristics: [characteristic2],
     })
     const upcomingBedspaceSummary: SummaryList = {
@@ -349,11 +350,11 @@ describe('BedspacesController', () => {
       ],
     }
     const upcomingBedspaceActions = [
-      // {
-      //   text: 'Cancel scheduled bedspace online date',
-      //   href: paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
-      //   classes: 'govuk-button--secondary',
-      // },
+      {
+        text: 'Cancel scheduled bedspace online date',
+        href: paths.premises.bedspaces.cancelUnarchive({ premisesId, bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
       {
         text: 'Edit bedspace details',
         href: paths.premises.bedspaces.edit({ premisesId, bedspaceId }),
@@ -1100,6 +1101,96 @@ describe('BedspacesController', () => {
       expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
       expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }))
+    })
+  })
+
+  describe('cancelUnarchive', () => {
+    const bedspace = cas3BedspaceFactory.build({ scheduleUnarchiveDate: '2125-12-31' })
+    beforeEach(() => {
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+
+      request.params = { premisesId, bedspaceId }
+    })
+
+    it('renders the cancel unarchive page with the correct data', async () => {
+      const requestHandler = bedspacesController.cancelUnarchive()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/cancel-unarchive', {
+        premisesId,
+        bedspaceId,
+        scheduleUnarchiveDate: DateFormats.isoDateToUIDate(bedspace.scheduleUnarchiveDate),
+        errors: {},
+        errorSummary: [],
+      })
+    })
+
+    it('renders the cancel unarchive page with errors and errorSummary when the backend returns errors', async () => {
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>({
+        errors: {
+          bedspaceId: { text: 'This bedspace is not scheduled to be unarchived' },
+        },
+        errorSummary: [{ text: 'This bedspace is not scheduled to be unarchived', href: '#bedspaceId' }],
+      })
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      const requestHandler = bedspacesController.cancelUnarchive()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/cancel-unarchive', {
+        premisesId,
+        bedspaceId,
+        scheduleUnarchiveDate: DateFormats.isoDateToUIDate(bedspace.scheduleUnarchiveDate),
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+      })
+    })
+  })
+
+  describe('submitCancelUnarchive', () => {
+    let requestHandler: ReturnType<BedspacesController['submitCancelUnarchive']>
+
+    beforeEach(() => {
+      requestHandler = bedspacesController.submitCancelUnarchive()
+      request.params = { premisesId, bedspaceId }
+    })
+
+    it('cancels the unarchive and redirects to bedspace page with a success message when "yes" is selected', async () => {
+      request.body = { bedspaceId: 'yes' }
+      bedspaceService.cancelUnarchiveBedspace.mockResolvedValue(undefined)
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.cancelUnarchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace online date cancelled')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('redirects to the bedspace page without cancelling if "no" is selected', async () => {
+      request.body = { bedspaceId: 'no' }
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.cancelUnarchiveBedspace).not.toHaveBeenCalled()
+      expect(request.flash).not.toHaveBeenCalledWith('success', 'Bedspace online date cancelled')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('renders the cancel unarchive page with errors when the service throws', async () => {
+      const error = new Error('error')
+      request.body = { bedspaceId: 'yes' }
+      bedspaceService.cancelUnarchiveBedspace.mockRejectedValue(error)
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        error,
+        paths.premises.bedspaces.cancelUnarchive({ premisesId, bedspaceId }),
+      )
     })
   })
 })

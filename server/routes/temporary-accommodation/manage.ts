@@ -153,6 +153,21 @@ export default function routes(controllers: Controllers, services: Services, rou
       },
     ],
   })
+  get(paths.premises.bedspaces.cancelUnarchive.pattern, bedspacesControllerV2.cancelUnarchive(), {
+    auditEvent: 'VIEW_BEDSPACE_CANCEL_UNARCHIVE_V2',
+  })
+  post(paths.premises.bedspaces.cancelUnarchive.pattern, bedspacesControllerV2.submitCancelUnarchive(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.premises.bedspaces.cancelUnarchive.pattern,
+        auditEvent: 'CANCEL_BEDSPACE_UNARCHIVE_V2_FAILURE',
+      },
+      {
+        path: paths.premises.bedspaces.show.pattern,
+        auditEvent: 'CANCEL_BEDSPACE_UNARCHIVE_V2_SUCCESS',
+      },
+    ],
+  })
   post(paths.premises.bedspaces.update.pattern, bedspacesControllerV2.update(), {
     redirectAuditEventSpecs: [
       {

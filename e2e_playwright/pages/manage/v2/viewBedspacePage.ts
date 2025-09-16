@@ -69,6 +69,11 @@ export class ViewBedspacePage extends BasePage {
     await this.page.getByText('Cancel scheduled bedspace archive').click()
   }
 
+  async clickCancelUnarchiveButton() {
+    await this.page.getByRole('button').getByText('Actions').click()
+    await this.page.getByText('Cancel scheduled bedspace online date').click()
+  }
+
   async shouldShowBedspaceStatus(status: string) {
     await expect(this.getRowTextByLabel('Bedspace status')).toContainText(status)
   }

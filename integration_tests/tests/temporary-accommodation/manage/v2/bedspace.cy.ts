@@ -1187,7 +1187,100 @@ context('Bedspace', () => {
       unarchivePage.clickSubmit()
 
       // Then I should see the validation error based on the API response
-      unarchivePage.shouldShowError('The restart date must be after the last archive end date')
+      unarchivePage.shouldShowError('The restart date must be after the last archive date')
+    })
+  })
+
+  describe('cancel unarchive', () => {
+    it('allows cancelling of an upcoming unarchive', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an archived bedspace in the database scheduled for unarchive
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'upcoming',
+        scheduleUnarchiveDate: '2124-02-03',
+        archiveHistory: [{ status: 'archived', date: '2024-01-01' }],
+      })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // When I visit the show bedspace page
+      const page = BedspaceShowPage.visit(premises, bedspace)
+
+      // When I click the cancel unarchive action
+      page.clickAction('Cancel scheduled bedspace online date')
+
+      // Then I should see the cancel unarchive confirmation page
+      page.shouldShowCancelUnarchive(bedspace)
+
+      // And when I confirm cancellation
+      cy.task('stubBedspaceCancelUnarchive', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspaceV2', {
+        premisesId: premises.id,
+        bedspace: { ...bedspace, startDate: undefined },
+      })
+      page.confirmCancelUnarchive()
+
+      // Then I should be redirected to the bedspace page with the archive cancelled
+      const updatedBedspace = { ...bedspace, startDate: undefined }
+      Page.verifyOnPage(BedspaceShowPage, premises, updatedBedspace)
+      page.shouldShowBanner('Bedspace online date cancelled')
+    })
+
+    it('shows an error if cancelling the unarchive fails', () => {
+      // And there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an archived bedspace in the database scheduled for unarchive (future startDate)
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'upcoming',
+        scheduleUnarchiveDate: '2126-08-01',
+        archiveHistory: [{ status: 'archived', date: '2024-01-01' }],
+      })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // When I visit the show bedspace page
+      const page = BedspaceShowPage.visit(premises, bedspace)
+
+      // When I click the cancel unarchive action
+      page.clickAction('Cancel scheduled bedspace online date')
+
+      // Then I should see the cancel unarchive confirmation page
+      page.shouldShowCancelUnarchive(bedspace)
+
+      // And when I confirm cancellation
+      cy.task('stubBedspaceCancelUnarchiveError', { premisesId: premises.id, bedspace })
+      page.confirmCancelUnarchive()
+
+      // Then I should see error messages
+      page.shouldShowErrorMessagesForFields(['bedspaceId'], 'bedspaceAlreadyOnline')
     })
   })
 })

@@ -39,11 +39,11 @@ const upcomingBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
   const actions: Array<PageHeadingBarItem> = []
 
   if (bedspace.archiveHistory.length >= 1) {
-    // actions.push({
-    //   text: 'Cancel scheduled bedspace online date',
-    //   href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-    //   classes: 'govuk-button--secondary',
-    // })
+    actions.push({
+      text: 'Cancel scheduled bedspace online date',
+      href: paths.premises.bedspaces.cancelUnarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      classes: 'govuk-button--secondary',
+    })
   }
   actions.push({
     text: 'Edit bedspace details',

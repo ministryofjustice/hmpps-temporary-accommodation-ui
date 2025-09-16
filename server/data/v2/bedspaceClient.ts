@@ -33,18 +33,6 @@ export default class BedspaceClient {
     })
   }
 
-  async cancelArchive(premisesId: string, bedspaceId: string) {
-    return this.restClient.put<Cas3Bedspace>({
-      path: paths.cas3.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
-    })
-  }
-
-  async canArchive(premisesId: string, bedspaceId: string) {
-    return this.restClient.get<{ date?: string; entityId?: string; entityReference?: string }>({
-      path: paths.cas3.premises.bedspaces.canArchive({ premisesId, bedspaceId }),
-    })
-  }
-
   async archive(premisesId: string, bedspaceId: string, data: { endDate: string }) {
     return this.restClient.post<void>({
       path: paths.cas3.premises.bedspaces.archive({ premisesId, bedspaceId }),
@@ -56,6 +44,24 @@ export default class BedspaceClient {
     return this.restClient.post<void>({
       path: paths.cas3.premises.bedspaces.unarchive({ premisesId, bedspaceId }),
       data,
+    })
+  }
+
+  async cancelArchive(premisesId: string, bedspaceId: string) {
+    return this.restClient.put<Cas3Bedspace>({
+      path: paths.cas3.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+    })
+  }
+
+  async cancelUnarchive(premisesId: string, bedspaceId: string) {
+    return this.restClient.put<Cas3Bedspace>({
+      path: paths.cas3.premises.bedspaces.cancelUnarchive({ premisesId, bedspaceId }),
+    })
+  }
+
+  async canArchive(premisesId: string, bedspaceId: string) {
+    return this.restClient.get<{ date?: string; entityId?: string; entityReference?: string }>({
+      path: paths.cas3.premises.bedspaces.canArchive({ premisesId, bedspaceId }),
     })
   }
 }

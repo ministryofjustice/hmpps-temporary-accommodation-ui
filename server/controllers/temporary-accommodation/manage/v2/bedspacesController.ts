@@ -427,4 +427,58 @@ export default class BedspacesController {
       }
     }
   }
+
+  cancelUnarchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
+
+      const scheduleUnarchiveDate = DateFormats.isoDateToUIDate(bedspace.scheduleUnarchiveDate)
+
+      const errorsAndUserInput = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary } = errorsAndUserInput
+
+      return res.render('temporary-accommodation/v2/bedspaces/cancel-unarchive', {
+        premisesId,
+        bedspaceId,
+        scheduleUnarchiveDate,
+        errors,
+        errorSummary,
+      })
+    }
+  }
+
+  submitCancelUnarchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+      const { bedspaceId: cancelUnarchive } = req.body
+
+      if (!cancelUnarchive) {
+        const errors = { bedspaceId: 'Select yes if you want to cancel the scheduled online date' }
+        req.flash('errors', generateErrorMessages(errors))
+        req.flash('errorSummary', generateErrorSummary(errors))
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.bedspaces.cancelUnarchive({ premisesId, bedspaceId }))
+      }
+
+      try {
+        if (cancelUnarchive === 'yes') {
+          await this.bedspaceService.cancelUnarchiveBedspace(callConfig, premisesId, bedspaceId)
+          req.flash('success', 'Bedspace online date cancelled')
+        }
+
+        return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      } catch (err) {
+        return catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.bedspaces.cancelUnarchive({ premisesId, bedspaceId }),
+        )
+      }
+    }
+  }
 }

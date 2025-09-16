@@ -15,6 +15,7 @@ import { CancelArchivePropertyPage } from '../../pages/manage/v2/cancelArchivePr
 import { ArchiveBedspacePage } from '../../pages/manage/v2/archiveBedspacePage'
 import { UnarchiveBedspacePage } from '../../pages/manage/v2/unarchiveBedspacePage'
 import { CancelArchiveBedspacePage } from '../../pages/manage/v2/cancelArchiveBedspacePage'
+import { CancelUnarchiveBedspacePage } from '../../pages/manage/v2/cancelUnarchiveBedspacePage'
 
 export const visitListPropertiesPage = async (page: Page) => {
   // TODO: navigate to the list properties page from the dashboard once the v2 pages are live in prod
@@ -221,18 +222,49 @@ export const archiveBedspace = async (page: Page, bedspace: Bedspace, options: {
   }
 }
 
-export const unarchiveBedspace = async (page: Page, property: Property, bedspace: Bedspace) => {
+export const unarchiveBedspace = async (page: Page, bedspace: Bedspace, options: { date?: Date } = {}) => {
   const showBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
   await showBedspacePage.clickUnarchiveButton()
   const unarchiveBedspacePage = await UnarchiveBedspacePage.initialise(page, bedspace.reference)
-  await unarchiveBedspacePage.unarchiveToday()
+  if (options.date) {
+    await unarchiveBedspacePage.unarchiveAnotherDate(options.date)
+  } else {
+    await unarchiveBedspacePage.unarchiveToday()
+  }
+
   const showUnarchivedBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+
   const isArchiveBedspaceOnlyMessageDisplayed =
     await showUnarchivedBedspacePage.isBannerMessageDisplayed('Bedspace online')
-  const isArchivedBedspaceAndPropertyMessageDisplayed =
-    await showUnarchivedBedspacePage.isBannerMessageDisplayed('Bedspace and property online')
-  expect(isArchiveBedspaceOnlyMessageDisplayed || isArchivedBedspaceAndPropertyMessageDisplayed).toBe(true)
-  await showUnarchivedBedspacePage.shouldShowBedspaceStatus('Online')
+
+  if (options.date) {
+    const isArchivedBedspaceAndPropertyMessageDisplayed = await showUnarchivedBedspacePage.isBannerMessageDisplayed(
+      'Bedspace and property updated',
+    )
+    expect(isArchiveBedspaceOnlyMessageDisplayed || isArchivedBedspaceAndPropertyMessageDisplayed).toBe(true)
+    await showUnarchivedBedspacePage.shouldShowBedspaceStatus('Upcoming')
+  } else {
+    const isArchivedBedspaceAndPropertyMessageDisplayed =
+      await showUnarchivedBedspacePage.isBannerMessageDisplayed('Bedspace and property online')
+    expect(isArchiveBedspaceOnlyMessageDisplayed || isArchivedBedspaceAndPropertyMessageDisplayed).toBe(true)
+    await showUnarchivedBedspacePage.shouldShowBedspaceStatus('Online')
+  }
+}
+
+export const cancelUnarchiveBedspace = async (page: Page, bedspace: Bedspace, options: { date: Date }) => {
+  const showBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+  await showBedspacePage.clickCancelUnarchiveButton()
+  const cancelUnarchiveBedspacePage = await CancelUnarchiveBedspacePage.initialise(
+    page,
+    DateFormats.isoDateToUIDate(options.date.toString()),
+  )
+  await cancelUnarchiveBedspacePage.clickYes()
+  const showCancelledUnarchiveBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+  const isBannerMessageDisplayed = await showCancelledUnarchiveBedspacePage.isBannerMessageDisplayed(
+    'Bedspace online date cancelled',
+  )
+  expect(isBannerMessageDisplayed).toBe(true)
+  await showCancelledUnarchiveBedspacePage.shouldShowBedspaceStatus('Archived')
 }
 
 export const cancelArchiveBedspace = async (page: Page, bedspace: Bedspace, options: { date: Date }) => {

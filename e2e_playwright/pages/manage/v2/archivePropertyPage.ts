@@ -12,4 +12,22 @@ export class ArchivePropertyPage extends BasePage {
     await this.clickSubmit()
     return new Date()
   }
+
+  async scheduleFutureArchive(): Promise<Date> {
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+
+    await this.page.getByLabel('Another date').click()
+
+    const dateGroupName = 'Enter a date within the last 7 days or the next 3 months'
+    const dateGroup = this.page.getByRole('group', { name: dateGroupName })
+    await expect(dateGroup).toBeVisible()
+
+    await dateGroup.getByLabel('Day').fill(tomorrow.getDate().toString())
+    await dateGroup.getByLabel('Month').fill((tomorrow.getMonth() + 1).toString())
+    await dateGroup.getByLabel('Year').fill(tomorrow.getFullYear().toString())
+
+    await this.clickSubmit()
+    return tomorrow
+  }
 }

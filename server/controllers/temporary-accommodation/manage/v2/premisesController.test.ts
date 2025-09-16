@@ -1543,4 +1543,114 @@ describe('PremisesController', () => {
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.unarchive({ premisesId: premises.id }))
     })
   })
+
+  describe('cancelArchive', () => {
+    const premises = cas3PremisesFactory.build({ endDate: '2025-12-31' })
+
+    it('should render the cancel archive form', async () => {
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+
+      const requestHandler = premisesController.cancelArchive()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params.premisesId = premises.id
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/cancel-archive', {
+        premises,
+        errors: {},
+        errorSummary: [],
+        premisesEndDate: '31 December 2025',
+      })
+    })
+  })
+
+  describe('cancelArchiveSubmit', () => {
+    const premises = cas3PremisesFactory.build()
+
+    it('should successfully cancel archive and redirect to the show premises page', async () => {
+      request.params.premisesId = premises.id
+      request.body = { cancelArchive: 'yes' }
+
+      premisesService.cancelArchivePremises.mockResolvedValue(premises)
+
+      const requestHandler = premisesController.cancelArchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.cancelArchivePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(request.flash).toHaveBeenCalledWith('success', 'Scheduled archive cancelled')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+    })
+
+    it('should redirect to show premises page when user selects no', async () => {
+      request.params.premisesId = premises.id
+      request.body = { cancelArchive: 'no' }
+
+      premisesService.cancelArchivePremises.mockReset()
+
+      const requestHandler = premisesController.cancelArchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.cancelArchivePremises).not.toHaveBeenCalled()
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+    })
+
+    it('should show validation error when no option is selected', async () => {
+      request.params.premisesId = premises.id
+      request.body = {}
+
+      const errorMessage = 'You need to choose an option to proceed'
+
+      ;(generateErrorMessages as jest.Mock).mockReturnValue([{ cancelArchive: { text: errorMessage } }])
+      ;(generateErrorSummary as jest.Mock).mockReturnValue([{ text: errorMessage, href: '#cancelArchive' }])
+
+      const requestHandler = premisesController.cancelArchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(request.flash).toHaveBeenCalledWith('errors', [{ cancelArchive: { text: errorMessage } }])
+      expect(request.flash).toHaveBeenCalledWith('errorSummary', [{ text: errorMessage, href: '#cancelArchive' }])
+      expect(request.flash).toHaveBeenCalledWith('userInput', {})
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.cancelArchive({ premisesId: premises.id }))
+    })
+
+    it('should handle API errors when cancelling archive', async () => {
+      request.params.premisesId = premises.id
+      request.body = { cancelArchive: 'yes' }
+
+      const error = {
+        data: {
+          title: 'Bad Request',
+          status: 400,
+          detail: 'There is a problem with your request',
+          'invalid-params': [
+            {
+              propertyName: '$.premisesId',
+              errorType: 'premisesNotScheduledToArchive',
+            },
+          ],
+        },
+      }
+
+      premisesService.cancelArchivePremises.mockImplementation(() => {
+        throw error
+      })
+
+      const requestHandler = premisesController.cancelArchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        error,
+        paths.premises.cancelArchive({ premisesId: premises.id }),
+        'premisesCancelArchive',
+      )
+    })
+  })
 })

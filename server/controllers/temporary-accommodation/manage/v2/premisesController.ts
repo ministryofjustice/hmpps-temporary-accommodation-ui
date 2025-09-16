@@ -404,4 +404,61 @@ export default class PremisesController {
       }
     }
   }
+
+  cancelArchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const callConfig = extractCallConfig(req)
+      const { premisesId } = req.params
+
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
+
+      return res.render('temporary-accommodation/v2/premises/cancel-archive', {
+        premises,
+        errors,
+        errorSummary,
+        ...userInput,
+        premisesEndDate: premises.endDate ? DateFormats.isoDateToUIDate(premises.endDate) : null,
+      })
+    }
+  }
+
+  cancelArchiveSubmit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId } = req.params
+      const { cancelArchive } = req.body
+
+      const errors: Record<string, string> = {}
+
+      if (!cancelArchive) {
+        errors.cancelArchive = 'You need to choose an option to proceed'
+      }
+
+      if (Object.keys(errors).length > 0) {
+        req.flash('errors', generateErrorMessages(errors))
+        req.flash('errorSummary', generateErrorSummary(errors))
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.cancelArchive({ premisesId }))
+      }
+
+      if (cancelArchive === 'yes') {
+        try {
+          await this.premisesService.cancelArchivePremises(callConfig, premisesId)
+          req.flash('success', 'Scheduled archive cancelled')
+          return res.redirect(paths.premises.show({ premisesId }))
+        } catch (err) {
+          return catchValidationErrorOrPropogate(
+            req,
+            res,
+            err,
+            paths.premises.cancelArchive({ premisesId }),
+            'premisesCancelArchive',
+          )
+        }
+      } else {
+        return res.redirect(paths.premises.show({ premisesId }))
+      }
+    }
+  }
 }

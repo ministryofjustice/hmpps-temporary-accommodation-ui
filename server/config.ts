@@ -51,6 +51,7 @@ export default {
     applyEnabledForAllRegions: ['local', 'dev', 'test'].includes(environment),
     domainEventsEmit: get('DOMAIN_EVENTS_EMIT_ENABLED', ''),
     managePropertiesV2Enabled: get('MANAGE_PROPERTIES_V2_ENABLED', 'false') === 'true',
+    cancelScheduledArchiveEnabled: get('CANCEL_SCHEDULED_ARCHIVE_ENABLED', 'false') === 'true',
   },
   environment,
   sentry: {

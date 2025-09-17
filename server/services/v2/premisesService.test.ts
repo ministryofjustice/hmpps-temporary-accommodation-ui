@@ -484,7 +484,7 @@ describe('PremisesService', () => {
 
       const propertyDetailsRow = summaryList.rows.find(row => (row.key as TextItem)?.text === 'Property details')
 
-      const expectedHtml = `<p>None</p><p><a href="#">Add property details</a></p>`
+      const expectedHtml = `<p>None</p><p><a href="/properties/${premises.id}/edit">Add property details</a></p>`
       expect(propertyDetailsRow.value).toEqual({ html: expectedHtml })
     })
 

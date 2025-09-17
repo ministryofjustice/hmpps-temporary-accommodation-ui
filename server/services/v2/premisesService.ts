@@ -200,7 +200,7 @@ export default class PremisesService {
       },
       {
         key: { text: 'Property details' },
-        value: this.htmlValue(this.formatDetails(premises.characteristics)),
+        value: this.htmlValue(this.formatDetails(premises.id, premises.characteristics)),
       },
       {
         key: { text: 'Additional property details' },
@@ -336,9 +336,9 @@ export default class PremisesService {
     return `${numberOfDays} working days`
   }
 
-  private formatDetails(characteristics: Array<Characteristic>): string {
+  private formatDetails(premisesId: string, characteristics: Array<Characteristic>): string {
     if (characteristics === undefined || characteristics.length === 0) {
-      return '<p>None</p><p><a href="#">Add property details</a></p>'
+      return `<p>None</p><p><a href="${paths.premises.edit({ premisesId })}">Add property details</a></p>`
     }
 
     return characteristics

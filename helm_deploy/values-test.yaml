@@ -23,6 +23,7 @@ generic-service:
     PAGINATION_ASSESSMENTS_DEFAULT_PAGE_SIZE: 100
     DOMAIN_EVENTS_EMIT_ENABLED: 'personArrived,personDeparted'
     MANAGE_PROPERTIES_V2_ENABLED: true
+    CANCEL_SCHEDULED_ARCHIVE_ENABLED: true
 
   allowlist: null
 

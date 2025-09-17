@@ -199,7 +199,16 @@ export default class PremisesShowPage extends Page {
     cy.get('button').contains('Actions').parent().siblings('ul').contains('Cancel scheduled property archive').click()
   }
 
+  clickCancelUnarchiveButton(): void {
+    cy.get('button').contains('Actions').parent().click()
+    cy.get('button').contains('Actions').parent().siblings('ul').contains('Cancel unarchive').click()
+  }
+
   shouldShowScheduledArchiveCancelledBanner(): void {
     cy.get('main .govuk-notification-banner--success').contains('Scheduled archive cancelled')
+  }
+
+  shouldShowScheduledUnarchiveCancelledBanner(): void {
+    cy.get('main .govuk-notification-banner--success').contains('Scheduled unarchive cancelled')
   }
 }

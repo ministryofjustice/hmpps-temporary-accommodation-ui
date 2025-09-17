@@ -3,10 +3,12 @@ import { signIn } from '../../../steps/signIn'
 import {
   archiveProperty,
   cancelScheduledArchiveProperty,
+  cancelScheduledUnarchiveProperty,
   createProperty,
   editProperty,
   navigateToProperty,
   scheduleArchiveProperty,
+  scheduleUnarchiveProperty,
   searchForProperty,
   showProperty,
   unarchiveProperty,
@@ -74,4 +76,16 @@ test('Cancel scheduled archive for a property', async ({ page, assessor }) => {
   await showProperty(page, property)
   await scheduleArchiveProperty(page, property)
   await cancelScheduledArchiveProperty(page, property)
+})
+
+test('Cancel scheduled unarchive for a property', async ({ page, assessor }) => {
+  const property = getProperty()
+
+  await signIn(page, assessor)
+  await visitListPropertiesPage(page)
+  await createProperty(page, property)
+  await showProperty(page, property)
+  await archiveProperty(page, property)
+  await scheduleUnarchiveProperty(page, property)
+  await cancelScheduledUnarchiveProperty(page, property)
 })

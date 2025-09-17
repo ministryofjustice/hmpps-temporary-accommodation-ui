@@ -32,7 +32,7 @@ describe('premisesV2Utils', () => {
       ])
     })
 
-    it('returns actions for an online premises with scheduled archive', () => {
+    it('returns actions for an online premise with scheduled archive', () => {
       const premises = cas3PremisesFactory.build({ status: 'online', endDate: '2025-12-31' })
       const actions = premisesActions(premises)
 
@@ -55,8 +55,26 @@ describe('premisesV2Utils', () => {
       ])
     })
 
+    it('returns actions for an archived premise with scheduled unarchive', () => {
+      const premises = cas3PremisesFactory.build({ status: 'archived', scheduleUnarchiveDate: '2025-12-31' })
+      const actions = premisesActions(premises)
+
+      expect(actions).toEqual([
+        {
+          text: 'Cancel unarchive',
+          classes: 'govuk-button--secondary',
+          href: paths.premises.cancelUnarchive({ premisesId: premises.id }),
+        },
+        {
+          text: 'Edit property details',
+          classes: 'govuk-button--secondary',
+          href: paths.premises.edit({ premisesId: premises.id }),
+        },
+      ])
+    })
+
     it('returns actions for an archived premises', () => {
-      const premises = cas3PremisesFactory.build({ status: 'archived' })
+      const premises = cas3PremisesFactory.build({ status: 'archived', scheduleUnarchiveDate: null })
       const actions = premisesActions(premises)
 
       expect(actions).toEqual([

@@ -462,4 +462,63 @@ export default class PremisesController {
       }
     }
   }
+
+  cancelUnarchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const callConfig = extractCallConfig(req)
+      const { premisesId } = req.params
+
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
+
+      return res.render('temporary-accommodation/v2/premises/cancel-unarchive', {
+        premises,
+        errors,
+        errorSummary,
+        ...userInput,
+        premisesScheduleUnarchiveDate: premises.scheduleUnarchiveDate
+          ? DateFormats.isoDateToUIDate(premises.scheduleUnarchiveDate)
+          : null,
+      })
+    }
+  }
+
+  cancelUnarchiveSubmit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId } = req.params
+      const { cancelUnarchive } = req.body
+
+      const errors: Record<string, string> = {}
+
+      if (!cancelUnarchive) {
+        errors.cancelUnarchive = 'You need to choose an option to proceed'
+      }
+
+      if (Object.keys(errors).length > 0) {
+        req.flash('errors', generateErrorMessages(errors))
+        req.flash('errorSummary', generateErrorSummary(errors))
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.cancelUnarchive({ premisesId }))
+      }
+
+      if (cancelUnarchive === 'yes') {
+        try {
+          await this.premisesService.cancelUnarchivePremises(callConfig, premisesId)
+          req.flash('success', 'Scheduled unarchive cancelled')
+          return res.redirect(paths.premises.show({ premisesId }))
+        } catch (err) {
+          return catchValidationErrorOrPropogate(
+            req,
+            res,
+            err,
+            paths.premises.cancelUnarchive({ premisesId }),
+            'premisesCancelUnarchive',
+          )
+        }
+      } else {
+        return res.redirect(paths.premises.show({ premisesId }))
+      }
+    }
+  }
 }

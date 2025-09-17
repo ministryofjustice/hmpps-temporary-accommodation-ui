@@ -370,5 +370,12 @@
       "premisesAlreadyArchived": "Property has already been archived",
       "premisesArchiveDateInThePast": "Property archive date is in the past"
     }
+  },
+  "premisesCancelUnarchive": {
+    "premisesId": {
+      "premisesNotScheduledToUnarchive": "Property is not scheduled to go online",
+      "premisesAlreadyOnline": "Property is already online",
+      "premisesUnarchiveDateInThePast": "Property online date is in the past"
+    }
   }
 }

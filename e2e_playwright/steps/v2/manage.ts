@@ -16,6 +16,7 @@ import { ArchiveBedspacePage } from '../../pages/manage/v2/archiveBedspacePage'
 import { UnarchiveBedspacePage } from '../../pages/manage/v2/unarchiveBedspacePage'
 import { CancelArchiveBedspacePage } from '../../pages/manage/v2/cancelArchiveBedspacePage'
 import { CancelUnarchiveBedspacePage } from '../../pages/manage/v2/cancelUnarchiveBedspacePage'
+import { CancelUnarchivePropertyPage } from '../../pages/manage/v2/cancelUnarchivePropertyPage'
 
 export const visitListPropertiesPage = async (page: Page) => {
   // TODO: navigate to the list properties page from the dashboard once the v2 pages are live in prod
@@ -105,6 +106,22 @@ export const scheduleArchiveProperty = async (page: Page, property: Property) =>
   await showUpdatedPropertyPage.shouldShowPropertyStatus('Online')
 }
 
+export const scheduleUnarchiveProperty = async (page: Page, property: Property) => {
+  const shortAddress = `${property.addressLine1}, ${property.postcode}`
+  const showPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
+  await showPropertyPage.clickUnarchiveButton()
+
+  const unarchivePropertyPage = await UnarchivePropertyPage.initialise(page, property.addressLine1)
+  await unarchivePropertyPage.scheduleFutureUnarchive()
+
+  const showUpdatedPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
+  const isBannerMessageDisplayed = await showUpdatedPropertyPage.isBannerMessageDisplayed(
+    'Property and bedspaces updated',
+  )
+  expect(isBannerMessageDisplayed).toBe(true)
+  await showUpdatedPropertyPage.shouldShowPropertyStatus('Archived')
+}
+
 export const unarchiveProperty = async (page: Page, property: Property) => {
   const shortAddress = `${property.addressLine1}, ${property.postcode}`
   const showPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
@@ -132,6 +149,21 @@ export const cancelScheduledArchiveProperty = async (page: Page, property: Prope
 
   const showUpdatedPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
   const isBannerMessageDisplayed = await showUpdatedPropertyPage.isBannerMessageDisplayed('Scheduled archive cancelled')
+  expect(isBannerMessageDisplayed).toBe(true)
+}
+
+export const cancelScheduledUnarchiveProperty = async (page: Page, property: Property) => {
+  const shortAddress = `${property.addressLine1}, ${property.postcode}`
+  const showPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
+  await showPropertyPage.clickCancelScheduledUnarchiveButton()
+
+  const cancelUnarchivePropertyPage = await CancelUnarchivePropertyPage.initialise(page, property.addressLine1)
+  await cancelUnarchivePropertyPage.confirmCancelUnarchive()
+
+  const showUpdatedPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
+  const isBannerMessageDisplayed = await showUpdatedPropertyPage.isBannerMessageDisplayed(
+    'Scheduled unarchive cancelled',
+  )
   expect(isBannerMessageDisplayed).toBe(true)
 }
 

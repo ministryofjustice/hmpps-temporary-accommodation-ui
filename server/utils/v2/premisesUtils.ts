@@ -34,12 +34,20 @@ export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarIte
         href: paths.premises.archive({ premisesId: premises.id }),
       })
     }
-  } else if (premises.status === 'archived' && !premises.scheduleUnarchiveDate) {
-    actions.push({
-      text: 'Make property online',
-      classes: 'govuk-button--secondary',
-      href: paths.premises.unarchive({ premisesId: premises.id }),
-    })
+  } else if (premises.status === 'archived') {
+    if (premises.scheduleUnarchiveDate) {
+      actions.push({
+        text: 'Cancel unarchive',
+        classes: 'govuk-button--secondary',
+        href: paths.premises.cancelUnarchive({ premisesId: premises.id }),
+      })
+    } else {
+      actions.push({
+        text: 'Make property online',
+        classes: 'govuk-button--secondary',
+        href: paths.premises.unarchive({ premisesId: premises.id }),
+      })
+    }
   }
 
   return actions.sort((a, b) => a.text.localeCompare(b.text))

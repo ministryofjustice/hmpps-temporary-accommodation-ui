@@ -92,6 +92,7 @@ export type { Cas3BookingSearchSortField } from './models/Cas3BookingSearchSortF
 export type { Cas3BookingStatus } from './models/Cas3BookingStatus';
 export type { Cas3Cancellation } from './models/Cas3Cancellation';
 export type { Cas3Confirmation } from './models/Cas3Confirmation';
+export type { Cas3CostCentre } from './models/Cas3CostCentre';
 export type { Cas3Departure } from './models/Cas3Departure';
 export type { Cas3Extension } from './models/Cas3Extension';
 export type { Cas3NewApplication } from './models/Cas3NewApplication';

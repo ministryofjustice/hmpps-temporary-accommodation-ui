@@ -1,7 +1,7 @@
 services:
 
   redis:
-    image: 'bitnami/redis:7.4.2'
+    image: 'redis:8.2.1'
     networks:
       - hmpps
     environment:

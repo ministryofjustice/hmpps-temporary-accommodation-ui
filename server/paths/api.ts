@@ -147,7 +147,6 @@ export default {
   },
   premises: {
     show: managePaths.premises.show,
-    capacity: managePaths.premises.show.path('capacity'),
     lostBeds: {
       show: managePaths.premises.lostBeds.show,
       create: managePaths.premises.lostBeds.create,

@@ -8,9 +8,7 @@ import {
   premisesFactory,
   probationRegionFactory,
 } from '../testutils/factories'
-import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
-import { statusTag } from '../utils/premisesUtils'
-import { escape, formatLines } from '../utils/viewUtils'
+import { filterCharacteristics } from '../utils/characteristicUtils'
 import PremisesService from './premisesService'
 
 jest.mock('../data/premisesClient')
@@ -95,48 +93,6 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('getUpdatePremises', () => {
-    it('finds the premises given by the premises ID, and returns the premises as an UpdatePremises', async () => {
-      const premises = premisesFactory.build({
-        localAuthorityArea: localAuthorityFactory.build({
-          name: 'Local authority',
-          id: 'local-authority',
-        }),
-        characteristics: [
-          characteristicFactory.build({
-            name: 'Characteristic A',
-            id: 'characteristic-a',
-          }),
-          characteristicFactory.build({
-            name: 'Characteristic B',
-            id: 'characteristic-b',
-          }),
-        ],
-        probationRegion: probationRegionFactory.build({
-          name: 'A probation region',
-          id: 'a-probation-region',
-        }),
-        probationDeliveryUnit: pduFactory.build({
-          name: 'A probation delivery unit',
-          id: 'a-probation-delivery-unit',
-        }),
-      })
-
-      premisesClient.find.mockResolvedValue(premises)
-
-      const result = await service.getUpdatePremises(callConfig, premises.id)
-      expect(result).toEqual({
-        ...premises,
-        localAuthorityAreaId: 'local-authority',
-        characteristicIds: ['characteristic-a', 'characteristic-b'],
-        probationRegionId: 'a-probation-region',
-        probationDeliveryUnitId: 'a-probation-delivery-unit',
-      })
-
-      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
-    })
-  })
-
   describe('getPremises', () => {
     it('returns the premises for the given premises ID', async () => {
       const premises = premisesFactory.build()
@@ -148,99 +104,6 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
-    })
-  })
-
-  describe('getPremisesDetails', () => {
-    it('returns a Premises and a summary list for a given Premises ID', async () => {
-      const premises = premisesFactory.build({
-        name: 'Test',
-        addressLine1: '10 Example Street',
-        addressLine2: '',
-        town: 'Example Town',
-        postcode: 'SW1A 1AA',
-        bedCount: 50,
-        availableBedsForToday: 20,
-        localAuthorityArea: localAuthorityFactory.build({
-          name: 'Test Authority',
-        }),
-        characteristics: [
-          characteristicFactory.build({
-            name: 'A characteristic',
-          }),
-        ],
-        probationRegion: probationRegionFactory.build({
-          name: 'A probation region',
-        }),
-        probationDeliveryUnit: pduFactory.build({ name: 'A PDU' }),
-        status: 'active',
-        notes: 'Some notes',
-        turnaroundWorkingDayCount: 2,
-      })
-
-      premisesClient.find.mockResolvedValue(premises)
-      ;(escape as jest.MockedFunction<typeof escape>).mockImplementation(text => text)
-      ;(formatLines as jest.MockedFunction<typeof escape>).mockImplementation(text => text)
-      ;(formatCharacteristics as jest.MockedFunction<typeof formatCharacteristics>).mockImplementation(() => ({
-        text: 'Some attributes',
-      }))
-      ;(statusTag as jest.MockedFn<typeof statusTag>).mockReturnValue('<strong>Online</strong>')
-
-      const result = await service.getPremisesDetails(callConfig, premises.id)
-
-      expect(result).toEqual({
-        premises,
-        summaryList: {
-          rows: [
-            {
-              key: { text: 'Address' },
-              value: { html: '10 Example Street<br />Example Town<br />SW1A 1AA' },
-            },
-            {
-              key: { text: 'Local authority' },
-              value: { text: 'Test Authority' },
-            },
-            {
-              key: { text: 'Probation region' },
-              value: { text: 'A probation region' },
-            },
-            {
-              key: { text: 'PDU' },
-              value: { text: 'A PDU' },
-            },
-            {
-              key: { text: 'Attributes' },
-              value: { text: 'Some attributes' },
-            },
-            {
-              key: { text: 'Status' },
-              value: { html: '<strong>Online</strong>' },
-            },
-            {
-              key: { text: 'Notes' },
-              value: { html: 'Some notes' },
-            },
-            {
-              key: { text: 'Expected turnaround time' },
-              value: { text: '2 working days' },
-            },
-          ],
-        },
-      })
-
-      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
-
-      expect(escape).toHaveBeenCalledWith('10 Example Street')
-      expect(escape).toHaveBeenCalledWith('Example Town')
-      expect(escape).toHaveBeenCalledWith('SW1A 1AA')
-      expect(formatLines).toHaveBeenCalledWith('Some notes')
-      expect(formatCharacteristics).toHaveBeenCalledWith([
-        expect.objectContaining({
-          name: 'A characteristic',
-        }),
-      ])
-      expect(statusTag).toHaveBeenCalledWith('active')
     })
   })
 })

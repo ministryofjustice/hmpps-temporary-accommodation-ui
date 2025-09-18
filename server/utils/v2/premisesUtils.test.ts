@@ -32,7 +32,7 @@ describe('premisesV2Utils', () => {
       ])
     })
 
-    it('returns actions for an online premise with scheduled archive', () => {
+    it('returns actions for an online premises with scheduled archive', () => {
       const premises = cas3PremisesFactory.build({ status: 'online', endDate: '2025-12-31' })
       const actions = premisesActions(premises)
 
@@ -55,7 +55,7 @@ describe('premisesV2Utils', () => {
       ])
     })
 
-    it('returns actions for an archived premise with scheduled unarchive', () => {
+    it('returns actions for an archived premises with scheduled unarchive', () => {
       const premises = cas3PremisesFactory.build({ status: 'archived', scheduleUnarchiveDate: '2025-12-31' })
       const actions = premisesActions(premises)
 

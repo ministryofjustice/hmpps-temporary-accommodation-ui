@@ -374,7 +374,7 @@
   "premisesCancelUnarchive": {
     "premisesId": {
       "premisesNotScheduledToUnarchive": "Property is not scheduled to go online",
-      "premisesAlreadyOnline": "Property is already online",
+      "premisesAlreadyArchived": "Property has already been archived",
       "premisesUnarchiveDateInThePast": "Property online date is in the past"
     }
   }

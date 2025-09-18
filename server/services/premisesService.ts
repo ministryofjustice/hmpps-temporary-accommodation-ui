@@ -1,7 +1,6 @@
 import type {
   Characteristic,
   LocalAuthorityArea,
-  NewPremises,
   TemporaryAccommodationPremises as Premises,
   UpdatePremises,
 } from '@approved-premises/api'
@@ -81,13 +80,6 @@ export default class PremisesService {
       probationRegionId: premises.probationRegion.id,
       probationDeliveryUnitId: premises.probationDeliveryUnit.id,
     }
-  }
-
-  async update(callConfig: CallConfig, id: string, updatePremises: UpdatePremises): Promise<Premises> {
-    const premisesClient = this.premisesClientFactory(callConfig)
-    const premises = await premisesClient.update(id, updatePremises)
-
-    return premises
   }
 
   private async summaryListForPremises(premises: Premises): Promise<SummaryList> {

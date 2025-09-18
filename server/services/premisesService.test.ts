@@ -4,11 +4,9 @@ import { CallConfig } from '../data/restClient'
 import {
   characteristicFactory,
   localAuthorityFactory,
-  newPremisesFactory,
   pduFactory,
   premisesFactory,
   probationRegionFactory,
-  updatePremisesFactory,
 } from '../testutils/factories'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { statusTag } from '../utils/premisesUtils'
@@ -243,25 +241,6 @@ describe('PremisesService', () => {
         }),
       ])
       expect(statusTag).toHaveBeenCalledWith('active')
-    })
-  })
-
-  describe('update', () => {
-    it('on success updates the premises and returns the updated premises', async () => {
-      const premises = premisesFactory.build()
-      const updatePremises = updatePremisesFactory.build({
-        postcode: premises.postcode,
-        notes: premises.notes,
-      })
-      premisesClient.update.mockResolvedValue(premises)
-
-      const updatedPremises = await service.update(callConfig, premises.id, updatePremises)
-      expect(updatedPremises).toEqual(premises)
-
-      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.update).toHaveBeenCalledWith(premises.id, {
-        ...updatePremises,
-      })
     })
   })
 })

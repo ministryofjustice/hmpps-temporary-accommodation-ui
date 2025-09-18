@@ -2,7 +2,7 @@ import nock from 'nock'
 
 import config from '../config'
 import paths from '../paths/api'
-import { newPremisesFactory, premisesFactory, updatePremisesFactory } from '../testutils/factories'
+import { premisesFactory } from '../testutils/factories'
 import PremisesClient from './premisesClient'
 import { CallConfig } from './restClient'
 
@@ -37,24 +37,6 @@ describe('PremisesClient', () => {
         .reply(200, premises)
 
       const output = await premisesClient.find(premises.id)
-      expect(output).toEqual(premises)
-    })
-  })
-
-  describe('update', () => {
-    it('updates the given premises and returns the updated premises', async () => {
-      const premises = premisesFactory.build()
-      const payload = updatePremisesFactory.build({
-        postcode: premises.postcode,
-        notes: premises.notes,
-      })
-
-      fakeApprovedPremisesApi
-        .put(paths.premises.update({ premisesId: premises.id }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, premises)
-
-      const output = await premisesClient.update(premises.id, payload)
       expect(output).toEqual(premises)
     })
   })

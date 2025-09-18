@@ -46,8 +46,11 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.premises.archived.pattern, premisesControllerV2.index('archived'), {
     auditEvent: 'VIEW_PREMISES_LIST_V2_ARCHIVED',
   })
-  get(paths.premises.toggleSort.pattern, premisesControllerV2.toggleSort(), {
-    auditEvent: 'TOGGLE_PREMISES_SORT_V2',
+  get(paths.premises.toggleSort.online.pattern, premisesControllerV2.toggleSort('online'), {
+    auditEvent: 'TOGGLE_PREMISES_SORT_V2_ONLINE',
+  })
+  get(paths.premises.toggleSort.archived.pattern, premisesControllerV2.toggleSort('archived'), {
+    auditEvent: 'TOGGLE_PREMISES_SORT_V2_ARCHIVED',
   })
   get(paths.premises.new.pattern, premisesControllerV2.new(), { auditEvent: 'CREATE_PREMISES_V2' })
   get(paths.premises.show.pattern, premisesControllerV2.showPremisesTab(), { auditEvent: 'SHOW_PREMISES_V2' })

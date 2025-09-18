@@ -106,15 +106,16 @@ export default class PremisesController {
     }
   }
 
-  toggleSort(): RequestHandler {
+  toggleSort(status: 'online' | 'archived' = 'online'): RequestHandler {
     return async (req: Request, res: Response) => {
       const currentSort = req.session.premisesSortBy || 'pdu'
-      const newSort = currentSort === 'pdu' ? 'la' : 'pdu'
-
-      req.session.premisesSortBy = newSort
+      req.session.premisesSortBy = currentSort === 'pdu' ? 'la' : 'pdu'
 
       const query = new URLSearchParams(req.query as Record<string, string>).toString()
-      const redirectUrl = paths.premises.online() + (query ? `?${query}` : '')
+      const redirectUrl =
+        status === 'archived'
+          ? paths.premises.archived() + (query ? `?${query}` : '')
+          : paths.premises.online() + (query ? `?${query}` : '')
 
       res.redirect(redirectUrl)
     }

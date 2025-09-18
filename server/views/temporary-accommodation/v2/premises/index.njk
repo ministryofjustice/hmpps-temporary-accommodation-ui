@@ -17,7 +17,7 @@
             Properties by probation delivery unit
         </div>
         <div class="govuk-!-margin-bottom-4">
-            <a href="{{ paths.premises.toggleSort() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-body govuk-!-font-weight-normal govuk-!-margin-bottom-4">
+            <a href="{{ paths.premises.toggleSort[status]() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-body govuk-!-font-weight-normal govuk-!-margin-bottom-4">
                 View by local authority
             </a>
         </div>
@@ -26,7 +26,7 @@
             Properties by local authority
         </div>
         <div class="govuk-!-margin-bottom-4">
-            <a href="{{ paths.premises.toggleSort() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-body govuk-!-font-weight-normal govuk-!-margin-bottom-4">
+            <a href="{{ paths.premises.toggleSort[status]() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-body govuk-!-font-weight-normal govuk-!-margin-bottom-4">
                 View by probation delivery unit
             </a>
         </div>

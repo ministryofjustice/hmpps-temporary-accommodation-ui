@@ -19,7 +19,6 @@ import {
   placeContextFactory,
   probationRegionFactory,
 } from '../../testutils/factories'
-import { statusTag } from '../../utils/premisesUtils'
 import PremisesService from './premisesService'
 import { ReferenceDataClient } from '../../data'
 import { filterCharacteristics } from '../../utils/characteristicUtils'
@@ -180,7 +179,6 @@ describe('PremisesService', () => {
       [undefined, []],
     ])('returns table view of the premises for Temporary Accommodation', (searchResults, expectedResults) => {
       const premises = cas3PremisesSearchResultsFactory.build({ results: searchResults })
-      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
       const rows = service.tableRows(premises, placeContext, 'online')
 
       const expectedRows = expectedResults.map(prem => {
@@ -236,7 +234,6 @@ describe('PremisesService', () => {
       })
 
       const premises = cas3PremisesSearchResultsFactory.build({ results: [searchResult] })
-      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
 
       const rows = service.tableRows(premises, placeContext, 'online', 'la')
 

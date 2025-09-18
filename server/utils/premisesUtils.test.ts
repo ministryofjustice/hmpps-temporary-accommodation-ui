@@ -1,13 +1,6 @@
 import paths from '../paths/temporary-accommodation/manage'
 import { assessmentFactory, placeContextFactory, premisesFactory } from '../testutils/factories'
-import {
-  getActiveStatuses,
-  premisesActions,
-  shortAddress,
-  showPropertySubNavArray,
-  statusInfo,
-  statusTag,
-} from './premisesUtils'
+import { premisesActions, shortAddress, showPropertySubNavArray } from './premisesUtils'
 
 describe('premisesUtils', () => {
   const placeContext = placeContextFactory.build({
@@ -32,42 +25,6 @@ describe('premisesUtils', () => {
       const premises = premisesFactory.archived().build()
 
       expect(premisesActions(premises)).toEqual(null)
-    })
-  })
-
-  describe('getActiveStatuses', () => {
-    it('returns only active statuses', () => {
-      const activeStatus1 = {
-        name: 'Online',
-        id: 'active' as const,
-        colour: 'turquoise',
-        isActive: true,
-      }
-      const activeStatus2 = {
-        name: 'Archived',
-        id: 'archived' as const,
-        colour: 'grey',
-        isActive: true,
-      }
-
-      expect(getActiveStatuses([activeStatus1, activeStatus2])).toEqual([activeStatus1, activeStatus2])
-    })
-  })
-
-  describe('statusInfo', () => {
-    it('returns the info for a given status', () => {
-      expect(statusInfo('active')).toEqual({
-        name: 'Online',
-        id: 'active',
-        colour: 'turquoise',
-        isActive: true,
-      })
-    })
-  })
-
-  describe('statusTag', () => {
-    it('returns the HTML tag for a given status', () => {
-      expect(statusTag('archived')).toEqual('<strong class="govuk-tag govuk-tag--grey">Archived</strong>')
     })
   })
 

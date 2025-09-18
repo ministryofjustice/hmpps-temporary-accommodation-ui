@@ -44,7 +44,7 @@ export const services = () => {
 
   const userService = new UserService(userClientBuilder)
   const auditService = new AuditService(config.apis.audit)
-  const premisesService = new PremisesService(premisesClientBuilder, referenceDataClientBuilder)
+  const premisesService = new PremisesService(premisesClientBuilder)
   const premisesServiceV2 = new PremisesServiceV2(premisesClientV2Builder, referenceDataClientBuilder)
   const personService = new PersonService(personClientBuilder)
   const bookingService = new BookingService(bookingClientBuilder, lostBedClientBuilder)

@@ -1,9 +1,4 @@
-import type {
-  NewPremises,
-  TemporaryAccommodationPremises as Premises,
-  Cas3PremisesSummary as PremisesSummary,
-  UpdatePremises,
-} from '@approved-premises/api'
+import type { NewPremises, TemporaryAccommodationPremises as Premises, UpdatePremises } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import RestClient, { CallConfig } from './restClient'
@@ -13,10 +8,6 @@ export default class PremisesClient {
 
   constructor(callConfig: CallConfig) {
     this.restClient = new RestClient('premisesClient', config.apis.approvedPremises as ApiConfig, callConfig)
-  }
-
-  async all() {
-    return this.restClient.get<Array<PremisesSummary>>({ path: paths.premises.index({}) })
   }
 
   async find(id: string) {

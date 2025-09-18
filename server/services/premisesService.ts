@@ -70,25 +70,6 @@ export default class PremisesService {
     return { premises, summaryList }
   }
 
-  async getPremisesSelectList(callConfig: CallConfig): Promise<Array<{ text: string; value: string }>> {
-    const premisesClient = this.premisesClientFactory(callConfig)
-    const premises = await premisesClient.all()
-
-    return premises
-      .map(singlePremises => {
-        return { text: `${singlePremises.name}`, value: `${singlePremises.id}` }
-      })
-      .sort((a, b) => {
-        if (a.text < b.text) {
-          return -1
-        }
-        if (a.text > b.text) {
-          return 1
-        }
-        return 0
-      })
-  }
-
   async getUpdatePremises(callConfig: CallConfig, id: string): Promise<UpdatePremises> {
     const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.find(id)

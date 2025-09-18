@@ -2,12 +2,7 @@ import nock from 'nock'
 
 import config from '../config'
 import paths from '../paths/api'
-import {
-  newPremisesFactory,
-  premisesFactory,
-  premisesSummaryFactory,
-  updatePremisesFactory,
-} from '../testutils/factories'
+import { newPremisesFactory, premisesFactory, updatePremisesFactory } from '../testutils/factories'
 import PremisesClient from './premisesClient'
 import { CallConfig } from './restClient'
 
@@ -30,20 +25,6 @@ describe('PremisesClient', () => {
     }
     nock.abortPendingRequests()
     nock.cleanAll()
-  })
-
-  describe('all', () => {
-    const premisesSummaries = premisesSummaryFactory.buildList(5)
-
-    it('should get all premises for the given service', async () => {
-      fakeApprovedPremisesApi
-        .get(paths.premises.index({}))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, premisesSummaries)
-
-      const output = await premisesClient.all()
-      expect(output).toEqual(premisesSummaries)
-    })
   })
 
   describe('find', () => {

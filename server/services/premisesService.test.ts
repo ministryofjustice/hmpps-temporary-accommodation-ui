@@ -1,21 +1,17 @@
-import { PremisesSearchParameters } from '@approved-premises/ui'
 import PremisesClient from '../data/premisesClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 import { CallConfig } from '../data/restClient'
-import paths from '../paths/temporary-accommodation/manage'
 import {
   cas3PremisesSummaryFactory,
   characteristicFactory,
   localAuthorityFactory,
   newPremisesFactory,
   pduFactory,
-  placeContextFactory,
   premisesFactory,
   probationRegionFactory,
   updatePremisesFactory,
 } from '../testutils/factories'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
-import { addPlaceContext } from '../utils/placeUtils'
 import { statusTag } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
 import PremisesService from './premisesService'
@@ -100,74 +96,6 @@ describe('PremisesService', () => {
         'premises',
       )
     })
-  })
-
-  describe('tableRows', () => {
-    const premisesSummary1 = cas3PremisesSummaryFactory.build({
-      addressLine1: 'ABC',
-      postcode: '123',
-      pdu: 'Hampshire South and Isle of Wight',
-    })
-    const premisesSummary2 = cas3PremisesSummaryFactory.build({
-      addressLine1: 'GHI',
-      postcode: '123',
-      pdu: 'Hampshire South and Isle of Wight',
-    })
-    const premisesSummary3 = cas3PremisesSummaryFactory.build({
-      addressLine1: 'GHI',
-      postcode: '456',
-      pdu: 'Bedfordshire',
-    })
-    const premisesSummary4 = cas3PremisesSummaryFactory.build({
-      addressLine1: 'XYZ',
-      postcode: '123',
-      pdu: 'Bedfordshire',
-    })
-
-    it.each([
-      [
-        [premisesSummary4, premisesSummary1, premisesSummary3, premisesSummary2],
-        undefined,
-        [premisesSummary3, premisesSummary4, premisesSummary1, premisesSummary2],
-      ],
-      [[premisesSummary2, premisesSummary3], 'GHI', [premisesSummary3, premisesSummary2]],
-      [[], 'ABC', []],
-    ])(
-      'returns a sorted table view of the premises for Temporary Accommodation with an option search for an address',
-      async (premises, postcodeOrAddress, expectedPremises) => {
-        const placeContext = placeContextFactory.build()
-        const params: PremisesSearchParameters = { postcodeOrAddress }
-
-        const clientFunction = postcodeOrAddress ? premisesClient.search : premisesClient.all
-
-        clientFunction.mockResolvedValue(premises)
-        ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
-        ;(addPlaceContext as jest.MockedFunction<typeof addPlaceContext>).mockReturnValue('/path/with/place/context')
-
-        const rows = await service.tableRows(callConfig, placeContext, params)
-
-        const expectedRows = expectedPremises.map(prem => {
-          const shortAddress = `${prem.addressLine1}, ${prem.postcode}`
-          return [
-            { text: shortAddress },
-            { text: prem.bedspaceCount.toString() },
-            { text: prem.pdu },
-            { html: `<strong>${prem.status}</strong>` },
-            {
-              html: `<a href="/path/with/place/context">Manage<span class="govuk-visually-hidden"> ${shortAddress}</span></a>`,
-            },
-          ]
-        })
-
-        expect(rows).toEqual(expectedRows)
-
-        expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-        expect(clientFunction).toHaveBeenCalled()
-        expectedPremises.forEach(prem => {
-          expect(addPlaceContext).toHaveBeenCalledWith(paths.premises.show({ premisesId: prem.id }), placeContext)
-        })
-      },
-    )
   })
 
   describe('getPremisesSelectList', () => {

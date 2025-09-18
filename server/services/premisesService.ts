@@ -5,13 +5,11 @@ import type {
   TemporaryAccommodationPremises as Premises,
   UpdatePremises,
 } from '@approved-premises/api'
-import { PlaceContext, PremisesSearchParameters, ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
+import { ReferenceData, SummaryList } from '@approved-premises/ui'
 import type { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../data'
-import paths from '../paths/temporary-accommodation/manage'
 
 import { CallConfig } from '../data/restClient'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
-import { addPlaceContext } from '../utils/placeUtils'
 import { statusTag } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
 
@@ -51,44 +49,6 @@ export default class PremisesService {
     ).sort((a, b) => a.name.localeCompare(b.name))
 
     return { localAuthorities, characteristics, probationRegions, pdus }
-  }
-
-  async tableRows(
-    callConfig: CallConfig,
-    placeContext: PlaceContext,
-    params: PremisesSearchParameters,
-  ): Promise<Array<TableRow>> {
-    const premisesClient = this.premisesClientFactory(callConfig)
-
-    const premises = params.postcodeOrAddress
-      ? await premisesClient.search(params.postcodeOrAddress)
-      : await premisesClient.all()
-
-    return premises
-      .map(entry => ({ ...entry, shortAddress: `${entry.addressLine1}, ${entry.postcode}` }))
-      .sort((a, b) => {
-        const pduSort = a.pdu.localeCompare(b.pdu)
-        if (pduSort !== 0) {
-          return pduSort
-        }
-        return a.shortAddress.localeCompare(b.shortAddress)
-      })
-      .map(entry => {
-        return [
-          this.textValue(entry.shortAddress),
-          this.textValue(`${entry.bedspaceCount}`),
-          this.textValue(entry.pdu),
-          this.htmlValue(statusTag(entry.status)),
-          this.htmlValue(
-            `<a href="${addPlaceContext(
-              paths.premises.show({
-                premisesId: entry.id,
-              }),
-              placeContext,
-            )}">Manage<span class="govuk-visually-hidden"> ${entry.shortAddress}</span></a>`,
-          ),
-        ]
-      })
   }
 
   async getPremises(callConfig: CallConfig, id: string): Promise<Premises> {

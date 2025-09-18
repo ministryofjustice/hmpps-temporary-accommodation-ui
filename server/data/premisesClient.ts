@@ -19,13 +19,6 @@ export default class PremisesClient {
     return this.restClient.get<Array<PremisesSummary>>({ path: paths.premises.index({}) })
   }
 
-  async search(postcodeOrAddress: string) {
-    return this.restClient.get<Array<PremisesSummary>>({
-      path: paths.premises.index({}),
-      query: { postcodeOrAddress },
-    })
-  }
-
   async find(id: string) {
     return this.restClient.get<Premises>({
       path: paths.premises.show({ premisesId: id }),

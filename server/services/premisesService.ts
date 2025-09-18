@@ -83,13 +83,6 @@ export default class PremisesService {
     }
   }
 
-  async create(callConfig: CallConfig, newPremises: NewPremises): Promise<Premises> {
-    const premisesClient = this.premisesClientFactory(callConfig)
-    const premises = await premisesClient.create(newPremises)
-
-    return premises
-  }
-
   async update(callConfig: CallConfig, id: string, updatePremises: UpdatePremises): Promise<Premises> {
     const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.update(id, updatePremises)

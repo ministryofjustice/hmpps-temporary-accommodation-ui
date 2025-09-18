@@ -41,24 +41,6 @@ describe('PremisesClient', () => {
     })
   })
 
-  describe('create', () => {
-    it('should return the premises that has been created', async () => {
-      const premises = premisesFactory.build()
-      const payload = newPremisesFactory.build({
-        name: premises.name,
-        postcode: premises.postcode,
-      })
-
-      fakeApprovedPremisesApi
-        .post(paths.premises.create({}))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(201, premises)
-
-      const output = await premisesClient.create(payload)
-      expect(output).toEqual(premises)
-    })
-  })
-
   describe('update', () => {
     it('updates the given premises and returns the updated premises', async () => {
       const premises = premisesFactory.build()

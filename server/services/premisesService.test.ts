@@ -246,23 +246,6 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('create', () => {
-    it('on success returns the premises that has been created', async () => {
-      const premises = premisesFactory.build()
-      const newPremises = newPremisesFactory.build({
-        name: premises.name,
-        postcode: premises.postcode,
-      })
-      premisesClient.create.mockResolvedValue(premises)
-
-      const createdPremises = await service.create(callConfig, newPremises)
-      expect(createdPremises).toEqual(premises)
-
-      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
-    })
-  })
-
   describe('update', () => {
     it('on success updates the premises and returns the updated premises', async () => {
       const premises = premisesFactory.build()

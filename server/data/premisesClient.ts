@@ -16,10 +16,6 @@ export default class PremisesClient {
     })
   }
 
-  async create(data: NewPremises) {
-    return this.restClient.post<Premises>({ path: paths.premises.create({}), data })
-  }
-
   async update(id: string, data: UpdatePremises) {
     return this.restClient.put<Premises>({
       path: paths.premises.update({ premisesId: id }),

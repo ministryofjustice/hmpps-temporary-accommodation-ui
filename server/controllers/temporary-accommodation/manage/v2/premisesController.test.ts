@@ -735,7 +735,7 @@ describe('PremisesController', () => {
   })
 
   describe('toggleSort', () => {
-    it('toggles from pdu to la and redirects with query params', async () => {
+    it('toggles from pdu to la and redirects to online tab with query params when status is online', async () => {
       const req = createMock<Request>({
         session: { premisesSortBy: 'pdu' },
         query: { postcodeOrAddress: 'SW1A' },
@@ -743,14 +743,14 @@ describe('PremisesController', () => {
       const res = createMock<Response>({})
       res.redirect = jest.fn()
 
-      const requestHandler = premisesController.toggleSort()
+      const requestHandler = premisesController.toggleSort('online')
       await requestHandler(req, res, next)
 
       expect(req.session.premisesSortBy).toBe('la')
       expect(res.redirect).toHaveBeenCalledWith('/properties/online?postcodeOrAddress=SW1A')
     })
 
-    it('toggles from la to pdu and redirects without query params', async () => {
+    it('toggles from la to pdu and redirects to online tab without query params when status is online', async () => {
       const req = createMock<Request>({
         session: { premisesSortBy: 'la' },
         query: {},
@@ -758,14 +758,14 @@ describe('PremisesController', () => {
       const res = createMock<Response>({})
       res.redirect = jest.fn()
 
-      const requestHandler = premisesController.toggleSort()
+      const requestHandler = premisesController.toggleSort('online')
       await requestHandler(req, res, next)
 
       expect(req.session.premisesSortBy).toBe('pdu')
       expect(res.redirect).toHaveBeenCalledWith('/properties/online')
     })
 
-    it('defaults to pdu if session value is missing, then toggles to la', async () => {
+    it('defaults to pdu if session value is missing, then toggles to la and redirects to online tab when no status provided', async () => {
       const req = createMock<Request>({
         session: {},
         query: {},
@@ -778,6 +778,21 @@ describe('PremisesController', () => {
 
       expect(req.session.premisesSortBy).toBe('la')
       expect(res.redirect).toHaveBeenCalledWith('/properties/online')
+    })
+
+    it('preserves query parameters when toggling sort', async () => {
+      const req = createMock<Request>({
+        session: { premisesSortBy: 'pdu' },
+        query: { postcodeOrAddress: 'SW1A', page: '2' },
+      })
+      const res = createMock<Response>({})
+      res.redirect = jest.fn()
+
+      const requestHandler = premisesController.toggleSort('archived')
+      await requestHandler(req, res, next)
+
+      expect(req.session.premisesSortBy).toBe('la')
+      expect(res.redirect).toHaveBeenCalledWith('/properties/archived?postcodeOrAddress=SW1A&page=2')
     })
   })
 

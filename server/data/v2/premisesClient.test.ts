@@ -150,6 +150,36 @@ describe('PremisesClient', () => {
     })
   })
 
+  describe('cancelArchive', () => {
+    it('should return the premises that has been archive cancelled', async () => {
+      const premisesId = 'fc321526-7d54-4e1b-94b4-8df4225d0763'
+      const premises = cas3PremisesFactory.build({ id: premisesId, endDate: null })
+
+      fakeApprovedPremisesApi
+        .put(paths.cas3.premises.cancelArchive({ premisesId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, premises)
+
+      const result = await premisesClient.cancelArchive(premisesId)
+      expect(result).toEqual(premises)
+    })
+  })
+
+  describe('cancelUnarchive', () => {
+    it('should return the premises that has been unarchive cancelled', async () => {
+      const premisesId = 'fc321526-7d54-4e1b-94b4-8df4225d0763'
+      const premises = cas3PremisesFactory.build({ id: premisesId, scheduleUnarchiveDate: null })
+
+      fakeApprovedPremisesApi
+        .put(paths.cas3.premises.cancelUnarchive({ premisesId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, premises)
+
+      const result = await premisesClient.cancelUnarchive(premisesId)
+      expect(result).toEqual(premises)
+    })
+  })
+
   describe('totals', () => {
     it('should return the bedspace totals for a premises', async () => {
       const premisesId = 'premises-id'

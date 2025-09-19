@@ -30,6 +30,7 @@ import { DateFormats } from '../../../../../server/utils/dateUtils'
 import PremisesCannotArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesCannotArchive'
 import PremisesCancelArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesCancelArchive'
 import BedspaceShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceShow'
+import PremisesCancelUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesCancelUnarchive'
 
 context('Premises', () => {
   beforeEach(() => {
@@ -1677,7 +1678,9 @@ context('Premises', () => {
     it('should be able to unarchive a property today', () => {
       // And there is an archived premises in the database
       const premises = cas3PremisesFactory.build({ status: 'archived' })
-      cy.task('stubSinglePremisesV2', premises)
+      // and these premises do not have a future unarchive date
+      const { scheduleUnarchiveDate, ...premisesWithoutScheduleUnarchiveDate } = premises
+      cy.task('stubSinglePremisesV2', premisesWithoutScheduleUnarchiveDate)
       cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
@@ -1724,7 +1727,9 @@ context('Premises', () => {
     it('should be able to unarchive a property tomorrow', () => {
       // And there is an archived premises in the database
       const premises = cas3PremisesFactory.build({ status: 'archived' })
-      cy.task('stubSinglePremisesV2', premises)
+      // and these premises do not have a future unarchive date
+      const { scheduleUnarchiveDate, ...premisesWithoutScheduleUnarchiveDate } = premises
+      cy.task('stubSinglePremisesV2', premisesWithoutScheduleUnarchiveDate)
       cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
@@ -1772,7 +1777,9 @@ context('Premises', () => {
     it('should show a dynamic error when unarchiving a property fails', () => {
       // And there is an archived premises
       const premises = cas3PremisesFactory.build({ status: 'archived' })
-      cy.task('stubSinglePremisesV2', premises)
+      // and these premises do not have a future unarchive date
+      const { scheduleUnarchiveDate, ...premisesWithoutScheduleUnarchiveDate } = premises
+      cy.task('stubSinglePremisesV2', premisesWithoutScheduleUnarchiveDate)
       cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
@@ -1929,6 +1936,131 @@ context('Premises', () => {
       // Then I should see an error message
       cancelArchivePage = Page.verifyOnPage(PremisesCancelArchivePage, premises)
       cancelArchivePage.shouldShowGivenErrorMessagesForField('premisesId', 'Property is not scheduled to be archived')
+    })
+  })
+
+  describe('cancel scheduled unarchive', () => {
+    beforeEach(() => {
+      cy.signIn()
+    })
+
+    it('should be able to cancel a scheduled unarchive', () => {
+      // Given there is a premises with a scheduled unarchive
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const tomorrowIso = DateFormats.dateObjToIsoDate(tomorrow)
+
+      const premises = cas3PremisesFactory.build({
+        status: 'archived',
+        scheduleUnarchiveDate: tomorrowIso,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      let showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Cancel unarchive" action
+      showPage.clickCancelUnarchiveButton()
+
+      // Then I should see the cancel unarchive premises page
+      const cancelUnarchivePage = Page.verifyOnPage(PremisesCancelUnarchivePage, premises)
+
+      // When I select "Yes" to confirm cancellation
+      cancelUnarchivePage.selectYes()
+
+      // When the backend responds with 200 ok
+      const expectedPremises: Cas3Premises = {
+        ...premises,
+        scheduleUnarchiveDate: undefined,
+      }
+      cy.task('stubPremisesCancelUnarchiveV2', expectedPremises)
+      cy.task('stubSinglePremisesV2', expectedPremises)
+
+      // And I submit the form
+      cancelUnarchivePage.clickSubmit()
+
+      // Then the premises should have had its unarchive cancelled in the backend
+      cy.task('verifyPremisesCancelUnarchiveV2', premises.id).then(requests => {
+        expect(requests).to.have.length(1)
+      })
+
+      // And I should be redirected to the show premises page
+      showPage = Page.verifyOnPage(PremisesShowPage, expectedPremises)
+
+      // And I should see a success message
+      showPage.shouldShowScheduledUnarchiveCancelledBanner()
+    })
+
+    it('should redirect to show premises page when user selects no', () => {
+      // Given there is a premises with a scheduled unarchive
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const tomorrowIso = DateFormats.dateObjToIsoDate(tomorrow)
+
+      const premises = cas3PremisesFactory.build({
+        status: 'archived',
+        scheduleUnarchiveDate: tomorrowIso,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      const showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Cancel unarchive" action
+      showPage.clickCancelUnarchiveButton()
+
+      // Then I should see the cancel unarchive premises page
+      const cancelUnarchivePage = Page.verifyOnPage(PremisesCancelUnarchivePage, premises)
+
+      // When I select "No"
+      cancelUnarchivePage.selectNo()
+
+      // And I submit the form
+      cancelUnarchivePage.clickSubmit()
+
+      // Then I should be redirected to the show premises page without any API call
+      Page.verifyOnPage(PremisesShowPage, premises)
+    })
+
+    it('should handle API errors when cancelling unarchive', () => {
+      // Given there is a premises with a scheduled unarchive
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const tomorrowIso = DateFormats.dateObjToIsoDate(tomorrow)
+
+      const premises = cas3PremisesFactory.build({
+        status: 'archived',
+        scheduleUnarchiveDate: tomorrowIso,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      const showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Cancel unarchive" action
+      showPage.clickCancelUnarchiveButton()
+
+      // Then I should see the cancel unarchive premises page
+      let cancelUnarchivePage = Page.verifyOnPage(PremisesCancelUnarchivePage, premises)
+
+      // When I select "Yes" to confirm cancellation
+      cancelUnarchivePage.selectYes()
+
+      // When the backend responds with an error
+      cy.task('stubPremisesCancelUnarchiveErrorsV2', {
+        premisesId: premises.id,
+        params: ['premisesNotScheduledToUnarchive'],
+      })
+
+      // And I submit the form
+      cancelUnarchivePage.clickSubmit()
+
+      // Then I should see an error message
+      cancelUnarchivePage = Page.verifyOnPage(PremisesCancelUnarchivePage, premises)
+      cancelUnarchivePage.shouldShowGivenErrorMessagesForField('premisesId', 'Property is not scheduled to go online')
     })
   })
 })

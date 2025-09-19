@@ -1668,4 +1668,114 @@ describe('PremisesController', () => {
       )
     })
   })
+
+  describe('cancelUnarchive', () => {
+    const premises = cas3PremisesFactory.build({ scheduleUnarchiveDate: '2025-12-31' })
+
+    it('should render the cancel unarchive form', async () => {
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+
+      const requestHandler = premisesController.cancelUnarchive()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params.premisesId = premises.id
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/cancel-unarchive', {
+        premises,
+        errors: {},
+        errorSummary: [],
+        premisesScheduleUnarchiveDate: '31 December 2025',
+      })
+    })
+  })
+
+  describe('cancelUnarchiveSubmit', () => {
+    const premises = cas3PremisesFactory.build()
+
+    it('should successfully cancel unarchive and redirect to the show premises page', async () => {
+      request.params.premisesId = premises.id
+      request.body = { cancelUnarchive: 'yes' }
+
+      premisesService.cancelUnarchivePremises.mockResolvedValue(premises)
+
+      const requestHandler = premisesController.cancelUnarchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.cancelUnarchivePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(request.flash).toHaveBeenCalledWith('success', 'Scheduled unarchive cancelled')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+    })
+
+    it('should redirect to show premises page when user selects no', async () => {
+      request.params.premisesId = premises.id
+      request.body = { cancelUnarchive: 'no' }
+
+      premisesService.cancelUnarchivePremises.mockReset()
+
+      const requestHandler = premisesController.cancelUnarchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.cancelUnarchivePremises).not.toHaveBeenCalled()
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+    })
+
+    it('should show validation error when no option is selected', async () => {
+      request.params.premisesId = premises.id
+      request.body = {}
+
+      const errorMessage = 'You need to choose an option to proceed'
+
+      ;(generateErrorMessages as jest.Mock).mockReturnValue([{ cancelUnarchive: { text: errorMessage } }])
+      ;(generateErrorSummary as jest.Mock).mockReturnValue([{ text: errorMessage, href: '#cancelUnarchive' }])
+
+      const requestHandler = premisesController.cancelUnarchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(request.flash).toHaveBeenCalledWith('errors', [{ cancelUnarchive: { text: errorMessage } }])
+      expect(request.flash).toHaveBeenCalledWith('errorSummary', [{ text: errorMessage, href: '#cancelUnarchive' }])
+      expect(request.flash).toHaveBeenCalledWith('userInput', {})
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.cancelUnarchive({ premisesId: premises.id }))
+    })
+
+    it('should handle API errors when cancelling unarchive', async () => {
+      request.params.premisesId = premises.id
+      request.body = { cancelUnarchive: 'yes' }
+
+      const error = {
+        data: {
+          title: 'Bad Request',
+          status: 400,
+          detail: 'Cannot cancel unarchive',
+          'invalid-params': [
+            {
+              propertyName: '$.scheduleUnarchiveDate',
+              errorType: 'invalid',
+            },
+          ],
+        },
+      }
+
+      premisesService.cancelUnarchivePremises.mockImplementation(() => {
+        throw error
+      })
+
+      const requestHandler = premisesController.cancelUnarchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        error,
+        paths.premises.cancelUnarchive({ premisesId: premises.id }),
+        'premisesCancelUnarchive',
+      )
+    })
+  })
 })

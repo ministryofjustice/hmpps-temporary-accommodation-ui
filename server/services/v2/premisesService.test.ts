@@ -120,6 +120,32 @@ describe('PremisesService', () => {
     })
   })
 
+  describe('cancelArchivePremises', () => {
+    it('on success returns the premises that has had its archive cancelled', async () => {
+      const premises = cas3PremisesFactory.build({ status: 'online', endDate: null })
+      premisesClient.cancelArchive.mockResolvedValue(premises)
+
+      const result = await service.cancelArchivePremises(callConfig, premises.id)
+      expect(result).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.cancelArchive).toHaveBeenCalledWith(premises.id)
+    })
+  })
+
+  describe('cancelUnarchivePremises', () => {
+    it('on success returns the premises that has had its unarchive cancelled', async () => {
+      const premises = cas3PremisesFactory.build({ status: 'archived', scheduleUnarchiveDate: null })
+      premisesClient.cancelUnarchive.mockResolvedValue(premises)
+
+      const result = await service.cancelUnarchivePremises(callConfig, premises.id)
+      expect(result).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.cancelUnarchive).toHaveBeenCalledWith(premises.id)
+    })
+  })
+
   describe('tableRows', () => {
     const searchResult1 = cas3PremisesSearchResultFactory.build({
       addressLine1: '32 Windsor Gardens',
@@ -359,7 +385,11 @@ describe('PremisesService', () => {
 
   describe('summaryList', () => {
     const onlinePremises = cas3PremisesFactory.build({ status: 'online', startDate: '2025-02-01' })
-    const archivedPremises = cas3PremisesFactory.build({ status: 'archived', startDate: '2025-03-02' })
+    const archivedPremises = cas3PremisesFactory.build({
+      status: 'archived',
+      startDate: '2025-03-02',
+      scheduleUnarchiveDate: null,
+    })
 
     it('should return a summary list for an online premises', async () => {
       const summaryList = service.summaryList(onlinePremises)
@@ -564,7 +594,11 @@ describe('PremisesService', () => {
 
   describe('shortSummaryList', () => {
     const onlinePremises = cas3PremisesFactory.build({ status: 'online', startDate: '2025-04-05' })
-    const archivedPremises = cas3PremisesFactory.build({ status: 'archived', startDate: '2025-05-06' })
+    const archivedPremises = cas3PremisesFactory.build({
+      status: 'archived',
+      startDate: '2025-05-06',
+      scheduleUnarchiveDate: null,
+    })
 
     it('should return a short summary list for an online premises', () => {
       const summaryList = service.shortSummaryList(onlinePremises)

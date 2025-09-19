@@ -12,6 +12,7 @@ const premisesCanArchivePath = singlePremisesCas3Path.path('can-archive')
 const premisesArchivePath = singlePremisesCas3Path.path('archive')
 const premisesUnarchivePath = singlePremisesCas3Path.path('unarchive')
 const premisesCancelArchivePath = singlePremisesCas3Path.path('cancel-archive')
+const premisesCancelUnarchivePath = singlePremisesCas3Path.path('cancel-unarchive')
 
 const lostBedsPath = singlePremisesPath.path('lost-beds')
 const singleLostBedPath = lostBedsPath.path(':lostBedId')
@@ -72,6 +73,7 @@ const managePathsCas3 = {
     archive: premisesArchivePath,
     unarchive: premisesUnarchivePath,
     cancelArchive: premisesCancelArchivePath,
+    cancelUnarchive: premisesCancelUnarchivePath,
     totals: singlePremisesCas3Path.path('bedspace-totals'),
     bedspaces: {
       show: singleBedspacePath,
@@ -124,6 +126,7 @@ export default {
       archive: managePathsCas3.premises.archive,
       unarchive: managePathsCas3.premises.unarchive,
       cancelArchive: managePathsCas3.premises.cancelArchive,
+      cancelUnarchive: managePathsCas3.premises.cancelUnarchive,
       totals: managePathsCas3.premises.totals,
       bedspaces: {
         show: managePathsCas3.premises.bedspaces.show,

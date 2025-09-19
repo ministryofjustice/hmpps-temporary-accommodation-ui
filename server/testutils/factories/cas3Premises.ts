@@ -44,4 +44,5 @@ export default Cas3PremisesFactory.define(() => ({
   turnaroundWorkingDays: faker.number.int({ min: 1, max: 7 }),
   notes: faker.lorem.sentences(5),
   startDate: DateFormats.dateObjToIsoDate(faker.date.past()),
+  scheduleUnarchiveDate: DateFormats.dateObjToIsoDate(faker.date.future()),
 }))

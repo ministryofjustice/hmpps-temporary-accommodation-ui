@@ -59,6 +59,8 @@ Given('I view the assessment', () => {
   const assessmentListPage = Page.verifyOnPage(AssessmentListPage, 'Unallocated referrals')
   const assessment = getAssessment('unallocated')
 
+  assessmentListPage.searchByCrnOrName(assessment.application.person.crn, 'unallocated')
+
   assessmentListPage.clickAssessment(assessment)
 })
 
@@ -111,6 +113,8 @@ Given('I view the list of ready to place assessments', () => {
 Given('I view the ready to place assessment', () => {
   const assessmentListPage = Page.verifyOnPage(AssessmentListPage, 'Ready to place referrals')
   const assessment = getAssessment('ready_to_place')
+
+  assessmentListPage.searchByCrnOrName(assessment.application.person.crn, 'ready to place')
 
   assessmentListPage.clickAssessment(assessment)
 })

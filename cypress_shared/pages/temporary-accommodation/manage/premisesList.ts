@@ -1,11 +1,7 @@
-import type {
-  TemporaryAccommodationPremises as Premises,
-  Cas3PremisesSummary as PremisesSummary,
-} from '@approved-premises/api'
+import type { TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { premisesFactory } from '../../../../server/testutils/factories'
-import { statusInfo } from '../../../../server/utils/premisesUtils'
 import Page from '../../page'
 
 export default class PremisesListPage extends Page {
@@ -51,30 +47,6 @@ export default class PremisesListPage extends Page {
       )
   }
 
-  shouldShowPremises(premises: Array<PremisesSummary>): void {
-    premises.forEach((item: PremisesSummary) => {
-      const shortAddress = `${item.addressLine1}, ${item.postcode}`
-
-      cy.contains(shortAddress)
-        .parent()
-        .within(() => {
-          cy.get('td').eq(0).contains(shortAddress)
-          cy.get('td').eq(1).contains(item.bedspaceCount)
-          cy.get('td').eq(2).contains(item.pdu)
-          cy.get('td').eq(3).contains(statusInfo(item.status).name)
-          cy.get('td')
-            .eq(4)
-            .contains('Manage')
-            .should('have.attr', 'href', paths.premises.show({ premisesId: item.id }))
-        })
-    })
-  }
-
-  shouldShowOnlyPremises(premises: Array<PremisesSummary>): void {
-    cy.get('main table tbody tr').should('have.length', premises.length)
-    this.shouldShowPremises(premises)
-  }
-
   clickAddPremisesButton() {
     cy.get('a').contains('Add a property').click()
   }
@@ -85,20 +57,5 @@ export default class PremisesListPage extends Page {
       .within(() => {
         cy.get('td').eq(3).contains('Manage').click()
       })
-  }
-
-  search(query: string) {
-    cy.get('main form input').type(query)
-    cy.get('main form button').contains('Search').click()
-  }
-
-  clearSearch() {
-    cy.get('main form a').contains('Clear').click()
-  }
-
-  shouldShowMessages(messages: Array<string>) {
-    messages.forEach(message => {
-      cy.contains(message).should('exist')
-    })
   }
 }

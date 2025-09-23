@@ -6,13 +6,10 @@ import {
 } from '../../testutils/factories'
 import { bedspaceActions } from './bedspaceUtils'
 import paths from '../../paths/temporary-accommodation/manage'
-import config from '../../config'
 
 jest.mock('../../config')
 
 describe('bedspaceV2Utils', () => {
-  config.flags.cancelScheduledArchiveEnabled = true
-
   describe('bedspaceActions', () => {
     const placeContext = placeContextFactory.build({
       assessment: assessmentFactory.build({

@@ -3,7 +3,6 @@ import { BedspaceStatus, PageHeadingBarItem, PlaceContext } from '@approved-prem
 import paths from '../../paths/temporary-accommodation/manage'
 import { addPlaceContext } from '../placeUtils'
 import { dateIsInFuture } from '../dateUtils'
-import config from '../../config'
 
 export function bedspaceActions(
   premises: Cas3Premises,
@@ -41,7 +40,7 @@ const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
 const upcomingBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> => {
   const actions: Array<PageHeadingBarItem> = []
 
-  if (config.flags.cancelScheduledArchiveEnabled && bedspace.archiveHistory.length >= 1) {
+  if (bedspace.archiveHistory.length >= 1) {
     actions.push({
       text: 'Cancel scheduled bedspace online date',
       href: paths.premises.bedspaces.cancelUnarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
@@ -74,13 +73,11 @@ const onlineBedspaceActions = (
     },
   ]
   if (bedspace.endDate) {
-    if (config.flags.cancelScheduledArchiveEnabled) {
-      actions.push({
-        text: 'Cancel scheduled bedspace archive',
-        href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-        classes: 'govuk-button--secondary',
-      })
-    }
+    actions.push({
+      text: 'Cancel scheduled bedspace archive',
+      href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      classes: 'govuk-button--secondary',
+    })
   } else {
     actions.push({
       text: 'Archive bedspace',

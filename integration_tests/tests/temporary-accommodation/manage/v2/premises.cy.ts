@@ -1960,7 +1960,7 @@ context('Premises', () => {
       // When I visit the show premises page
       let showPage = PremisesShowPage.visit(premises)
 
-      // And click on the "Cancel unarchive" action
+      // And click on the "Cancel scheduled property online date" action
       showPage.clickCancelUnarchiveButton()
 
       // Then I should see the cancel unarchive premises page
@@ -2008,7 +2008,7 @@ context('Premises', () => {
       // When I visit the show premises page
       const showPage = PremisesShowPage.visit(premises)
 
-      // And click on the "Cancel unarchive" action
+      // And click on the "Cancel scheduled property online date" action
       showPage.clickCancelUnarchiveButton()
 
       // Then I should see the cancel unarchive premises page
@@ -2040,7 +2040,7 @@ context('Premises', () => {
       // When I visit the show premises page
       const showPage = PremisesShowPage.visit(premises)
 
-      // And click on the "Cancel unarchive" action
+      // And click on the "Cancel scheduled property online date" action
       showPage.clickCancelUnarchiveButton()
 
       // Then I should see the cancel unarchive premises page

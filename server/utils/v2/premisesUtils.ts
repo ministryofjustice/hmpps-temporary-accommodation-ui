@@ -1,6 +1,7 @@
 import { Cas3Premises, Cas3PremisesBedspaceTotals } from '@approved-premises/api'
 import { PageHeadingBarItem } from '@approved-premises/ui'
 import paths from '../../paths/temporary-accommodation/manage'
+import config from '../../config'
 
 export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarItem> => {
   const actions = [
@@ -19,11 +20,13 @@ export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarIte
     })
 
     if (premises.endDate) {
-      actions.push({
-        text: 'Cancel scheduled property archive',
-        classes: 'govuk-button--secondary',
-        href: paths.premises.cancelArchive({ premisesId: premises.id }),
-      })
+      if (config.flags.cancelScheduledArchiveEnabled) {
+        actions.push({
+          text: 'Cancel scheduled property archive',
+          classes: 'govuk-button--secondary',
+          href: paths.premises.cancelArchive({ premisesId: premises.id }),
+        })
+      }
     } else {
       actions.push({
         text: 'Archive property',
@@ -33,11 +36,13 @@ export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarIte
     }
   } else if (premises.status === 'archived') {
     if (premises.scheduleUnarchiveDate) {
-      actions.push({
-        text: 'Cancel unarchive',
-        classes: 'govuk-button--secondary',
-        href: paths.premises.cancelUnarchive({ premisesId: premises.id }),
-      })
+      if (config.flags.cancelScheduledArchiveEnabled) {
+        actions.push({
+          text: 'Cancel scheduled property online date',
+          classes: 'govuk-button--secondary',
+          href: paths.premises.cancelUnarchive({ premisesId: premises.id }),
+        })
+      }
     } else {
       actions.push({
         text: 'Make property online',

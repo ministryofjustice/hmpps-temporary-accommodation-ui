@@ -31,12 +31,15 @@ import { DateFormats } from '../../../../utils/dateUtils'
 import paths from '../../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService } from '../../../../services'
 import { ListingEntry } from '../../../../services/bookingService'
+import config from '../../../../config'
 
 jest.mock('../../../../config')
 jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
 
 describe('BedspacesController', () => {
+  config.flags.cancelScheduledArchiveEnabled = true
+
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'some-premises-id'
   const bedspaceId = 'some-bedspace-id'

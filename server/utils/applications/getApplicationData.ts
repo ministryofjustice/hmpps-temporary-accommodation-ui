@@ -1,6 +1,6 @@
 import {
   TemporaryAccommodationApplication as Application,
-  SubmitTemporaryAccommodationApplication as SubmitApplication,
+  Cas3SubmitApplication as SubmitApplication,
   UpdateTemporaryAccommodationApplication as UpdateApplication,
 } from '../../@types/shared'
 import { arrivalDateFromApplication } from '../../form-pages/utils'
@@ -10,6 +10,7 @@ import {
   dutyToReferOutcomeFromApplication,
   dutyToReferSubmissionDateFromApplication,
   eligibilityReasonFromApplication,
+  getOutOfRegionDataFromApplication,
   hasHistoryOfArsonFromApplication,
   isApplicationEligibleFromApplication,
   isConcerningArsonBehaviourFromApplication,
@@ -31,9 +32,8 @@ export const getApplicationUpdateData = (application: Application): UpdateApplic
 }
 
 export const getApplicationSubmissionData = (application: Application): SubmitApplication => {
-  return {
+  const applicationData = {
     translatedDocument: application.document,
-    type: 'CAS3',
     arrivalDate: arrivalDateFromApplication(application),
     summaryData: getSummaryDataFromApplication(application),
     isDutyToReferSubmitted: isDutyToReferSubmittedFromApplication(application),
@@ -51,5 +51,7 @@ export const getApplicationSubmissionData = (application: Application): SubmitAp
     isConcerningArsonBehaviour: isConcerningArsonBehaviourFromApplication(application),
     prisonReleaseTypes: releaseTypesFromApplication(application),
     probationDeliveryUnitId: probationDeliveryUnitIdFromApplication(application),
+    ...getOutOfRegionDataFromApplication(application),
   }
+  return applicationData
 }

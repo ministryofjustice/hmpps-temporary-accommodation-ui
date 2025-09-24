@@ -348,10 +348,22 @@ describe('applicationsController', () => {
 
   describe('confirm', () => {
     it('renders the application submission confirmation page', async () => {
+      const application = applicationFactory.build({
+        data: {
+          'placement-location': {
+            'different-region': {
+              regionName: 'London',
+            },
+          },
+        },
+      })
+      applicationService.findApplication.mockResolvedValue(application)
+
+      request.params.id = application.id
       const requestHandler = applicationsController.confirm()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('applications/confirm')
+      expect(response.render).toHaveBeenCalledWith('applications/confirm', { regionName: 'London' })
     })
   })
 

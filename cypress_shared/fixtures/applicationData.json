@@ -1,4 +1,19 @@
 {
+  "placement-location": {
+    "alternative-pdu": {
+      "alternativePdu": "yes",
+      "pduId": "616497bf-3e6b-40e2-830b-8bfaeeaec157",
+      "pduName": "Bedfordshire (includes Bedford, Central Bedfordshire and Luton)"
+    },
+    "alternative-pdu-reason": {
+      "reason": "Reasons X, Y, Z"
+    },
+    "alternative-region": {
+      "alternativeRegion": "yes",
+      "regionId": "616497bf-3e6b-40e2-830b-8bfaeeaec157",
+      "regionName": "East of England"
+    }
+  },
   "offence-and-behaviour-summary": {
     "history-of-sexual-offence": {
       "historyOfSexualOffence": "no"
@@ -256,16 +271,6 @@
       "cas1Detail": "Approved Premises detail",
       "cas2Detail": "",
       "cas3Detail": "Transitional Accommodation (CAS3) detail"
-    }
-  },
-  "placement-location": {
-    "alternative-pdu": {
-      "alternativePdu": "yes",
-      "pduId": "616497bf-3e6b-40e2-830b-8bfaeeaec157",
-      "pduName": "County Durham and Darlington"
-    },
-    "alternative-pdu-reason": {
-      "reason": "Reasons X, Y, Z"
     }
   },
   "disability-cultural-and-specific-needs": {

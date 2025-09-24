@@ -19,7 +19,6 @@ describe('getApplicationSubmissionData', () => {
 
     expect(getApplicationSubmissionData(application)).toEqual({
       translatedDocument: application.document,
-      type: 'CAS3',
       arrivalDate: applicationDataJson.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
       summaryData: {
         isAbleToShare: true,
@@ -41,5 +40,24 @@ describe('getApplicationSubmissionData', () => {
       prisonReleaseTypes: ['14-day fixed-term recall', 'Parole'],
       probationDeliveryUnitId: applicationDataJson['contact-details']['probation-practitioner'].pdu.id,
     })
+  })
+
+  it('includes out of region ids when the application is out of region', () => {
+    const application = applicationFactory.build({
+      data: {
+        ...applicationDataJson,
+        'placement-location': {
+          ...applicationDataJson['placement-location'],
+          'alternative-region': { alternativeRegion: 'no' },
+          'different-region': { regionId: 'region123', regionName: 'London' },
+          'placement-pdu': { pduId: 'pdu123', pduName: 'Camden' },
+        },
+      },
+    })
+
+    const result = getApplicationSubmissionData(application)
+
+    expect(result.outOfRegionProbationRegionId).toBe('region123')
+    expect(result.outOfRegionPduId).toBe('pdu123')
   })
 })

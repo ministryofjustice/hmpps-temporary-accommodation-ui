@@ -1,0 +1,66 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% extends "../../layout.njk" %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block questions %}
+    {% set pageTitleHTML %}
+        Is the evidence in NDelius?
+    {% endset %}
+    {% set innerHTML %}
+    <p>If you answer ‘Not yet’, you can carry on completing the referral form.</p>
+    <p>But before you submit it to the HPT, you must:</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>make sure the evidence has been added to NDelius</li>
+        <li>change your answer here to ‘Yes’</li>
+    </ul>
+    {% endset %}
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ section.title }}</span>
+        {{ page.title }}
+    </h1>
+
+    <p>There must be evidence in NDelius showing:</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>you’ve started a discussion with {{ page.pduName }} PDU about this CAS3 request</li>
+        <li>the PDU has agreed to consider the request</li>
+    </ul>
+    <h2 class="govuk-heading-m">
+        How to get agreement
+    </h2>
+    <ol class="govuk-list govuk-list--number  govuk-list--spaced">
+        <li>
+            Email {{ page.regionName }} Homelessness Prevention Team (HPT) if you need to get the email address for {{ page.pduName }} PDU.
+        </li>
+        <li>Email the PDU to ask them to consider this CAS3 request.</li>
+        <li>The PDU must reply by email to confirm they’ll consider it.</li>
+        <li>Add a copy of that email to NDelius.</li>
+    </ol>
+    <p>Contact your manager or {{ page.regionName }} HPT if you need help.</p>
+    {{ formPageRadios({
+        fieldName: "pduEvidence",
+        fieldset: {
+            legend: {
+                html: pageTitleHTML,
+                isPageHeading: false,
+                classes: "govuk-fieldset__legend--l"
+            }
+        },
+        hint: {
+            html: innerHTML
+        },
+        items: [
+            {
+                value: "yes",
+                text: "Yes"
+            },
+            {
+                value: "no",
+                text: "Not yet"
+            }
+        ]
+    },fetchContext()) }}
+{% endblock %}

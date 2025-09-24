@@ -2,6 +2,7 @@ import {
   dutyToReferLocalAuthorityAreaNameFromApplication,
   dutyToReferSubmissionDateFromApplication,
   eligibilityReasonFromApplication,
+  getOutOfRegionDataFromApplication,
   hasHistoryOfArsonFromApplication,
   isApplicationEligibleFromApplication,
   isConcerningArsonBehaviourFromApplication,
@@ -411,6 +412,52 @@ describe('reportDataFromApplication', () => {
       expect(() => probationDeliveryUnitIdFromApplication(application)).toThrow(
         new SessionDataError('No probation practitioner PDU'),
       )
+    })
+  })
+
+  describe('getOutOfRegionDataFromApplication', () => {
+    it('returns out of region fields if isOutOfRegion is true', () => {
+      const application = applicationFactory.build({
+        data: {
+          'placement-location': {
+            'alternative-region': { alternativeRegion: 'no' },
+            'different-region': { regionId: 'region123' },
+            'placement-pdu': { pduId: 'pdu123' },
+          },
+        },
+      })
+      expect(getOutOfRegionDataFromApplication(application)).toEqual({
+        outOfRegionProbationRegionId: 'region123',
+        outOfRegionPduId: 'pdu123',
+      })
+    })
+
+    it('returns an empty object if isOutOfRegion is false', () => {
+      const application = applicationFactory.build({
+        data: {
+          'placement-location': {
+            'alternative-region': { alternativeRegion: 'yes' },
+            'different-region': { regionId: 'region123' },
+            'placement-pdu': { pduId: 'pdu123' },
+          },
+        },
+      })
+      expect(getOutOfRegionDataFromApplication(application)).toEqual({})
+    })
+
+    it('returns undefined fields if keys are missing but isOutOfRegion is true', () => {
+      const application = applicationFactory.build({
+        data: {
+          'placement-location': {
+            'alternative-region': { alternativeRegion: 'no' },
+          },
+        },
+      })
+
+      expect(getOutOfRegionDataFromApplication(application)).toEqual({
+        outOfRegionProbationRegionId: undefined,
+        outOfRegionPduId: undefined,
+      })
     })
   })
 })

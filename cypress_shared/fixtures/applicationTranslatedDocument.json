@@ -4,6 +4,18 @@
       "title": "Accommodation need",
       "tasks": [
         {
+          "title": "Placement location",
+          "id": "placement-location",
+          "content": [
+            {
+              "Is the placement for the": "Yes",
+              "Is placement required in an different pdu?": "Yes",
+              "Which PDU should the person be placed in?": "Bedfordshire (includes Bedford, Central Bedfordshire and Luton)",
+              "Reason for choosing a different pdu": "Reasons X, Y, Z"
+            }
+          ]
+        },
+        {
           "title": "Offence and behaviour summary",
           "id": "offence-and-behaviour-summary",
           "content": [
@@ -226,19 +238,8 @@
       ]
     },
     {
-      "title": "Requirements for placement",
+      "title": "Health, disability, culture, and safeguarding",
       "tasks": [
-        {
-          "title": "Placement location",
-          "id": "placement-location",
-          "content": [
-            {
-              "Is placement required in an alternative PDU?": "Yes",
-              "PDU for placement": "County Durham and Darlington",
-              "Reason for choosing an alternative PDU": "Reasons X, Y, Z"
-            }
-          ]
-        },
         {
           "title": "Health, disability and cultural needs",
           "id": "disability-cultural-and-specific-needs",

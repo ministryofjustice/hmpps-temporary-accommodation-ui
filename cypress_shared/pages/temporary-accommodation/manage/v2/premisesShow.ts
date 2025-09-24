@@ -201,7 +201,12 @@ export default class PremisesShowPage extends Page {
 
   clickCancelUnarchiveButton(): void {
     cy.get('button').contains('Actions').parent().click()
-    cy.get('button').contains('Actions').parent().siblings('ul').contains('Cancel unarchive').click()
+    cy.get('button')
+      .contains('Actions')
+      .parent()
+      .siblings('ul')
+      .contains('Cancel scheduled property online date')
+      .click()
   }
 
   shouldShowScheduledArchiveCancelledBanner(): void {

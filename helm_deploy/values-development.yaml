@@ -23,6 +23,7 @@ generic-service:
     COMMUNITY_ACCOMMODATION_API_TIMEOUT_DEADLINE: 30000
     PAGINATION_ASSESSMENTS_DEFAULT_PAGE_SIZE: 100
     DOMAIN_EVENTS_EMIT_ENABLED: 'personArrived,personDeparted'
+    CANCEL_SCHEDULED_ARCHIVE_ENABLED: true
 
   namespace_secrets:
     sqs-hmpps-audit-secret:

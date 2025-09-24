@@ -3,6 +3,7 @@ import { BedspaceStatus, PageHeadingBarItem, PlaceContext } from '@approved-prem
 import paths from '../../paths/temporary-accommodation/manage'
 import { addPlaceContext } from '../placeUtils'
 import { dateIsInFuture } from '../dateUtils'
+import config from '../../config'
 
 export function bedspaceActions(
   premises: Cas3Premises,
@@ -41,11 +42,13 @@ const upcomingBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
   const actions: Array<PageHeadingBarItem> = []
 
   if (bedspace.archiveHistory.length >= 1) {
-    actions.push({
-      text: 'Cancel scheduled bedspace online date',
-      href: paths.premises.bedspaces.cancelUnarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-      classes: 'govuk-button--secondary',
-    })
+    if (config.flags.cancelScheduledArchiveEnabled) {
+      actions.push({
+        text: 'Cancel scheduled bedspace online date',
+        href: paths.premises.bedspaces.cancelUnarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+    }
   }
   actions.push({
     text: 'Edit bedspace details',
@@ -73,11 +76,13 @@ const onlineBedspaceActions = (
     },
   ]
   if (bedspace.endDate) {
-    actions.push({
-      text: 'Cancel scheduled bedspace archive',
-      href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-      classes: 'govuk-button--secondary',
-    })
+    if (config.flags.cancelScheduledArchiveEnabled) {
+      actions.push({
+        text: 'Cancel scheduled bedspace archive',
+        href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+    }
   } else {
     actions.push({
       text: 'Archive bedspace',

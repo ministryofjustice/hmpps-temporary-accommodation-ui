@@ -1,10 +1,13 @@
 import paths from '../../paths/temporary-accommodation/manage'
 import { cas3PremisesBedspaceTotalsFactory, cas3PremisesFactory } from '../../testutils/factories'
 import { isPremiseScheduledToBeArchived, premisesActions } from './premisesUtils'
+import config from '../../config'
 
 jest.mock('../../config')
 
 describe('premisesV2Utils', () => {
+  config.flags.cancelScheduledArchiveEnabled = true
+
   describe('premisesActions', () => {
     it('returns actions for an online premises without scheduled archive', () => {
       const premises = cas3PremisesFactory.build({ status: 'online', endDate: null })
@@ -58,7 +61,7 @@ describe('premisesV2Utils', () => {
 
       expect(actions).toEqual([
         {
-          text: 'Cancel unarchive',
+          text: 'Cancel scheduled property online date',
           classes: 'govuk-button--secondary',
           href: paths.premises.cancelUnarchive({ premisesId: premises.id }),
         },

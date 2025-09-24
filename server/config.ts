@@ -50,6 +50,7 @@ export default {
     oasysDisabled: process.env.OASYS_DISABLED || false,
     applyEnabledForAllRegions: ['local', 'dev', 'test'].includes(environment),
     domainEventsEmit: get('DOMAIN_EVENTS_EMIT_ENABLED', ''),
+    cancelScheduledArchiveEnabled: get('CANCEL_SCHEDULED_ARCHIVE_ENABLED', 'false') === 'true',
   },
   environment,
   sentry: {

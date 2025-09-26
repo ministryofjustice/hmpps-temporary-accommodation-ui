@@ -59,5 +59,43 @@ describe('ReferenceDataService', () => {
       })
       expect(result).toEqual([pduABC, pduFOO, pduXYZ])
     })
+
+    it('returns a list of PDUs for a given regionId sorted by name', async () => {
+      const regionId = 'region123'
+      const result = await referenceDataService.getPdus(callConfig, { regionId })
+
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {
+        probationRegionId: regionId,
+      })
+      expect(result).toEqual([pduABC, pduFOO, pduXYZ])
+    })
+  })
+
+  describe('getProbationRegions', () => {
+    const regionXYZ = probationRegionFactory.build({ name: 'London' })
+    const regionABC = probationRegionFactory.build({ name: 'West Midlands' })
+    const regionFOO = probationRegionFactory.build({ name: 'East Midlands' })
+
+    beforeEach(() => {
+      referenceDataClient.getReferenceData.mockImplementation(async () => {
+        return [regionXYZ, regionABC, regionFOO]
+      })
+    })
+
+    it('returns a list of probation regions sorted by name', async () => {
+      const result = await referenceDataService.getProbationRegions(callConfig)
+
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-regions')
+      expect(result).toEqual([regionFOO, regionXYZ, regionABC])
+    })
+
+    it('returns an empty array if no regions are returned', async () => {
+      referenceDataClient.getReferenceData.mockImplementation(async () => {
+        return []
+      })
+
+      const result = await referenceDataService.getProbationRegions(callConfig)
+      expect(result).toEqual([])
+    })
   })
 })

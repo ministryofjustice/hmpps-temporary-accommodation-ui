@@ -230,7 +230,7 @@ export interface ReferenceData {
 
 export type PersonRisksUI = PersonRisks
 
-export type GetPdusOptions = { regional?: boolean }
+export type GetPdusOptions = { regional?: boolean; regionId?: string }
 export type DataServices = Partial<{
   personService: {
     getPrisonCaseNotes: (callConfig: CallConfig, crn: string) => Promise<Array<PrisonCaseNote>>
@@ -248,6 +248,7 @@ export type DataServices = Partial<{
   referenceDataService: {
     getLocalAuthorities: (CallConfig: CallConfig) => Promise<Array<LocalAuthorityArea>>
     getPdus: (CallConfig: CallConfig, options: GetPdusOptions = {}) => Promise<Array<ProbationDeliveryUnit>>
+    getProbationRegions: (CallConfig: CallConfig) => Promise<Array<{ id: string; name: string }>>
   }
 }>
 

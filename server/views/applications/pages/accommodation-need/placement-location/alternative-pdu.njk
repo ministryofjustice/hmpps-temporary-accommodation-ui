@@ -1,0 +1,62 @@
+{% from "../../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% extends "../../layout.njk" %}
+
+{% block head %}
+    {{ super() }}
+    <link href="/assets/css/accessible-autocomplete.min.css?{{ version }}" rel="stylesheet"/>
+{% endblock %}
+
+{% block questions %}
+    {% set pageTitleHTML %}
+    <span class="govuk-caption-l">{{ section.title }}</span>
+    {{ page.title }}
+    {% endset %}
+
+    {% set alternativePduDetailHtml %}
+    {{ formPageSelect({
+            fieldName: 'pduId',
+            label: {
+                text: "Enter a PDU in " + page.regionName,
+                classes: "govuk-label--s"
+            },
+            items: page.getAllPdus()
+        }, fetchContext()) }}
+    {% endset %}
+
+    {{ formPageRadios({
+        hint: {
+            text: "If placement is required in a PDU that's different to the person's current PDU, select 'yes'"
+        },
+        fieldName: "alternativePdu",
+        fieldset: {
+            legend: {
+                html: pageTitleHTML,
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+            }
+        },
+        items: [
+            {
+                value: "yes",
+                text: "Yes",
+                conditional: {
+                html: alternativePduDetailHtml
+            }
+            },
+            {
+                value: "no",
+                text: "No"
+            }
+        ]
+    },fetchContext()) }}
+{% endblock %}
+
+{% block extraScripts %}
+
+    <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/accessible-autocomplete.min.js"></script>
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+        accessibleAutocomplete.enhanceSelectElement({selectElement: document.querySelector('select#pduId'), defaultValue: ''})
+    </script>
+
+{% endblock %}

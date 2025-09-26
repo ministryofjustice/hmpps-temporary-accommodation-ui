@@ -3,7 +3,7 @@ import type {
   TemporaryAccommodationApplication as Application,
   TemporaryAccommodationApplicationSummary as ApplicationSummary,
   Document,
-  SubmitApplication,
+  Cas3SubmitApplication as SubmitApplication,
   UpdateTemporaryAccommodationApplication as UpdateApplication,
 } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'

@@ -13,5 +13,6 @@ export type Cas3PremisesSummary = {
     pdu: string;
     postcode: string;
     status: PropertyStatus;
+    town?: string;
 };
 

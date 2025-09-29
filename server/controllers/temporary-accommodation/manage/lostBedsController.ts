@@ -71,6 +71,12 @@ export default class LostBedsController {
           insertGenericError(err, 'endDate', 'conflict')
         }
 
+        // TODO: costCentre is optional in the API types right now, so we add a FE check to make sure it's present in the form.
+        //  Once the API makes costCentre mandatory, remove this check and let the backend handle validation.
+        if (!req.body.costCentre) {
+          insertGenericError(err, 'costCentre', 'empty')
+        }
+
         catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.new({ premisesId, bedspaceId }))
       }
     }
@@ -119,6 +125,12 @@ export default class LostBedsController {
           insertBespokeError(err, generateConflictBespokeError(err, premisesId, bedspaceId, 'plural'))
           insertGenericError(err, 'startDate', 'conflict')
           insertGenericError(err, 'endDate', 'conflict')
+        }
+
+        // TODO: costCentre is optional in the API types right now, so we add a FE check to make sure it's present in the form.
+        //  Once the API makes costCentre mandatory, remove this check and let the backend handle validation.
+        if (!req.body.costCentre) {
+          insertGenericError(err, 'costCentre', 'empty')
         }
 
         catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.edit({ premisesId, bedspaceId, lostBedId }))

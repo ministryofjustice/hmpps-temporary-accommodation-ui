@@ -2,6 +2,7 @@
 {% from "../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
 {% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 {% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
+{% from "../../components/formFields/form-page-radios/macro.njk" import formPageRadios %}
 
 {{ formPageDateInput(
     {
@@ -29,6 +30,26 @@
     },
     fetchContext()
   ) }}
+{{ formPageRadios(
+  {
+      fieldName: "costCentre",
+      fieldset: {
+      legend: {
+      text: "Who pays the cost?",
+      classes: "govuk-fieldset__legend--m"
+    }
+    },
+      items: [
+    {
+      value: "HMPPS",
+      text: "HMPSS"
+      },
+    {
+      value: "SUPPLIER",
+      text: "Supplier"
+    }
+  ]
+}, fetchContext()) }}
 {{ formPageSelect(
     {
         label: {

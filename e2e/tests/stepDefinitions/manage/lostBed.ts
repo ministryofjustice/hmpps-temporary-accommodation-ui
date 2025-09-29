@@ -66,7 +66,7 @@ Given('I attempt to mark a bedspace as void with required details missing', () =
 Then('I should see a list of the problems encountered voiding the bedspace', () => {
   cy.then(function _() {
     const lostBedNewPage = Page.verifyOnPage(LostBedNewPage, this.premises, this.bedspace)
-    lostBedNewPage.shouldShowErrorMessagesForFields(['startDate', 'endDate'])
+    lostBedNewPage.shouldShowErrorMessagesForFields(['startDate', 'endDate', 'costCentre'])
   })
 })
 
@@ -117,7 +117,7 @@ Given('I attempt to edit the void booking with required details missing', () => 
 
     lostBedEditPage.clearForm()
     lostBedEditPage.clickSubmit()
-    lostBedEditPage.shouldShowErrorMessagesForFields(['startDate', 'endDate'])
+    lostBedEditPage.shouldShowErrorMessagesForFields(['startDate', 'endDate', 'costCentre'])
   })
 })
 

@@ -11,4 +11,5 @@ export default Factory.define<UpdateLostBed>(() => ({
   notes: faker.lorem.sentence(),
   referenceNumber: faker.string.uuid(),
   id: faker.string.uuid(),
+  costCentre: faker.helpers.arrayElement(['HMPPS', 'SUPPLIER']),
 }))

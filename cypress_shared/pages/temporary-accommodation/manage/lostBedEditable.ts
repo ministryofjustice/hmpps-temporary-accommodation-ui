@@ -36,6 +36,9 @@ export default abstract class LostBedEditablePage extends Page {
     this.getLabel('What is the reason for this void?')
     this.getSelectInputByIdAndSelectAnEntry('reason', newOrUpdateLostBed.reason)
 
+    this.getLegend('Who pays the cost?')
+    this.checkRadioByNameAndValue('costCentre', newOrUpdateLostBed.costCentre)
+
     this.getLabel('Please provide further details')
     this.getTextInputByIdAndEnterDetails('notes', newOrUpdateLostBed.notes)
 

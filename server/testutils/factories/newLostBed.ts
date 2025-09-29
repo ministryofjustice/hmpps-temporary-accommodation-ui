@@ -15,5 +15,6 @@ export default Factory.define<NewLostBed>(() => {
     referenceNumber: faker.string.uuid(),
     reason: referenceDataFactory.lostBedReasons().build().id,
     bedId: faker.string.uuid(),
+    costCentre: faker.helpers.arrayElement(['HMPPS', 'SUPPLIER']),
   }
 })

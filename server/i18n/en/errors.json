@@ -182,6 +182,9 @@
       "bedspaceNotScheduledToArchive": "This bedspace is not scheduled to be archived",
       "bedspaceAlreadyArchived": "This bedspace has already been archived",
       "bedspaceAlreadyOnline": "This bedspace is already online"
+    },
+    "costCentre": {
+      "empty": "You must select a cost centre"
     }
   },
   "bookingCancellation": {

@@ -130,6 +130,12 @@ describe('LostBedsController', () => {
           bedspaceId,
         }
 
+        request.body = {
+          costCentre: 'HMPPS',
+          reason: 'some-reason',
+          notes: 'some notes',
+        }
+
         await requestHandler(request, response, next)
 
         expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
@@ -159,6 +165,12 @@ describe('LostBedsController', () => {
         request.params = {
           premisesId,
           bedspaceId,
+        }
+
+        request.body = {
+          costCentre: 'HMPPS',
+          reason: 'some-reason',
+          notes: 'some notes',
         }
 
         await requestHandler(request, response, next)
@@ -251,6 +263,12 @@ describe('LostBedsController', () => {
           lostBedId,
         }
 
+        request.body = {
+          costCentre: 'HMPPS',
+          reason: 'some-reason',
+          notes: 'some notes',
+        }
+
         const err = new Error()
 
         lostBedService.update.mockImplementation(() => {
@@ -274,6 +292,12 @@ describe('LostBedsController', () => {
           premisesId,
           bedspaceId,
           lostBedId,
+        }
+
+        request.body = {
+          costCentre: 'HMPPS',
+          reason: 'some-reason',
+          notes: 'some notes',
         }
 
         const err = { status: 409 }

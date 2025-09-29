@@ -30,6 +30,26 @@
     },
     fetchContext()
   ) }}
+{{ formPageRadios(
+  {
+      fieldName: "costCentre",
+      fieldset: {
+      legend: {
+      text: "Who pays the cost?",
+      classes: "govuk-fieldset__legend--m"
+    }
+    },
+      items: [
+    {
+      value: "HMPPS",
+      text: "HMPSS"
+      },
+    {
+      value: "SUPPLIER",
+      text: "Supplier"
+    }
+  ]
+}, fetchContext()) }}
 {{ formPageSelect(
     {
         label: {
@@ -41,26 +61,6 @@
           },
           fetchContext()
         ) }}
-
-{{ formPageRadios({
-    fieldName: "costCentre",
-    fieldset: {
-      legend: {
-        text: "Who pays for the cost?",
-        classes: "govuk-fieldset__legend--m"
-      }
-    },
-    items: [
-      {
-        value: "HMPPS",
-        text: "HMPPS"
-      },
-      {
-        value: "SUPPLIER",
-        text: "Supplier"
-      }
-    ]
-  }, fetchContext()) }}
 {{ formPageTextarea(
           {
             label: {

@@ -165,6 +165,19 @@ const probationDeliveryUnitIdFromApplication = (application: Application): strin
   return pduId
 }
 
+const isOutOfRegion = (application: Application): boolean => {
+  const basedInSameRegion = application.data?.['placement-location']['alternative-region']?.alternativeRegion
+  return basedInSameRegion === 'no'
+}
+
+const getOutOfRegionDataFromApplication = (application: Application) => {
+  if (!isOutOfRegion(application)) return {}
+  return {
+    outOfRegionProbationRegionId: application.data?.['placement-location']?.['different-region']?.regionId,
+    outOfRegionPduId: application.data?.['placement-location']?.['placement-pdu']?.pduId,
+  }
+}
+
 export {
   dutyToReferSubmissionDateFromApplication,
   dutyToReferLocalAuthorityAreaNameFromApplication,
@@ -181,4 +194,5 @@ export {
   isConcerningArsonBehaviourFromApplication,
   releaseTypesFromApplication,
   probationDeliveryUnitIdFromApplication,
+  getOutOfRegionDataFromApplication,
 }

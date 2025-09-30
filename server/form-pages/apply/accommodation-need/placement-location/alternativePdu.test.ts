@@ -7,13 +7,21 @@ import { CallConfig } from '../../../../data/restClient'
 import { buildUniqueList } from '../../../../testutils/utils'
 
 describe('AlternativePdu', () => {
-  const application = applicationFactory.build()
+  const application = applicationFactory.build({
+    data: {
+      'placement-location': {
+        'alternative-region': {
+          regionName: 'East Midlands',
+        },
+      },
+    },
+  })
   const pdus = buildUniqueList(referenceDataFactory.pdu(), pdu => pdu.id, 3)
   const body: AlternativePduBody = { alternativePdu: 'yes', pduId: pdus[1].id, pduName: pdus[1].name }
 
   describe('initialize', () => {
     it('returns the page with all PDUs fetched from the API', async () => {
-      const callConfig = { token: 'some-token' } as CallConfig
+      const callConfig = { token: 'some-token', probationRegion: { id: '1', name: 'East Midlands' } } as CallConfig
       const getPdusMock = jest.fn().mockResolvedValue(pdus)
       const referenceDataService = createMock<ReferenceDataService>({
         getPdus: getPdusMock,
@@ -23,7 +31,7 @@ describe('AlternativePdu', () => {
         referenceDataService,
       })
 
-      expect(getPdusMock).toHaveBeenCalledWith(callConfig)
+      expect(getPdusMock).toHaveBeenCalledWith(callConfig, { regional: true })
       expect(page).toBeInstanceOf(AlternativePdu)
       expect(page.pdus).toEqual(pdus)
     })
@@ -62,7 +70,7 @@ describe('AlternativePdu', () => {
   itShouldHavePreviousValue(new AlternativePdu({}, application, pdus), 'dashboard')
 
   describe('next', () => {
-    it('returns the alternative PDU reason page ID if the answer is yes', () => {
+    it('returns the different pdu reason page ID if the answer is yes', () => {
       const page = new AlternativePdu(body, application, pdus)
 
       expect(page.next()).toEqual('alternative-pdu-reason')
@@ -76,31 +84,32 @@ describe('AlternativePdu', () => {
   })
 
   describe('errors', () => {
-    it('returns no error if the alternative PDU fields are populated', () => {
+    it('returns no error if the different pdu fields are populated', () => {
       const page = new AlternativePdu(body, application, pdus)
 
       expect(page.errors()).toEqual({})
     })
 
-    it('returns no error if the alternative PDU answer is no', () => {
+    it('returns no error if the different pdu answer is no', () => {
       const page = new AlternativePdu({ alternativePdu: 'no' }, application, pdus)
 
       expect(page.errors()).toEqual({})
     })
 
-    it('returns an error if the alternative PDU answer is not populated', () => {
+    it('returns an error if the different pdu answer is not populated', () => {
       const page = new AlternativePdu({ ...body, alternativePdu: undefined }, application, pdus)
 
       expect(page.errors()).toEqual({
-        alternativePdu: 'You must specify if placement is required in an alternative PDU',
+        alternativePdu: 'Select yes if the placement is required in an different PDU',
       })
     })
 
-    it('returns an error if the alternative PDU answer is yes but PDU is not selected', () => {
+    it('returns an error if the different pdu answer is yes but PDU is not selected', () => {
       const page = new AlternativePdu({ alternativePdu: 'yes', pduId: undefined }, application, pdus)
-
+      const region = application.data?.['placement-location']?.['alternative-region']?.regionName || ''
+      page.regionName = region
       expect(page.errors()).toEqual({
-        pduId: 'You must select a PDU',
+        pduId: `Enter a PDU in ${region}`,
       })
     })
   })
@@ -108,10 +117,10 @@ describe('AlternativePdu', () => {
   describe('response', () => {
     it('returns a translated version of the response when answered yes', () => {
       const page = new AlternativePdu(body, application, pdus)
-
+      const region = application.data?.['placement-location']?.['alternative-region']?.regionName || ''
       expect(page.response()).toEqual({
-        'Is placement required in an alternative PDU?': 'Yes',
-        'PDU for placement': pdus[1].name,
+        'Is placement required in a different PDU?': 'Yes',
+        [`PDU in ${region}`]: pdus[1].name,
       })
     })
 
@@ -119,7 +128,7 @@ describe('AlternativePdu', () => {
       const page = new AlternativePdu({ alternativePdu: 'no' }, application, pdus)
 
       expect(page.response()).toEqual({
-        'Is placement required in an alternative PDU?': 'No',
+        'Is placement required in a different PDU?': 'No',
       })
     })
   })

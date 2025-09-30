@@ -25,6 +25,7 @@ export default class LostBedEditPage extends LostBedEditablePage {
     super.clearDateInputs('startDate')
     super.clearDateInputs('endDate')
     super.getTextInputByIdAndClear('notes')
+    super.clearRadioByName('costCentre')
   }
 
   completeForm(updateLostBed: UpdateLostBed): void {

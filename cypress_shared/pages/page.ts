@@ -161,6 +161,10 @@ export default abstract class Page extends Component {
     cy.get(`#${id}`).clear()
   }
 
+  clearRadioByName(name: string): void {
+    cy.get(`input[type="radio"][name="${name}"]`).invoke('prop', 'checked', false)
+  }
+
   getSelectInputByIdAndSelectAnEntry(id: string, entry: string): void {
     cy.get(`#${id}`).select(entry)
   }

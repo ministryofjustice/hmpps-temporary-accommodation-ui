@@ -1,0 +1,34 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% extends "../../layout.njk" %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block questions %}
+    {% set pageTitleHTML %}
+        <span class="govuk-caption-l">{{ section.title }}</span>
+        {{ page.title }}
+    {% endset %}
+
+    {{ formPageRadios({
+        fieldName: "alternativeRegion",
+        fieldset: {
+            legend: {
+                html: pageTitleHTML,
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+            }
+        },
+        items: [
+            {
+                value: "yes",
+                text: "Yes, " + page.regionName
+            },
+            {
+                value: "no",
+                text: "No, a different region"
+            }
+        ]
+    },fetchContext()) }}
+{% endblock %}

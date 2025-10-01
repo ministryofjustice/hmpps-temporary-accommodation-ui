@@ -37,6 +37,7 @@ import {
   AdjudicationsPage,
   AlternativePduPage,
   AlternativePduReasonPage,
+  AlternativeRegionPage,
   AntiSocialBehaviourPage,
   ApprovalsForSpecificRisksPage,
   BackupContactPage,
@@ -48,6 +49,7 @@ import {
   ConsentGivenPage,
   CooperationPage,
   CrsSubmittedPage,
+  DifferentRegionPage,
   DtrDetailsPage,
   DtrSubmittedPage,
   EligibilityReasonPage,
@@ -60,6 +62,8 @@ import {
   NeedsPage,
   OffendingSummaryPage,
   OtherAccommodationOptionsPage,
+  PduEvidencePage,
+  PlacementPduPage,
   PopPhoneNumberPage,
   PreviousStaysDetailsPage,
   PreviousStaysPage,
@@ -159,6 +163,7 @@ export default class ApplyHelper {
   }
 
   completeApplication() {
+    this.completePlacementLocation()
     this.completeOffenceAndBehaviourSummary()
     this.completeSentenceInformation()
     this.completeContactDetails()
@@ -169,7 +174,6 @@ export default class ApplyHelper {
     this.completePlacementConsiderations()
     this.completeApprovalsForSpecificRisks()
     this.completeBehaviourInCas()
-    this.completePlacementLocation()
     this.completeDisabilityCulturalAndSpecificNeeds()
     this.completeSafeguardingAndSupport()
     this.completeFoodAllergies()
@@ -602,10 +606,10 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('behaviour-in-cas', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('placement-location', 'Not started')
+    tasklistPage.shouldShowTaskStatus('disability-cultural-and-specific-needs', 'Not started')
   }
 
-  private completePlacementLocation() {
+  completePlacementLocation() {
     if (this.environment === 'integration') {
       const pdu = referenceDataFactory.pdu().build({
         id: this.application.data['placement-location']['alternative-pdu'].pduId,
@@ -613,15 +617,18 @@ export default class ApplyHelper {
       })
       cy.task('stubPdus', {
         pdus: [pdu, ...referenceDataFactory.pdu().buildList(5)],
+        probationRegionId: this.actingUser.region.id,
       })
     }
-
     // Given I click on the safeguarding and support task
     Page.verifyOnPage(TaskListPage, this.application).clickTask('placement-location')
 
     // When I complete the form
+    const alternativeRegionPage = new AlternativeRegionPage(this.application)
+    alternativeRegionPage.completeForm()
+    alternativeRegionPage.clickSubmit()
+
     const alternativePduPage = new AlternativePduPage(this.application)
-    alternativePduPage.checkNotificationBannerHasLinkToExternalGuidance()
     alternativePduPage.completeForm()
     alternativePduPage.clickSubmit()
 
@@ -629,7 +636,7 @@ export default class ApplyHelper {
     alternativePduReasonPage.completeForm()
     alternativePduReasonPage.clickSubmit()
 
-    this.pages.placementLocation = [alternativePduPage, alternativePduReasonPage]
+    this.pages.placementLocation = [alternativeRegionPage, alternativePduPage, alternativePduReasonPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
@@ -638,7 +645,202 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('placement-location', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('disability-cultural-and-specific-needs', 'Not started')
+    tasklistPage.shouldShowTaskStatus('offence-and-behaviour-summary', 'Not started')
+  }
+
+  completePlacementLocationNonAlternativePdu() {
+    if (this.environment === 'integration') {
+      const pdu = referenceDataFactory.pdu().build({
+        id: this.application.data['placement-location']['alternative-pdu'].pduId,
+        name: this.application.data['placement-location']['alternative-pdu'].pduName,
+      })
+      cy.task('stubPdus', {
+        pdus: [pdu, ...referenceDataFactory.pdu().buildList(5)],
+        probationRegionId: this.actingUser.region.id,
+      })
+    }
+
+    // Given I click on the safeguarding and support task
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('placement-location')
+
+    // When I complete the form
+    const alternativeRegionPage = new AlternativeRegionPage(this.application)
+    alternativeRegionPage.completeForm()
+    alternativeRegionPage.clickSubmit()
+
+    const alternativePduPage = new AlternativePduPage(this.application)
+    alternativePduPage.completeForm()
+    alternativePduPage.clickSubmit()
+
+    this.pages.placementLocation = [alternativeRegionPage, alternativePduPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('placement-location', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('offence-and-behaviour-summary', 'Not started')
+  }
+
+  completePlacementLocationAlternativeRegionWithEvidence() {
+    if (this.environment === 'integration') {
+      const pdu = referenceDataFactory.pdu().build({
+        id: this.application.data['placement-location']['alternative-pdu'].pduId,
+        name: this.application.data['placement-location']['alternative-pdu'].pduName,
+      })
+      cy.task('stubPdus', {
+        pdus: [pdu, ...referenceDataFactory.pdu().buildList(5)],
+        probationRegionId: '2',
+      })
+      cy.task('stubProbationRegions', [
+        referenceDataFactory.probationRegion().build({
+          id: '1',
+          name: 'South West',
+        }),
+        referenceDataFactory.probationRegion().build({
+          id: '2',
+          name: 'North West',
+        }),
+      ])
+    }
+
+    // Given I click on the safeguarding and support task
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('placement-location')
+
+    // When I complete the form
+    const alternativeRegionPage = new AlternativeRegionPage(this.application)
+    alternativeRegionPage.completeForm()
+    alternativeRegionPage.clickSubmit()
+
+    const differentRegionPage = new DifferentRegionPage(this.application)
+    differentRegionPage.completeForm()
+    differentRegionPage.clickSubmit()
+
+    const placementPduPage = new PlacementPduPage(this.application)
+    placementPduPage.completeForm()
+    placementPduPage.clickSubmit()
+
+    const pduEvidencePage = new PduEvidencePage(this.application)
+    pduEvidencePage.completeForm()
+    pduEvidencePage.clickSubmit()
+
+    this.pages.placementLocation = [alternativeRegionPage, placementPduPage, differentRegionPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('placement-location', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('offence-and-behaviour-summary', 'Not started')
+  }
+
+  completePlacementLocationAlternativeRegionWithNoEvidence() {
+    if (this.environment === 'integration') {
+      const pdu = referenceDataFactory.pdu().build({
+        id: this.application.data['placement-location']['alternative-pdu'].pduId,
+        name: this.application.data['placement-location']['alternative-pdu'].pduName,
+      })
+      cy.task('stubPdus', {
+        pdus: [pdu, ...referenceDataFactory.pdu().buildList(5)],
+        probationRegionId: '2',
+      })
+      cy.task('stubProbationRegions', [
+        referenceDataFactory.probationRegion().build({
+          id: '1',
+          name: 'South West',
+        }),
+        referenceDataFactory.probationRegion().build({
+          id: '2',
+          name: 'North West',
+        }),
+      ])
+    }
+
+    // Given I click on the safeguarding and support task
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('placement-location')
+
+    // When I complete the form
+    const alternativeRegionPage = new AlternativeRegionPage(this.application)
+    alternativeRegionPage.completeForm()
+    alternativeRegionPage.clickSubmit()
+
+    const differentRegionPage = new DifferentRegionPage(this.application)
+    differentRegionPage.completeForm()
+    differentRegionPage.clickSubmit()
+
+    const placementPduPage = new PlacementPduPage(this.application)
+    placementPduPage.completeForm()
+    placementPduPage.clickSubmit()
+
+    const pduEvidencePage = new PduEvidencePage(this.application)
+    pduEvidencePage.completeForm()
+    pduEvidencePage.clickSubmit()
+    pduEvidencePage.clickSubmit('Save and continue')
+
+    this.pages.placementLocation = [alternativeRegionPage, placementPduPage, differentRegionPage, pduEvidencePage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('placement-location', 'In progress')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('offence-and-behaviour-summary', 'Not started')
+  }
+
+  completePlacementLocationAsNationalUser() {
+    if (this.environment === 'integration') {
+      const pdu = referenceDataFactory.pdu().build({
+        id: this.application.data['placement-location']['alternative-pdu'].pduId,
+        name: this.application.data['placement-location']['alternative-pdu'].pduName,
+      })
+      cy.task('stubPdus', {
+        pdus: [pdu, ...referenceDataFactory.pdu().buildList(5)],
+        probationRegionId: '2',
+      })
+      cy.task('stubProbationRegions', [
+        referenceDataFactory.probationRegion().build({
+          id: '1',
+          name: 'South West',
+        }),
+        referenceDataFactory.probationRegion().build({
+          id: '2',
+          name: 'North West',
+        }),
+      ])
+    }
+
+    // Given I click on the safeguarding and support task
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('placement-location')
+
+    // When I complete the form
+    const differentRegionPage = new DifferentRegionPage(this.application)
+    differentRegionPage.completeForm()
+    differentRegionPage.clickSubmit()
+
+    const placementPduPage = new PlacementPduPage(this.application)
+    placementPduPage.completeForm()
+    placementPduPage.clickSubmit()
+
+    const pduEvidencePage = new PduEvidencePage(this.application)
+    pduEvidencePage.completeForm()
+    pduEvidencePage.clickSubmit()
+
+    this.pages.placementLocation = [placementPduPage, differentRegionPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('placement-location', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('offence-and-behaviour-summary', 'Not started')
   }
 
   private completeDisabilityCulturalAndSpecificNeeds() {

@@ -26,7 +26,7 @@ export default (lostBed: LostBed): SummaryList['rows'] => {
 
   rows.push({
     key: textValue('Cost Centre'),
-    value: textValue(costCentre),
+    value: textValue({ HMPPS: 'HMPPS', SUPPLIER: 'Supplier' }[costCentre] || costCentre),
   })
 
   rows.push({

@@ -1,6 +1,6 @@
 import nock from 'nock'
 
-import { Cas3SubmitApplication as SubmitApplication, UpdateApplication } from '../@types/shared'
+import { SubmitApplication, UpdateApplication } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
 import { activeOffenceFactory, applicationFactory, documentFactory } from '../testutils/factories'
@@ -133,14 +133,12 @@ describe('ApplicationClient', () => {
     it('should submit the application', async () => {
       const application = applicationFactory.build()
       const data: SubmitApplication = {
-        arrivalDate: application.data?.eligibility?.['accommodation-required-from-date']?.accommodationRequiredFromDate,
-        summaryData: {},
-        probationDeliveryUnitId: application.data?.['contact-details']?.['probation-practitioner']?.pdu?.id,
         translatedDocument: application.document,
+        type: 'CAS3',
       }
 
       fakeApprovedPremisesApi
-        .post(paths.applications.submission({ id: application.id }), JSON.stringify({ ...data }))
+        .post(paths.applications.submission({ id: application.id }), JSON.stringify({ ...data, type: 'CAS3' }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201)
 

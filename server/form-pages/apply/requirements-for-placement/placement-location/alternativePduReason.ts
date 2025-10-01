@@ -28,15 +28,15 @@ export default class AlternativePduReason implements TasklistPage {
 
   response(): PageResponse {
     return {
-      'Reason for choosing a different PDU': this.body.reason,
+      'Reason for choosing an alternative PDU': this.body.reason,
     }
   }
 
-  errors(): TaskListErrors<this> {
+  errors(): Partial<Record<keyof this['body'], unknown>> {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.reason) {
-      errors.reason = 'Enter a reason for choosing a different PDU'
+      errors.reason = 'You must provide a reason for choosing a different PDU'
     }
 
     return errors

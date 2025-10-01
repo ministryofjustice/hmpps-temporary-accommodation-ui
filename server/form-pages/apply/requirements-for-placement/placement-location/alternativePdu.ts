@@ -8,17 +8,15 @@ import { CallConfig } from '../../../../data/restClient'
 
 export type AlternativePduBody = {
   alternativePdu: YesOrNo
-  pduId?: ProbationDeliveryUnit['id']
-  pduName?: ProbationDeliveryUnit['name']
+  pduId: ProbationDeliveryUnit['id']
+  pduName: ProbationDeliveryUnit['name']
 }
 
 @Page({ name: 'alternative-pdu', bodyProperties: ['alternativePdu', 'pduId', 'pduName'] })
 export default class AlternativePdu implements TasklistPage {
-  title = 'Is placement required in a different PDU (Probation Delivery Unit)?'
+  title = 'Is placement required in an alternative PDU (Probation Delivery Unit)?'
 
   htmlDocumentTitle = this.title
-
-  regionName: string
 
   constructor(
     private _body: Partial<AlternativePduBody>,
@@ -32,11 +30,8 @@ export default class AlternativePdu implements TasklistPage {
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {
-    const pdus = await dataServices.referenceDataService.getPdus(callConfig, { regional: true })
-    const regionName = callConfig.probationRegion.name
-    const instance = new AlternativePdu(body, application, pdus)
-    instance.regionName = regionName
-    return instance
+    const pdus = await dataServices.referenceDataService.getPdus(callConfig)
+    return new AlternativePdu(body, application, pdus)
   }
 
   set body(value) {
@@ -45,7 +40,8 @@ export default class AlternativePdu implements TasklistPage {
     }
 
     if (value.alternativePdu === 'yes') {
-      const submittedPdu = value.pduId && !value.pduName && this.pdus?.find(pdu => pdu.id === value.pduId)
+      const submittedPdu =
+        value.pduId !== undefined && value.pduName === undefined && this.pdus?.find(pdu => pdu.id === value.pduId)
 
       this._body.pduId = submittedPdu?.id || value.pduId
       this._body.pduName = submittedPdu?.name || value.pduName
@@ -58,13 +54,11 @@ export default class AlternativePdu implements TasklistPage {
 
   response() {
     const translatedResponse: PageResponse = {
-      'Is placement required in a different PDU?': sentenceCase(this.body.alternativePdu),
+      'Is placement required in an alternative PDU?': sentenceCase(this.body.alternativePdu),
     }
 
-    const region =
-      this.regionName || this.application.data?.['placement-location']?.['alternative-region']?.regionName || ''
     if (this.body.alternativePdu === 'yes') {
-      translatedResponse[`PDU in ${region}`] = this.body.pduName
+      translatedResponse['PDU for placement'] = this.body.pduName
     }
 
     return translatedResponse
@@ -80,10 +74,11 @@ export default class AlternativePdu implements TasklistPage {
 
   errors() {
     const errors: TaskListErrors<this> = {}
+
     if (!this.body.alternativePdu) {
-      errors.alternativePdu = 'Select yes if the placement is required in an different PDU'
+      errors.alternativePdu = 'You must specify if placement is required in an alternative PDU'
     } else if (this.body.alternativePdu === 'yes' && !this.body.pduId) {
-      errors.pduId = `Enter a PDU in ${this.regionName}`
+      errors.pduId = 'You must select a PDU'
     }
 
     return errors
@@ -95,7 +90,7 @@ export default class AlternativePdu implements TasklistPage {
         value: '',
         text: 'Select an option',
       },
-      ...(this.pdus ?? []).map(pdu => ({
+      ...this.pdus.map(pdu => ({
         value: pdu.id,
         text: pdu.name,
         selected: this.body.pduId === pdu.id || undefined,

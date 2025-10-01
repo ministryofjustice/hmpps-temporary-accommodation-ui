@@ -133,14 +133,8 @@ export default class ApplicationsController {
   }
 
   confirm(): RequestHandler {
-    return async (req: Request, res: Response) => {
-      const callConfig = extractCallConfig(req)
-
-      const { id } = req.params
-      const application = await this.applicationService.findApplication(callConfig, id)
-      const regionName = application.data?.['placement-location']?.['different-region']?.regionName
-
-      return res.render('applications/confirm', { regionName })
+    return async (_: Request, res: Response) => {
+      return res.render('applications/confirm')
     }
   }
 

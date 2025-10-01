@@ -5,7 +5,7 @@ import ApplyPage from '../../applyPage'
 export default class AlternativePduPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Is placement required in a different PDU (Probation Delivery Unit)?',
+      'Is placement required in an alternative PDU (Probation Delivery Unit)?',
       application,
       'placement-location',
       'alternative-pdu',
@@ -20,7 +20,7 @@ export default class AlternativePduPage extends ApplyPage {
 
     if (this.tasklistPage.body.alternativePdu === 'yes') {
       const pduName = this.tasklistPage.body.pduName as string
-      this.completeTextInputByLabel('Enter a PDU in ', pduName.slice(0, 3))
+      this.completeTextInputByLabel('Select a PDU', pduName.slice(0, 3))
       cy.get('li[role="option"]').contains(pduName).click()
     }
   }

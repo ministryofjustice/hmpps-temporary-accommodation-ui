@@ -35,12 +35,8 @@ import PropertyAttributesOrAdaptationsPage from './requirements-for-placement/di
 import ReligiousOrCulturalNeedsPage from './requirements-for-placement/disability-cultural-and-specific-needs/religiousOrCulturalNeeds'
 import FoodAllergiesPage from './requirements-for-placement/food-allergies/foodAllergies'
 import MoveOnPlanPage from './requirements-for-placement/move-on-plan/moveOnPlan'
-import AlternativePduPage from './accommodation-need/placement-location/alternativePdu'
-import AlternativePduReasonPage from './accommodation-need/placement-location/alternativePduReason'
-import AlternativeRegionPage from './accommodation-need/placement-location/alternativeRegion'
-import DifferentRegionPage from './accommodation-need/placement-location/differentRegion'
-import PduEvidencePage from './accommodation-need/placement-location/pduEvidence'
-import PlacementPduPage from './accommodation-need/placement-location/placementPdu'
+import AlternativePduPage from './requirements-for-placement/placement-location/alternativePdu'
+import AlternativePduReasonPage from './requirements-for-placement/placement-location/alternativePduReason'
 import CaringResponsibilitiesPage from './requirements-for-placement/safeguarding-and-support/caringResponsibilities'
 import LocalConnectionsPage from './requirements-for-placement/safeguarding-and-support/localConnections'
 import SafeguardingAndVulnerabilityPage from './requirements-for-placement/safeguarding-and-support/safeguardingAndVulnerability'
@@ -64,10 +60,6 @@ export {
   AdjudicationsPage,
   AlternativePduPage,
   AlternativePduReasonPage,
-  AlternativeRegionPage,
-  DifferentRegionPage,
-  PduEvidencePage,
-  PlacementPduPage,
   AntiSocialBehaviourPage,
   ApprovalsForSpecificRisksPage,
   BackupContactPage,

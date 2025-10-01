@@ -4,7 +4,7 @@ import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../share
 
 describe('alternativePduReason', () => {
   const application = applicationFactory.build()
-  const body: AlternativePduReasonBody = { reason: 'Some reason for requesting placement in an different PDU' }
+  const body: AlternativePduReasonBody = { reason: 'Some reason for requesting placement in an alternative PDU' }
 
   describe('body', () => {
     it('sets the body', () => {
@@ -22,7 +22,7 @@ describe('alternativePduReason', () => {
       const page = new AlternativePduReason(body, application)
 
       expect(page.response()).toEqual({
-        'Reason for choosing a different PDU': body.reason,
+        'Reason for choosing an alternative PDU': body.reason,
       })
     })
   })
@@ -38,7 +38,7 @@ describe('alternativePduReason', () => {
       const page = new AlternativePduReason({}, application)
 
       expect(page.errors()).toEqual({
-        reason: 'Enter a reason for choosing a different PDU',
+        reason: 'You must provide a reason for choosing a different PDU',
       })
     })
   })

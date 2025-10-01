@@ -97,7 +97,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: `/cas3/applications/${args.application.id}/submission`,
+        url: `/applications/${args.application.id}/submission`,
       },
       response: {
         status: 200,
@@ -122,7 +122,7 @@ export default {
     (
       await getMatchingRequests({
         method: 'POST',
-        url: `/cas3/applications/${applicationId}/submission`,
+        url: `/applications/${applicationId}/submission`,
       })
     ).body.requests,
   stubApplicationDelete: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>

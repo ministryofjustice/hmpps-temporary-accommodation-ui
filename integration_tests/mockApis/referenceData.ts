@@ -1,4 +1,4 @@
-import { LocalAuthorityArea, ProbationDeliveryUnit, ProbationRegion } from '@approved-premises/api'
+import { LocalAuthorityArea, ProbationDeliveryUnit } from '@approved-premises/api'
 import { stubFor } from '.'
 
 const stubLocalAuthorities = (localAuthorities: Array<LocalAuthorityArea>) =>
@@ -31,23 +31,7 @@ const stubPdus = (args: { pdus: Array<ProbationDeliveryUnit>; probationRegionId?
     },
   })
 
-const stubProbationRegions = (regions: Array<ProbationRegion>) =>
-  stubFor({
-    request: {
-      method: 'GET',
-      url: '/reference-data/probation-regions',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: regions,
-    },
-  })
-
 export default {
   stubLocalAuthorities,
   stubPdus,
-  stubProbationRegions,
 }

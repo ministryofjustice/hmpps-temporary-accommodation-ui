@@ -103,7 +103,6 @@ const oasysPath = personPath.path('oasys')
 const reportsCas3Path = cas3Path.path('reports')
 const timelineCas3Path = cas3Path.path('timeline').path(':assessmentId')
 const deleteApplicationCas3Path = cas3Path.path('/applications/:id')
-const submitApplicationCas3Path = cas3Path.path('/applications/:id/submission')
 
 const applyPaths = {
   applications: {
@@ -112,7 +111,7 @@ const applyPaths = {
     index: applicationsPath,
     delete: singleApplicationPath.path('delete'),
     update: singleApplicationPath,
-    submission: submitApplicationCas3Path,
+    submission: singleApplicationPath.path('submission'),
   },
 }
 

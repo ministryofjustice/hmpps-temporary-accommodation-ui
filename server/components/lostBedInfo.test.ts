@@ -15,6 +15,8 @@ describe('LostBedInfo', () => {
       const lostBed = lostBedFactory.active().build({
         startDate: '2023-03-21',
         endDate: '2023-03-24',
+        reason: { name: 'some active void Reason' },
+        costCentre: 'HMPPS',
       })
 
       const result = await summaryListRows(lostBed)
@@ -46,6 +48,22 @@ describe('LostBedInfo', () => {
         },
         {
           key: {
+            text: 'Cost Centre',
+          },
+          value: {
+            text: 'HMPPS',
+          },
+        },
+        {
+          key: {
+            text: 'Reason',
+          },
+          value: {
+            text: 'some active void Reason',
+          },
+        },
+        {
+          key: {
             text: 'Notes',
           },
           value: {
@@ -58,6 +76,8 @@ describe('LostBedInfo', () => {
       const lostBed = lostBedFactory.cancelled().build({
         startDate: '2023-04-21',
         endDate: '2023-04-24',
+        reason: { name: 'some cancelled void Reason' },
+        costCentre: 'HMPPS',
       })
 
       const result = await summaryListRows(lostBed)
@@ -85,6 +105,22 @@ describe('LostBedInfo', () => {
           },
           value: {
             text: '24 April 2023',
+          },
+        },
+        {
+          key: {
+            text: 'Cost Centre',
+          },
+          value: {
+            text: 'HMPPS',
+          },
+        },
+        {
+          key: {
+            text: 'Reason',
+          },
+          value: {
+            text: 'some cancelled void Reason',
           },
         },
         {

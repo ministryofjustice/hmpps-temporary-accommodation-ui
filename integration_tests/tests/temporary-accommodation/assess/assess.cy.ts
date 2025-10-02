@@ -79,9 +79,9 @@ context('Apply', () => {
         unallocatedListPage.shouldHaveActiveSubNavItem('Ready to place')
         readyToPlaceListPage.shouldShowAssessments(readyToPlaceAssessmentSummaries)
 
-        // When I click on the 'View archived assessments' link
+        // When I click on 'Archived'
         cy.task('stubAssessments', { data: [...closedAssessmentSummaries, ...rejectedAssessmentSummaries] })
-        readyToPlaceListPage.clickViewArchivedReferrals()
+        readyToPlaceListPage.clickSubNav('Archived')
 
         // Then I should see the list of archived assessments
         const archivedListPage = Page.verifyOnPage(ListPage, 'Archived referrals')

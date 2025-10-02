@@ -102,7 +102,8 @@
       "beforeStartDate": "The end date must be before the start date",
       "inFuture": "The end date must be today or a past date",
       "rangeTooLarge": "The end date cannot be more than 3 months after the start date",
-      "voidEndDateAfterBedspaceEndDate": "Void end date must be on or earlier than bedspace end date"
+      "voidEndDateAfterBedspaceEndDate": "Void end date must be on or earlier than bedspace end date",
+      "voidEndDateBeforeVoidStartDate": "Void end date must be on or after void start date"
     },
     "reason": {
       "empty": "You must choose a reason"

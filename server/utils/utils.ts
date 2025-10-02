@@ -4,6 +4,7 @@ import escapeRegExp from 'lodash.escaperegexp'
 import qs, { IStringifyOptions } from 'qs'
 import type { PersonRisks } from '@approved-premises/api'
 import type { PersonRisksUI, SummaryListItem } from '@approved-premises/ui'
+import type { Response } from 'express'
 
 /* istanbul ignore next */
 const properCase = (word: string): string =>
@@ -104,6 +105,11 @@ export const createQueryString = (
 /* istanbul ignore next */
 export const assertUnreachable = (_: never) => {
   throw new Error('Unreachable code reached')
+}
+
+export const notFound = (res: Response) => {
+  res.status(404)
+  return res.render('pages/error')
 }
 
 export const appendQueryString = (

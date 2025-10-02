@@ -65,10 +65,7 @@ export default class AssessmentsController {
 
       const params = getParams(req.query)
 
-      const template =
-        status === 'archived'
-          ? 'temporary-accommodation/assessments/archive'
-          : 'temporary-accommodation/assessments/index'
+      const template = 'temporary-accommodation/assessments/index'
 
       try {
         const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)

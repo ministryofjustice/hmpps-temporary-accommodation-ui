@@ -104,7 +104,7 @@ describe('AssessmentsController', () => {
     describe.each(['unallocated', 'in_review', 'ready_to_place', 'archived'])(
       'when viewing assessments with status %s',
       (status: AssessmentSearchApiStatus) => {
-        let expectedTemplate = 'temporary-accommodation/assessments/index'
+        const expectedTemplate = 'temporary-accommodation/assessments/index'
         let expectedHeaders = [...tableHeaders]
         const statusHeader = {
           html: '<a href="?sortBy=status&sortDirection=asc"><button>Status</button></a>',
@@ -115,7 +115,6 @@ describe('AssessmentsController', () => {
 
         beforeEach(() => {
           if (status === 'archived') {
-            expectedTemplate = 'temporary-accommodation/assessments/archive'
             expectedHeaders.push(statusHeader)
           }
         })

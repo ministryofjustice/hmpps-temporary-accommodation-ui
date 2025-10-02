@@ -40,10 +40,6 @@ export default class ListPage extends Page {
     }
   }
 
-  clickViewArchivedReferrals(): void {
-    cy.get('a').contains('View archived referrals').click()
-  }
-
   shouldShowAssessments(assessments: Array<AssessmentSummary>, checkStatus = false): void {
     assessments.forEach(assessmentSummary => {
       cy.get(`a[href*="${paths.assessments.full({ id: assessmentSummary.id })}"]`)

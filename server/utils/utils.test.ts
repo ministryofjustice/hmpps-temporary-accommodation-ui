@@ -1,4 +1,6 @@
 import type { SummaryListItem } from '@approved-premises/ui'
+import { createMock } from '@golevelup/ts-jest'
+import type { Response } from 'express'
 import { risksFactory } from '../testutils/factories'
 import {
   appendQueryString,
@@ -10,6 +12,7 @@ import {
   lowerCase,
   mapApiPersonRisksForUi,
   normalise,
+  notFound,
   pascalCase,
   removeBlankSummaryListItems,
   sentenceCase,
@@ -243,5 +246,15 @@ describe('stripWhitespace', () => {
 describe('normalise', () => {
   it('capitalises and removes leading and trailing spaces from string', () => {
     expect(normalise('abc123')).toEqual('ABC123')
+  })
+})
+
+describe('notFound', () => {
+  it('should set the status to 404 and render the error page', () => {
+    const response = createMock<Response>({})
+    notFound(response)
+
+    expect(response.status).toHaveBeenCalledWith(404)
+    expect(response.render).toHaveBeenCalledWith('pages/error')
   })
 })

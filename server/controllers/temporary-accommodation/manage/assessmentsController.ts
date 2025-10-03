@@ -23,7 +23,7 @@ import {
 } from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { appendQueryString } from '../../../utils/utils'
+import { appendQueryString, notFound } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
 import { DateFormats, dateExists } from '../../../utils/dateUtils'
@@ -225,11 +225,17 @@ export default class AssessmentsController {
 
   confirm(): RequestHandler {
     return async (req: Request, res: Response) => {
-      return res.render('temporary-accommodation/assessments/confirm', {
-        content: confirmationPageContent[req.params.status as AssessmentUpdateStatus],
-        status: req.params.status,
-        id: req.params.id,
-      })
+      const { status } = req.params
+      const validStatuses = ['unallocated', 'in_review', 'ready_to_place', 'closed']
+      if (validStatuses.includes(status)) {
+        return res.render('temporary-accommodation/assessments/confirm', {
+          content: confirmationPageContent[status as AssessmentUpdateStatus],
+          id: req.params.id,
+          status,
+        })
+      }
+
+      return notFound(res)
     }
   }
 

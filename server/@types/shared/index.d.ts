@@ -106,6 +106,7 @@ export type { Cas3OASysGroup } from './models/Cas3OASysGroup';
 export type { Cas3Premises } from './models/Cas3Premises';
 export type { Cas3PremisesArchiveAction } from './models/Cas3PremisesArchiveAction';
 export type { Cas3PremisesBedspaceTotals } from './models/Cas3PremisesBedspaceTotals';
+export type { Cas3PremisesCharacteristic } from './models/Cas3PremisesCharacteristic';
 export type { Cas3PremisesSearchResult } from './models/Cas3PremisesSearchResult';
 export type { Cas3PremisesSearchResults } from './models/Cas3PremisesSearchResults';
 export type { Cas3PremisesSortBy } from './models/Cas3PremisesSortBy';

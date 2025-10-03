@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Cas3PremisesArchiveAction } from './Cas3PremisesArchiveAction';
+import type { Cas3PremisesCharacteristic } from './Cas3PremisesCharacteristic';
 import type { Cas3PremisesStatus } from './Cas3PremisesStatus';
 import type { Characteristic } from './Characteristic';
 import type { LocalAuthorityArea } from './LocalAuthorityArea';
@@ -12,12 +13,17 @@ export type Cas3Premises = {
     addressLine1: string;
     addressLine2?: string;
     archiveHistory?: Array<Cas3PremisesArchiveAction>;
+    /**
+     * Will be replaced with Cas3PremisesCharacteristics for v2
+     * @deprecated
+     */
     characteristics?: Array<Characteristic>;
     endDate?: string;
     id: string;
     localAuthorityArea?: LocalAuthorityArea;
     notes?: string;
     postcode: string;
+    premisesCharacteristics?: Array<Cas3PremisesCharacteristic>;
     probationDeliveryUnit: ProbationDeliveryUnit;
     probationRegion: ProbationRegion;
     reference: string;

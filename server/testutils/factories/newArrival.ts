@@ -20,7 +20,12 @@ export default Factory.define<NewArrival>(({ params }) => {
     const now = new Date()
     const latestArrivalDate = dayBeforeDeparture < now ? dayBeforeDeparture : now
 
-    arrivalDate = faker.date.between({ from: sevenDays, to: latestArrivalDate })
+    const earliestArrivalDate = new Date(expectedDepartureDate)
+    earliestArrivalDate.setDate(earliestArrivalDate.getDate() - 84)
+
+    const lowerBoundDate = earliestArrivalDate > sevenDays ? earliestArrivalDate : sevenDays
+
+    arrivalDate = faker.date.between({ from: lowerBoundDate, to: latestArrivalDate })
   } else {
     arrivalDate = faker.date.soon({ days: 7, refDate: sevenDays })
 

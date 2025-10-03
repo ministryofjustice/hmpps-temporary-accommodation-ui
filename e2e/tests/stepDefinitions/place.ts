@@ -59,9 +59,34 @@ Given('I view the assessment', () => {
   const assessmentListPage = Page.verifyOnPage(AssessmentListPage, 'Unallocated referrals')
   const assessment = getAssessment('unallocated')
 
-  assessmentListPage.searchByCrnOrName(assessment.application.person.crn, 'unallocated')
+  cy.wrap(null).then(() => {
+    try {
+      assessmentListPage.searchByCrnOrName(assessment.application.person.crn, 'unallocated')
+      assessmentListPage.clickAssessment(assessment)
+    } catch {
+      AssessmentListPage.visit('ready_to_place')
+      assessmentListPage.searchByCrnOrName(assessment.application.person.crn, 'ready to place')
+      assessmentListPage.clickAssessment(assessment)
 
-  assessmentListPage.clickAssessment(assessment)
+      const unallocatedAssesmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, {
+        ...assessment,
+        status: 'ready_to_place',
+      })
+      unallocatedAssesmentSummaryPage.clickAction('In review')
+
+      const inReviewConfirmationPage = Page.verifyOnPage(AssessmentConfirmPage, 'Mark this referral as in review')
+      inReviewConfirmationPage.clickSubmit()
+
+      const inReviewAssessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, {
+        ...assessment,
+        status: 'in_review',
+      })
+      inReviewAssessmentSummaryPage.clickAction('Unallocated')
+
+      const readyToPlaceConfirmationPage = Page.verifyOnPage(AssessmentConfirmPage, 'Unallocate this referral')
+      readyToPlaceConfirmationPage.clickSubmit()
+    }
+  })
 })
 
 Given('I mark the assessment as ready to place', () => {

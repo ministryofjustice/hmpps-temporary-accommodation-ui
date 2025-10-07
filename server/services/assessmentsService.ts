@@ -17,7 +17,6 @@ import { AssessmentSummary } from '../@types/shared'
 import type { AssessmentClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 import { assessmentTableRows } from '../utils/assessmentUtils'
-import { assertUnreachable } from '../utils/utils'
 
 export type AssessmentReferenceData = {
   referralRejectionReasons: Array<ReferenceData>
@@ -91,7 +90,7 @@ export default class AssessmentsService {
         break
 
       default:
-        assertUnreachable(status)
+        throw new Error(`Invalid status ‘${status}’`)
     }
   }
 

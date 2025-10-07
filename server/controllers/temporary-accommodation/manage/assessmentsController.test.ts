@@ -481,23 +481,30 @@ describe('AssessmentsController', () => {
   })
 
   describe('confirm', () => {
-    it.each([
-      'null' as const,
-      'unallocated' as const,
-      'in_review' as const,
-      'ready_to_place' as const,
-      'closed' as const,
-    ])('calls render with a confirmation message for the %s status', async status => {
+    it.each(['unallocated' as const, 'in_review' as const, 'ready_to_place' as const, 'closed' as const])(
+      'calls render with a confirmation message for the valid %s status',
+      async status => {
+        const assessmentId = 'some-assessment-id'
+        const requestHandler = assessmentsController.confirm()
+        request.params = { id: assessmentId, status }
+        await requestHandler(request, response, next)
+
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm', {
+          content: confirmationPageContent[status as AssessmentUpdateStatus],
+          status,
+          id: assessmentId,
+        })
+      },
+    )
+
+    it.each(['null' as const, 'notes' as const])('shows a 404 error for the invalid %s status', async status => {
       const assessmentId = 'some-assessment-id'
       const requestHandler = assessmentsController.confirm()
       request.params = { id: assessmentId, status }
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm', {
-        content: confirmationPageContent[status as AssessmentUpdateStatus],
-        status,
-        id: assessmentId,
-      })
+      expect(response.status).toHaveBeenCalledWith(404)
+      expect(response.render).toHaveBeenCalledWith('pages/error')
     })
   })
 

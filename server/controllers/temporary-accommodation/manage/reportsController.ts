@@ -2,6 +2,7 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import { addDays } from 'date-fns'
 import paths from '../../../paths/temporary-accommodation/manage'
+import config from '../../../config'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import ReportService from '../../../services/reportService'
 import extractCallConfig from '../../../utils/restUtils'
@@ -29,6 +30,7 @@ export default class ReportsController {
         probationRegionId: req.session.probationRegion.id,
         maxStartDate: DateFormats.isoDateToDatepickerInput(DateFormats.dateObjToIsoDate(addDays(new Date(), -1))),
         maxEndDate: DateFormats.isoDateToDatepickerInput(DateFormats.dateObjToIsoDate(new Date())),
+        showGapReportButton: config.flags.showGapReportButton,
         ...userInput,
       })
     }

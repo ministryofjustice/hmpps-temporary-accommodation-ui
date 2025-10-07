@@ -167,6 +167,10 @@ const reportTypeMetaData = {
     ],
     callToAction: 'Download referrals report',
   },
+  bookingGap: {
+    columnNames: ['probationRegion', 'pduName', 'premisesName', 'bedName', 'gap', 'gapDays', 'turnaroundDays'],
+    callToAction: 'Download gap report',
+  },
 }
 
 type ReportType = keyof typeof reportTypeMetaData

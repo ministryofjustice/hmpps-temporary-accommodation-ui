@@ -26,3 +26,8 @@ test('Download referrals report for a probation region', async ({ page, assessor
   await signIn(page, assessor)
   await visitReportsPageAndDownloadReport(page, 'referrals', assessor.probationRegion)
 })
+
+test('Download Gap report for a probation region', async ({ page, assessor }) => {
+  await signIn(page, assessor)
+  await visitReportsPageAndDownloadReport(page, 'bookingGap', assessor.probationRegion)
+})

@@ -138,6 +138,18 @@
                     preventDoubleClick: true
                 }) }}
 
+                <br />
+
+                {% if showGapReportButton %}
+                    {{ govukButton({
+                        text: "Download GAP report",
+                        name: "reportType",
+                        value: 'bookingGap',
+                        classes: 'govuk-!-width-one-half',
+                        preventDoubleClick: true
+                    }) }}
+                {% endif %}
+
             </form>
         </div>
     </div>

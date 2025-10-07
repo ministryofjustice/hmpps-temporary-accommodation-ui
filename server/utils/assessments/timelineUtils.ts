@@ -30,6 +30,7 @@ export const timelineData = (events: Array<ReferralHistoryNote>): Array<Timeline
         type: 'datetime',
       },
       byline: { text: convertToTitleCase(note.createdByUserName) },
+      category: (note as unknown as { category?: string }).category,
     }
   })
 }

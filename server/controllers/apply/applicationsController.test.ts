@@ -383,6 +383,7 @@ describe('applicationsController', () => {
           datetime: { timestamp: submittedTimelineEvent.createdAt, type: 'datetime' },
           html: undefined,
           label: { text: 'Referral submitted' },
+          category: 'submitted',
         },
       ]
 
@@ -395,7 +396,11 @@ describe('applicationsController', () => {
       const requestHandler = applicationsController.full()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('applications/full', { application, timelineEvents })
+      expect(response.render).toHaveBeenCalledWith('applications/full', {
+        application,
+        timelineEvents,
+        backLinkFragment: '#applications-submitted',
+      })
     })
   })
 })

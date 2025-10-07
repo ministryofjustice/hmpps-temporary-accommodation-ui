@@ -6,7 +6,7 @@
 {% extends "../partials/layout.njk" %}
 {% set pageTitle = "The person's referral - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
-{% set backLinkUrl = paths.applications.index({}) + (("#applications-rejected") if application.status === 'rejected' else "#applications-submitted") %}
+{% set backLinkUrl = paths.applications.index({}) + backLinkFragment %}
 
 {% block beforeContent %}
   {{

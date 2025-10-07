@@ -8,14 +8,19 @@ export default class ListPage extends Page {
   constructor(
     private readonly inProgressApplications: Array<Application>,
     private readonly submittedApplications: Array<Application>,
+    private readonly rejectedApplications: Array<Application>,
   ) {
     super('Transitional Accommodation (CAS3) referrals')
   }
 
-  static visit(inProgressApplications: Array<Application>, submittedApplications: Array<Application>): ListPage {
+  static visit(
+    inProgressApplications: Array<Application>,
+    submittedApplications: Array<Application>,
+    rejectedApplications: Array<Application>,
+  ): ListPage {
     cy.visit(paths.applications.index.pattern)
 
-    return new ListPage(inProgressApplications, submittedApplications)
+    return new ListPage(inProgressApplications, submittedApplications, rejectedApplications)
   }
 
   clickApplication(application: Application) {

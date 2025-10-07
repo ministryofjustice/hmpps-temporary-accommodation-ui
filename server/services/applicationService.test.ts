@@ -58,8 +58,9 @@ describe('ApplicationService', () => {
   describe('getAllForLoggedInUser', () => {
     const submittedApplications = applicationSummaryFactory.buildList(5, { status: 'submitted' })
     const inProgressApplications = applicationSummaryFactory.buildList(2, { status: 'inProgress' })
+    const rejectedApplications = applicationSummaryFactory.buildList(3, { status: 'rejected' })
 
-    const applications = [submittedApplications, inProgressApplications].flat()
+    const applications = [submittedApplications, inProgressApplications, rejectedApplications].flat()
 
     it('fetches all applications', async () => {
       applicationClient.all.mockResolvedValue(applications)
@@ -71,6 +72,7 @@ describe('ApplicationService', () => {
       expect(result).toEqual({
         inProgress: inProgressApplications,
         submitted: submittedApplications,
+        rejected: rejectedApplications,
       })
 
       expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)

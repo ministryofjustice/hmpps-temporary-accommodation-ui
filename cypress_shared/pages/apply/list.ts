@@ -65,7 +65,6 @@ export default class ListPage extends Page {
         .within(() => {
           cy.get('th').eq(0).contains(personName(application.person, 'Limited access offender'))
           cy.get('td').eq(0).contains(application.person.crn)
-          cy.get('td').eq(2).contains('Submitted')
 
           if (checkSubmittedAtDate) {
             cy.get('td').eq(1).contains(DateFormats.isoDateToUIDate(application.submittedAt))

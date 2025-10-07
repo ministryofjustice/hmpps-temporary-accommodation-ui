@@ -23,9 +23,6 @@ context('Applications dashboard', () => {
     // When I visit the Previous Applications page
     const page = ListPage.visit(inProgressApplications, submittedApplications)
 
-    // Then I should see all of the in progress applications
-    page.shouldShowInProgressApplications()
-
     // And I click on the submitted tab
     page.clickSubmittedTab()
 

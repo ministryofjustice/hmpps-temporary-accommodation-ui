@@ -102,6 +102,7 @@ const oasysPath = personPath.path('oasys')
 
 const reportsCas3Path = cas3Path.path('reports')
 const timelineCas3Path = cas3Path.path('timeline').path(':assessmentId')
+const applicationsCas3Path = cas3Path.path('applications')
 const deleteApplicationCas3Path = cas3Path.path('/applications/:id')
 const submitApplicationCas3Path = cas3Path.path('/applications/:id/submission')
 
@@ -145,6 +146,9 @@ export default {
         departure: managePathsCas3.premises.bookings.departure,
       },
     },
+    applications: {
+      index: applicationsCas3Path,
+    },
   },
   premises: {
     show: managePaths.premises.show,
@@ -167,7 +171,7 @@ export default {
   },
   applications: {
     show: applyPaths.applications.show,
-    index: applyPaths.applications.index,
+    index: applicationsCas3Path,
     update: applyPaths.applications.update,
     delete: deleteApplicationCas3Path,
     new: applyPaths.applications.create,

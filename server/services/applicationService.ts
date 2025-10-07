@@ -44,6 +44,7 @@ export default class ApplicationService {
     const result = {
       inProgress: [],
       submitted: [],
+      rejected: [],
     } as GroupedApplications
 
     await Promise.all(
@@ -54,6 +55,9 @@ export default class ApplicationService {
             break
           case 'submitted':
             result.submitted.push(application)
+            break
+          case 'rejected':
+            result.rejected.push(application)
             break
           default:
             break

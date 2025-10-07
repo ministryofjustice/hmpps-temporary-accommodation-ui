@@ -48,7 +48,11 @@ describe('applicationsController', () => {
 
   describe('index', () => {
     it('renders the index view', async () => {
-      const applications: GroupedApplications = { inProgress: [], submitted: [] }
+      const applications: GroupedApplications = {
+        inProgress: [],
+        submitted: [],
+        rejected: [],
+      }
 
       applicationService.getAllForLoggedInUser.mockResolvedValue(applications)
 

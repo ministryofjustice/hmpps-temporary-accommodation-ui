@@ -24,19 +24,18 @@ import { embeddedSummaryListItem } from './checkYourAnswersUtils/embeddedSummary
 
 const dashboardTableRows = (applications: Array<Application>): Array<TableRow> => {
   return applications.map(application => {
-    if (application.status === 'submitted') {
+    if (application.status === 'submitted' || application.status === 'rejected') {
       return [
         createNameAnchorElement(personName(application.person, 'Limited access offender'), application),
         textValue(application.person.crn),
         textValue(application.submittedAt ? DateFormats.isoDateToUIDate(application.submittedAt) : 'N/A'),
-        htmlValue(getStatus(application)),
       ]
     }
 
     return [
       createNameAnchorElement(personName(application.person, 'Limited access offender'), application),
       textValue(application.person.crn),
-      htmlValue(getStatus(application)),
+      textValue(application.createdAt ? DateFormats.isoDateToUIDate(application.createdAt) : 'N/A'),
     ]
   })
 }
@@ -59,7 +58,7 @@ const htmlValue = (value: string) => {
 }
 
 const createNameAnchorElement = (name: string, application: Application) => {
-  return application.status === 'submitted'
+  return application.status === 'submitted' || application.status === 'rejected'
     ? htmlValue(`<a href=${paths.applications.full({ id: application.id })}>${name}</a>`)
     : htmlValue(`<a href=${paths.applications.show({ id: application.id })}>${name}</a>`)
 }

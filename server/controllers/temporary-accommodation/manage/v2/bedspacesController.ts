@@ -4,7 +4,7 @@ import type { Cas3NewBedspace, Cas3UpdateBedspace } from '@approved-premises/api
 import AssessmentsService from '../../../../services/assessmentsService'
 import extractCallConfig from '../../../../utils/restUtils'
 import BedspaceService from '../../../../services/v2/bedspaceService'
-import { preservePlaceContext } from '../../../../utils/placeUtils'
+import { addPlaceContext, preservePlaceContext } from '../../../../utils/placeUtils'
 
 import paths from '../../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../../services/v2/premisesService'
@@ -39,8 +39,13 @@ export default class BedspacesController {
       const callConfig = extractCallConfig(req)
       const { premisesId } = req.params
 
-      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(callConfig)
-      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
+      const [referenceData, premises] = await Promise.all([
+        this.bedspaceService.getReferenceData(callConfig),
+        this.premisesService.getSinglePremises(callConfig, premisesId),
+        preservePlaceContext(req, res, this.assessmentService),
+      ])
+
+      const { characteristics: allCharacteristics } = referenceData
 
       const hasScheduledArchive = !!(
         premises.endDate &&
@@ -96,12 +101,16 @@ export default class BedspacesController {
         notes: req.body.notes,
       }
 
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
       try {
         const callConfig = extractCallConfig(req)
         const bedspace = await this.bedspaceService.createBedspace(callConfig, premisesId, newBedspace)
 
         req.flash('success', 'Bedspace added')
-        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
+        res.redirect(
+          addPlaceContext(paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }), placeContext),
+        )
       } catch (err) {
         const transform = (params: InvalidParams) => ({
           premisesStartDate: DateFormats.isoDateToUIDate(params.value),
@@ -115,7 +124,7 @@ export default class BedspacesController {
           req,
           res,
           err,
-          paths.premises.bedspaces.new({ premisesId }),
+          addPlaceContext(paths.premises.bedspaces.new({ premisesId }), placeContext),
           undefined,
           mergeVariables,
         )
@@ -132,6 +141,7 @@ export default class BedspacesController {
         this.premisesService.getSinglePremises(callConfig, premisesId),
         this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
         this.bedspaceService.getReferenceData(callConfig),
+        preservePlaceContext(req, res, this.assessmentService),
       ])
 
       const summary = this.premisesService.shortSummaryList(premises)
@@ -170,13 +180,22 @@ export default class BedspacesController {
         characteristicIds: req.body.characteristicIds ?? [],
       }
 
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
       try {
         const bedspace = await this.bedspaceService.updateBedspace(callConfig, premisesId, bedspaceId, updatedBedspace)
 
         req.flash('success', 'Bedspace edited')
-        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
+        res.redirect(
+          addPlaceContext(paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }), placeContext),
+        )
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.edit({ premisesId, bedspaceId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          addPlaceContext(paths.premises.bedspaces.edit({ premisesId, bedspaceId }), placeContext),
+        )
       }
     }
   }

@@ -68,6 +68,12 @@
         <div class="govuk-grid-column-full">
             <div class="moj-search cas-search-container govuk-!-margin-bottom-6 govuk-!-padding-6 govuk-!-padding-bottom-7 govuk-grid-column-two-thirds">
                 <form action="{{ paths.premises[status]({}) }}" method="get">
+                    {% if params.placeContextAssessmentId %}
+                        <input type="hidden" name="placeContextAssessmentId" value="{{ params.placeContextAssessmentId }}">
+                    {% endif %}
+                    {% if params.placeContextArrivalDate %}
+                        <input type="hidden" name="placeContextArrivalDate" value="{{ params.placeContextArrivalDate }}">
+                    {% endif %}
                     {{ govukInput({
                         label: {
                             classes: 'govuk-!-font-weight-bold',

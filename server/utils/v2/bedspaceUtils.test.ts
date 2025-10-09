@@ -19,6 +19,8 @@ describe('bedspaceV2Utils', () => {
         accommodationRequiredFromDate: '2025-08-27',
       }),
     })
+    const placeContextQueryString = `placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`
+
     it('returns correct actions for an online bedspace', () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({ status: 'online', endDate: undefined })
@@ -28,7 +30,7 @@ describe('bedspaceV2Utils', () => {
       expect(actions).toHaveLength(4)
       expect(actions).toContainEqual({
         text: 'Book bedspace',
-        href: `${paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id })}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+        href: `${paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id })}?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({
@@ -43,7 +45,7 @@ describe('bedspaceV2Utils', () => {
       })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
-        href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: `${paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id })}?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       })
     })
@@ -57,7 +59,7 @@ describe('bedspaceV2Utils', () => {
       expect(actions).toHaveLength(4)
       expect(actions).toContainEqual({
         text: 'Book bedspace',
-        href: `${paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id })}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+        href: `${paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id })}?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({
@@ -72,7 +74,7 @@ describe('bedspaceV2Utils', () => {
       })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
-        href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: `${paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id })}?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       })
     })
@@ -91,7 +93,7 @@ describe('bedspaceV2Utils', () => {
       })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
-        href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: `${paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id })}?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       })
     })
@@ -108,7 +110,7 @@ describe('bedspaceV2Utils', () => {
       expect(actions).toHaveLength(1)
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
-        href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: `${paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id })}?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       })
     })
@@ -135,7 +137,7 @@ describe('bedspaceV2Utils', () => {
       })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
-        href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: `${paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id })}?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       })
     })

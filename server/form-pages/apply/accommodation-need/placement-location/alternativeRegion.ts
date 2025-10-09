@@ -41,7 +41,7 @@ export default class AlternativeRegion implements TasklistPage {
       application.data['placement-location'] = {
         ...application.data['placement-location'],
         'alternative-region': {
-          alternativeRegion: 'yes',
+          alternativeRegion: 'no',
           regionName,
         },
       }

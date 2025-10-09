@@ -167,7 +167,7 @@ const probationDeliveryUnitIdFromApplication = (application: Application): strin
 
 const isOutOfRegion = (application: Application): boolean => {
   const basedInSameRegion = application.data?.['placement-location']['alternative-region']?.alternativeRegion
-  return basedInSameRegion === 'no'
+  return basedInSameRegion !== 'yes'
 }
 
 const getOutOfRegionDataFromApplication = (application: Application) => {

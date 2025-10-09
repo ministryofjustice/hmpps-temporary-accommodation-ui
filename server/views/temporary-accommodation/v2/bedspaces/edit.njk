@@ -13,7 +13,7 @@
 {% block beforeContent %}
     {{ govukBackLink({
         text: 'Back',
-        href: paths.premises.bedspaces.show({ premisesId: premisesId, bedspaceId: bedspaceId }),
+        href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premisesId, bedspaceId: bedspaceId })),
         classes: 'govuk-!-display-none-print'
     }) }}
 {% endblock %}
@@ -31,7 +31,7 @@
                 rows: summary.rows
             }) }}
 
-            <form action="{{ paths.premises.bedspaces.update({ premisesId: premisesId, bedspaceId: bedspaceId })}}" method="post">
+            <form action="{{ addPlaceContext(paths.premises.bedspaces.update({ premisesId: premisesId, bedspaceId: bedspaceId })) }}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
                 {{ formPageInput(

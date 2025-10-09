@@ -1,22 +1,27 @@
 import { Cas3Premises, Cas3PremisesBedspaceTotals } from '@approved-premises/api'
-import { PageHeadingBarItem } from '@approved-premises/ui'
+import { PageHeadingBarItem, PlaceContext } from '@approved-premises/ui'
 import paths from '../../paths/temporary-accommodation/manage'
 import config from '../../config'
+import { addPlaceContext } from '../placeUtils'
 
-export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarItem> => {
+export const premisesActions = (premises: Cas3Premises, placeContext?: PlaceContext): Array<PageHeadingBarItem> => {
+  const editPremisesPath = paths.premises.edit({ premisesId: premises.id })
+
   const actions = [
     {
       text: 'Edit property details',
       classes: 'govuk-button--secondary',
-      href: paths.premises.edit({ premisesId: premises.id }),
+      href: addPlaceContext(editPremisesPath, placeContext),
     },
   ]
 
   if (premises.status === 'online') {
+    const addBedspacePath = paths.premises.bedspaces.new({ premisesId: premises.id })
+
     actions.push({
       text: 'Add a bedspace',
       classes: 'govuk-button--secondary',
-      href: paths.premises.bedspaces.new({ premisesId: premises.id }),
+      href: addPlaceContext(addBedspacePath, placeContext),
     })
 
     if (premises.endDate) {

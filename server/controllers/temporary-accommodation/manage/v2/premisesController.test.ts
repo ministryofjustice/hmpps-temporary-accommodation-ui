@@ -19,7 +19,6 @@ import {
 } from '../../../../testutils/factories'
 import extractCallConfig from '../../../../utils/restUtils'
 import PremisesController from './premisesController'
-import paths from '../../../../paths/temporary-accommodation/manage'
 import { filterProbationRegions } from '../../../../utils/userUtils'
 import {
   catchValidationErrorOrPropogate,
@@ -54,6 +53,7 @@ describe('PremisesController', () => {
   ]
   const assessment = assessmentFactory.build({ status: 'ready_to_place' })
   const placeContext = placeContextFactory.build({ assessment })
+  const placeContextQueryString = `placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`
 
   let request: Request
 
@@ -886,12 +886,12 @@ describe('PremisesController', () => {
     const navArr = (activeTab: PremisesShowTabs) => [
       {
         text: 'Property overview',
-        href: `${paths.premises.show({ premisesId: property.id })}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+        href: `/properties/${property.id}?${placeContextQueryString}`,
         active: activeTab === 'premises',
       },
       {
         text: 'Bedspaces overview',
-        href: `${paths.premises.bedspaces.list({ premisesId: property.id })}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+        href: `/properties/${property.id}/bedspaces?${placeContextQueryString}`,
         active: activeTab === 'bedspaces',
       },
     ]
@@ -924,7 +924,7 @@ describe('PremisesController', () => {
           {
             text: 'Add a bedspace',
             classes: 'govuk-button--secondary',
-            href: `/properties/${property.id}/bedspaces/new`,
+            href: `/properties/${property.id}/bedspaces/new?${placeContextQueryString}`,
           },
           {
             text: 'Archive property',
@@ -934,7 +934,7 @@ describe('PremisesController', () => {
           {
             text: 'Edit property details',
             classes: 'govuk-button--secondary',
-            href: `/properties/${property.id}/edit`,
+            href: `/properties/${property.id}/edit?${placeContextQueryString}`,
           },
         ],
         showPremises: true,
@@ -972,7 +972,7 @@ describe('PremisesController', () => {
           {
             text: 'Add a bedspace',
             classes: 'govuk-button--secondary',
-            href: `/properties/${property.id}/bedspaces/new`,
+            href: `/properties/${property.id}/bedspaces/new?${placeContextQueryString}`,
           },
           {
             text: 'Archive property',
@@ -982,7 +982,7 @@ describe('PremisesController', () => {
           {
             text: 'Edit property details',
             classes: 'govuk-button--secondary',
-            href: `/properties/${property.id}/edit`,
+            href: `/properties/${property.id}/edit?${placeContextQueryString}`,
           },
         ],
         showPremises: false,
@@ -1061,7 +1061,7 @@ describe('PremisesController', () => {
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property added')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
     })
 
     it('should fail to create a premises when the service returns an error', async () => {
@@ -1088,7 +1088,7 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, paths.premises.new({}))
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '/properties/new')
     })
   })
 
@@ -1246,7 +1246,7 @@ describe('PremisesController', () => {
 
       expect(premisesService.updatePremises).toHaveBeenCalledWith(callConfig, premises.id, { ...updatedPremises })
       expect(request.flash).toHaveBeenCalledWith('success', 'Property edited')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
     })
 
     it('should fail to update a premises when the service returns an error', async () => {
@@ -1282,7 +1282,7 @@ describe('PremisesController', () => {
         request,
         response,
         err,
-        paths.premises.edit({ premisesId }),
+        `/properties/${premisesId}/edit`,
       )
     })
   })
@@ -1370,7 +1370,7 @@ describe('PremisesController', () => {
         endDate: DateFormats.dateObjToIsoDate(today),
       })
       expect(request.flash).toHaveBeenCalledWith('success', 'Property and bedspaces archived')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
     })
 
     it('should fail to archive when the service returns an error', async () => {
@@ -1411,7 +1411,7 @@ describe('PremisesController', () => {
         request,
         response,
         error,
-        paths.premises.archive({ premisesId: premises.id }),
+        `/properties/${premises.id}/archive`,
         'premisesArchive',
         mergeParameters,
       )
@@ -1437,7 +1437,7 @@ describe('PremisesController', () => {
 
       expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
       expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.archive({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}/archive`)
     })
   })
 
@@ -1499,7 +1499,7 @@ describe('PremisesController', () => {
         restartDate: DateFormats.dateObjToIsoDate(today),
       })
       expect(request.flash).toHaveBeenCalledWith('success', 'Property and bedspaces online')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
     })
 
     it('should fail to unarchive when the service returns an error', async () => {
@@ -1532,7 +1532,7 @@ describe('PremisesController', () => {
         request,
         response,
         error,
-        paths.premises.unarchive({ premisesId: premises.id }),
+        `/properties/${premises.id}/unarchive`,
         'premisesUnarchive',
       )
     })
@@ -1555,7 +1555,7 @@ describe('PremisesController', () => {
 
       expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
       expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.unarchive({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}/unarchive`)
     })
   })
 
@@ -1597,7 +1597,7 @@ describe('PremisesController', () => {
 
       expect(premisesService.cancelArchivePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(request.flash).toHaveBeenCalledWith('success', 'Scheduled archive cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
     })
 
     it('should redirect to show premises page when user selects no', async () => {
@@ -1611,7 +1611,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.cancelArchivePremises).not.toHaveBeenCalled()
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
     })
 
     it('should show validation error when no option is selected', async () => {
@@ -1630,7 +1630,7 @@ describe('PremisesController', () => {
       expect(request.flash).toHaveBeenCalledWith('errors', [{ cancelArchive: { text: errorMessage } }])
       expect(request.flash).toHaveBeenCalledWith('errorSummary', [{ text: errorMessage, href: '#cancelArchive' }])
       expect(request.flash).toHaveBeenCalledWith('userInput', {})
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.cancelArchive({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}/cancel-archive`)
     })
 
     it('should handle API errors when cancelling archive', async () => {
@@ -1663,7 +1663,7 @@ describe('PremisesController', () => {
         request,
         response,
         error,
-        paths.premises.cancelArchive({ premisesId: premises.id }),
+        `/properties/${premises.id}/cancel-archive`,
         'premisesCancelArchive',
       )
     })
@@ -1707,7 +1707,7 @@ describe('PremisesController', () => {
 
       expect(premisesService.cancelUnarchivePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(request.flash).toHaveBeenCalledWith('success', 'Scheduled unarchive cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
     })
 
     it('should redirect to show premises page when user selects no', async () => {
@@ -1721,7 +1721,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.cancelUnarchivePremises).not.toHaveBeenCalled()
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
     })
 
     it('should show validation error when no option is selected', async () => {
@@ -1740,7 +1740,7 @@ describe('PremisesController', () => {
       expect(request.flash).toHaveBeenCalledWith('errors', [{ cancelUnarchive: { text: errorMessage } }])
       expect(request.flash).toHaveBeenCalledWith('errorSummary', [{ text: errorMessage, href: '#cancelUnarchive' }])
       expect(request.flash).toHaveBeenCalledWith('userInput', {})
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.cancelUnarchive({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}/cancel-unarchive`)
     })
 
     it('should handle API errors when cancelling unarchive', async () => {
@@ -1773,7 +1773,7 @@ describe('PremisesController', () => {
         request,
         response,
         error,
-        paths.premises.cancelUnarchive({ premisesId: premises.id }),
+        `/properties/${premises.id}/cancel-unarchive`,
         'premisesCancelUnarchive',
       )
     })

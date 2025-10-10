@@ -14,12 +14,16 @@ export function bedspaceActions(
     return onlineBedspaceActions(premises, bedspace, placeContext)
   }
   if (bedspace.status === 'archived') {
-    return archivedBedspaceActions(premises, bedspace)
+    return archivedBedspaceActions(premises, bedspace, placeContext)
   }
-  return upcomingBedspaceActions(premises, bedspace)
+  return upcomingBedspaceActions(premises, bedspace, placeContext)
 }
 
-const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> => {
+const archivedBedspaceActions = (
+  premises: Cas3Premises,
+  bedspace: Cas3Bedspace,
+  placeContext: PlaceContext,
+): Array<PageHeadingBarItem> => {
   const actions: Array<PageHeadingBarItem> = []
 
   if (!bedspace.scheduleUnarchiveDate) {
@@ -32,13 +36,20 @@ const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
 
   actions.push({
     text: 'Edit bedspace details',
-    href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    href: addPlaceContext(
+      paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      placeContext,
+    ),
     classes: 'govuk-button--secondary',
   })
   return actions
 }
 
-const upcomingBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> => {
+const upcomingBedspaceActions = (
+  premises: Cas3Premises,
+  bedspace: Cas3Bedspace,
+  placeContext: PlaceContext,
+): Array<PageHeadingBarItem> => {
   const actions: Array<PageHeadingBarItem> = []
 
   if (bedspace.archiveHistory.length >= 1) {
@@ -52,7 +63,10 @@ const upcomingBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
   }
   actions.push({
     text: 'Edit bedspace details',
-    href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    href: addPlaceContext(
+      paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      placeContext,
+    ),
     classes: 'govuk-button--secondary',
   })
   return actions
@@ -92,7 +106,10 @@ const onlineBedspaceActions = (
   }
   actions.push({
     text: 'Edit bedspace details',
-    href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    href: addPlaceContext(
+      paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      placeContext,
+    ),
     classes: 'govuk-button--secondary',
   })
   return actions

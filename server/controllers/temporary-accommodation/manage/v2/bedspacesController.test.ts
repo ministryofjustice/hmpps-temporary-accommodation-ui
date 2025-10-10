@@ -28,7 +28,6 @@ import {
 import extractCallConfig from '../../../../utils/restUtils'
 import PremisesService from '../../../../services/v2/premisesService'
 import { DateFormats } from '../../../../utils/dateUtils'
-import paths from '../../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService } from '../../../../services'
 import { ListingEntry } from '../../../../services/bookingService'
 import config from '../../../../config'
@@ -51,6 +50,7 @@ describe('BedspacesController', () => {
   }
   const assessment = assessmentFactory.build({ status: 'ready_to_place' })
   const placeContext = placeContextFactory.build({ assessment })
+  const placeContextQueryString = `placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`
 
   let request: Request
 
@@ -186,7 +186,7 @@ describe('BedspacesController', () => {
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace added')
       expect(response.redirect).toHaveBeenCalledWith(
-        paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }),
+        `/properties/${premisesId}/bedspaces/${bedspace.id}?${placeContextQueryString}`,
       )
     })
 
@@ -209,13 +209,13 @@ describe('BedspacesController', () => {
         notes: bedspace.notes,
       }
 
-      requestHandler(request, response, next)
+      await requestHandler(request, response, next)
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,
         err,
-        paths.premises.bedspaces.new({ premisesId }),
+        `/properties/${premisesId}/bedspaces/new?${placeContextQueryString}`,
         undefined,
         undefined,
       )
@@ -269,22 +269,22 @@ describe('BedspacesController', () => {
     const onlineBedspaceActions = [
       {
         text: 'Book bedspace',
-        href: `${paths.bookings.new({ premisesId, bedspaceId })}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+        href: `/properties/${premisesId}/bedspaces/${bedspaceId}/bookings/new?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       },
       {
         text: 'Void bedspace',
-        href: paths.lostBeds.new({ premisesId, bedspaceId }),
+        href: `/properties/${premisesId}/bedspaces/${bedspaceId}/void/new`,
         classes: 'govuk-button--secondary',
       },
       {
         text: 'Archive bedspace',
-        href: paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
+        href: `/properties/${premisesId}/bedspaces/${bedspaceId}/archive`,
         classes: 'govuk-button--secondary',
       },
       {
         text: 'Edit bedspace details',
-        href: paths.premises.bedspaces.edit({ premisesId, bedspaceId }),
+        href: `/properties/${premisesId}/bedspaces/${bedspaceId}/edit?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       },
     ]
@@ -317,12 +317,12 @@ describe('BedspacesController', () => {
     const archivedBedspaceActions = [
       {
         text: 'Make bedspace online',
-        href: paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }),
+        href: `/properties/${premisesId}/bedspaces/${bedspaceId}/unarchive`,
         classes: 'govuk-button--secondary',
       },
       {
         text: 'Edit bedspace details',
-        href: paths.premises.bedspaces.edit({ premisesId, bedspaceId }),
+        href: `/properties/${premisesId}/bedspaces/${bedspaceId}/edit?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       },
     ]
@@ -356,24 +356,24 @@ describe('BedspacesController', () => {
     const upcomingBedspaceActions = [
       {
         text: 'Cancel scheduled bedspace online date',
-        href: paths.premises.bedspaces.cancelUnarchive({ premisesId, bedspaceId }),
+        href: `/properties/${premisesId}/bedspaces/${bedspaceId}/cancel-unarchive`,
         classes: 'govuk-button--secondary',
       },
       {
         text: 'Edit bedspace details',
-        href: paths.premises.bedspaces.edit({ premisesId, bedspaceId }),
+        href: `/properties/${premisesId}/bedspaces/${bedspaceId}/edit?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
       },
     ]
     const bookingEntry = {
       body: bookingFactory.build({ id: bookingId }),
       type: 'booking',
-      path: paths.bookings.show({ premisesId, bedspaceId, bookingId }),
+      path: `/properties/${premisesId}/bedspaces/${bedspaceId}/bookings/${bookingId}`,
     }
     const lostBedEntry = {
       body: lostBedFactory.build({ id: lostBedId }),
       type: 'lost-bed',
-      path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId }),
+      path: `/properties/${premisesId}/bedspaces/${bedspaceId}/void/${lostBedId}`,
     }
     it.each([
       [onlineBedspace, onlineBedspaceSummary, onlineBedspaceActions, [bookingEntry, lostBedEntry]],
@@ -525,7 +525,7 @@ describe('BedspacesController', () => {
       })
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace edited')
       expect(response.redirect).toHaveBeenCalledWith(
-        paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        `/properties/${premises.id}/bedspaces/${bedspace.id}?${placeContextQueryString}`,
       )
     })
 
@@ -560,7 +560,7 @@ describe('BedspacesController', () => {
         request,
         response,
         err,
-        paths.premises.bedspaces.edit({ premisesId, bedspaceId }),
+        `/properties/${premisesId}/bedspaces/${bedspaceId}/edit?${placeContextQueryString}`,
       )
     })
   })
@@ -581,7 +581,7 @@ describe('BedspacesController', () => {
 
       expect(bedspaceService.cancelArchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace archive cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
     })
 
     it('shows the correct success message when premisesScheduledForArchive is true', async () => {
@@ -592,7 +592,7 @@ describe('BedspacesController', () => {
 
       expect(bedspaceService.cancelArchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property archive cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
     })
 
     it('redirects to the bedspace page without cancelling if "no" is selected', async () => {
@@ -602,7 +602,7 @@ describe('BedspacesController', () => {
 
       expect(bedspaceService.cancelArchiveBedspace).not.toHaveBeenCalled()
       expect(request.flash).not.toHaveBeenCalledWith('success', 'Bedspace archive cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
     })
 
     it('renders the cancel archive page with errors when the service throws', async () => {
@@ -616,7 +616,7 @@ describe('BedspacesController', () => {
         request,
         response,
         error,
-        paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+        `/properties/${premisesId}/bedspaces/${bedspaceId}/cancel-archive`,
       )
     })
   })
@@ -776,7 +776,7 @@ describe('BedspacesController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace archived')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
     })
 
     it('successfully archives the last bedspace and redirects to show page with archived property message', async () => {
@@ -815,7 +815,7 @@ describe('BedspacesController', () => {
         expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/), // Today's date in ISO format
       )
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property archived')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
     })
 
     it('should fail to archive when the service returns an error', async () => {
@@ -856,7 +856,7 @@ describe('BedspacesController', () => {
         request,
         response,
         error,
-        paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
+        `/properties/${premisesId}/bedspaces/${bedspaceId}/archive`,
         'bedspaceArchive',
         mergeParameters,
       )
@@ -887,7 +887,7 @@ describe('BedspacesController', () => {
         request,
         response,
         error,
-        paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
+        `/properties/${premisesId}/bedspaces/${bedspaceId}/archive`,
         'bedspaceArchive',
         undefined,
       )
@@ -922,7 +922,7 @@ describe('BedspacesController', () => {
         request,
         response,
         error,
-        paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
+        `/properties/${premisesId}/bedspaces/${bedspaceId}/archive`,
         'bedspaceArchive',
         undefined,
       )
@@ -947,7 +947,7 @@ describe('BedspacesController', () => {
 
       expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
       expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}/archive`)
     })
   })
 
@@ -1009,7 +1009,7 @@ describe('BedspacesController', () => {
         expect.any(String),
       )
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace online')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
     })
 
     it('successfully unarchives the last archived bedspace and shows property message', async () => {
@@ -1046,7 +1046,7 @@ describe('BedspacesController', () => {
         expect.any(String),
       )
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property online')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
     })
 
     it('successfully unarchives the last archived bedspace with future date and shows property updated message', async () => {
@@ -1082,7 +1082,7 @@ describe('BedspacesController', () => {
       expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.unarchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId, futureDate)
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property updated')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
     })
 
     it('should show an error when the user has not selected a date option', async () => {
@@ -1104,7 +1104,7 @@ describe('BedspacesController', () => {
 
       expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
       expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}/unarchive`)
     })
   })
 
@@ -1169,7 +1169,7 @@ describe('BedspacesController', () => {
 
       expect(bedspaceService.cancelUnarchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace online date cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
     })
 
     it('redirects to the bedspace page without cancelling if "no" is selected', async () => {
@@ -1179,7 +1179,7 @@ describe('BedspacesController', () => {
 
       expect(bedspaceService.cancelUnarchiveBedspace).not.toHaveBeenCalled()
       expect(request.flash).not.toHaveBeenCalledWith('success', 'Bedspace online date cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
     })
 
     it('renders the cancel unarchive page with errors when the service throws', async () => {
@@ -1193,7 +1193,7 @@ describe('BedspacesController', () => {
         request,
         response,
         error,
-        paths.premises.bedspaces.cancelUnarchive({ premisesId, bedspaceId }),
+        `/properties/${premisesId}/bedspaces/${bedspaceId}/cancel-unarchive`,
       )
     })
   })

@@ -3,22 +3,18 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ApplicationStatus } from './ApplicationStatus';
+import type { AssessmentDecision } from './AssessmentDecision';
 import type { FullPerson } from './FullPerson';
 import type { PersonRisks } from './PersonRisks';
 import type { RestrictedPerson } from './RestrictedPerson';
 import type { UnknownPerson } from './UnknownPerson';
 export type Cas3Application = {
     arrivalDate?: string;
+    assessmentDecision?: AssessmentDecision;
     assessmentId?: string;
     createdAt: string;
     createdByUserId: string;
-    /**
-     * Any object
-     */
     data?: any;
-    /**
-     * Any object
-     */
     document?: any;
     id: string;
     offenceId: string;

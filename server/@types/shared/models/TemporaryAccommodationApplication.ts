@@ -9,13 +9,7 @@ export type TemporaryAccommodationApplication = (Application & {
     arrivalDate?: string;
     assessmentId?: string;
     createdByUserId?: string;
-    /**
-     * Any object
-     */
     data?: any;
-    /**
-     * Any object
-     */
     document?: any;
     offenceId?: string;
     risks?: PersonRisks;

@@ -334,7 +334,7 @@ describe('applicationUtils', () => {
             text: applicationA.person.crn,
           },
           {
-            html: getStatus(applicationA),
+            text: DateFormats.isoDateToUIDate(applicationA.createdAt),
           },
         ],
         [
@@ -346,9 +346,6 @@ describe('applicationUtils', () => {
           },
           {
             text: DateFormats.isoDateToUIDate(submittedAtDate),
-          },
-          {
-            html: getStatus(applicationB),
           },
         ],
       ])

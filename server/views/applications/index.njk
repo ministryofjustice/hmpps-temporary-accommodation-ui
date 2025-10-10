@@ -33,6 +33,13 @@
             panel: {
               html: applicationsTable("Referrals", dashboardTableRows(applications.submitted), true)
             }
+          },
+          {
+            label: "Rejected",
+            id: "applications-rejected",
+            panel: {
+              html: applicationsTable("Referrals", dashboardTableRows(applications.rejected), true)
+            }
           }
         ]
       }) }}

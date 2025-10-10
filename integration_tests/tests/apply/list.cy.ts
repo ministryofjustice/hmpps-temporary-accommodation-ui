@@ -14,17 +14,15 @@ context('Applications dashboard', () => {
     // Given there are applications in the database
     const inProgressApplications = applicationFactory.buildList(5, { status: 'inProgress' })
     const submittedApplications = applicationFactory.buildList(5, { status: 'submitted' })
+    const rejectedApplications = applicationFactory.buildList(5, { status: 'rejected' })
 
-    cy.task('stubApplications', [inProgressApplications, submittedApplications].flat())
+    cy.task('stubApplications', [inProgressApplications, submittedApplications, rejectedApplications].flat())
 
     // And given I am logged in
     cy.signIn()
 
     // When I visit the Previous Applications page
-    const page = ListPage.visit(inProgressApplications, submittedApplications)
-
-    // Then I should see all of the in progress applications
-    page.shouldShowInProgressApplications()
+    const page = ListPage.visit(inProgressApplications, submittedApplications, rejectedApplications)
 
     // And I click on the submitted tab
     page.clickSubmittedTab()

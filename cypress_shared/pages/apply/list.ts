@@ -8,14 +8,19 @@ export default class ListPage extends Page {
   constructor(
     private readonly inProgressApplications: Array<Application>,
     private readonly submittedApplications: Array<Application>,
+    private readonly rejectedApplications: Array<Application>,
   ) {
     super('Transitional Accommodation (CAS3) referrals')
   }
 
-  static visit(inProgressApplications: Array<Application>, submittedApplications: Array<Application>): ListPage {
+  static visit(
+    inProgressApplications: Array<Application>,
+    submittedApplications: Array<Application>,
+    rejectedApplications: Array<Application>,
+  ): ListPage {
     cy.visit(paths.applications.index.pattern)
 
-    return new ListPage(inProgressApplications, submittedApplications)
+    return new ListPage(inProgressApplications, submittedApplications, rejectedApplications)
   }
 
   clickApplication(application: Application) {
@@ -65,7 +70,6 @@ export default class ListPage extends Page {
         .within(() => {
           cy.get('th').eq(0).contains(personName(application.person, 'Limited access offender'))
           cy.get('td').eq(0).contains(application.person.crn)
-          cy.get('td').eq(2).contains('Submitted')
 
           if (checkSubmittedAtDate) {
             cy.get('td').eq(1).contains(DateFormats.isoDateToUIDate(application.submittedAt))

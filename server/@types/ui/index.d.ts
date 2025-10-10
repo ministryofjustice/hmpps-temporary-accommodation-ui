@@ -163,6 +163,7 @@ export interface TimelineItem {
     timestamp: string
     type: 'datetime'
   }
+  category?: string
   byline?: {
     text: string
   }
@@ -255,6 +256,7 @@ export type DataServices = Partial<{
 export interface GroupedApplications {
   inProgress: Array<ApplicationSummary>
   submitted: Array<ApplicationSummary>
+  rejected: Array<ApplicationSummary>
 }
 
 export type OasysImportArrays = Array<OASysQuestion> | Array<OASysSupportingInformationQuestion>

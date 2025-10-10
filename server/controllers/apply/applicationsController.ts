@@ -153,9 +153,20 @@ export default class ApplicationsController {
 
       const timelineEvents = await this.timelineService.getTimelineForAssessment(callConfig, application.assessmentId)
 
+      const firstEventWithCategory = timelineEvents.find(e => e.category)
+
+      const categoryToFragmentMap: Record<string, string> = {
+        rejected: '#applications-rejected',
+        in_review: '#applications-submitted',
+      }
+
+      const backLinkFragment =
+        categoryToFragmentMap[firstEventWithCategory?.category ?? ''] || '#applications-submitted'
+
       return res.render('applications/full', {
         application,
         timelineEvents,
+        backLinkFragment,
       })
     }
   }

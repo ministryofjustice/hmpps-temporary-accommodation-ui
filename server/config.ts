@@ -51,6 +51,7 @@ export default {
     applyEnabledForAllRegions: ['local', 'dev', 'test'].includes(environment),
     domainEventsEmit: get('DOMAIN_EVENTS_EMIT_ENABLED', ''),
     cancelScheduledArchiveEnabled: get('CANCEL_SCHEDULED_ARCHIVE_ENABLED', 'false') === 'true',
+    showGapReportButton: get('SHOW_GAP_REPORT_BUTTON', 'false'),
   },
   environment,
   sentry: {

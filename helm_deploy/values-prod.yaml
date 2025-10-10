@@ -21,6 +21,7 @@ generic-service:
     PAGINATION_ASSESSMENTS_DEFAULT_PAGE_SIZE: 100
     DOMAIN_EVENTS_EMIT_ENABLED: 'personArrived,personDeparted'
     CANCEL_SCHEDULED_ARCHIVE_ENABLED: true
+    SHOW_GAP_REPORT_BUTTON: false
 
   namespace_secrets:
     sqs-hmpps-audit-secret:

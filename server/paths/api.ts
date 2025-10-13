@@ -172,7 +172,7 @@ export default {
     search: managePaths.bookings.search,
   },
   applications: {
-    show: applyPaths.applications.show,
+    show: singleApplicationCas3Path,
     index: applicationsCas3Path,
     update: applyPaths.applications.update,
     delete: deleteApplicationCas3Path,

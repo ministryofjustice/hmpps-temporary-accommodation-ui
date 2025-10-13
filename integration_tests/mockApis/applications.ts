@@ -9,7 +9,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        url: `/applications`,
+        url: `/cas3/applications`,
       },
       response: {
         status: 200,
@@ -55,7 +55,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        url: `/applications/${args.application.id}`,
+        url: `/cas3/applications/${args.application.id}`,
       },
       response: {
         status: 200,

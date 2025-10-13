@@ -10,28 +10,9 @@
         text: "CRN"
       },
       {
-        text: "Status"
+        text: "Date actioned"
       }
     ] %}
-
-    {% set headersWithSubmitted = [
-      {
-        text: "Person"
-      },
-      {
-        text: "CRN"
-      },
-      {
-        text: "Date submitted"
-      },
-      {
-        text: "Status"
-      }
-    ] %}
-
-    {% if submitted %}
-      {% set headers = headersWithSubmitted %}
-    {% endif %}
 
     {{
         govukTable({

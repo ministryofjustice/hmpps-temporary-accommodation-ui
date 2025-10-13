@@ -39,7 +39,7 @@ context('Delete application', () => {
     page.clickSubmit('Save and continue')
 
     // Then the user should be redirected to the list applications page
-    const listPage = Page.verifyOnPage(ListPage, [firstApplication], [])
+    const listPage = Page.verifyOnPage(ListPage, [firstApplication], [], [])
 
     // And I should see a success message
     listPage.shouldShowBanner(`You have deleted the referral`)

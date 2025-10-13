@@ -383,7 +383,6 @@ describe('applicationsController', () => {
           datetime: { timestamp: submittedTimelineEvent.createdAt, type: 'datetime' },
           html: undefined,
           label: { text: 'Referral submitted' },
-          category: 'submitted',
         },
       ]
 

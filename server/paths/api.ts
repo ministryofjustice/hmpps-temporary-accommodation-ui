@@ -105,6 +105,7 @@ const timelineCas3Path = cas3Path.path('timeline').path(':assessmentId')
 const applicationsCas3Path = cas3Path.path('applications')
 const deleteApplicationCas3Path = cas3Path.path('/applications/:id')
 const submitApplicationCas3Path = cas3Path.path('/applications/:id/submission')
+const singleApplicationCas3Path = applicationsCas3Path.path(':id')
 
 const applyPaths = {
   applications: {
@@ -148,6 +149,7 @@ export default {
     },
     applications: {
       index: applicationsCas3Path,
+      show: singleApplicationCas3Path,
     },
   },
   premises: {

@@ -1,5 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 
+import { Cas3Application } from '@approved-premises/api'
 import paths from '../../paths/apply'
 import { PersonService } from '../../services'
 import ApplicationService from '../../services/applicationService'
@@ -149,19 +150,18 @@ export default class ApplicationsController {
       const callConfig = extractCallConfig(req)
 
       const { id } = req.params
-      const application = await this.applicationService.findApplication(callConfig, id)
+      const application = (await this.applicationService.findApplication(callConfig, id)) as Cas3Application
 
       const timelineEvents = await this.timelineService.getTimelineForAssessment(callConfig, application.assessmentId)
 
-      const firstEventWithCategory = timelineEvents.find(e => e.category)
+      const { assessmentDecision } = application
 
-      const categoryToFragmentMap: Record<string, string> = {
+      const assessmentDecisionToFragmentMap: Record<string, string> = {
         rejected: '#applications-rejected',
         in_review: '#applications-submitted',
       }
 
-      const backLinkFragment =
-        categoryToFragmentMap[firstEventWithCategory?.category ?? ''] || '#applications-submitted'
+      const backLinkFragment = assessmentDecisionToFragmentMap[assessmentDecision] || '#applications-submitted'
 
       return res.render('applications/full', {
         application,

@@ -35,7 +35,6 @@ describe('TimelineService', () => {
           datetime: { timestamp: systemNote.createdAt, type: 'datetime' },
           html: undefined,
           label: { text: 'Referral submitted' },
-          category: 'submitted',
         },
       ])
 

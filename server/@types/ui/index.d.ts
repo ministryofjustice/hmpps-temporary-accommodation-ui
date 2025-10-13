@@ -163,7 +163,6 @@ export interface TimelineItem {
     timestamp: string
     type: 'datetime'
   }
-  category?: string
   byline?: {
     text: string
   }

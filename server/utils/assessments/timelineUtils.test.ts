@@ -93,7 +93,6 @@ describe('timelineUtils', () => {
           byline: {
             text: 'Some User',
           },
-          category: undefined,
         },
         {
           label: {
@@ -107,7 +106,6 @@ describe('timelineUtils', () => {
           byline: {
             text: 'Some User',
           },
-          category: undefined,
         },
         {
           label: {
@@ -120,7 +118,6 @@ describe('timelineUtils', () => {
           byline: {
             text: 'Some User',
           },
-          category: 'ready_to_place',
         },
         {
           label: {
@@ -134,7 +131,6 @@ describe('timelineUtils', () => {
           byline: {
             text: 'Another User',
           },
-          category: undefined,
         },
         {
           label: {
@@ -147,7 +143,6 @@ describe('timelineUtils', () => {
           byline: {
             text: 'Some User',
           },
-          category: 'in_review',
         },
         {
           label: {
@@ -161,7 +156,6 @@ describe('timelineUtils', () => {
           byline: {
             text: 'Some User',
           },
-          category: undefined,
         },
       ])
     })

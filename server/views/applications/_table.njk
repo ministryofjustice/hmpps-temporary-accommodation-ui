@@ -14,22 +14,6 @@
       }
     ] %}
 
-    {% set headersWithSubmitted = [
-      {
-        text: "Person"
-      },
-      {
-        text: "CRN"
-      },
-      {
-        text: "Date actioned"
-      }
-    ] %}
-
-    {% if submitted %}
-      {% set headers = headersWithSubmitted %}
-    {% endif %}
-
     {{
         govukTable({
           caption: title,

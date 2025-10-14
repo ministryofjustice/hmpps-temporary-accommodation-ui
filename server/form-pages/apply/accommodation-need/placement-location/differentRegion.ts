@@ -54,13 +54,17 @@ export default class DifferentRegion implements TasklistPage {
   set body(value) {
     this._body = {
       ...this.body,
-      regionId: value.regionId,
+      regionId:
+        value.regionId ||
+        (this.body.currentRegionName === 'National'
+          ? this.application.data?.['placement-location']?.['different-region']?.regionId
+          : null),
       regionName: value.regionName || this.regions?.find(region => region.id === value.regionId)?.name || '',
     }
 
     const previousRegionId = this.application.data?.['placement-location']?.['different-region']?.regionId
 
-    if (previousRegionId && previousRegionId !== value.regionId) {
+    if (previousRegionId && previousRegionId !== value.regionId && this.body.currentRegionName !== 'National') {
       this.application.data['placement-location']['placement-pdu'] = {}
     }
   }
@@ -107,7 +111,7 @@ export default class DifferentRegion implements TasklistPage {
         checked: this.body.regionId === region.id || false,
       }))
 
-    if (this.body.currentRegionId && this.body.currentRegionName) {
+    if (this.body.currentRegionId && this.body.currentRegionName && this.body.currentRegionName !== 'National') {
       regionOptions.push(
         { divider: 'or' },
         {

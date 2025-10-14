@@ -21,7 +21,7 @@ import { filterProbationRegions } from '../../../../utils/userUtils'
 import { parseNumber } from '../../../../utils/formUtils'
 import { premisesActions } from '../../../../utils/v2/premisesUtils'
 import { DateFormats } from '../../../../utils/dateUtils'
-import { preservePlaceContext } from '../../../../utils/placeUtils'
+import { addPlaceContext, preservePlaceContext } from '../../../../utils/placeUtils'
 
 export default class PremisesController {
   constructor(
@@ -66,13 +66,15 @@ export default class PremisesController {
       ])
       const summary = this.premisesService.summaryList(premises)
 
-      return res.render('temporary-accommodation/v2/premises/show', {
+      const bodyData = {
         premises,
         summary,
-        actions: premisesActions(premises),
+        actions: premisesActions(premises, placeContext),
         showPremises: true,
         subNavArr: showPropertySubNavArray(premisesId, placeContext, 'premises'),
-      })
+      }
+
+      return res.render('temporary-accommodation/v2/premises/show', bodyData)
     }
   }
 
@@ -99,7 +101,7 @@ export default class PremisesController {
       return res.render('temporary-accommodation/v2/premises/show', {
         premises,
         bedspaceSummaries,
-        actions: premisesActions(premises),
+        actions: premisesActions(premises, placeContext),
         showPremises: false,
         subNavArr,
       })
@@ -127,8 +129,12 @@ export default class PremisesController {
 
       const callConfig = extractCallConfig(req)
 
-      const { localAuthorities, characteristics, probationRegions, pdus } =
-        await this.premisesService.getReferenceData(callConfig)
+      const [referenceData] = await Promise.all([
+        this.premisesService.getReferenceData(callConfig),
+        preservePlaceContext(req, res, this.assessmentService),
+      ])
+
+      const { localAuthorities, characteristics, probationRegions, pdus } = referenceData
 
       return res.render('temporary-accommodation/v2/premises/new', {
         errors,
@@ -158,14 +164,16 @@ export default class PremisesController {
         turnaroundWorkingDays: parseNumber(req.body.turnaroundWorkingDays, { allowNegatives: true }),
       }
 
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
       try {
         const callConfig = extractCallConfig(req)
         const premises = await this.premisesService.createPremises(callConfig, newPremises)
 
         req.flash('success', 'Property added')
-        res.redirect(paths.premises.show({ premisesId: premises.id }))
+        res.redirect(addPlaceContext(paths.premises.show({ premisesId: premises.id }), placeContext))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.new())
+        catchValidationErrorOrPropogate(req, res, err, addPlaceContext(paths.premises.new(), placeContext))
       }
     }
   }
@@ -175,9 +183,12 @@ export default class PremisesController {
       const callConfig = extractCallConfig(req)
       const { premisesId } = req.params
 
-      const [premises, referenceData] = await Promise.all([
+      // preservePlaceContext sets the placeContext in the response as a side effect
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [premises, referenceData, _placeContext] = await Promise.all([
         this.premisesService.getSinglePremises(callConfig, premisesId),
         this.premisesService.getReferenceData(callConfig),
+        preservePlaceContext(req, res, this.assessmentService),
       ])
 
       const { localAuthorities, characteristics, probationRegions, pdus } = referenceData
@@ -233,14 +244,21 @@ export default class PremisesController {
 
       const { premisesId } = req.params
 
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
       try {
         const callConfig = extractCallConfig(req)
         const premises = await this.premisesService.updatePremises(callConfig, premisesId, updatedPremises)
 
         req.flash('success', 'Property edited')
-        res.redirect(paths.premises.show({ premisesId: premises.id }))
+        res.redirect(addPlaceContext(paths.premises.show({ premisesId: premises.id }), placeContext))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.edit({ premisesId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          addPlaceContext(paths.premises.edit({ premisesId }), placeContext),
+        )
       }
     }
   }

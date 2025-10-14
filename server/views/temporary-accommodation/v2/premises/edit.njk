@@ -14,7 +14,7 @@
 {% block beforeContent %}
     {{ govukBackLink({
         text: 'Back',
-        href: paths.premises.show({ premisesId: premisesId }),
+        href: addPlaceContext(paths.premises.show({ premisesId: premisesId })),
         classes: 'govuk-!-display-none-print'
     }) }}
 {% endblock %}
@@ -32,7 +32,7 @@
                 rows: summary.rows
             }) }}
 
-            <form action="{{ paths.premises.edit({ premisesId: premisesId }) }}" method="post">
+            <form action="{{ addPlaceContext(paths.premises.edit({ premisesId: premisesId })) }}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 {% include "./_editable.njk" %}
             </form>

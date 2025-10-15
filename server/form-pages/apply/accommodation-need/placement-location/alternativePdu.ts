@@ -50,6 +50,19 @@ export default class AlternativePdu implements TasklistPage {
       this._body.pduId = submittedPdu?.id || value.pduId
       this._body.pduName = submittedPdu?.name || value.pduName
     }
+
+    this.application.data['placement-location']['different-region'] = {}
+    this.application.data['placement-location']['placement-pdu'] = {}
+
+    if (this.application.data['placement-location']['alternative-region']?.alternativeRegion === 'no') {
+      const region =
+        this.regionName || this.application.data?.['placement-location']?.['alternative-region']?.regionName || ''
+
+      this.application.data['placement-location']['alternative-region'] = {
+        alternativeRegion: 'yes',
+        regionName: region,
+      }
+    }
   }
 
   get body() {
@@ -71,7 +84,7 @@ export default class AlternativePdu implements TasklistPage {
   }
 
   previous() {
-    return 'dashboard'
+    return 'alternative-region'
   }
 
   next() {

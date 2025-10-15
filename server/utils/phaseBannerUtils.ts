@@ -1,4 +1,3 @@
-export const supportEmail = 'cas3support@digital.justice.gov.uk'
 export const feedbackLink = 'https://forms.office.com/e/SsWLbpUgtx'
 export const supportLink =
   'https://mojprod.service-now.com/moj_sp?id=sc_cat_item&table=sc_cat_item&sys_id=4f0128741b6fd61025dc6351f54bcb31'

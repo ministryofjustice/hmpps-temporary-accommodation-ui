@@ -8,7 +8,7 @@ import { DateFormats } from '../../../server/utils/dateUtils'
 import { isFullPerson, personName } from '../../../server/utils/personUtils'
 import Page from '../page'
 import type { AssessmentSearchApiStatus } from '../../../server/@types/ui'
-import { supportEmail } from '../../../server/utils/phaseBannerUtils'
+import { supportLink } from '../../../server/utils/phaseBannerUtils'
 import { pathFromStatus } from '../../../server/utils/assessmentUtils'
 
 export default class ListPage extends Page {
@@ -97,6 +97,6 @@ export default class ListPage extends Page {
     cy.get('main table').should('not.exist')
     cy.get('h2').should('contain', `There are no results for ‘${crn}’ in ${status} referrals.`)
     cy.get('p').should('contain', 'Check the other lists.')
-    cy.get('main a').contains('contact support').should('have.attr', 'href', `mailto:${supportEmail}`)
+    cy.get('main a').contains('contact support').should('have.attr', 'href', supportLink)
   }
 }

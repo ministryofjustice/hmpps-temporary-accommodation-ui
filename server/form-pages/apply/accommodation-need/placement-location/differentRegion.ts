@@ -56,15 +56,14 @@ export default class DifferentRegion implements TasklistPage {
       ...this.body,
       regionId:
         value.regionId ||
-        (this.body.currentRegionName === 'National'
+        (this.body.regionName === 'National'
           ? this.application.data?.['placement-location']?.['different-region']?.regionId
           : null),
       regionName: value.regionName || this.regions?.find(region => region.id === value.regionId)?.name || '',
     }
 
     const previousRegionId = this.application.data?.['placement-location']?.['different-region']?.regionId
-
-    if (previousRegionId && previousRegionId !== value.regionId && this.body.currentRegionName !== 'National') {
+    if (previousRegionId && previousRegionId !== value.regionId && this.body.regionName !== 'National') {
       this.application.data['placement-location']['placement-pdu'] = {}
     }
   }
@@ -82,13 +81,18 @@ export default class DifferentRegion implements TasklistPage {
   }
 
   previous() {
-    return 'alternative-region'
+    if (this.body.regionName !== 'National') {
+      return 'alternative-region'
+    }
+    return 'dashboard'
   }
 
   next() {
     if (this.body?.regionId === this.body.currentRegionId) {
       return 'alternative-pdu'
     }
+    this.application.data['placement-location']['alternative-pdu'] = {}
+    this.application.data['placement-location']['alternative-pdu-reason'] = {}
     return 'placement-pdu'
   }
 

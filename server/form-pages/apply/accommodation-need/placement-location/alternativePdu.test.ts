@@ -67,7 +67,7 @@ describe('AlternativePdu', () => {
     })
   })
 
-  itShouldHavePreviousValue(new AlternativePdu({}, application, pdus), 'dashboard')
+  itShouldHavePreviousValue(new AlternativePdu({}, application, pdus), 'alternative-region')
 
   describe('next', () => {
     it('returns the different pdu reason page ID if the answer is yes', () => {

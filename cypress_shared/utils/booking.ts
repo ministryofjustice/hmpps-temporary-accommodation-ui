@@ -6,8 +6,8 @@ export const setupBookingStateStubs = (booking: Booking): { premises: Cas3Premis
   const premises = cas3PremisesFactory.build()
   const bedspace = cas3BedspaceFactory.build({ status: 'online' })
 
-  cy.task('stubSinglePremisesV2', premises)
-  cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+  cy.task('stubSinglePremises', premises)
+  cy.task('stubBedspace', { premisesId: premises.id, bedspace })
   cy.task('stubBooking', { premisesId: premises.id, booking })
 
   return { premises, bedspace }

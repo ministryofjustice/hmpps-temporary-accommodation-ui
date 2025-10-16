@@ -32,7 +32,7 @@ context('Bedspace', () => {
     cy.signIn()
 
     // And there is reference data in the database
-    cy.task('stubPremisesReferenceDataV2')
+    cy.task('stubPremisesReferenceData')
   })
 
   it('should navigate to the bedspace show page', () => {
@@ -58,9 +58,9 @@ context('Bedspace', () => {
 
     const searchResult = cas3PremisesSearchResultFactory.build({ ...premises, bedspaces: [bedspaceSummary] })
     const searchResults = cas3PremisesSearchResultsFactory.build({ results: [searchResult] })
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -111,9 +111,9 @@ context('Bedspace', () => {
         bedId: bedspace.id,
       })
       .buildList(5)
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces })
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -147,7 +147,7 @@ context('Bedspace', () => {
 
     beforeEach(() => {
       premises = cas3PremisesFactory.build({ status: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubSinglePremises', premises)
     })
 
     it('allows me to create a bedspace', () => {
@@ -179,7 +179,7 @@ context('Bedspace', () => {
         .buildList(5)
 
       cy.task('stubBedspaceCreate', { premisesId: premises.id, bedspace })
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -207,7 +207,7 @@ context('Bedspace', () => {
       futureDate.setDate(futureDate.getDate() + 7)
       const premisesWithScheduledArchive = { ...premises, endDate: futureDate.toISOString(), status: 'online' as const }
 
-      cy.task('stubSinglePremisesV2', premisesWithScheduledArchive)
+      cy.task('stubSinglePremises', premisesWithScheduledArchive)
 
       // When I visit the new bedspace page
       BedspaceNewPage.visit(premisesWithScheduledArchive)
@@ -220,7 +220,7 @@ context('Bedspace', () => {
       // Given a premises without a scheduled archive date
       const premisesWithoutScheduledArchive = { ...premises, endDate: null, status: 'online' as const }
 
-      cy.task('stubSinglePremisesV2', premisesWithoutScheduledArchive)
+      cy.task('stubSinglePremises', premisesWithoutScheduledArchive)
 
       // When I visit the new bedspace page
       BedspaceNewPage.visit(premisesWithoutScheduledArchive)
@@ -245,8 +245,8 @@ context('Bedspace', () => {
         totalArchivedBedspaces: 0,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces })
 
       // When I navigate to the show premises page
       const premisesPage = PremisesShowPage.visit(premises)
@@ -311,8 +311,8 @@ context('Bedspace', () => {
           bedId: bedspace.id,
         })
         .buildList(5)
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -343,8 +343,8 @@ context('Bedspace', () => {
           bedId: bedspace.id,
         })
         .buildList(5)
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -373,8 +373,8 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -405,8 +405,8 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -437,8 +437,8 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -470,8 +470,8 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -503,8 +503,8 @@ context('Bedspace', () => {
       ]
       const bedspace = cas3BedspaceFactory.build({ status: 'online', characteristics })
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
 
       // When I visit the edit bedspace page
       const page = BedspaceEditPage.visit(premises, bedspace)
@@ -544,8 +544,8 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -582,7 +582,7 @@ context('Bedspace', () => {
         characteristics: updatedCharacteristics,
       })
       cy.task('stubBedspaceUpdate', { premisesId: premises.id, bedspace })
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: expectedBedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace: expectedBedspace })
 
       // When I submit the form
       page.clickSubmit()
@@ -627,8 +627,8 @@ context('Bedspace', () => {
       ]
       const bedspace = cas3BedspaceFactory.build({ status: 'online', characteristics })
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
 
       // When I visit the edit bedspace page
       const page = BedspaceEditPage.visit(premises, bedspace)
@@ -676,13 +676,13 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // And the bedspace can be archived
-      cy.task('stubBedspaceCanArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+      cy.task('stubBedspaceCanArchive', { premisesId: premises.id, bedspaceId: bedspace.id })
 
       // When I visit the show bedspace page
       const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
@@ -695,7 +695,7 @@ context('Bedspace', () => {
       archivePage.shouldShowBedspaceDetails()
 
       // When I archive with today option
-      cy.task('stubBedspaceArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+      cy.task('stubBedspaceArchive', { premisesId: premises.id, bedspaceId: bedspace.id })
 
       const bedspacesList = {
         bedspaces: [bedspace],
@@ -703,10 +703,10 @@ context('Bedspace', () => {
         totalArchivedBedspaces: 0,
         totalUpcomingBedspaces: 0,
       }
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: bedspacesList })
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: bedspacesList })
 
       const archivedBedspace = { ...bedspace, status: 'archived' }
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: archivedBedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace: archivedBedspace })
       archivePage.completeArchiveWithToday()
 
       // Then I should be redirected to the bedspace show page with success message for last bedspace
@@ -733,13 +733,13 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // And the bedspace can be archived
-      cy.task('stubBedspaceCanArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+      cy.task('stubBedspaceCanArchive', { premisesId: premises.id, bedspaceId: bedspace.id })
 
       // When I visit the show bedspace page
       const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
@@ -752,7 +752,7 @@ context('Bedspace', () => {
       archivePage.shouldShowBedspaceDetails()
 
       // When I archive with today option
-      cy.task('stubBedspaceArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+      cy.task('stubBedspaceArchive', { premisesId: premises.id, bedspaceId: bedspace.id })
 
       const otherBedspace = cas3BedspaceFactory.build({ status: 'online' })
       const bedspacesList = {
@@ -761,10 +761,10 @@ context('Bedspace', () => {
         totalArchivedBedspaces: 0,
         totalUpcomingBedspaces: 0,
       }
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: bedspacesList })
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: bedspacesList })
 
       const archivedBedspace = { ...bedspace, status: 'archived' }
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: archivedBedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace: archivedBedspace })
       archivePage.completeArchiveWithToday()
 
       // Then I should be redirected to the bedspace show page with success message
@@ -786,13 +786,13 @@ context('Bedspace', () => {
         .buildList(1)
       const lostBeds = lostBedFactory.buildList(1)
 
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // And the bedspace cannot be archived due to a blocking booking/void
-      cy.task('stubBedspaceCanArchiveV2WithBlocking', {
+      cy.task('stubBedspaceCanArchiveWithBlocking', {
         premisesId: premises.id,
         bedspaceId: bedspace.id,
         blockingDate: '2025-12-25',
@@ -840,13 +840,13 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // And the bedspace can be archived
-      cy.task('stubBedspaceCanArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+      cy.task('stubBedspaceCanArchive', { premisesId: premises.id, bedspaceId: bedspace.id })
 
       // When I visit the show bedspace page
       const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
@@ -859,7 +859,7 @@ context('Bedspace', () => {
       archivePage.shouldShowBedspaceDetails()
 
       // When I try to archive with past date
-      cy.task('stubBedspaceArchiveV2WithError', {
+      cy.task('stubBedspaceArchiveWithError', {
         premisesId: premises.id,
         bedspaceId: bedspace.id,
         errorType: 'invalidEndDateInThePast',
@@ -871,7 +871,7 @@ context('Bedspace', () => {
         totalArchivedBedspaces: 0,
         totalUpcomingBedspaces: 0,
       }
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: bedspacesList })
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: bedspacesList })
 
       // Select another date option and enter a past date (1/1/1900)
       archivePage.selectAnotherDateOption()
@@ -904,14 +904,14 @@ context('Bedspace', () => {
           bedId: bedspace.id,
         })
         .buildList(5)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // And the premises totals are stubbed
       const totals = { premisesEndDate: null, status: 'online' } as Cas3PremisesBedspaceTotals
-      cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
+      cy.task('stubPremisesBedspaceTotals', { premisesId: premises.id, totals })
 
       // When I visit the show bedspace page
       const page = BedspaceShowPage.visit(premises, bedspace)
@@ -924,7 +924,7 @@ context('Bedspace', () => {
 
       // And when I confirm cancellation
       cy.task('stubBedspaceCancelArchive', { premisesId: premises.id, bedspace })
-      cy.task('stubBedspaceV2', {
+      cy.task('stubBedspace', {
         premisesId: premises.id,
         bedspace: { ...bedspace, status: 'online', endDate: undefined },
       })
@@ -956,14 +956,14 @@ context('Bedspace', () => {
           bedId: bedspace.id,
         })
         .buildList(5)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // And the premises totals are stubbed with a future premisesEndDate (scheduled for archive)
       const totals = { premisesEndDate: '2126-08-01', status: 'online' } as Cas3PremisesBedspaceTotals
-      cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
+      cy.task('stubPremisesBedspaceTotals', { premisesId: premises.id, totals })
 
       // When I visit the show bedspace page
       const page = BedspaceShowPage.visit(premises, bedspace)
@@ -976,7 +976,7 @@ context('Bedspace', () => {
 
       // And when I confirm cancellation
       cy.task('stubBedspaceCancelArchive', { premisesId: premises.id, bedspace })
-      cy.task('stubBedspaceV2', {
+      cy.task('stubBedspace', {
         premisesId: premises.id,
         bedspace: { ...bedspace, status: 'online', endDate: undefined },
       })
@@ -1009,14 +1009,14 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // And the premises totals are stubbed
       const totals = { premisesEndDate: '2126-08-01', status: 'online' } as Cas3PremisesBedspaceTotals
-      cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
+      cy.task('stubPremisesBedspaceTotals', { premisesId: premises.id, totals })
 
       // When I visit the show bedspace page
       const page = BedspaceShowPage.visit(premises, bedspace)
@@ -1052,14 +1052,14 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // And the premises totals are stubbed
       const totals = { premisesEndDate: null, status: 'online' } as Cas3PremisesBedspaceTotals
-      cy.task('stubPremisesBedspaceTotalsV2', { premisesId: premises.id, totals })
+      cy.task('stubPremisesBedspaceTotals', { premisesId: premises.id, totals })
 
       const page = BedspaceShowPage.visit(premises, bedspace)
 
@@ -1096,8 +1096,8 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -1112,7 +1112,7 @@ context('Bedspace', () => {
       unarchivePage.shouldShowBedspaceDetails()
 
       // When I unarchive with today option
-      cy.task('stubBedspaceUnarchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+      cy.task('stubBedspaceUnarchive', { premisesId: premises.id, bedspaceId: bedspace.id })
 
       const otherArchivedBedspace = cas3BedspaceFactory.build({ status: 'archived' })
       const bedspacesList = {
@@ -1121,10 +1121,10 @@ context('Bedspace', () => {
         totalArchivedBedspaces: 2,
         totalUpcomingBedspaces: 0,
       }
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: bedspacesList })
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: bedspacesList })
 
       const unarchivedBedspace = { ...bedspace, status: 'online' }
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: unarchivedBedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace: unarchivedBedspace })
       unarchivePage.completeUnarchiveWithToday()
 
       // Then I should be redirected to the bedspace show page with success message
@@ -1151,8 +1151,8 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -1167,7 +1167,7 @@ context('Bedspace', () => {
       unarchivePage.shouldShowBedspaceDetails()
 
       // When I try to unarchive with past date
-      cy.task('stubBedspaceUnarchiveV2WithError', {
+      cy.task('stubBedspaceUnarchiveWithError', {
         premisesId: premises.id,
         bedspaceId: bedspace.id,
         errorType: 'invalidEndDateInThePast',
@@ -1179,7 +1179,7 @@ context('Bedspace', () => {
         totalArchivedBedspaces: 0,
         totalUpcomingBedspaces: 0,
       }
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: bedspacesList })
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: bedspacesList })
 
       // Select another date option and enter a past date (1/1/1900)
       unarchivePage.selectAnotherDateOption()
@@ -1212,8 +1212,8 @@ context('Bedspace', () => {
           bedId: bedspace.id,
         })
         .buildList(5)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -1228,7 +1228,7 @@ context('Bedspace', () => {
 
       // And when I confirm cancellation
       cy.task('stubBedspaceCancelUnarchive', { premisesId: premises.id, bedspace })
-      cy.task('stubBedspaceV2', {
+      cy.task('stubBedspace', {
         premisesId: premises.id,
         bedspace: { ...bedspace, startDate: undefined },
       })
@@ -1261,8 +1261,8 @@ context('Bedspace', () => {
         })
         .buildList(5)
 
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremises', premises)
       cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
       cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 

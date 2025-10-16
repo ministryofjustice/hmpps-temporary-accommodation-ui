@@ -7,15 +7,15 @@ import type {
   Cas3ValidationResults,
 } from '@approved-premises/api'
 import type { Response } from 'superagent'
-import { getMatchingRequests, stubFor } from '..'
-import paths from '../../../server/paths/api'
+import { getMatchingRequests, stubFor } from './index'
+import paths from '../../server/paths/api'
 import {
   characteristics,
   localAuthorities,
   pdus,
   probationRegions,
-} from '../../../server/testutils/stubs/referenceDataStubs'
-import { errorStub } from '../utils'
+} from '../../server/testutils/stubs/referenceDataStubs'
+import { errorStub } from './utils'
 
 type SearchArguments = {
   searchResults: Cas3PremisesSearchResults
@@ -24,7 +24,7 @@ type SearchArguments = {
   sortBy?: Cas3PremisesSortBy
 }
 
-const stubPremisesSearchV2 = (args: SearchArguments) =>
+const stubPremisesSearch = (args: SearchArguments) =>
   stubFor({
     request: {
       method: 'GET',
@@ -44,7 +44,7 @@ const stubPremisesSearchV2 = (args: SearchArguments) =>
     },
   })
 
-const stubSinglePremisesV2 = (premises: Cas3Premises) =>
+const stubSinglePremises = (premises: Cas3Premises) =>
   stubFor({
     request: {
       method: 'GET',
@@ -57,10 +57,10 @@ const stubSinglePremisesV2 = (premises: Cas3Premises) =>
     },
   })
 
-const stubPremisesReferenceDataV2 = (): Promise<[Response, Response, Response, Response]> =>
+const stubPremisesReferenceData = (): Promise<[Response, Response, Response, Response]> =>
   Promise.all([stubFor(localAuthorities), stubFor(characteristics), stubFor(probationRegions), stubFor(pdus)])
 
-const stubPremisesCreateV2 = (premises: Cas3Premises) =>
+const stubPremisesCreate = (premises: Cas3Premises) =>
   stubFor({
     request: {
       method: 'POST',
@@ -73,10 +73,10 @@ const stubPremisesCreateV2 = (premises: Cas3Premises) =>
     },
   })
 
-const stubPremisesCreateErrorsV2 = (params: Array<string>) =>
+const stubPremisesCreateErrors = (params: Array<string>) =>
   stubFor(errorStub(params, paths.cas3.premises.create({}), 'POST'))
 
-const verifyPremisesCreateV2 = async () =>
+const verifyPremisesCreate = async () =>
   (
     await getMatchingRequests({
       method: 'POST',
@@ -84,7 +84,7 @@ const verifyPremisesCreateV2 = async () =>
     })
   ).body.requests
 
-const stubPremisesUpdateV2 = (premises: Cas3Premises) =>
+const stubPremisesUpdate = (premises: Cas3Premises) =>
   stubFor({
     request: {
       method: 'PUT',
@@ -97,10 +97,10 @@ const stubPremisesUpdateV2 = (premises: Cas3Premises) =>
     },
   })
 
-const stubPremisesUpdateErrorsV2 = (params: { fields: Array<string>; premisesId: string }) =>
+const stubPremisesUpdateErrors = (params: { fields: Array<string>; premisesId: string }) =>
   stubFor(errorStub(params.fields, paths.cas3.premises.update({ premisesId: params.premisesId }), 'PUT'))
 
-const verifyPremisesUpdateV2 = async (premisesId: string) =>
+const verifyPremisesUpdate = async (premisesId: string) =>
   (
     await getMatchingRequests({
       method: 'PUT',
@@ -121,7 +121,7 @@ const stubPremisesCanArchive = (params: { premisesId: string; bedspacesReference
     },
   })
 
-const stubPremisesArchiveV2 = (premises: Cas3Premises) =>
+const stubPremisesArchive = (premises: Cas3Premises) =>
   stubFor({
     request: {
       method: 'POST',
@@ -134,7 +134,7 @@ const stubPremisesArchiveV2 = (premises: Cas3Premises) =>
     },
   })
 
-const verifyPremisesArchiveV2 = async (premisesId: string) =>
+const verifyPremisesArchive = async (premisesId: string) =>
   (
     await getMatchingRequests({
       method: 'POST',
@@ -142,7 +142,7 @@ const verifyPremisesArchiveV2 = async (premisesId: string) =>
     })
   ).body.requests
 
-const stubPremisesArchiveErrorsV2 = (params: { premisesId: string; endDate: string }) =>
+const stubPremisesArchiveErrors = (params: { premisesId: string; endDate: string }) =>
   stubFor({
     request: {
       method: 'POST',
@@ -166,7 +166,7 @@ const stubPremisesArchiveErrorsV2 = (params: { premisesId: string; endDate: stri
     },
   })
 
-const stubPremisesUnarchiveV2 = (premises: Cas3Premises) =>
+const stubPremisesUnarchive = (premises: Cas3Premises) =>
   stubFor({
     request: {
       method: 'POST',
@@ -179,7 +179,7 @@ const stubPremisesUnarchiveV2 = (premises: Cas3Premises) =>
     },
   })
 
-const verifyPremisesUnarchiveV2 = async (premisesId: string) =>
+const verifyPremisesUnarchive = async (premisesId: string) =>
   (
     await getMatchingRequests({
       method: 'POST',
@@ -187,7 +187,7 @@ const verifyPremisesUnarchiveV2 = async (premisesId: string) =>
     })
   ).body.requests
 
-const stubPremisesUnarchiveErrorsV2 = (premisesId: string) =>
+const stubPremisesUnarchiveErrors = (premisesId: string) =>
   stubFor({
     request: {
       method: 'POST',
@@ -210,7 +210,7 @@ const stubPremisesUnarchiveErrorsV2 = (premisesId: string) =>
     },
   })
 
-const stubPremisesBedspaceTotalsV2 = ({
+const stubPremisesBedspaceTotals = ({
   premisesId,
   totals,
 }: {
@@ -229,7 +229,7 @@ const stubPremisesBedspaceTotalsV2 = ({
     },
   })
 
-const stubPremisesCancelArchiveV2 = (premises: Cas3Premises) =>
+const stubPremisesCancelArchive = (premises: Cas3Premises) =>
   stubFor({
     request: {
       method: 'PUT',
@@ -242,7 +242,7 @@ const stubPremisesCancelArchiveV2 = (premises: Cas3Premises) =>
     },
   })
 
-const verifyPremisesCancelArchiveV2 = async (premisesId: string) =>
+const verifyPremisesCancelArchive = async (premisesId: string) =>
   (
     await getMatchingRequests({
       method: 'PUT',
@@ -250,7 +250,7 @@ const verifyPremisesCancelArchiveV2 = async (premisesId: string) =>
     })
   ).body.requests
 
-const stubPremisesCancelArchiveErrorsV2 = (params: { premisesId: string; params: Array<string> }) =>
+const stubPremisesCancelArchiveErrors = (params: { premisesId: string; params: Array<string> }) =>
   stubFor({
     request: {
       method: 'PUT',
@@ -268,7 +268,7 @@ const stubPremisesCancelArchiveErrorsV2 = (params: { premisesId: string; params:
     },
   })
 
-const stubPremisesCancelUnarchiveV2 = (premises: Cas3Premises) =>
+const stubPremisesCancelUnarchive = (premises: Cas3Premises) =>
   stubFor({
     request: {
       method: 'PUT',
@@ -281,7 +281,7 @@ const stubPremisesCancelUnarchiveV2 = (premises: Cas3Premises) =>
     },
   })
 
-const verifyPremisesCancelUnarchiveV2 = async (premisesId: string) =>
+const verifyPremisesCancelUnarchive = async (premisesId: string) =>
   (
     await getMatchingRequests({
       method: 'PUT',
@@ -289,7 +289,7 @@ const verifyPremisesCancelUnarchiveV2 = async (premisesId: string) =>
     })
   ).body.requests
 
-const stubPremisesCancelUnarchiveErrorsV2 = (params: { premisesId: string; params: Array<string> }) =>
+const stubPremisesCancelUnarchiveErrors = (params: { premisesId: string; params: Array<string> }) =>
   stubFor({
     request: {
       method: 'PUT',
@@ -308,27 +308,27 @@ const stubPremisesCancelUnarchiveErrorsV2 = (params: { premisesId: string; param
   })
 
 export default {
-  stubPremisesSearchV2,
-  stubSinglePremisesV2,
-  stubPremisesReferenceDataV2,
-  stubPremisesBedspaceTotalsV2,
-  stubPremisesCreateV2,
-  stubPremisesCreateErrorsV2,
-  verifyPremisesCreateV2,
-  stubPremisesUpdateV2,
-  stubPremisesUpdateErrorsV2,
-  verifyPremisesUpdateV2,
+  stubPremisesSearch,
+  stubSinglePremises,
+  stubPremisesReferenceData,
+  stubPremisesBedspaceTotals,
+  stubPremisesCreate,
+  stubPremisesCreateErrors,
+  verifyPremisesCreate,
+  stubPremisesUpdate,
+  stubPremisesUpdateErrors,
+  verifyPremisesUpdate,
   stubPremisesCanArchive,
-  stubPremisesArchiveV2,
-  verifyPremisesArchiveV2,
-  stubPremisesArchiveErrorsV2,
-  stubPremisesUnarchiveV2,
-  verifyPremisesUnarchiveV2,
-  stubPremisesUnarchiveErrorsV2,
-  stubPremisesCancelArchiveV2,
-  verifyPremisesCancelArchiveV2,
-  stubPremisesCancelArchiveErrorsV2,
-  stubPremisesCancelUnarchiveV2,
-  verifyPremisesCancelUnarchiveV2,
-  stubPremisesCancelUnarchiveErrorsV2,
+  stubPremisesArchive,
+  verifyPremisesArchive,
+  stubPremisesArchiveErrors,
+  stubPremisesUnarchive,
+  verifyPremisesUnarchive,
+  stubPremisesUnarchiveErrors,
+  stubPremisesCancelArchive,
+  verifyPremisesCancelArchive,
+  stubPremisesCancelArchiveErrors,
+  stubPremisesCancelUnarchive,
+  verifyPremisesCancelUnarchive,
+  stubPremisesCancelUnarchiveErrors,
 }

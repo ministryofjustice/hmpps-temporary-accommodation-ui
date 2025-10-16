@@ -58,7 +58,7 @@ Given('I create an active premises with all necessary details', () => {
         id: 'unknown',
       })
 
-    const newPremises = cas3NewPremisesFactory.build(premises)
+    const newPremises = cas3NewPremisesFactory.fromPremises(premises).build()
 
     cy.wrap(premises).as('premises')
     page.completeForm(newPremises, premises.localAuthorityArea.name)

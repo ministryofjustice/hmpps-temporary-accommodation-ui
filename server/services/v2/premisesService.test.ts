@@ -1,7 +1,7 @@
 import { TextItem } from '@approved-premises/ui'
 import { Cas3PremisesArchiveAction } from '@approved-premises/api'
 import { createMock } from '@golevelup/ts-jest'
-import PremisesClient from '../../data/v2/premisesClient'
+import PremisesClient from '../../data/premisesClient'
 import { CallConfig } from '../../data/restClient'
 import {
   assessmentFactory,
@@ -24,7 +24,7 @@ import { ReferenceDataClient } from '../../data'
 import { filterCharacteristics } from '../../utils/characteristicUtils'
 import { AssessmentsService } from '../index'
 
-jest.mock('../../data/v2/premisesClient')
+jest.mock('../../data/premisesClient')
 jest.mock('../../data/referenceDataClient')
 jest.mock('../../utils/premisesUtils')
 jest.mock('../../utils/viewUtils')

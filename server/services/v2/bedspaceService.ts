@@ -10,7 +10,7 @@ import {
 import { SummaryList } from '@approved-premises/ui'
 import { CallConfig } from '../../data/restClient'
 import { RestClientBuilder } from '../../data'
-import BedspaceClient from '../../data/v2/bedspaceClient'
+import BedspaceClient from '../../data/bedspaceClient'
 import ReferenceDataClient from '../../data/referenceDataClient'
 import { DateFormats } from '../../utils/dateUtils'
 import { convertToTitleCase } from '../../utils/utils'

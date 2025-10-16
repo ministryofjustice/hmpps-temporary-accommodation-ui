@@ -1,5 +1,5 @@
 import { ReferenceDataClient } from '../data'
-import BedspaceClient from '../data/v2/bedspaceClient'
+import BedspaceClient from '../data/bedspaceClient'
 import { CallConfig } from '../data/restClient'
 import {
   bedspaceSearchApiParametersFactory,
@@ -10,7 +10,7 @@ import {
 } from '../testutils/factories'
 import BedspaceSearchService from './bedspaceSearchService'
 
-jest.mock('../data/v2/bedspaceClient')
+jest.mock('../data/bedspaceClient')
 jest.mock('../data/referenceDataClient')
 
 describe('BedspaceSearchService', () => {

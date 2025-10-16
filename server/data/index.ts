@@ -14,12 +14,11 @@ buildAppInsightsClient()
 import HmppsAuthClient from './hmppsAuthClient'
 import PersonClient from './personClient'
 import PremisesClient from './premisesClient'
-import PremisesClientV2 from './v2/premisesClient'
 import ReferenceDataClient from './referenceDataClient'
 
 import ApplicationClient from './applicationClient'
 import AssessmentClient from './assessmentClient'
-import BedspaceClientV2 from './v2/bedspaceClient'
+import BedspaceClient from './bedspaceClient'
 import LostBedClient from './lostBedClient'
 import { createRedisClient } from './redisClient'
 import ReportClient from './reportClient'
@@ -33,7 +32,7 @@ type RestClientBuilder<T> = (callConfig: CallConfig) => T
 export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
   premisesClientV2Builder: ((callConfig: CallConfig) =>
-    new PremisesClientV2(callConfig)) as RestClientBuilder<PremisesClientV2>,
+    new PremisesClient(callConfig)) as RestClientBuilder<PremisesClient>,
   bookingClientBuilder: ((callConfig: CallConfig) => new BookingClient(callConfig)) as RestClientBuilder<BookingClient>,
   referenceDataClientBuilder: ((callConfig: CallConfig) =>
     new ReferenceDataClient(callConfig)) as RestClientBuilder<ReferenceDataClient>,
@@ -44,7 +43,7 @@ export const dataAccess = () => ({
   reportClientBuilder: ((callConfig: CallConfig) => new ReportClient(callConfig)) as RestClientBuilder<ReportClient>,
   userClientBuilder: ((callConfig: CallConfig) => new UserClient(callConfig)) as RestClientBuilder<UserClient>,
   bedspaceClientV2Builder: ((callConfig: CallConfig) =>
-    new BedspaceClientV2(callConfig)) as RestClientBuilder<BedspaceClientV2>,
+    new BedspaceClient(callConfig)) as RestClientBuilder<BedspaceClient>,
   assessmentClientBuilder: ((callConfig: CallConfig) =>
     new AssessmentClient(callConfig)) as RestClientBuilder<AssessmentClient>,
   timelineClientBuilder: ((callConfig: CallConfig) =>
@@ -56,13 +55,12 @@ export type DataAccess = ReturnType<typeof dataAccess>
 export {
   ApplicationClient,
   AssessmentClient,
-  BedspaceClientV2,
+  BedspaceClient,
   BookingClient,
   HmppsAuthClient,
   LostBedClient,
   PersonClient,
   PremisesClient,
-  PremisesClientV2,
   ReferenceDataClient,
   ReportClient,
   RestClientBuilder,

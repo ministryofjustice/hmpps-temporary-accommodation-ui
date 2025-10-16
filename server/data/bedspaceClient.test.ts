@@ -1,7 +1,7 @@
 import nock from 'nock'
 import BedspaceClient from './bedspaceClient'
-import { CallConfig } from '../restClient'
-import config from '../../config'
+import { CallConfig } from './restClient'
+import config from '../config'
 import {
   bedspaceSearchApiParametersFactory,
   bedspaceSearchResultsFactory,
@@ -9,8 +9,8 @@ import {
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
   cas3UpdateBedspaceFactory,
-} from '../../testutils/factories'
-import paths from '../../paths/api'
+} from '../testutils/factories'
+import paths from '../paths/api'
 
 describe('BedspaceClient', () => {
   let fakeApprovedPremisesApi: nock.Scope

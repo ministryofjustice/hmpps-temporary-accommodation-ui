@@ -4,7 +4,6 @@ import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import ReportIndexPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportIndex'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { premisesSummaryFactory } from '../../../../server/testutils/factories'
 import { reportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 
@@ -329,10 +328,6 @@ context('Report', () => {
   it('navigates back from the booking report page to the dashboard page', () => {
     // Given I am signed in
     cy.signIn()
-
-    // And there are premises in the database
-    const premisesSummaries = premisesSummaryFactory.buildList(5)
-    cy.task('stubPremises', premisesSummaries)
 
     // When I visit the show premises page
     cy.task('stubReportReferenceData')

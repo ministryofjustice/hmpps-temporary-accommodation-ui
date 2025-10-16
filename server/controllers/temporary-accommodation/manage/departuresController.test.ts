@@ -6,9 +6,9 @@ import { BookingService, DepartureService, PremisesService } from '../../../serv
 import {
   bookingFactory,
   cas3BedspaceFactory,
+  cas3PremisesFactory,
   departureFactory,
   newDepartureFactory,
-  premisesFactory,
 } from '../../../testutils/factories'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
@@ -50,7 +50,7 @@ describe('DeparturesController', () => {
 
   describe('new', () => {
     it('renders the form', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.build()
 
@@ -60,7 +60,7 @@ describe('DeparturesController', () => {
         bookingId: booking.id,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
@@ -71,7 +71,7 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
@@ -192,7 +192,7 @@ describe('DeparturesController', () => {
 
   describe('edit', () => {
     it('renders the form', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.build()
 
@@ -202,7 +202,7 @@ describe('DeparturesController', () => {
         bookingId: booking.id,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
@@ -213,7 +213,7 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
@@ -314,7 +314,7 @@ describe('DeparturesController', () => {
     })
 
     it('does not show the NDelius update message when creating', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.build()
 
@@ -324,7 +324,7 @@ describe('DeparturesController', () => {
         bookingId: booking.id,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 

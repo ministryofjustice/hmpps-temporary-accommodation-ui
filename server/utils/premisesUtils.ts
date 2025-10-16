@@ -1,9 +1,9 @@
-import type { Premises } from '@approved-premises/api'
-import { PageHeadingBarItem, PlaceContext, PremisesShowTabs, type SubNavObj } from '../@types/ui'
+import type { Cas3Premises } from '@approved-premises/api'
+import { PageHeadingBarItem, PlaceContext, PremisesShowTabs, type SubNavObj } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { addPlaceContext } from './placeUtils'
 
-export const premisesActions = (premises: Premises): Array<PageHeadingBarItem> => {
+export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarItem> => {
   const items = []
 
   if (premises.status !== 'archived') {
@@ -21,7 +21,7 @@ export const premisesActions = (premises: Premises): Array<PageHeadingBarItem> =
   return items
 }
 
-export const shortAddress = (premises: Premises): string => {
+export const shortAddress = (premises: Cas3Premises): string => {
   const elements = [premises.addressLine1, premises.town, premises.postcode].filter(element => !!element)
 
   return elements.join(', ')

@@ -22,7 +22,7 @@ export default class CancellationsController {
 
       const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
@@ -75,7 +75,7 @@ export default class CancellationsController {
 
       const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 

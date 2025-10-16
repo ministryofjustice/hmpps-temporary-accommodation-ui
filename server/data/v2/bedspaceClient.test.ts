@@ -3,6 +3,8 @@ import BedspaceClient from './bedspaceClient'
 import { CallConfig } from '../restClient'
 import config from '../../config'
 import {
+  bedspaceSearchApiParametersFactory,
+  bedspaceSearchResultsFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
@@ -31,6 +33,23 @@ describe('BedspaceClient', () => {
     }
     nock.abortPendingRequests()
     nock.cleanAll()
+  })
+
+  describe('search', () => {
+    it('returns search results', async () => {
+      const results = bedspaceSearchResultsFactory.build()
+      const payload = bedspaceSearchApiParametersFactory.build()
+
+      fakeApprovedPremisesApi
+        .post(paths.bedspaces.search({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(201, results)
+
+      const result = await bedspaceClient.search(payload)
+
+      expect(result).toEqual(results)
+      expect(nock.isDone()).toBeTruthy()
+    })
   })
 
   describe('find', () => {

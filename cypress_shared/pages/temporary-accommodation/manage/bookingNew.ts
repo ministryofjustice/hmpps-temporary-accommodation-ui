@@ -1,6 +1,5 @@
-import type { NewBooking } from '@approved-premises/api'
-import { Cas3Bedspace, TemporaryAccommodationPremises as Premises } from '../../../../server/@types/shared'
-import { PlaceContext } from '../../../../server/@types/ui'
+import type { Cas3Bedspace, Cas3Premises, NewBooking } from '@approved-premises/api'
+import { PlaceContext } from '@approved-premises/ui'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -13,7 +12,7 @@ export default class BookingNewPage extends BookingEditablePage {
   private readonly bedspaceStatusComponent: BedspaceStatusComponent
 
   constructor(
-    private readonly premises: Premises,
+    private readonly premises: Cas3Premises,
     bedspace: Cas3Bedspace,
   ) {
     super('Book bedspace', premises, bedspace)
@@ -22,7 +21,7 @@ export default class BookingNewPage extends BookingEditablePage {
     this.bedspaceStatusComponent = new BedspaceStatusComponent(bedspace)
   }
 
-  static visit(premises: Premises, bedspace: Cas3Bedspace): BookingNewPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace): BookingNewPage {
     cy.visit(paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id }))
     return new BookingNewPage(premises, bedspace)
   }
@@ -68,8 +67,8 @@ export default class BookingNewPage extends BookingEditablePage {
   }
 
   private turnaroundText(): string {
-    return `There will be a turnaround time of ${this.premises.turnaroundWorkingDayCount} working ${
-      this.premises.turnaroundWorkingDayCount === 1 ? 'day' : 'days'
+    return `There will be a turnaround time of ${this.premises.turnaroundWorkingDays} working ${
+      this.premises.turnaroundWorkingDays === 1 ? 'day' : 'days'
     } after this booking`
   }
 }

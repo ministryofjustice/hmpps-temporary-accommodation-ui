@@ -982,7 +982,7 @@ context('Premises', () => {
       cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // And there is reference data in the database
-      cy.task('stubPremisesReferenceData')
+      cy.task('stubPremisesReferenceDataV2')
 
       // When I visit the premises page
       const page = PremisesListPage.visit()

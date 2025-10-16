@@ -6,23 +6,23 @@ import type {
   BedSearchResultRoomSummary,
   Cas3Bedspace,
   Cas3BedspaceSearchResult,
-  Premises,
+  Cas3Premises,
 } from '@approved-premises/api'
 import bedFactory from './bed'
 import overlapFactory from './overlap'
-import premisesFactory from './premises'
 import cas3BedspaceFactory from './cas3Bedspace'
+import cas3PremisesFactory from './cas3Premises'
 
 class BedSearchResultFactory extends Factory<Cas3BedspaceSearchResult> {
   /* istanbul ignore next */
-  forPremises(premises: Premises) {
+  forPremises(premises: Cas3Premises) {
     return this.params({
       premises: premisesToPremisesSummary(premises),
     })
   }
 
   /* istanbul ignore next */
-  forBedspace(premises: Premises, bedspace: Cas3Bedspace) {
+  forBedspace(premises: Cas3Premises, bedspace: Cas3Bedspace) {
     return this.params({
       premises: premisesToPremisesSummary(premises),
       room: bedspaceToBedspaceSummary(bedspace),
@@ -35,7 +35,7 @@ class BedSearchResultFactory extends Factory<Cas3BedspaceSearchResult> {
 }
 
 export default BedSearchResultFactory.define(() => {
-  const premises = premisesFactory.build()
+  const premises = cas3PremisesFactory.build()
   const bedspace = cas3BedspaceFactory.build({ status: 'online' })
   const bed = bedFactory.build()
 
@@ -51,9 +51,9 @@ export default BedSearchResultFactory.define(() => {
   }
 })
 
-const premisesToPremisesSummary = (premises: Premises): BedSearchResultPremisesSummary => ({
+const premisesToPremisesSummary = (premises: Cas3Premises): BedSearchResultPremisesSummary => ({
   id: premises.id,
-  name: premises.name,
+  name: '',
   addressLine1: premises.addressLine1,
   addressLine2: premises.addressLine2,
   town: premises.town,

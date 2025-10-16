@@ -2,7 +2,8 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewLostBed, NewLostBedCancellation, UpdateLostBed } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { AssessmentsService, LostBedService, PremisesService } from '../../../services'
+import { AssessmentsService, LostBedService } from '../../../services'
+import PremisesService from '../../../services/v2/premisesService'
 import BedspaceService from '../../../services/v2/bedspaceService'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -31,7 +32,7 @@ export default class LostBedsController {
 
       const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const lostBedReasons = await this.lostBedsService.getReferenceData(callConfig)
@@ -89,7 +90,7 @@ export default class LostBedsController {
 
       await preservePlaceContext(req, res, this.assessmentService)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const lostBed = await this.lostBedsService.find(callConfig, premisesId, lostBedId)
@@ -145,7 +146,7 @@ export default class LostBedsController {
       const { premisesId, bedspaceId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const lostBedReasons = await this.lostBedsService.getReferenceData(callConfig)
@@ -175,7 +176,7 @@ export default class LostBedsController {
       const { premisesId, bedspaceId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const lostBed = await this.lostBedsService.find(callConfig, premisesId, lostBedId)

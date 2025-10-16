@@ -1,4 +1,11 @@
-import { Cas3Bedspace, Cas3Bedspaces, Cas3NewBedspace, Cas3UpdateBedspace } from '@approved-premises/api'
+import {
+  Cas3Bedspace,
+  Cas3BedspaceSearchParameters,
+  Cas3BedspaceSearchResults,
+  Cas3Bedspaces,
+  Cas3NewBedspace,
+  Cas3UpdateBedspace,
+} from '@approved-premises/api'
 import RestClient, { CallConfig } from '../restClient'
 import config, { ApiConfig } from '../../config'
 import paths from '../../paths/api'
@@ -8,6 +15,13 @@ export default class BedspaceClient {
 
   constructor(callConfig: CallConfig) {
     this.restClient = new RestClient('bedspaceClientV2', config.apis.approvedPremises as ApiConfig, callConfig)
+  }
+
+  async search(searchParameters: Cas3BedspaceSearchParameters) {
+    return this.restClient.post<Cas3BedspaceSearchResults>({
+      path: paths.bedspaces.search({}),
+      data: searchParameters,
+    })
   }
 
   async find(premisesId: string, bedspaceId: string) {

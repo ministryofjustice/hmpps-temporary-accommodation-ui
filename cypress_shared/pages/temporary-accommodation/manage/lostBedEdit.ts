@@ -1,4 +1,4 @@
-import type { Cas3Bedspace, LostBed, Premises, UpdateLostBed } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Premises, LostBed, UpdateLostBed } from '@approved-premises/api'
 import LostBedEditablePage from './lostBedEditable'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -6,13 +6,13 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 export default class LostBedEditPage extends LostBedEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
-  constructor(premises: Premises, bedspace: Cas3Bedspace) {
+  constructor(premises: Cas3Premises, bedspace: Cas3Bedspace) {
     super('Void a bedspace', premises, bedspace)
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, bedspace })
   }
 
-  static visit(premises: Premises, bedspace: Cas3Bedspace, lostBed: LostBed): LostBedEditPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, lostBed: LostBed): LostBedEditPage {
     cy.visit(paths.lostBeds.edit({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }))
     return new LostBedEditPage(premises, bedspace)
   }

@@ -1,4 +1,4 @@
-import type { TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
+import type { Cas3Premises } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import RestClient, { CallConfig } from './restClient'
@@ -11,7 +11,7 @@ export default class PremisesClient {
   }
 
   async find(id: string) {
-    return this.restClient.get<Premises>({
+    return this.restClient.get<Cas3Premises>({
       path: paths.premises.show({ premisesId: id }),
     })
   }

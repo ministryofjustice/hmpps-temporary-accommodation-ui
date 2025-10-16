@@ -7,8 +7,8 @@ import { BookingService, PremisesService, TurnaroundService } from '../../../ser
 import {
   bookingFactory,
   cas3BedspaceFactory,
+  cas3PremisesFactory,
   newTurnaroundFactory,
-  premisesFactory,
   turnaroundFactory,
 } from '../../../testutils/factories'
 import { generateTurnaroundConflictBespokeError } from '../../../utils/bookingUtils'
@@ -56,7 +56,7 @@ describe('TurnaroundsController', () => {
 
   describe('new', () => {
     it('renders the form prepopulated with the current turnaround days', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
@@ -66,7 +66,7 @@ describe('TurnaroundsController', () => {
         bookingId: booking.id,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 

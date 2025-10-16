@@ -19,7 +19,6 @@ import ReferenceDataClient from './referenceDataClient'
 
 import ApplicationClient from './applicationClient'
 import AssessmentClient from './assessmentClient'
-import BedspaceClient from './bedspaceClient'
 import BedspaceClientV2 from './v2/bedspaceClient'
 import LostBedClient from './lostBedClient'
 import { createRedisClient } from './redisClient'
@@ -33,8 +32,6 @@ type RestClientBuilder<T> = (callConfig: CallConfig) => T
 
 export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
-  premisesClientBuilder: ((callConfig: CallConfig) =>
-    new PremisesClient(callConfig)) as RestClientBuilder<PremisesClient>,
   premisesClientV2Builder: ((callConfig: CallConfig) =>
     new PremisesClientV2(callConfig)) as RestClientBuilder<PremisesClientV2>,
   bookingClientBuilder: ((callConfig: CallConfig) => new BookingClient(callConfig)) as RestClientBuilder<BookingClient>,
@@ -46,8 +43,6 @@ export const dataAccess = () => ({
     new ApplicationClient(callConfig)) as RestClientBuilder<ApplicationClient>,
   reportClientBuilder: ((callConfig: CallConfig) => new ReportClient(callConfig)) as RestClientBuilder<ReportClient>,
   userClientBuilder: ((callConfig: CallConfig) => new UserClient(callConfig)) as RestClientBuilder<UserClient>,
-  bedspaceClientBuilder: ((callConfig: CallConfig) =>
-    new BedspaceClient(callConfig)) as RestClientBuilder<BedspaceClient>,
   bedspaceClientV2Builder: ((callConfig: CallConfig) =>
     new BedspaceClientV2(callConfig)) as RestClientBuilder<BedspaceClientV2>,
   assessmentClientBuilder: ((callConfig: CallConfig) =>
@@ -61,7 +56,6 @@ export type DataAccess = ReturnType<typeof dataAccess>
 export {
   ApplicationClient,
   AssessmentClient,
-  BedspaceClient,
   BedspaceClientV2,
   BookingClient,
   HmppsAuthClient,

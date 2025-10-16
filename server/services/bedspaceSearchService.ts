@@ -1,7 +1,7 @@
 import type { Cas3BedspaceSearchParameters, Characteristic } from '@approved-premises/api'
 import { ReferenceData } from '../@types/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
-import BedspaceClient from '../data/bedspaceClient'
+import BedspaceClient from '../data/v2/bedspaceClient'
 import { CallConfig } from '../data/restClient'
 import { filterCharacteristics } from '../utils/characteristicUtils'
 

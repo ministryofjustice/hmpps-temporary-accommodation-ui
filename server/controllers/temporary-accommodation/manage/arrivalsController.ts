@@ -30,7 +30,7 @@ export default class ArrivalsController {
 
       const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
@@ -112,7 +112,7 @@ export default class ArrivalsController {
       const callConfig = extractCallConfig(req)
 
       const [premises, bedspace, booking] = await Promise.all([
-        this.premisesService.getPremises(callConfig, premisesId),
+        this.premisesService.getSinglePremises(callConfig, premisesId),
         this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId),
         this.bookingsService.getBooking(callConfig, premisesId, bookingId),
       ])

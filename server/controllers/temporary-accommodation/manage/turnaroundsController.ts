@@ -29,7 +29,7 @@ export default class TurnaroundsController {
 
       const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingService.getBooking(callConfig, premisesId, bookingId)
 

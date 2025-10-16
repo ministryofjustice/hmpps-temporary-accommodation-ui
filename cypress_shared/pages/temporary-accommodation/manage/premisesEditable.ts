@@ -1,10 +1,13 @@
-import type { NewPremises, UpdatePremises } from '@approved-premises/api'
+import type { Cas3NewPremises, Cas3UpdatePremises } from '@approved-premises/api'
 import Page from '../../page'
 
 export default abstract class PremisesEditablePage extends Page {
-  protected completeEditableForm(newOrUpdatePremises: NewPremises | UpdatePremises, localAuthorityName: string): void {
+  protected completeEditableForm(
+    newOrUpdatePremises: Cas3NewPremises | Cas3UpdatePremises,
+    localAuthorityName: string,
+  ): void {
     this.getLabel('Enter a property reference')
-    this.getTextInputByIdAndEnterDetails('reference', newOrUpdatePremises.name)
+    this.getTextInputByIdAndEnterDetails('reference', newOrUpdatePremises.reference)
 
     this.getLabel('Address line 1')
     this.getTextInputByIdAndEnterDetails('addressLine1', newOrUpdatePremises.addressLine1)
@@ -38,7 +41,15 @@ export default abstract class PremisesEditablePage extends Page {
       'Enter the number of working days required to turnaround the property. The standard turnaround time should be 2 days',
     )
     this.getTextInputByIdAndClear('turnaroundWorkingDays')
-    this.getTextInputByIdAndEnterDetails('turnaroundWorkingDays', `${newOrUpdatePremises.turnaroundWorkingDayCount}`)
+
+    // FIXME: This type guard and conditional in next method should be removed once the Cas3NewPremises and
+    //  Cas3UpdatePremises types are aligned on the turnaroundWorkingDays field
+    const isUpdatePremises = (entity?: Cas3UpdatePremises | Cas3NewPremises): entity is Cas3UpdatePremises =>
+      'turnaroundWorkingDayCount' in (entity as Cas3UpdatePremises)
+    this.getTextInputByIdAndEnterDetails(
+      'turnaroundWorkingDays',
+      `${isUpdatePremises(newOrUpdatePremises) ? newOrUpdatePremises.turnaroundWorkingDayCount : newOrUpdatePremises.turnaroundWorkingDays}`,
+    )
 
     this.clickSubmit()
   }

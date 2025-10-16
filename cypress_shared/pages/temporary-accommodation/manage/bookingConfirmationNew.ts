@@ -1,4 +1,4 @@
-import type { Booking, Cas3Bedspace, NewConfirmation, Premises } from '@approved-premises/api'
+import type { Booking, Cas3Bedspace, Cas3Premises, NewConfirmation } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -12,7 +12,7 @@ export default class BookingConfirmationNewPage extends Page {
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Premises, bedspace: Cas3Bedspace, booking: Booking) {
+  constructor(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking) {
     super('Mark booking as confirmed')
 
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
@@ -20,7 +20,7 @@ export default class BookingConfirmationNewPage extends Page {
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premises: Premises, bedspace: Cas3Bedspace, booking: Booking): BookingConfirmationNewPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking): BookingConfirmationNewPage {
     cy.visit(
       paths.bookings.confirmations.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
     )

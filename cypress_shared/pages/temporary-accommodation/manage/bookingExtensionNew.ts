@@ -1,4 +1,4 @@
-import type { Booking, Cas3Bedspace, LostBed, NewExtension, Premises } from '@approved-premises/api'
+import type { Booking, Cas3Bedspace, Cas3Premises, LostBed, NewExtension } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { getLatestExtension } from '../../../../server/utils/bookingUtils'
 import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
@@ -17,7 +17,7 @@ export default class BookingExtensionNewPage extends Page {
   private readonly bookingInfoComponent: BookingInfoComponent
 
   constructor(
-    premises: Premises,
+    premises: Cas3Premises,
     bedspace: Cas3Bedspace,
     private readonly booking: Booking,
   ) {
@@ -29,7 +29,7 @@ export default class BookingExtensionNewPage extends Page {
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premises: Premises, bedspace: Cas3Bedspace, booking: Booking): BookingExtensionNewPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking): BookingExtensionNewPage {
     cy.visit(paths.bookings.extensions.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))
     return new BookingExtensionNewPage(premises, bedspace, booking)
   }

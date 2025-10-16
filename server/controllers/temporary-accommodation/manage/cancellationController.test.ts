@@ -8,8 +8,8 @@ import {
   bookingFactory,
   cancellationFactory,
   cas3BedspaceFactory,
+  cas3PremisesFactory,
   newCancellationFactory,
-  premisesFactory,
 } from '../../../testutils/factories'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
@@ -49,7 +49,7 @@ describe('CancellationsController', () => {
 
   describe('new', () => {
     it('renders the form', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
@@ -59,7 +59,7 @@ describe('CancellationsController', () => {
         bookingId: booking.id,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
@@ -70,7 +70,7 @@ describe('CancellationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
@@ -160,7 +160,7 @@ describe('CancellationsController', () => {
 
   describe('edit', () => {
     it('renders the form', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.cancelled().build()
 
@@ -170,7 +170,7 @@ describe('CancellationsController', () => {
         bookingId: booking.id,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
@@ -181,7 +181,7 @@ describe('CancellationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 

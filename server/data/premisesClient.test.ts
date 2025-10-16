@@ -2,7 +2,7 @@ import nock from 'nock'
 
 import config from '../config'
 import paths from '../paths/api'
-import { premisesFactory } from '../testutils/factories'
+import { cas3PremisesFactory } from '../testutils/factories'
 import PremisesClient from './premisesClient'
 import { CallConfig } from './restClient'
 
@@ -28,7 +28,7 @@ describe('PremisesClient', () => {
   })
 
   describe('find', () => {
-    const premises = premisesFactory.build()
+    const premises = cas3PremisesFactory.build()
 
     it('should get a single premises', async () => {
       fakeApprovedPremisesApi

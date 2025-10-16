@@ -1,6 +1,5 @@
-import type { Booking, LostBed } from '@approved-premises/api'
+import type { Booking, Cas3Bedspace, Cas3Premises, LostBed } from '@approved-premises/api'
 
-import { Cas3Bedspace, Premises } from '../../../../server/@types/shared'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingListingComponent from '../../../components/bookingListing'
 import LostBedListingComponent from '../../../components/lostBedListing'
@@ -11,7 +10,7 @@ export default class BedspaceShowPage extends Page {
     super(`Bedspace reference: ${bedspace.reference}`)
   }
 
-  static visit(premises: Premises, bedspace: Cas3Bedspace): BedspaceShowPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace): BedspaceShowPage {
     cy.visit(paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }))
     return new BedspaceShowPage(bedspace)
   }

@@ -1,5 +1,5 @@
 import paths from '../paths/temporary-accommodation/manage'
-import { assessmentFactory, placeContextFactory, premisesFactory } from '../testutils/factories'
+import { assessmentFactory, cas3PremisesFactory, placeContextFactory } from '../testutils/factories'
 import { premisesActions, shortAddress, showPropertySubNavArray } from './premisesUtils'
 
 describe('premisesUtils', () => {
@@ -10,7 +10,7 @@ describe('premisesUtils', () => {
   })
   describe('premisesActions', () => {
     it('returns add a bedspace for an active premises', () => {
-      const premises = premisesFactory.active().build()
+      const premises = cas3PremisesFactory.build({ status: 'online' })
 
       expect(premisesActions(premises)).toEqual([
         {
@@ -22,7 +22,7 @@ describe('premisesUtils', () => {
     })
 
     it('returns null for an archived premises', () => {
-      const premises = premisesFactory.archived().build()
+      const premises = cas3PremisesFactory.build({ status: 'archived' })
 
       expect(premisesActions(premises)).toEqual(null)
     })
@@ -30,7 +30,7 @@ describe('premisesUtils', () => {
 
   describe('shortAddress', () => {
     it('returns a shortened address for the premises when it does not have a town', () => {
-      const premises = premisesFactory.build({
+      const premises = cas3PremisesFactory.build({
         addressLine1: '123 Road Lane',
         postcode: 'ABC 123',
       })
@@ -40,7 +40,7 @@ describe('premisesUtils', () => {
     })
 
     it('returns a shortened address for the premises when it does have a town', () => {
-      const premises = premisesFactory.build({
+      const premises = cas3PremisesFactory.build({
         addressLine1: '123 Road Lane',
         town: 'Townville',
         postcode: 'ABC 123',

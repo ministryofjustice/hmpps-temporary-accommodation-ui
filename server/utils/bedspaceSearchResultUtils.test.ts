@@ -3,8 +3,8 @@ import {
   assessmentFactory,
   bedspaceSearchResultFactory,
   cas3BedspaceFactory,
+  cas3PremisesFactory,
   characteristicFactory,
-  premisesFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
 import {
@@ -17,7 +17,7 @@ import { fullPersonFactory } from '../testutils/factories/person'
 describe('BedspaceSearchResultUtils', () => {
   describe('bedspaceKeyCharacteristics', () => {
     it('returns a sorted list of the characteristic names for the bedspace', () => {
-      const premises = premisesFactory.build({
+      const premises = cas3PremisesFactory.build({
         characteristics: [
           characteristicFactory.build({
             name: 'Women only',
@@ -39,7 +39,7 @@ describe('BedspaceSearchResultUtils', () => {
 
   describe('bedspaceKeyCharacteristics', () => {
     it('returns a sorted list of the characteristic names for the bedspace', () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({
         characteristics: [
           characteristicFactory.build({

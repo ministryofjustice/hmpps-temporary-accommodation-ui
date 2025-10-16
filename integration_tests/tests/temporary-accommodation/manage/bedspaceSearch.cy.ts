@@ -18,7 +18,6 @@ import {
   overlapFactory,
   personFactory,
   placeContextFactory,
-  premisesFactory,
   timelineEventsFactory,
 } from '../../../../server/testutils/factories'
 
@@ -166,8 +165,7 @@ context('Bedspace Search', () => {
     const bedspaceId = faker.string.uuid()
 
     // And when I fill out the form
-    const premises = premisesFactory.build({ id: premisesId, name: 'Test premises' })
-    const cas3Premises = cas3PremisesFactory.build({ id: premisesId, status: 'online', reference: 'Test premises' })
+    const premises = cas3PremisesFactory.build({ id: premisesId, status: 'online', reference: 'Test premises' })
     const cas3Bedspace = cas3BedspaceFactory.build({ id: bedspaceId, reference: 'Test bedspace', status: 'online' })
     const bookings = bookingFactory
       .params({
@@ -186,8 +184,7 @@ context('Bedspace Search', () => {
     })
 
     cy.task('stubBedspaceSearch', results)
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSinglePremisesV2', cas3Premises)
+    cy.task('stubSinglePremisesV2', premises)
     cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: cas3Bedspace })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
@@ -214,7 +211,7 @@ context('Bedspace Search', () => {
 
     // And there is a bedspace with an overlap in the database
     const person = personFactory.build({ crn: 'known-crn' })
-    const premises = premisesFactory.build()
+    const premises = cas3PremisesFactory.build()
     const bedspace = cas3BedspaceFactory.build({ status: 'online' })
     const assessment = assessmentFactory.build({ status: 'closed' })
     const timeline = timelineEventsFactory.build()
@@ -238,7 +235,7 @@ context('Bedspace Search', () => {
     })
 
     cy.task('stubBedspaceSearch', results)
-    cy.task('stubSinglePremises', premises)
+    cy.task('stubSinglePremisesV2', premises)
     cy.task('stubFindAssessment', { ...assessment, status: 'closed' })
     cy.task('stubAssessmentReferralHistoryGet', {
       assessment,

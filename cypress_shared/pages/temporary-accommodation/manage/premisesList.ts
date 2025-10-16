@@ -1,7 +1,7 @@
 import type { TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { premisesFactory } from '../../../../server/testutils/factories'
+import { cas3PremisesFactory } from '../../../../server/testutils/factories'
 import Page from '../../page'
 
 export default class PremisesListPage extends Page {
@@ -28,10 +28,10 @@ export default class PremisesListPage extends Page {
             .eq(0)
             .then(element => {
               const [addressLine1] = element.text().split(', ')
-              const premises = premisesFactory.build({
+              const premises = cas3PremisesFactory.build({
                 id: 'unknown',
                 addressLine1,
-                status: 'active',
+                status: 'online',
               })
 
               if (index === 0) {

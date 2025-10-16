@@ -41,7 +41,6 @@ import newDepartureFactory from './newDeparture'
 import newExtensionFactory from './newExtension'
 import newLostBedFactory from './newLostBed'
 import newLostBedCancellationFactory from './newLostBedCancellation'
-import newPremisesFactory from './newPremises'
 import newReferralHistoryUserNoteFactory from './newReferralHistoryUserNote'
 import newTurnaroundFactory from './newTurnaround'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
@@ -49,8 +48,6 @@ import overlapFactory from './overlap'
 import pduFactory from './pdu'
 import { fullPersonFactory as personFactory, restrictedPersonFactory } from './person'
 import placeContextFactory from './placeContext'
-import premisesFactory from './premises'
-import premisesSummaryFactory from './premisesSummary'
 import cas3PremisesFactory from './cas3Premises'
 import cas3NewPremisesFactory from './cas3NewPremises'
 import cas3UpdatePremisesFactory from './cas3UpdatePremises'
@@ -80,7 +77,6 @@ import tierEnvelopeFactory from './tierEnvelopeFactory'
 import { timelineEventsFactory } from './timelineEvents'
 import turnaroundFactory from './turnaround'
 import updateLostBedFactory from './updateLostBed'
-import updatePremisesFactory from './updatePremises'
 import userFactory, { userProfileFactory } from './user'
 
 export {
@@ -127,7 +123,6 @@ export {
   newExtensionFactory,
   newLostBedCancellationFactory,
   newLostBedFactory,
-  newPremisesFactory,
   newReferralHistoryUserNoteFactory,
   newTurnaroundFactory,
   oasysSectionsFactory,
@@ -135,8 +130,6 @@ export {
   pduFactory,
   personFactory,
   placeContextFactory,
-  premisesFactory,
-  premisesSummaryFactory,
   cas3PremisesFactory,
   cas3NewPremisesFactory,
   cas3UpdatePremisesFactory,
@@ -168,7 +161,6 @@ export {
   timelineEventsFactory,
   turnaroundFactory,
   updateLostBedFactory,
-  updatePremisesFactory,
   userFactory,
   userProfileFactory,
 }

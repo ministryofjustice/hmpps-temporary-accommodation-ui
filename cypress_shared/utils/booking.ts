@@ -1,12 +1,12 @@
-import { Booking, BookingStatus, Cas3Bedspace, Premises } from '../../server/@types/shared'
-import { cas3BedspaceFactory, premisesFactory } from '../../server/testutils/factories'
+import { Booking, BookingStatus, Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
+import { cas3BedspaceFactory, cas3PremisesFactory } from '../../server/testutils/factories'
 import { statusName } from '../../server/utils/bookingUtils'
 
-export const setupBookingStateStubs = (booking: Booking): { premises: Premises; bedspace: Cas3Bedspace } => {
-  const premises = premisesFactory.build()
+export const setupBookingStateStubs = (booking: Booking): { premises: Cas3Premises; bedspace: Cas3Bedspace } => {
+  const premises = cas3PremisesFactory.build()
   const bedspace = cas3BedspaceFactory.build({ status: 'online' })
 
-  cy.task('stubSinglePremises', premises)
+  cy.task('stubSinglePremisesV2', premises)
   cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
   cy.task('stubBooking', { premisesId: premises.id, booking })
 

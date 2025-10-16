@@ -1,4 +1,4 @@
-import type { Booking, Cas3Bedspace, Premises } from '@approved-premises/api'
+import type { Booking, Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -12,7 +12,7 @@ export default class BookingDepartureNewPage extends BookingDepartureEditablePag
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Premises, bedspace: Cas3Bedspace, booking: Booking) {
+  constructor(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking) {
     super('Mark booking as departed')
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, bedspace })
@@ -20,7 +20,7 @@ export default class BookingDepartureNewPage extends BookingDepartureEditablePag
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premises: Premises, bedspace: Cas3Bedspace, booking: Booking): BookingDepartureNewPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking): BookingDepartureNewPage {
     cy.visit(paths.bookings.departures.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))
     return new BookingDepartureNewPage(premises, bedspace, booking)
   }

@@ -13,7 +13,6 @@ import extension from './integration_tests/mockApis/extension'
 import lostBed from './integration_tests/mockApis/lostBed'
 import nonArrival from './integration_tests/mockApis/nonArrival'
 import person from './integration_tests/mockApis/person'
-import premises from './integration_tests/mockApis/premises'
 import premisesV2 from './integration_tests/mockApis/v2/premises'
 import report from './integration_tests/mockApis/report'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
@@ -49,7 +48,6 @@ export default defineConfig({
         ...nonArrival,
         ...auth,
         ...tokenVerification,
-        ...premises,
         ...premisesV2,
         ...booking,
         ...extension,

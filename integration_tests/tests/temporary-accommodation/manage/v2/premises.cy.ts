@@ -47,7 +47,7 @@ context('Premises', () => {
       const searchResults = cas3PremisesSearchResultsFactory.build({
         results: cas3PremisesSearchResultFactory.buildList(5),
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // When I visit the premises page
       const page = PremisesListPage.visitOnline()
@@ -87,8 +87,8 @@ context('Premises', () => {
         ],
         totalPremises: 5,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
-      cy.task('stubPremisesSearchV2', {
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', {
         searchResults: matchingSearchResults,
         postcodeOrAddress: postcode,
         premisesStatus: 'online',
@@ -131,8 +131,8 @@ context('Premises', () => {
         results: [],
         totalPremises: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
-      cy.task('stubPremisesSearchV2', {
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', {
         searchResults: matchingSearchResults,
         postcodeOrAddress: 'SR6',
         premisesStatus: 'online',
@@ -167,7 +167,7 @@ context('Premises', () => {
         results: cas3PremisesSearchResultFactory.buildList(5),
         totalPremises: 5,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // When I visit the premises list page
       const page = PremisesListPage.visitOnline()
@@ -190,7 +190,7 @@ context('Premises', () => {
         totalOnlineBedspaces: 8,
         totalUpcomingBedspaces: 2,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // When I visit the premises page
       PremisesListPage.visitOnline()
@@ -220,8 +220,8 @@ context('Premises', () => {
         totalOnlineBedspaces: 4,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults: allResults, postcodeOrAddress: '', premisesStatus: 'online' })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: 'NE1', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults: allResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: 'NE1', premisesStatus: 'online' })
 
       // When I visit the premises page
       const page = PremisesListPage.visitOnline()
@@ -248,7 +248,7 @@ context('Premises', () => {
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // When I visit the premises page
       PremisesListPage.visitOnline()
@@ -275,7 +275,7 @@ context('Premises', () => {
         totalOnlineBedspaces: 8,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // When I visit the premises page
       PremisesListPage.visitOnline()
@@ -299,7 +299,7 @@ context('Premises', () => {
         totalOnlineBedspaces: 8,
         totalUpcomingBedspaces: 2,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // When I visit the base v2 properties route
       cy.visit('/properties')
@@ -323,7 +323,7 @@ context('Premises', () => {
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
 
       // When I visit the archived premises page
       const page = PremisesListPage.visitArchived()
@@ -363,12 +363,12 @@ context('Premises', () => {
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', {
+      cy.task('stubPremisesSearch', {
         searchResults: allSearchResults,
         postcodeOrAddress: '',
         premisesStatus: 'archived',
       })
-      cy.task('stubPremisesSearchV2', {
+      cy.task('stubPremisesSearch', {
         searchResults: matchingSearchResults,
         postcodeOrAddress: postcode,
         premisesStatus: 'archived',
@@ -416,8 +416,8 @@ context('Premises', () => {
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
-      cy.task('stubPremisesSearchV2', {
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
+      cy.task('stubPremisesSearch', {
         searchResults: matchingSearchResults,
         postcodeOrAddress: 'NOTFOUND',
         premisesStatus: 'archived',
@@ -454,7 +454,7 @@ context('Premises', () => {
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
 
       // When I visit the archived premises page
       PremisesListPage.visitArchived()
@@ -478,7 +478,7 @@ context('Premises', () => {
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
 
       // When I visit the archived premises page
       PremisesListPage.visitArchived()
@@ -507,8 +507,8 @@ context('Premises', () => {
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults: onlineResults, postcodeOrAddress: '', premisesStatus: 'online' })
-      cy.task('stubPremisesSearchV2', {
+      cy.task('stubPremisesSearch', { searchResults: onlineResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', {
         searchResults: archivedResults,
         postcodeOrAddress: '',
         premisesStatus: 'archived',
@@ -569,18 +569,18 @@ context('Premises', () => {
         totalUpcomingBedspaces: 0,
       })
 
-      cy.task('stubPremisesSearchV2', { searchResults: onlineResults, postcodeOrAddress: '', premisesStatus: 'online' })
-      cy.task('stubPremisesSearchV2', {
+      cy.task('stubPremisesSearch', { searchResults: onlineResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', {
         searchResults: onlineSearchResults,
         postcodeOrAddress: searchTerm,
         premisesStatus: 'online',
       })
-      cy.task('stubPremisesSearchV2', {
+      cy.task('stubPremisesSearch', {
         searchResults: archivedResults,
         postcodeOrAddress: '',
         premisesStatus: 'archived',
       })
-      cy.task('stubPremisesSearchV2', {
+      cy.task('stubPremisesSearch', {
         searchResults: archivedSearchResults,
         postcodeOrAddress: searchTerm,
         premisesStatus: 'archived',
@@ -625,8 +625,8 @@ context('Premises', () => {
         totalOnlineBedspaces: 4,
         totalUpcomingBedspaces: 1,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
 
       // When I visit the online premises page
       PremisesListPage.visitOnline()
@@ -651,7 +651,7 @@ context('Premises', () => {
       const searchResults = cas3PremisesSearchResultsFactory.build({
         results: cas3PremisesSearchResultFactory.buildList(2),
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // When I visit the online premises page
       PremisesListPage.visitOnline()
@@ -669,7 +669,7 @@ context('Premises', () => {
       const searchResults = cas3PremisesSearchResultsFactory.build({
         results: cas3PremisesSearchResultFactory.buildList(2),
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'archived' })
 
       // When I visit the archived premises page
       PremisesListPage.visitArchived()
@@ -703,9 +703,9 @@ context('Premises', () => {
         totalPremises: 1,
         totalOnlineBedspaces: 1,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces })
 
       // When I visit the premises page
       const page = PremisesListPage.visitOnline()
@@ -761,9 +761,9 @@ context('Premises', () => {
         totalOnlineBedspaces: 1,
         totalUpcomingBedspaces: 3,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces })
 
       // When I visit the premises page
       const page = PremisesListPage.visitOnline()
@@ -818,9 +818,9 @@ context('Premises', () => {
         totalUpcomingBedspaces: 0,
         totalOnlineBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces })
 
       // When I visit the premises page
       const page = PremisesListPage.visitOnline()
@@ -865,8 +865,8 @@ context('Premises', () => {
         totalUpcomingBedspaces: 0,
         totalArchivedBedspaces: 0,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces })
 
       // When I visit the show premises page
       const page = PremisesShowPage.visit(premises)
@@ -892,7 +892,7 @@ context('Premises', () => {
         cas3PremisesSearchResultFactory.build({ pdu: 'PDU B', localAuthorityAreaName: 'LA Y' }),
       ],
     })
-    cy.task('stubPremisesSearchV2', {
+    cy.task('stubPremisesSearch', {
       searchResults: pduResults,
       postcodeOrAddress: '',
       premisesStatus: 'online',
@@ -906,7 +906,7 @@ context('Premises', () => {
         cas3PremisesSearchResultFactory.build({ pdu: 'PDU D', localAuthorityAreaName: 'LA W' }),
       ],
     })
-    cy.task('stubPremisesSearchV2', {
+    cy.task('stubPremisesSearch', {
       searchResults: laResults,
       postcodeOrAddress: '',
       premisesStatus: 'online',
@@ -945,9 +945,9 @@ context('Premises', () => {
     const searchResults = cas3PremisesSearchResultsFactory.build({
       results: cas3PremisesSearchResultFactory.buildList(5),
     })
-    cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
-    cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: postcode, premisesStatus: 'online' })
-    cy.task('stubPremisesSearchV2', {
+    cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+    cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: postcode, premisesStatus: 'online' })
+    cy.task('stubPremisesSearch', {
       searchResults,
       postcodeOrAddress: postcode,
       premisesStatus: 'online',
@@ -979,10 +979,10 @@ context('Premises', () => {
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
       })
-      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+      cy.task('stubPremisesSearch', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // And there is reference data in the database
-      cy.task('stubPremisesReferenceDataV2')
+      cy.task('stubPremisesReferenceData')
 
       // When I visit the premises page
       const page = PremisesListPage.visit()
@@ -999,7 +999,7 @@ context('Premises', () => {
       cy.signIn()
 
       // And there is reference data in the database
-      cy.task('stubPremisesReferenceDataV2')
+      cy.task('stubPremisesReferenceData')
 
       // When I visit the new premises page
       const page = PremisesNewPage.visit()
@@ -1051,14 +1051,14 @@ context('Premises', () => {
         startDate: '2025-02-01',
         status: 'online',
       })
-      cy.task('stubPremisesCreateV2', premises)
-      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesCreate', premises)
+      cy.task('stubSinglePremises', premises)
 
       // When I submit the form
       page.clickSubmit()
 
       // Then a premises should have been created in the API
-      cy.task('verifyPremisesCreateV2').then(requests => {
+      cy.task('verifyPremisesCreate').then(requests => {
         expect(requests).to.have.length(1)
         const requestBody = JSON.parse(requests[0].body)
 
@@ -1089,7 +1089,7 @@ context('Premises', () => {
       cy.signIn()
 
       // And there is reference data in the database
-      cy.task('stubPremisesReferenceDataV2')
+      cy.task('stubPremisesReferenceData')
 
       // When I visit the new premises page
       const page = PremisesNewPage.visit()
@@ -1102,7 +1102,7 @@ context('Premises', () => {
       page.enterWorkingDays(5)
 
       // And the backend responds with 400 bad request
-      cy.task('stubPremisesCreateErrorsV2', [
+      cy.task('stubPremisesCreateErrors', [
         'reference',
         'addressLine1',
         'postcode',
@@ -1135,7 +1135,7 @@ context('Premises', () => {
   describe('edit an existing property', () => {
     beforeEach(() => {
       // And there is reference data in the database
-      cy.task('stubPremisesReferenceDataV2')
+      cy.task('stubPremisesReferenceData')
     })
 
     it('should navigate to the edit property page from the show property page', () => {
@@ -1144,8 +1144,8 @@ context('Premises', () => {
 
       // And there is an online premises in the database
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
       const showPage = PremisesShowPage.visit(premises)
@@ -1191,8 +1191,8 @@ context('Premises', () => {
         probationDeliveryUnit,
         characteristics,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the edit premises page
       const page = PremisesEditPage.visit(premises)
@@ -1237,8 +1237,8 @@ context('Premises', () => {
         probationDeliveryUnit,
         characteristics,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the edit property page
       const page = PremisesEditPage.visit(premises)
@@ -1296,14 +1296,14 @@ context('Premises', () => {
         id: premises.id,
         status: premises.status,
       })
-      cy.task('stubPremisesUpdateV2', expectedPremises)
-      cy.task('stubSinglePremisesV2', expectedPremises)
+      cy.task('stubPremisesUpdate', expectedPremises)
+      cy.task('stubSinglePremises', expectedPremises)
 
       // When I submit the form
       page.clickSubmit()
 
       // Then the premises should have been updated in the backend
-      cy.task('verifyPremisesUpdateV2', premises.id).then(requests => {
+      cy.task('verifyPremisesUpdate', premises.id).then(requests => {
         expect(requests).to.have.length(1)
         const requestBody = JSON.parse(requests[0].body)
 
@@ -1363,8 +1363,8 @@ context('Premises', () => {
         probationDeliveryUnit,
         characteristics,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the edit premises page
       const page = PremisesEditPage.visit(premises)
@@ -1374,7 +1374,7 @@ context('Premises', () => {
       page.enterAddress('', premises.addressLine2, premises.town, '')
 
       // And the backend responds with 400 bad request
-      cy.task('stubPremisesUpdateErrorsV2', {
+      cy.task('stubPremisesUpdateErrors', {
         premisesId: premises.id,
         fields: ['reference', 'addressLine1', 'postcode'],
       })
@@ -1407,8 +1407,8 @@ context('Premises', () => {
     it('should be able to archive a property today', () => {
       // And there is an online premises in the database
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
       cy.task('stubPremisesCanArchive', { premisesId: premises.id, undefined })
 
       // When I visit the show premises page
@@ -1426,8 +1426,8 @@ context('Premises', () => {
         status: 'archived',
         archiveHistory: [{ date: DateFormats.dateObjToIsoDate(new Date()), status: 'archived' }],
       }
-      cy.task('stubPremisesArchiveV2', expectedPremises)
-      cy.task('stubSinglePremisesV2', expectedPremises)
+      cy.task('stubPremisesArchive', expectedPremises)
+      cy.task('stubSinglePremises', expectedPremises)
 
       // And I click the option for "today"
       archivePage.selectToday()
@@ -1437,7 +1437,7 @@ context('Premises', () => {
 
       // Then the premises should have been archived in the backend
       const today = DateFormats.dateObjToIsoDate(new Date())
-      cy.task('verifyPremisesArchiveV2', premises.id).then(requests => {
+      cy.task('verifyPremisesArchive', premises.id).then(requests => {
         expect(requests).to.have.length(1)
         const requestBody = JSON.parse(requests[0].body)
         expect(requestBody.endDate).equal(today)
@@ -1457,8 +1457,8 @@ context('Premises', () => {
     it('should be able to archive a property tomorrow', () => {
       // And there is an online premises in the database
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
       cy.task('stubPremisesCanArchive', { premisesId: premises.id, undefined })
 
       // When I visit the show premises page
@@ -1478,14 +1478,14 @@ context('Premises', () => {
 
       // When the backend responds with 200 ok
       const expectedPremises: Cas3Premises = { ...premises, endDate: tomorrow }
-      cy.task('stubPremisesArchiveV2', expectedPremises)
-      cy.task('stubSinglePremisesV2', expectedPremises)
+      cy.task('stubPremisesArchive', expectedPremises)
+      cy.task('stubSinglePremises', expectedPremises)
 
       // And I submit the form
       archivePage.clickSubmit()
 
       // Then the premises should have been archived in the backend
-      cy.task('verifyPremisesArchiveV2', premises.id).then(requests => {
+      cy.task('verifyPremisesArchive', premises.id).then(requests => {
         expect(requests).to.have.length(1)
         const requestBody = JSON.parse(requests[0].body)
         expect(requestBody.endDate).equal(tomorrow)
@@ -1513,8 +1513,8 @@ context('Premises', () => {
         totalOnlineBedspaces: 0,
         totalArchivedBedspaces: 0,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces })
       cy.task('stubPremisesCanArchive', { premisesId: premises.id, undefined })
 
       // When I visit the show premises page
@@ -1530,7 +1530,7 @@ context('Premises', () => {
       oneWeek.setDate(oneWeek.getDate() + 7)
 
       // When the backend responds with 400 bad request
-      cy.task('stubPremisesArchiveErrorsV2', {
+      cy.task('stubPremisesArchiveErrors', {
         premisesId: premises.id,
         endDate: DateFormats.dateObjToIsoDate(oneWeek),
       })
@@ -1561,8 +1561,8 @@ context('Premises', () => {
           { entityId: bedspaces[1].id, entityReference: bedspaces[1].reference },
         ],
       }
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', {
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', {
         premisesId: premises.id,
         bedspaces: cas3BedspacesFactory.build({ bedspaces }),
       })
@@ -1602,8 +1602,8 @@ context('Premises', () => {
           { entityId: bedspaces[1].id, entityReference: bedspaces[1].reference },
         ],
       }
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', {
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', {
         premisesId: premises.id,
         bedspaces: cas3BedspacesFactory.build({ bedspaces }),
       })
@@ -1624,7 +1624,7 @@ context('Premises', () => {
       cannotArchivePage.shouldShowAffectedBedspaces(bedspacesReference.items)
 
       // When I click on one of the affected bedspaces
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: bedspaces[1] })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace: bedspaces[1] })
       cannotArchivePage.clickAffectedBedspace(bedspaces[1].reference)
 
       // Then I should see the show bedspace page
@@ -1641,8 +1641,8 @@ context('Premises', () => {
           { entityId: bedspaces[1].id, entityReference: bedspaces[1].reference },
         ],
       }
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', {
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', {
         premisesId: premises.id,
         bedspaces: cas3BedspacesFactory.build({ bedspaces }),
       })
@@ -1680,8 +1680,8 @@ context('Premises', () => {
       const premises = cas3PremisesFactory.build({ status: 'archived' })
       // and these premises do not have a future unarchive date
       const { scheduleUnarchiveDate, ...premisesWithoutScheduleUnarchiveDate } = premises
-      cy.task('stubSinglePremisesV2', premisesWithoutScheduleUnarchiveDate)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premisesWithoutScheduleUnarchiveDate)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
       let showPage = PremisesShowPage.visit(premises)
@@ -1697,8 +1697,8 @@ context('Premises', () => {
         ...premises,
         status: 'online',
       }
-      cy.task('stubPremisesUnarchiveV2', expectedPremises)
-      cy.task('stubSinglePremisesV2', expectedPremises)
+      cy.task('stubPremisesUnarchive', expectedPremises)
+      cy.task('stubSinglePremises', expectedPremises)
 
       // And I select the "today" option
       unarchivePage.selectToday()
@@ -1708,7 +1708,7 @@ context('Premises', () => {
 
       // Then the premises should have been unarchived in the backend
       const today = DateFormats.dateObjToIsoDate(new Date())
-      cy.task('verifyPremisesUnarchiveV2', premises.id).then(requests => {
+      cy.task('verifyPremisesUnarchive', premises.id).then(requests => {
         expect(requests).to.have.length(1)
         const requestBody = JSON.parse(requests[0].body)
         expect(requestBody.restartDate).equal(today)
@@ -1729,8 +1729,8 @@ context('Premises', () => {
       const premises = cas3PremisesFactory.build({ status: 'archived' })
       // and these premises do not have a future unarchive date
       const { scheduleUnarchiveDate, ...premisesWithoutScheduleUnarchiveDate } = premises
-      cy.task('stubSinglePremisesV2', premisesWithoutScheduleUnarchiveDate)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premisesWithoutScheduleUnarchiveDate)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
       let showPage = PremisesShowPage.visit(premises)
@@ -1749,14 +1749,14 @@ context('Premises', () => {
 
       // When the backend responds with 200 ok
       const expectedPremises: Cas3Premises = premises
-      cy.task('stubPremisesUnarchiveV2', expectedPremises)
-      cy.task('stubSinglePremisesV2', expectedPremises)
+      cy.task('stubPremisesUnarchive', expectedPremises)
+      cy.task('stubSinglePremises', expectedPremises)
 
       // And I submit the form
       unarchivePage.clickSubmit()
 
       // Then the premises should have been scheduled to come online in the backend
-      cy.task('verifyPremisesUnarchiveV2', premises.id).then(requests => {
+      cy.task('verifyPremisesUnarchive', premises.id).then(requests => {
         expect(requests).to.have.length(1)
         const requestBody = JSON.parse(requests[0].body)
         expect(requestBody.restartDate).equal(tomorrow)
@@ -1779,8 +1779,8 @@ context('Premises', () => {
       const premises = cas3PremisesFactory.build({ status: 'archived' })
       // and these premises do not have a future unarchive date
       const { scheduleUnarchiveDate, ...premisesWithoutScheduleUnarchiveDate } = premises
-      cy.task('stubSinglePremisesV2', premisesWithoutScheduleUnarchiveDate)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premisesWithoutScheduleUnarchiveDate)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
       const showPage = PremisesShowPage.visit(premises)
@@ -1795,7 +1795,7 @@ context('Premises', () => {
       twoWeeks.setDate(twoWeeks.getDate() + 14)
 
       // When the backend responds with 400 bad request
-      cy.task('stubPremisesUnarchiveErrorsV2', premises.id)
+      cy.task('stubPremisesUnarchiveErrors', premises.id)
 
       // And I select the "today" option
       unarchivePage.selectToday()
@@ -1829,8 +1829,8 @@ context('Premises', () => {
         status: 'online',
         endDate: tomorrowIso,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
       let showPage = PremisesShowPage.visit(premises)
@@ -1849,14 +1849,14 @@ context('Premises', () => {
         ...premises,
         endDate: undefined,
       }
-      cy.task('stubPremisesCancelArchiveV2', expectedPremises)
-      cy.task('stubSinglePremisesV2', expectedPremises)
+      cy.task('stubPremisesCancelArchive', expectedPremises)
+      cy.task('stubSinglePremises', expectedPremises)
 
       // And I submit the form
       cancelArchivePage.clickSubmit()
 
       // Then the premises should have had its archive cancelled in the backend
-      cy.task('verifyPremisesCancelArchiveV2', premises.id).then(requests => {
+      cy.task('verifyPremisesCancelArchive', premises.id).then(requests => {
         expect(requests).to.have.length(1)
       })
 
@@ -1877,8 +1877,8 @@ context('Premises', () => {
         status: 'online',
         endDate: tomorrowIso,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
       const showPage = PremisesShowPage.visit(premises)
@@ -1909,8 +1909,8 @@ context('Premises', () => {
         status: 'online',
         endDate: tomorrowIso,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
       const showPage = PremisesShowPage.visit(premises)
@@ -1925,7 +1925,7 @@ context('Premises', () => {
       cancelArchivePage.selectYes()
 
       // When the backend responds with an error
-      cy.task('stubPremisesCancelArchiveErrorsV2', {
+      cy.task('stubPremisesCancelArchiveErrors', {
         premisesId: premises.id,
         params: ['premisesNotScheduledToArchive'],
       })
@@ -1954,8 +1954,8 @@ context('Premises', () => {
         status: 'archived',
         scheduleUnarchiveDate: tomorrowIso,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
       let showPage = PremisesShowPage.visit(premises)
@@ -1974,14 +1974,14 @@ context('Premises', () => {
         ...premises,
         scheduleUnarchiveDate: undefined,
       }
-      cy.task('stubPremisesCancelUnarchiveV2', expectedPremises)
-      cy.task('stubSinglePremisesV2', expectedPremises)
+      cy.task('stubPremisesCancelUnarchive', expectedPremises)
+      cy.task('stubSinglePremises', expectedPremises)
 
       // And I submit the form
       cancelUnarchivePage.clickSubmit()
 
       // Then the premises should have had its unarchive cancelled in the backend
-      cy.task('verifyPremisesCancelUnarchiveV2', premises.id).then(requests => {
+      cy.task('verifyPremisesCancelUnarchive', premises.id).then(requests => {
         expect(requests).to.have.length(1)
       })
 
@@ -2002,8 +2002,8 @@ context('Premises', () => {
         status: 'archived',
         scheduleUnarchiveDate: tomorrowIso,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
       const showPage = PremisesShowPage.visit(premises)
@@ -2034,8 +2034,8 @@ context('Premises', () => {
         status: 'archived',
         scheduleUnarchiveDate: tomorrowIso,
       })
-      cy.task('stubSinglePremisesV2', premises)
-      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
 
       // When I visit the show premises page
       const showPage = PremisesShowPage.visit(premises)
@@ -2050,7 +2050,7 @@ context('Premises', () => {
       cancelUnarchivePage.selectYes()
 
       // When the backend responds with an error
-      cy.task('stubPremisesCancelUnarchiveErrorsV2', {
+      cy.task('stubPremisesCancelUnarchiveErrors', {
         premisesId: premises.id,
         params: ['premisesNotScheduledToUnarchive'],
       })

@@ -41,8 +41,8 @@ context('Lost bed', () => {
       })
       .buildList(5)
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -76,8 +76,8 @@ context('Lost bed', () => {
       })
       .buildList(5)
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: lostBeds[0] })
@@ -100,8 +100,8 @@ context('Lost bed', () => {
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
 
     // When I visit the void a bedspace page
     cy.task('stubLostBedReferenceData')
@@ -151,8 +151,8 @@ context('Lost bed', () => {
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
 
     // When I visit the new lost bed page
     cy.task('stubLostBedReferenceData')
@@ -178,8 +178,8 @@ context('Lost bed', () => {
     const bedspace = cas3BedspaceFactory.build()
     const conflictingBooking = bookingFactory.build()
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubBooking', { premisesId: premises.id, booking: conflictingBooking })
 
     // When I visit the new lost bed page
@@ -226,8 +226,8 @@ context('Lost bed', () => {
       })
       .buildList(5)
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -251,8 +251,8 @@ context('Lost bed', () => {
     const bedspace = cas3BedspaceFactory.build()
     const lostBed = lostBedFactory.active().build()
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the show lost bed page
@@ -271,8 +271,8 @@ context('Lost bed', () => {
     const bedspace = cas3BedspaceFactory.build()
     const lostBed = lostBedFactory.build({ status: 'cancelled' })
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the show lost bed page
@@ -295,9 +295,9 @@ context('Lost bed', () => {
       })
       .buildList(5)
 
-    cy.task('stubSinglePremisesV2', premises)
+    cy.task('stubSinglePremises', premises)
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings: [] })
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: lostBeds[0] })
 
@@ -320,8 +320,8 @@ context('Lost bed', () => {
     const bedspace = cas3BedspaceFactory.build()
     const lostBed = lostBedFactory.active().build()
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the show lost bed page
@@ -355,8 +355,8 @@ context('Lost bed', () => {
       })
       .buildList(5)
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
@@ -381,8 +381,8 @@ context('Lost bed', () => {
     const bedspace = cas3BedspaceFactory.build()
     const lostBed = lostBedFactory.active().build()
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the edit void booking page
@@ -419,8 +419,8 @@ context('Lost bed', () => {
     const bedspace = cas3BedspaceFactory.build()
     const lostBed = lostBedFactory.active().build()
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the edit void booking page
@@ -449,8 +449,8 @@ context('Lost bed', () => {
     const bedspace = cas3BedspaceFactory.build()
     const lostBed = lostBedFactory.active().build()
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the show lost bed page
@@ -478,8 +478,8 @@ context('Lost bed', () => {
       .buildList(5)
     const lostBeds = [lostBed]
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
@@ -503,8 +503,8 @@ context('Lost bed', () => {
     const bedspace = cas3BedspaceFactory.build()
     const lostBed = lostBedFactory.active().build()
 
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the cancel void booking page

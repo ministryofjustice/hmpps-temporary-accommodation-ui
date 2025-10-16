@@ -184,8 +184,8 @@ context('Bedspace Search', () => {
     })
 
     cy.task('stubBedspaceSearch', results)
-    cy.task('stubSinglePremisesV2', premises)
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: cas3Bedspace })
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubBedspace', { premisesId: premises.id, bedspace: cas3Bedspace })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
@@ -235,7 +235,7 @@ context('Bedspace Search', () => {
     })
 
     cy.task('stubBedspaceSearch', results)
-    cy.task('stubSinglePremisesV2', premises)
+    cy.task('stubSinglePremises', premises)
     cy.task('stubFindAssessment', { ...assessment, status: 'closed' })
     cy.task('stubAssessmentReferralHistoryGet', {
       assessment,

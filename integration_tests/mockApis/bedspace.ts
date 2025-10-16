@@ -1,15 +1,15 @@
 import { Cas3Bedspace, Cas3Bedspaces } from '@approved-premises/api'
 import { SuperAgentRequest } from 'superagent'
-import { getMatchingRequests, stubFor } from '../index'
-import paths from '../../../server/paths/api'
-import { errorStub } from '../utils'
+import { getMatchingRequests, stubFor } from './index'
+import paths from '../../server/paths/api'
+import { errorStub } from './utils'
 
 type BedspaceArguments = {
   premisesId: string
   bedspace: Cas3Bedspace
 }
 
-const stubBedspaceV2 = (args: BedspaceArguments) =>
+const stubBedspace = (args: BedspaceArguments) =>
   stubFor({
     request: {
       method: 'GET',
@@ -24,7 +24,7 @@ const stubBedspaceV2 = (args: BedspaceArguments) =>
     },
   })
 
-const stubPremisesBedspacesV2 = (args: { premisesId: string; bedspaces: Cas3Bedspaces }) =>
+const stubPremisesBedspaces = (args: { premisesId: string; bedspaces: Cas3Bedspaces }) =>
   stubFor({
     request: {
       method: 'GET',
@@ -145,7 +145,7 @@ const stubBedspaceCancelArchiveError = (args: BedspaceArguments) =>
     },
   })
 
-const stubBedspaceArchiveV2 = (args: { premisesId: string; bedspaceId: string }) =>
+const stubBedspaceArchive = (args: { premisesId: string; bedspaceId: string }) =>
   stubFor({
     request: {
       method: 'POST',
@@ -172,7 +172,7 @@ const stubBedspaceArchiveV2 = (args: { premisesId: string; bedspaceId: string })
     },
   })
 
-const stubBedspaceArchiveV2WithError = (args: { premisesId: string; bedspaceId: string; errorType: string }) =>
+const stubBedspaceArchiveWithError = (args: { premisesId: string; bedspaceId: string; errorType: string }) =>
   stubFor({
     request: {
       method: 'POST',
@@ -201,7 +201,7 @@ const stubBedspaceArchiveV2WithError = (args: { premisesId: string; bedspaceId: 
     },
   })
 
-const stubBedspaceUnarchiveV2 = (args: { premisesId: string; bedspaceId: string }) =>
+const stubBedspaceUnarchive = (args: { premisesId: string; bedspaceId: string }) =>
   stubFor({
     request: {
       method: 'POST',
@@ -218,7 +218,7 @@ const stubBedspaceUnarchiveV2 = (args: { premisesId: string; bedspaceId: string 
     },
   })
 
-const stubBedspaceUnarchiveV2WithError = (args: { premisesId: string; bedspaceId: string; errorType: string }) =>
+const stubBedspaceUnarchiveWithError = (args: { premisesId: string; bedspaceId: string; errorType: string }) =>
   stubFor({
     request: {
       method: 'POST',
@@ -279,7 +279,7 @@ const stubBedspaceCancelUnarchiveError = (args: BedspaceArguments) =>
     },
   })
 
-const stubBedspaceCanArchiveV2 = (args: { premisesId: string; bedspaceId: string }) =>
+const stubBedspaceCanArchive = (args: { premisesId: string; bedspaceId: string }) =>
   stubFor({
     request: {
       method: 'GET',
@@ -297,7 +297,7 @@ const stubBedspaceCanArchiveV2 = (args: { premisesId: string; bedspaceId: string
     },
   })
 
-const stubBedspaceCanArchiveV2WithBlocking = (args: {
+const stubBedspaceCanArchiveWithBlocking = (args: {
   premisesId: string
   bedspaceId: string
   blockingDate: string
@@ -326,8 +326,8 @@ const stubBedspaceCanArchiveV2WithBlocking = (args: {
   })
 
 export default {
-  stubBedspaceV2,
-  stubPremisesBedspacesV2,
+  stubBedspace,
+  stubPremisesBedspaces,
   stubBedspaceCreate,
   verifyBedspaceCreate,
   stubBedspaceCreateErrors,
@@ -338,10 +338,10 @@ export default {
   stubBedspaceCancelUnarchiveError,
   verifyBedspaceUpdate,
   stubBedspaceUpdateErrors,
-  stubBedspaceArchiveV2,
-  stubBedspaceArchiveV2WithError,
-  stubBedspaceUnarchiveV2,
-  stubBedspaceUnarchiveV2WithError,
-  stubBedspaceCanArchiveV2,
-  stubBedspaceCanArchiveV2WithBlocking,
+  stubBedspaceArchive,
+  stubBedspaceArchiveWithError,
+  stubBedspaceUnarchive,
+  stubBedspaceUnarchiveWithError,
+  stubBedspaceCanArchive,
+  stubBedspaceCanArchiveWithBlocking,
 }

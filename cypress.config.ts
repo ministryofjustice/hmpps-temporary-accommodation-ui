@@ -13,7 +13,7 @@ import extension from './integration_tests/mockApis/extension'
 import lostBed from './integration_tests/mockApis/lostBed'
 import nonArrival from './integration_tests/mockApis/nonArrival'
 import person from './integration_tests/mockApis/person'
-import premisesV2 from './integration_tests/mockApis/v2/premises'
+import premises from './integration_tests/mockApis/premises'
 import report from './integration_tests/mockApis/report'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import turnaround from './integration_tests/mockApis/turnaround'
@@ -21,7 +21,7 @@ import user from './integration_tests/mockApis/user'
 import referenceData from './integration_tests/mockApis/referenceData'
 import schemaValidator from './integration_tests/tasks/schemaValidator'
 import accessibilityViolations from './integration_tests/tasks/accessibilityViolations'
-import bedspaceV2 from './integration_tests/mockApis/v2/bedspace'
+import bedspace from './integration_tests/mockApis/bedspace'
 import { resetStubs } from './integration_tests/mockApis'
 
 export default defineConfig({
@@ -48,7 +48,7 @@ export default defineConfig({
         ...nonArrival,
         ...auth,
         ...tokenVerification,
-        ...premisesV2,
+        ...premises,
         ...booking,
         ...extension,
         ...departure,
@@ -67,7 +67,7 @@ export default defineConfig({
         ...bedspaceSearch,
         ...accessibilityViolations,
         ...referenceData,
-        ...bedspaceV2,
+        ...bedspace,
       })
     },
     baseUrl: 'http://localhost:3007',

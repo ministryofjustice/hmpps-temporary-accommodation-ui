@@ -41,6 +41,7 @@ generic-service:
     COMMUNITY_ACCOMMODATION_API_SERVICE_NAME: 'temporary-accommodation'
     AUDIT_SERVICE_NAME: 'hmpps-temporary-accommodation-ui'
     AUDIT_SQS_REGION: 'eu-west-2'
+    LOG_LEVEL: 'info'
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:

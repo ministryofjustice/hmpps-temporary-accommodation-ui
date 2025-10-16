@@ -17,7 +17,7 @@ import {
   ProbationRegion,
 } from '@approved-premises/api'
 import { PlaceContext, SummaryList, TableRow } from '@approved-premises/ui'
-import { PremisesClientV2 as PremisesClient, ReferenceDataClient, RestClientBuilder } from '../../data'
+import { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../../data'
 
 import { CallConfig } from '../../data/restClient'
 import paths from '../../paths/temporary-accommodation/manage'

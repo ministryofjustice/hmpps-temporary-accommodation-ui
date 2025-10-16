@@ -1,7 +1,7 @@
 import type { Cas3NewBedspace } from '@approved-premises/api'
 import { Cas3Premises as Premises } from '../../../../../server/@types/shared'
 import paths from '../../../../../server/paths/temporary-accommodation/manage'
-import LocationHeaderComponent from '../../../../components/v2/locationHeader'
+import LocationHeaderComponent from '../../../../components/locationHeader'
 import BedspaceEditablePage from './bedspaceEditable'
 
 export default class BedspaceNewPage extends BedspaceEditablePage {

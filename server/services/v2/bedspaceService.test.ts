@@ -1,4 +1,4 @@
-import BedspaceClient from '../../data/v2/bedspaceClient'
+import BedspaceClient from '../../data/bedspaceClient'
 import ReferenceDataClient from '../../data/referenceDataClient'
 import BedspaceService from './bedspaceService'
 import {
@@ -14,7 +14,7 @@ import { filterCharacteristics } from '../../utils/characteristicUtils'
 import { CallConfig } from '../../data/restClient'
 import { convertToTitleCase } from '../../utils/utils'
 
-jest.mock('../../data/v2/bedspaceClient')
+jest.mock('../../data/bedspaceClient')
 jest.mock('../../data/referenceDataClient')
 jest.mock('../../utils/characteristicUtils')
 

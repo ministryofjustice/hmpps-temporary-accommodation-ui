@@ -6,9 +6,9 @@ import {
   Cas3NewBedspace,
   Cas3UpdateBedspace,
 } from '@approved-premises/api'
-import RestClient, { CallConfig } from '../restClient'
-import config, { ApiConfig } from '../../config'
-import paths from '../../paths/api'
+import RestClient, { CallConfig } from './restClient'
+import config, { ApiConfig } from '../config'
+import paths from '../paths/api'
 
 export default class BedspaceClient {
   restClient: RestClient

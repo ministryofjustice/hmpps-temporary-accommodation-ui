@@ -7,8 +7,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">Sorry, there is a problem with the service</h1>
-      <p class="govuk-body">Try again later or contact</p>
-      <p class="govuk-body"><a class="govuk-link" href="mailto:{{ PhaseBannerUtils.supportEmail }}">{{ PhaseBannerUtils.supportEmail }}</a> for help.</p>
+      <p class="govuk-body">Try again later or raise a <a class="govuk-link" href="{{ PhaseBannerUtils.supportLink }}">support ticket</a> to get help or report a bug.</p>
 
       {% if stack %}
         <h1>{{ message }}</h1>

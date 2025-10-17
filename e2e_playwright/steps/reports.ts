@@ -168,7 +168,7 @@ const reportTypeMetaData = {
     callToAction: 'Download referrals report',
   },
   bookingGap: {
-    columnNames: ['probationRegion', 'pduName', 'premisesName', 'bedName', 'gap', 'gapDays', 'turnaroundDays'],
+    columnNames: ['probationRegion', 'pduName', 'premisesName', 'bedName', 'gap', 'gapDays'],
     callToAction: 'Download gap report',
   },
 }

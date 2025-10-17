@@ -21,14 +21,15 @@ export default function populateCurrentUser(userService: UserService): RequestHa
           logger.info('No user available')
         }
       }
-      next()
+
+      return next()
     } catch (error) {
       if (error instanceof DeliusAccountMissingStaffDetailsError) {
         res.status(403)
         return res.render('temporary-accommodation/static/userDetailsRequired')
       }
       logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.username}`)
-      next(error)
+      return next(error)
     }
   }
 }

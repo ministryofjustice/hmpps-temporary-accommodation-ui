@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
 import logger from '../../logger'
-import UserService from '../services/userService'
+import UserService, { DeliusAccountMissingStaffDetailsError } from '../services/userService'
 import extractCallConfig from '../utils/restUtils'
 
 export default function populateCurrentUser(userService: UserService): RequestHandler {
@@ -23,6 +23,10 @@ export default function populateCurrentUser(userService: UserService): RequestHa
       }
       next()
     } catch (error) {
+      if (error instanceof DeliusAccountMissingStaffDetailsError) {
+        res.status(403)
+        return res.render('temporary-accommodation/static/userDetailsRequired')
+      }
       logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.username}`)
       next(error)
     }

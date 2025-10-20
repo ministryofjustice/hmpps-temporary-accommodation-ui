@@ -1,5 +1,5 @@
-import { test } from '../../../test'
-import { signIn } from '../../../steps/signIn'
+import { test } from '../../test'
+import { signIn } from '../../steps/signIn'
 import {
   archiveProperty,
   cancelScheduledArchiveProperty,
@@ -13,8 +13,8 @@ import {
   showProperty,
   unarchiveProperty,
   visitListPropertiesPage,
-} from '../../../steps/v2/manage'
-import { getProperty } from '../../../utils/manage'
+} from '../../steps/manage'
+import { getProperty } from '../../utils/manage'
 
 test('Create a property', async ({ page, assessor }) => {
   const property = getProperty()

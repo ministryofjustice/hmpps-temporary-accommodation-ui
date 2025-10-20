@@ -1,6 +1,6 @@
-import { test } from '../../../test'
-import { getBedspace, getProperty } from '../../../utils/manage'
-import { signIn } from '../../../steps/signIn'
+import { test } from '../../test'
+import { getBedspace, getProperty } from '../../utils/manage'
+import { signIn } from '../../steps/signIn'
 import {
   archiveBedspace,
   cancelArchiveBedspace,
@@ -13,7 +13,7 @@ import {
   showBedspace,
   unarchiveBedspace,
   visitListPropertiesPage,
-} from '../../../steps/v2/manage'
+} from '../../steps/manage'
 
 test('Create a bedspace', async ({ page, assessor }) => {
   const property = getProperty()

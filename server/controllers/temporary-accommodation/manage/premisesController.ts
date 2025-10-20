@@ -238,7 +238,7 @@ export default class PremisesController {
         probationDeliveryUnitId: req.body.probationDeliveryUnitId,
         characteristicIds: req.body.characteristicIds ?? [],
         notes: req.body.notes,
-        turnaroundWorkingDayCount: parseNumber(req.body.turnaroundWorkingDays, { allowNegatives: true }),
+        turnaroundWorkingDays: parseNumber(req.body.turnaroundWorkingDays, { allowNegatives: true }),
       }
 
       const { premisesId } = req.params

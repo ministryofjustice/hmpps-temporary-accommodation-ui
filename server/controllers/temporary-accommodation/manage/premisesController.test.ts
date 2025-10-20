@@ -1235,10 +1235,7 @@ describe('PremisesController', () => {
 
       request.params.premisesId = premises.id
 
-      request.body = {
-        ...updatedPremises,
-        turnaroundWorkingDays: `${updatedPremises.turnaroundWorkingDayCount}`,
-      }
+      request.body = updatedPremises
 
       premisesService.updatePremises.mockResolvedValue(premises)
 
@@ -1259,7 +1256,6 @@ describe('PremisesController', () => {
 
       request.body = {
         ...updatedPremises,
-        turnaroundWorkingDays: `${updatedPremises.turnaroundWorkingDayCount}`,
         addressLine1: '',
       }
 

@@ -1284,7 +1284,7 @@ context('Premises', () => {
       page.enterPdu(updatedPdu.name)
       page.enterCharacteristics(updatedCharacteristics.map(char => char.name))
       page.enterAdditionalDetails(updatedPremises.notes)
-      page.enterWorkingDays(updatedPremises.turnaroundWorkingDayCount)
+      page.enterWorkingDays(updatedPremises.turnaroundWorkingDays)
 
       // And the backend responds with 200 ok
       const expectedPremises = cas3PremisesFactory.build({
@@ -1316,7 +1316,7 @@ context('Premises', () => {
         expect(requestBody.probationDeliveryUnitId).equal(updatedPremises.probationDeliveryUnitId)
         expect(requestBody.characteristicIds).members(updatedPremises.characteristicIds)
         expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatedPremises.notes)
-        expect(requestBody.turnaroundWorkingDayCount).equal(updatedPremises.turnaroundWorkingDayCount)
+        expect(requestBody.turnaroundWorkingDays).equal(updatedPremises.turnaroundWorkingDays)
       })
 
       // And I should be taken to the existing updated property

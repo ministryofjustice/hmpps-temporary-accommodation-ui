@@ -41,15 +41,7 @@ export default abstract class PremisesEditablePage extends Page {
       'Enter the number of working days required to turnaround the property. The standard turnaround time should be 2 days',
     )
     this.getTextInputByIdAndClear('turnaroundWorkingDays')
-
-    // FIXME: This type guard and conditional in next method should be removed once the Cas3NewPremises and
-    //  Cas3UpdatePremises types are aligned on the turnaroundWorkingDays field
-    const isUpdatePremises = (entity?: Cas3UpdatePremises | Cas3NewPremises): entity is Cas3UpdatePremises =>
-      'turnaroundWorkingDayCount' in (entity as Cas3UpdatePremises)
-    this.getTextInputByIdAndEnterDetails(
-      'turnaroundWorkingDays',
-      `${isUpdatePremises(newOrUpdatePremises) ? newOrUpdatePremises.turnaroundWorkingDayCount : newOrUpdatePremises.turnaroundWorkingDays}`,
-    )
+    this.getTextInputByIdAndEnterDetails('turnaroundWorkingDays', `${newOrUpdatePremises.turnaroundWorkingDays}`)
 
     this.clickSubmit()
   }

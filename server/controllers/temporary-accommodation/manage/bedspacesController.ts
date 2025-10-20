@@ -1,13 +1,13 @@
 import { Request, RequestHandler, Response } from 'express'
 import { PageHeadingBarItem } from '@approved-premises/ui'
 import type { Cas3NewBedspace, Cas3UpdateBedspace } from '@approved-premises/api'
-import AssessmentsService from '../../../../services/assessmentsService'
-import extractCallConfig from '../../../../utils/restUtils'
-import BedspaceService from '../../../../services/v2/bedspaceService'
-import { addPlaceContext, preservePlaceContext } from '../../../../utils/placeUtils'
+import AssessmentsService from '../../../services/assessmentsService'
+import extractCallConfig from '../../../utils/restUtils'
+import BedspaceService from '../../../services/bedspaceService'
+import { addPlaceContext, preservePlaceContext } from '../../../utils/placeUtils'
 
-import paths from '../../../../paths/temporary-accommodation/manage'
-import PremisesService from '../../../../services/v2/premisesService'
+import paths from '../../../paths/temporary-accommodation/manage'
+import PremisesService from '../../../services/premisesService'
 
 import {
   InvalidParams,
@@ -16,12 +16,12 @@ import {
   generateErrorMessages,
   generateErrorSummary,
   generateMergeParameters,
-} from '../../../../utils/validation'
+} from '../../../utils/validation'
 // eslint-disable-next-line import/named
-import { bedspaceActions, setDefaultStartDate } from '../../../../utils/v2/bedspaceUtils'
-import { isPremiseScheduledToBeArchived } from '../../../../utils/v2/premisesUtils'
-import { DateFormats, dateIsInFuture } from '../../../../utils/dateUtils'
-import { BookingService } from '../../../../services'
+import { bedspaceActions, setDefaultStartDate } from '../../../utils/v2/bedspaceUtils'
+import { isPremiseScheduledToBeArchived } from '../../../utils/v2/premisesUtils'
+import { DateFormats, dateIsInFuture } from '../../../utils/dateUtils'
+import { BookingService } from '../../../services'
 
 export default class BedspacesController {
   constructor(

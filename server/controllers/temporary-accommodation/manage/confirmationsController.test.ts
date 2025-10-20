@@ -14,7 +14,7 @@ import {
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import ConfirmationsController from './confirmationsController'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')

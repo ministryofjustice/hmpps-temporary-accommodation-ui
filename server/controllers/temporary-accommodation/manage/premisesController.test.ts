@@ -3,8 +3,8 @@ import type { NextFunction, Request, Response } from 'express'
 
 import { ErrorsAndUserInput, PremisesShowTabs, SummaryList } from '@approved-premises/ui'
 import type { Cas3Premises, Cas3PremisesSearchResult } from '@approved-premises/api'
-import { CallConfig } from '../../../../data/restClient'
-import PremisesService from '../../../../services/v2/premisesService'
+import { CallConfig } from '../../../data/restClient'
+import PremisesService from '../../../services/premisesService'
 import {
   assessmentFactory,
   cas3BedspaceFactory,
@@ -16,25 +16,25 @@ import {
   placeContextFactory,
   probationRegionFactory,
   referenceDataFactory,
-} from '../../../../testutils/factories'
-import extractCallConfig from '../../../../utils/restUtils'
+} from '../../../testutils/factories'
+import extractCallConfig from '../../../utils/restUtils'
 import PremisesController from './premisesController'
-import { filterProbationRegions } from '../../../../utils/userUtils'
+import { filterProbationRegions } from '../../../utils/userUtils'
 import {
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   generateErrorMessages,
   generateErrorSummary,
   generateMergeParameters,
-} from '../../../../utils/validation'
-import BedspaceService from '../../../../services/v2/bedspaceService'
-import { DateFormats } from '../../../../utils/dateUtils'
-import { AssessmentsService } from '../../../../services'
-import cas3BedspaceReferenceFactory from '../../../../testutils/factories/cas3BedspaceReference'
+} from '../../../utils/validation'
+import BedspaceService from '../../../services/bedspaceService'
+import { DateFormats } from '../../../utils/dateUtils'
+import { AssessmentsService } from '../../../services'
+import cas3BedspaceReferenceFactory from '../../../testutils/factories/cas3BedspaceReference'
 
-jest.mock('../../../../utils/validation')
-jest.mock('../../../../utils/restUtils')
-jest.mock('../../../../utils/userUtils')
+jest.mock('../../../utils/validation')
+jest.mock('../../../utils/restUtils')
+jest.mock('../../../utils/userUtils')
 
 describe('PremisesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig

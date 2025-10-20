@@ -13,7 +13,7 @@ import {
   insertGenericError,
 } from '../../../utils/validation'
 import config from '../../../config'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 
 export default class ArrivalsController {
   constructor(

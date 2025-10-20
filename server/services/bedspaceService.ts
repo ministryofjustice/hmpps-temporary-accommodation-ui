@@ -8,14 +8,14 @@ import {
   Characteristic,
 } from '@approved-premises/api'
 import { SummaryList } from '@approved-premises/ui'
-import { CallConfig } from '../../data/restClient'
-import { RestClientBuilder } from '../../data'
-import BedspaceClient from '../../data/bedspaceClient'
-import ReferenceDataClient from '../../data/referenceDataClient'
-import { DateFormats } from '../../utils/dateUtils'
-import { convertToTitleCase } from '../../utils/utils'
-import { filterCharacteristics } from '../../utils/characteristicUtils'
-import { bedspaceStatus } from '../../utils/v2/bedspaceUtils'
+import { CallConfig } from '../data/restClient'
+import { RestClientBuilder } from '../data'
+import BedspaceClient from '../data/bedspaceClient'
+import ReferenceDataClient from '../data/referenceDataClient'
+import { DateFormats } from '../utils/dateUtils'
+import { convertToTitleCase } from '../utils/utils'
+import { filterCharacteristics } from '../utils/characteristicUtils'
+import { bedspaceStatus } from '../utils/v2/bedspaceUtils'
 
 export type BedspaceReferenceData = {
   characteristics: Array<Characteristic>

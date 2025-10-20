@@ -17,14 +17,14 @@ import {
   ProbationRegion,
 } from '@approved-premises/api'
 import { PlaceContext, SummaryList, TableRow } from '@approved-premises/ui'
-import { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../../data'
+import { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../data'
 
-import { CallConfig } from '../../data/restClient'
-import paths from '../../paths/temporary-accommodation/manage'
-import { DateFormats } from '../../utils/dateUtils'
-import { convertToTitleCase } from '../../utils/utils'
-import { filterCharacteristics } from '../../utils/characteristicUtils'
-import { addPlaceContext } from '../../utils/placeUtils'
+import { CallConfig } from '../data/restClient'
+import paths from '../paths/temporary-accommodation/manage'
+import { DateFormats } from '../utils/dateUtils'
+import { convertToTitleCase } from '../utils/utils'
+import { filterCharacteristics } from '../utils/characteristicUtils'
+import { addPlaceContext } from '../utils/placeUtils'
 
 const ARCHIVE_HISTORY_THRESHOLD = 14
 

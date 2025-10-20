@@ -14,8 +14,8 @@ import ExtensionsController from './extensionsController'
 import LostBedsController from './lostBedsController'
 import ReportsController from './reportsController'
 import TurnaroundsController from './turnaroundsController'
-import PremisesControllerV2 from './v2/premisesController'
-import BedspacesControllerV2 from './v2/bedspacesController'
+import PremisesControllerV2 from './premisesController'
+import BedspacesControllerV2 from './bedspacesController'
 
 export const controllers = (services: Services) => {
   const dashboardController = new DashboardController()

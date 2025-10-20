@@ -1,8 +1,8 @@
 import { TextItem } from '@approved-premises/ui'
 import { Cas3PremisesArchiveAction } from '@approved-premises/api'
 import { createMock } from '@golevelup/ts-jest'
-import PremisesClient from '../../data/premisesClient'
-import { CallConfig } from '../../data/restClient'
+import PremisesClient from '../data/premisesClient'
+import { CallConfig } from '../data/restClient'
 import {
   assessmentFactory,
   cas3ArchivePremisesFactory,
@@ -18,17 +18,17 @@ import {
   pduFactory,
   placeContextFactory,
   probationRegionFactory,
-} from '../../testutils/factories'
+} from '../testutils/factories'
 import PremisesService from './premisesService'
-import { ReferenceDataClient } from '../../data'
-import { filterCharacteristics } from '../../utils/characteristicUtils'
-import { AssessmentsService } from '../index'
+import { ReferenceDataClient } from '../data'
+import { filterCharacteristics } from '../utils/characteristicUtils'
+import { AssessmentsService } from './index'
 
-jest.mock('../../data/premisesClient')
-jest.mock('../../data/referenceDataClient')
-jest.mock('../../utils/premisesUtils')
-jest.mock('../../utils/viewUtils')
-jest.mock('../../utils/characteristicUtils')
+jest.mock('../data/premisesClient')
+jest.mock('../data/referenceDataClient')
+jest.mock('../utils/premisesUtils')
+jest.mock('../utils/viewUtils')
+jest.mock('../utils/characteristicUtils')
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>

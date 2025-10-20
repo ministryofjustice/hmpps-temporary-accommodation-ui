@@ -24,7 +24,7 @@ import {
 } from '../../../utils/validation'
 import ArrivalsController from './arrivalsController'
 import config from '../../../config'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')

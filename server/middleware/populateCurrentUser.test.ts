@@ -59,6 +59,22 @@ describe('populateCurrentUser', () => {
     expect(next).toHaveBeenCalledWith()
   })
 
+  it('renders the dedicated 403 page when staff record is missing', async () => {
+    const request = createMock<Request>()
+    const response = createMock<Response>()
+    const next = jest.fn()
+    ;(extractCallConfig as jest.MockedFunction<typeof extractCallConfig>).mockReturnValue(callConfig)
+
+    const { DeliusAccountMissingStaffDetailsError } = jest.requireActual('../services/userService')
+    userService.getActingUser.mockRejectedValue(new DeliusAccountMissingStaffDetailsError('missing'))
+
+    await populateCurrentUser(userService)(request, response, next)
+
+    expect(response.status).toHaveBeenCalledWith(403)
+    expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/userDetailsRequired')
+    expect(next).not.toHaveBeenCalledWith(expect.any(Error))
+  })
+
   it('propogates any error from the user service', async () => {
     const request = createMock<Request>()
     const response = createMock<Response>()

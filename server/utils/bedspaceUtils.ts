@@ -1,9 +1,9 @@
 import { Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
 import { BedspaceStatus, PageHeadingBarItem, PlaceContext } from '@approved-premises/ui'
-import paths from '../../paths/temporary-accommodation/manage'
-import { addPlaceContext } from '../placeUtils'
-import { dateIsInFuture } from '../dateUtils'
-import config from '../../config'
+import paths from '../paths/temporary-accommodation/manage'
+import { addPlaceContext } from './placeUtils'
+import { dateIsInFuture } from './dateUtils'
+import config from '../config'
 
 export function bedspaceActions(
   premises: Cas3Premises,

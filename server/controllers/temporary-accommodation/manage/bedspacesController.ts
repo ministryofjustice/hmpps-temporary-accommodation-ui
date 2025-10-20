@@ -17,9 +17,8 @@ import {
   generateErrorSummary,
   generateMergeParameters,
 } from '../../../utils/validation'
-// eslint-disable-next-line import/named
-import { bedspaceActions, setDefaultStartDate } from '../../../utils/v2/bedspaceUtils'
-import { isPremiseScheduledToBeArchived } from '../../../utils/v2/premisesUtils'
+import { bedspaceActions, setDefaultStartDate } from '../../../utils/bedspaceUtils'
+import { isPremiseScheduledToBeArchived } from '../../../utils/premisesUtils'
 import { DateFormats, dateIsInFuture } from '../../../utils/dateUtils'
 import { BookingService } from '../../../services'
 

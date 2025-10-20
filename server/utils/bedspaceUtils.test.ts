@@ -3,12 +3,12 @@ import {
   cas3BedspaceFactory,
   cas3PremisesFactory,
   placeContextFactory,
-} from '../../testutils/factories'
+} from '../testutils/factories'
 import { bedspaceActions } from './bedspaceUtils'
-import paths from '../../paths/temporary-accommodation/manage'
-import config from '../../config'
+import paths from '../paths/temporary-accommodation/manage'
+import config from '../config'
 
-jest.mock('../../config')
+jest.mock('../config')
 
 describe('bedspaceV2Utils', () => {
   config.flags.cancelScheduledArchiveEnabled = true

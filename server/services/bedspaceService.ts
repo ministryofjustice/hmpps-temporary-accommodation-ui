@@ -15,7 +15,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import { DateFormats } from '../utils/dateUtils'
 import { convertToTitleCase } from '../utils/utils'
 import { filterCharacteristics } from '../utils/characteristicUtils'
-import { bedspaceStatus } from '../utils/v2/bedspaceUtils'
+import { bedspaceStatus } from '../utils/bedspaceUtils'
 
 export type BedspaceReferenceData = {
   characteristics: Array<Characteristic>

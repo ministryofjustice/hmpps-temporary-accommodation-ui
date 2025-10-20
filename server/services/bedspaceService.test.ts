@@ -1,5 +1,5 @@
-import BedspaceClient from '../../data/bedspaceClient'
-import ReferenceDataClient from '../../data/referenceDataClient'
+import BedspaceClient from '../data/bedspaceClient'
+import ReferenceDataClient from '../data/referenceDataClient'
 import BedspaceService from './bedspaceService'
 import {
   cas3BedspaceArchiveActionFactory,
@@ -9,14 +9,14 @@ import {
   cas3UpdateBedspaceFactory,
   characteristicFactory,
   probationRegionFactory,
-} from '../../testutils/factories'
-import { filterCharacteristics } from '../../utils/characteristicUtils'
-import { CallConfig } from '../../data/restClient'
-import { convertToTitleCase } from '../../utils/utils'
+} from '../testutils/factories'
+import { filterCharacteristics } from '../utils/characteristicUtils'
+import { CallConfig } from '../data/restClient'
+import { convertToTitleCase } from '../utils/utils'
 
-jest.mock('../../data/bedspaceClient')
-jest.mock('../../data/referenceDataClient')
-jest.mock('../../utils/characteristicUtils')
+jest.mock('../data/bedspaceClient')
+jest.mock('../data/referenceDataClient')
+jest.mock('../utils/characteristicUtils')
 
 describe('BedspaceService', () => {
   const bedspaceClient = new BedspaceClient(null) as jest.Mocked<BedspaceClient>

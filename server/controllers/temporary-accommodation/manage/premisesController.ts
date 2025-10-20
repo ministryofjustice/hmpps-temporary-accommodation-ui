@@ -2,13 +2,13 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import { PremisesSearchParameters } from '@approved-premises/ui'
 import type { Cas3NewPremises, Cas3PremisesStatus, Cas3UpdatePremises } from '@approved-premises/api'
-import paths from '../../../../paths/temporary-accommodation/manage'
-import PremisesService from '../../../../services/v2/premisesService'
-import BedspaceService from '../../../../services/v2/bedspaceService'
-import AssessmentsService from '../../../../services/assessmentsService'
-import extractCallConfig from '../../../../utils/restUtils'
-import { createSubNavArr } from '../../../../utils/premisesSearchUtils'
-import { showPropertySubNavArray } from '../../../../utils/premisesUtils'
+import paths from '../../../paths/temporary-accommodation/manage'
+import PremisesService from '../../../services/premisesService'
+import BedspaceService from '../../../services/bedspaceService'
+import AssessmentsService from '../../../services/assessmentsService'
+import extractCallConfig from '../../../utils/restUtils'
+import { createSubNavArr } from '../../../utils/premisesSearchUtils'
+import { showPropertySubNavArray } from '../../../utils/premisesUtils'
 import {
   InvalidParams,
   catchValidationErrorOrPropogate,
@@ -16,12 +16,12 @@ import {
   generateErrorMessages,
   generateErrorSummary,
   generateMergeParameters,
-} from '../../../../utils/validation'
-import { filterProbationRegions } from '../../../../utils/userUtils'
-import { parseNumber } from '../../../../utils/formUtils'
-import { premisesActions } from '../../../../utils/v2/premisesUtils'
-import { DateFormats } from '../../../../utils/dateUtils'
-import { addPlaceContext, preservePlaceContext } from '../../../../utils/placeUtils'
+} from '../../../utils/validation'
+import { filterProbationRegions } from '../../../utils/userUtils'
+import { parseNumber } from '../../../utils/formUtils'
+import { premisesActions } from '../../../utils/v2/premisesUtils'
+import { DateFormats } from '../../../utils/dateUtils'
+import { addPlaceContext, preservePlaceContext } from '../../../utils/placeUtils'
 
 export default class PremisesController {
   constructor(

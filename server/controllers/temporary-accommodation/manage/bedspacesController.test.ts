@@ -2,8 +2,8 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import { NextFunction, Request, Response } from 'express'
 import { Cas3Bedspace, Cas3PremisesBedspaceTotals } from '@approved-premises/api'
 import { ErrorsAndUserInput, SummaryList } from '@approved-premises/ui'
-import { CallConfig } from '../../../../data/restClient'
-import BedspaceService from '../../../../services/v2/bedspaceService'
+import { CallConfig } from '../../../data/restClient'
+import BedspaceService from '../../../services/bedspaceService'
 import BedspacesController from './bedspacesController'
 import {
   assessmentFactory,
@@ -17,24 +17,24 @@ import {
   placeContextFactory,
   probationRegionFactory,
   referenceDataFactory,
-} from '../../../../testutils/factories'
+} from '../../../testutils/factories'
 import {
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   generateErrorMessages,
   generateErrorSummary,
   generateMergeParameters,
-} from '../../../../utils/validation'
-import extractCallConfig from '../../../../utils/restUtils'
-import PremisesService from '../../../../services/v2/premisesService'
-import { DateFormats } from '../../../../utils/dateUtils'
-import { AssessmentsService, BookingService } from '../../../../services'
-import { ListingEntry } from '../../../../services/bookingService'
-import config from '../../../../config'
+} from '../../../utils/validation'
+import extractCallConfig from '../../../utils/restUtils'
+import PremisesService from '../../../services/premisesService'
+import { DateFormats } from '../../../utils/dateUtils'
+import { AssessmentsService, BookingService } from '../../../services'
+import { ListingEntry } from '../../../services/bookingService'
+import config from '../../../config'
 
-jest.mock('../../../../config')
-jest.mock('../../../../utils/validation')
-jest.mock('../../../../utils/restUtils')
+jest.mock('../../../config')
+jest.mock('../../../utils/validation')
+jest.mock('../../../utils/restUtils')
 
 describe('BedspacesController', () => {
   config.flags.cancelScheduledArchiveEnabled = true

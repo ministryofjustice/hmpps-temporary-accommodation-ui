@@ -4,7 +4,7 @@ import type { NewBooking } from '@approved-premises/api'
 import { ObjectWithDateParts } from '@approved-premises/ui'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 import {
   assessmentRadioItems,
   bookingActions,

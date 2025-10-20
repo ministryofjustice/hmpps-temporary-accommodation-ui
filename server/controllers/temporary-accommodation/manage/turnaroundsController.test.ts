@@ -20,7 +20,7 @@ import {
   insertGenericError,
 } from '../../../utils/validation'
 import TurnaroundsController from './turnaroundsController'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')

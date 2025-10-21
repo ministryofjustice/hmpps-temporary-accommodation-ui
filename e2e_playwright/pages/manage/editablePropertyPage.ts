@@ -1,6 +1,6 @@
 import { Locator } from '@playwright/test'
 import { Property } from '@temporary-accommodation-ui/e2e'
-import { BasePage } from '../../basePage'
+import { BasePage } from '../basePage'
 
 export class EditablePropertyPage extends BasePage {
   async enterFormDetails(property: Property) {

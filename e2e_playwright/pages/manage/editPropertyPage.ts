@@ -1,57 +1,78 @@
 import { Locator, Page, expect } from '@playwright/test'
 import { Property } from '@temporary-accommodation-ui/e2e'
-import { BasePage } from '../basePage'
+import { EditablePropertyPage } from './editablePropertyPage'
 
-export class EditPropertyPage extends BasePage {
-  static async initialize(page: Page) {
-    await expect(page.locator('h1')).toContainText('Edit a property')
+export class EditPropertyPage extends EditablePropertyPage {
+  static async initialise(page: Page) {
+    await expect(page.locator('h1')).toContainText('Edit property')
     return new EditPropertyPage(page)
   }
 
-  async shouldShowPropertyDetails(property: Property) {
-    await expect(this.page.getByLabel('Enter a property reference')).toHaveValue(property.name)
-    await expect(this.page.getByLabel('Address line 1')).toHaveValue(property.addressLine1)
-    await expect(this.page.getByLabel('Address line 2')).toHaveValue(property.addressLine2)
-    await expect(this.page.getByLabel('Town or city (optional)')).toHaveValue(property.town)
-    await expect(this.page.getByLabel('Postcode')).toHaveValue(property.postcode)
-
-    const selectedOptions = this.page.locator('select > option[selected]')
-    await expect(selectedOptions.nth(0)).toHaveText(property.localAuthority)
-    await expect(selectedOptions.nth(1)).toHaveText(property.probationRegion)
-    await expect(selectedOptions.nth(2)).toHaveText(property.pdu)
-
-    await this.isCorrectPropertyAttributesChecked(property)
-
-    const statusRadioThatShouldBeChecked = this.page.getByLabel(property.status)
-    expect(await statusRadioThatShouldBeChecked.isChecked()).toBe(true)
-
-    await expect(this.page.getByLabel('Please provide any further property details')).toHaveValue(property.notes)
-
-    const expectedNoOfWorkingDays = String(property.turnaroundWorkingDayCount)
-    await expect(this.page.locator('#turnaroundWorkingDayCount')).toHaveValue(expectedNoOfWorkingDays)
-  }
-
-  async changeAddressLine1(addressLine1: string) {
-    await this.page.getByLabel('Address line 1').fill(addressLine1)
-  }
-
-  private async isCorrectPropertyAttributesChecked(property: Property) {
-    const allPropertyAttributes = await this.page.getByRole('checkbox').all()
-    const promises = [] as Array<Promise<void>>
-    allPropertyAttributes.forEach(propertyAttributeCheckbox => {
-      promises.push(
-        this.isPropertyAttributeCheckedAsExpected(propertyAttributeCheckbox, property.propertyAttributesValues),
+  async clearFormDetails() {
+    await this.page.getByLabel('Enter a property reference').clear()
+    // eslint-disable-next-line no-restricted-syntax
+    for (const input of await this.getInputsByLabel('What is the property address?').all()) {
+      // eslint-disable-next-line no-await-in-loop
+      await input.clear()
+    }
+    await this.page.getByLabel('What is the local authority?').clear()
+    await this.page.getByLabel('What is the region?').selectOption('Select a probation region')
+    await this.page.getByLabel('What is the PDU?').selectOption('Select a PDU')
+    // eslint-disable-next-line no-restricted-syntax
+    for (const checkbox of await this.page.getByRole('checkbox').all()) {
+      // eslint-disable-next-line no-await-in-loop
+      await checkbox.uncheck()
+    }
+    await this.page.getByLabel('Additional property details').clear()
+    await this.page
+      .getByLabel(
+        'Enter the number of working days required to turnaround the property. The standard turnaround time should be 2 days',
       )
-    })
-    await Promise.all(promises)
+      .clear()
   }
 
-  private async isPropertyAttributeCheckedAsExpected(
-    propertyAttributeCheckbox: Locator,
-    checkedPropertyAttributeValues: Array<string>,
-  ) {
-    const propertyAttributeValue = (await propertyAttributeCheckbox.getAttribute('value')) as string
-    const shouldBeChecked = checkedPropertyAttributeValues.includes(propertyAttributeValue)
-    expect(await propertyAttributeCheckbox.isChecked()).toBe(shouldBeChecked)
+  async shouldShowPropertyDetails(property: Property) {
+    await expect(this.getRowTextByLabel('Status')).toContainText('Online')
+    const addressRow = this.getRowTextByLabel('Address')
+    await expect(addressRow).toContainText(property.addressLine1)
+    await expect(addressRow).toContainText(property.addressLine2)
+    await expect(addressRow).toContainText(property.town)
+    await expect(addressRow).toContainText(property.postcode)
+
+    await expect(this.page.getByLabel('Enter a property reference')).toHaveValue(property.name)
+
+    const editableAddressInputs = this.getInputsByLabel('What is the property address?')
+    await expect(editableAddressInputs.nth(0)).toHaveValue(property.addressLine1)
+    await expect(editableAddressInputs.nth(1)).toHaveValue(property.addressLine2)
+    await expect(editableAddressInputs.nth(2)).toHaveValue(property.town)
+    await expect(editableAddressInputs.nth(3)).toHaveValue(property.postcode)
+
+    await expect(this.page.getByLabel('What is the local authority?')).toHaveValue(property.localAuthority)
+
+    await expect(this.getSelectedOptionByLabel('What is the region?')).toHaveText(property.probationRegion)
+
+    await expect(this.getSelectedOptionByLabel('What is the PDU?')).toHaveText(property.pdu)
+
+    await Promise.all(
+      property.propertyAttributesValues.map(async attribute =>
+        expect(this.findCheckboxByLabel(attribute, true)).toBeChecked(),
+      ),
+    )
+
+    await expect(this.page.getByLabel('Additional property details')).toContainText(property.notes)
+
+    await expect(
+      this.page.getByLabel(
+        'Enter the number of working days required to turnaround the property. The standard turnaround time should be 2 days',
+      ),
+    ).toHaveValue(`${property.turnaroundWorkingDayCount}`)
+  }
+
+  private getInputsByLabel(label: string, exact: boolean = false): Locator {
+    return this.page.getByText(label, { exact }).locator('..').locator('input')
+  }
+
+  private getSelectedOptionByLabel(label: string, exact: boolean = false): Locator {
+    return this.page.getByLabel(label, { exact }).locator('option[selected]')
   }
 }

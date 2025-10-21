@@ -1,7 +1,7 @@
 import { Page, expect } from '@playwright/test'
 import { Bedspace, Property } from '@temporary-accommodation-ui/e2e'
-import { BasePage } from '../../basePage'
-import { DateFormats } from '../../../../server/utils/dateUtils'
+import { BasePage } from '../basePage'
+import { DateFormats } from '../../../server/utils/dateUtils'
 
 export class ViewBedspacePage extends BasePage {
   static async initialise(page: Page, reference: string) {

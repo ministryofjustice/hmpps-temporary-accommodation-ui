@@ -1,5 +1,5 @@
 import { Page, expect } from '@playwright/test'
-import { BasePage } from '../../basePage'
+import { BasePage } from '../basePage'
 
 export class CancelArchivePropertyPage extends BasePage {
   static async initialise(page: Page, propertyAddress: string) {

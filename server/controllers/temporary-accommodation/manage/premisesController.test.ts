@@ -125,7 +125,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params,
         status: 'online',
         premisesSortBy: 'pdu',
@@ -181,7 +181,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params,
         status: 'online',
         premisesSortBy: 'pdu',
@@ -236,7 +236,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params,
         status: 'online',
         premisesSortBy: 'pdu',
@@ -292,7 +292,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params,
         status: 'online',
         premisesSortBy: 'pdu',
@@ -348,7 +348,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params,
         status: 'online',
         premisesSortBy: 'pdu',
@@ -407,7 +407,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params,
         status: 'online',
         premisesSortBy: 'pdu',
@@ -466,7 +466,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params,
         status: 'online',
         premisesSortBy: 'pdu',
@@ -526,7 +526,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index('archived')
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params,
         status: 'archived',
         premisesSortBy: 'pdu',
@@ -585,7 +585,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index('archived')
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params,
         status: 'archived',
         premisesSortBy: 'pdu',
@@ -644,7 +644,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index('archived')
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params,
         status: 'archived',
         premisesSortBy: 'pdu',
@@ -706,7 +706,7 @@ describe('PremisesController', () => {
     const requestHandler = premisesController.index('online')
     await requestHandler(request, response, next)
 
-    expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+    expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
       params,
       status: 'online',
       premisesSortBy: 'la',
@@ -917,7 +917,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       const subNavArr = navArr('premises')
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/show', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/show', {
         premises: property,
         summary: summaryList,
         actions: [
@@ -965,7 +965,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.showBedspacesTab()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/show', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/show', {
         premises: property,
         bedspaceSummaries: bedspaceSummaryLists,
         actions: [
@@ -1008,7 +1008,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/new', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities: referenceData.localAuthorities,
         characteristics: referenceData.characteristics,
         pdus: referenceData.pdus,
@@ -1029,7 +1029,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/new', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities: referenceData.localAuthorities,
         characteristics: referenceData.characteristics,
         pdus: referenceData.pdus,
@@ -1123,7 +1123,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/edit', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         premisesId: premises.id,
         errors: {},
         errorSummary: [],
@@ -1165,7 +1165,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/edit', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         premisesId: premises.id,
         errors: {},
         errorSummary: [],
@@ -1202,7 +1202,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/edit', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         localAuthorities: referenceData.localAuthorities,
         characteristics: referenceData.characteristics,
         pdus: referenceData.pdus,
@@ -1297,7 +1297,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/archive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/archive', {
         premises,
         errors: {},
         errorSummary: [],
@@ -1313,7 +1313,7 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/archive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/archive', {
         premises,
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
@@ -1340,7 +1340,7 @@ describe('PremisesController', () => {
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(premisesService.canArchivePremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/cannot-archive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/cannot-archive', {
         premises,
         bedspaces: [bedspace1, bedspace2, bedspace3],
       })
@@ -1451,7 +1451,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/unarchive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/unarchive', {
         premises,
         errors: {},
         errorSummary: [],
@@ -1467,7 +1467,7 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/unarchive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/unarchive', {
         premises,
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
@@ -1569,7 +1569,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/cancel-archive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/cancel-archive', {
         premises,
         errors: {},
         errorSummary: [],
@@ -1679,7 +1679,7 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/cancel-unarchive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/cancel-unarchive', {
         premises,
         errors: {},
         errorSummary: [],

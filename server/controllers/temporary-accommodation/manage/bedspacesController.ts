@@ -52,7 +52,7 @@ export default class BedspacesController {
         premises.status === 'online'
       )
 
-      return res.render('temporary-accommodation/v2/bedspaces/new', {
+      return res.render('temporary-accommodation/bedspaces/new', {
         allCharacteristics: allCharacteristics.filter(c => c.propertyName !== 'other'),
         characteristicIds: [],
         premises,
@@ -79,7 +79,7 @@ export default class BedspacesController {
       const summary = this.bedspaceService.summaryList(bedspace)
       const actions: Array<PageHeadingBarItem> = bedspaceActions(premises, bedspace, placeContext)
 
-      return res.render('temporary-accommodation/v2/bedspaces/show', {
+      return res.render('temporary-accommodation/bedspaces/show', {
         premises,
         bedspace,
         summary,
@@ -156,7 +156,7 @@ export default class BedspacesController {
         ...errorsAndUserInput.userInput,
       }
 
-      return res.render('temporary-accommodation/v2/bedspaces/edit', {
+      return res.render('temporary-accommodation/bedspaces/edit', {
         premisesId,
         bedspaceId,
         errors,
@@ -251,7 +251,7 @@ export default class BedspacesController {
       const errorsAndUserInput = fetchErrorsAndUserInput(req)
       const { errors, errorSummary } = errorsAndUserInput
 
-      return res.render('temporary-accommodation/v2/bedspaces/cancel-archive', {
+      return res.render('temporary-accommodation/bedspaces/cancel-archive', {
         premisesId,
         bedspaceId,
         bedspaceEndDate,
@@ -276,7 +276,7 @@ export default class BedspacesController {
 
       if (canArchiveResponse?.date) {
         const blockingDate = DateFormats.isoDateToUIDate(canArchiveResponse.date)
-        return res.render('temporary-accommodation/v2/bedspaces/cannot-archive', {
+        return res.render('temporary-accommodation/bedspaces/cannot-archive', {
           bedspace,
           premises,
           blockingDate,
@@ -284,7 +284,7 @@ export default class BedspacesController {
         })
       }
 
-      return res.render('temporary-accommodation/v2/bedspaces/archive', {
+      return res.render('temporary-accommodation/bedspaces/archive', {
         bedspace,
         params: req.params,
         errors,
@@ -381,7 +381,7 @@ export default class BedspacesController {
 
       const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
-      return res.render('temporary-accommodation/v2/bedspaces/unarchive', {
+      return res.render('temporary-accommodation/bedspaces/unarchive', {
         bedspace,
         params: req.params,
         errors,
@@ -458,7 +458,7 @@ export default class BedspacesController {
       const errorsAndUserInput = fetchErrorsAndUserInput(req)
       const { errors, errorSummary } = errorsAndUserInput
 
-      return res.render('temporary-accommodation/v2/bedspaces/cancel-unarchive', {
+      return res.render('temporary-accommodation/bedspaces/cancel-unarchive', {
         premisesId,
         bedspaceId,
         scheduleUnarchiveDate,

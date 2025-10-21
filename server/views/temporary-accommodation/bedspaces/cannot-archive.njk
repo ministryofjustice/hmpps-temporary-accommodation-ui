@@ -1,7 +1,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% extends "../../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 
 {% block beforeContent %}
     {{ govukBackLink({
@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-    {% include "../../../_messages.njk" %}
+    {% include "_messages.njk" %}
 
     <h1 class="govuk-heading-l">You cannot archive {{ bedspace.reference }}</h1>
 
@@ -27,4 +27,4 @@
         </div>
     </div>
 
-{%  endblock %}
+{% endblock %}

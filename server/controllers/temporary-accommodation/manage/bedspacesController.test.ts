@@ -106,7 +106,7 @@ describe('BedspacesController', () => {
 
       expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/new', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/new', {
         allCharacteristics: referenceData.characteristics,
         characteristicIds: [],
         premises,
@@ -142,7 +142,7 @@ describe('BedspacesController', () => {
 
       expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/new', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/new', {
         allCharacteristics: referenceData.characteristics,
         characteristicIds: [],
         premises,
@@ -403,7 +403,7 @@ describe('BedspacesController', () => {
         const requestHandler = bedspacesController.show()
         await requestHandler(request, response, next)
 
-        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/show', {
           premises: premisesWithFullAddress,
           summary,
           bedspace,
@@ -451,7 +451,7 @@ describe('BedspacesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/edit', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
         premisesId: premises.id,
         bedspaceId: bedspace.id,
         summary: summaryList,
@@ -484,7 +484,7 @@ describe('BedspacesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/edit', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
         premisesId: premises.id,
         bedspaceId: bedspace.id,
         summary: summaryList,
@@ -639,7 +639,7 @@ describe('BedspacesController', () => {
 
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       expect(premisesService.getSinglePremisesBedspaceTotals).toHaveBeenCalledWith(callConfig, premisesId)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/cancel-archive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/cancel-archive', {
         premisesId,
         bedspaceId,
         bedspaceEndDate: DateFormats.isoDateToUIDate(bedspace.endDate),
@@ -661,7 +661,7 @@ describe('BedspacesController', () => {
       const requestHandler = bedspacesController.cancelArchive()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/cancel-archive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/cancel-archive', {
         premisesId,
         bedspaceId,
         bedspaceEndDate: DateFormats.isoDateToUIDate(bedspace.endDate),
@@ -697,7 +697,7 @@ describe('BedspacesController', () => {
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.canArchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/archive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/archive', {
         bedspace,
         params,
         errors: {},
@@ -729,7 +729,7 @@ describe('BedspacesController', () => {
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.canArchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/cannot-archive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/cannot-archive', {
         bedspace,
         premises,
         blockingDate: '28 August 2025',
@@ -967,7 +967,7 @@ describe('BedspacesController', () => {
       await requestHandler(request, response, next)
 
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/unarchive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/unarchive', {
         bedspace,
         params: request.params,
         errors: {},
@@ -1122,7 +1122,7 @@ describe('BedspacesController', () => {
       await requestHandler(request, response, next)
 
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/cancel-unarchive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/cancel-unarchive', {
         premisesId,
         bedspaceId,
         scheduleUnarchiveDate: DateFormats.isoDateToUIDate(bedspace.scheduleUnarchiveDate),
@@ -1143,7 +1143,7 @@ describe('BedspacesController', () => {
       const requestHandler = bedspacesController.cancelUnarchive()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/cancel-unarchive', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/cancel-unarchive', {
         premisesId,
         bedspaceId,
         scheduleUnarchiveDate: DateFormats.isoDateToUIDate(bedspace.scheduleUnarchiveDate),

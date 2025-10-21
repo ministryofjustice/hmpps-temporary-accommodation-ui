@@ -44,7 +44,7 @@ export default class PremisesController {
         premisesSortBy,
       )
 
-      return res.render('temporary-accommodation/v2/premises/index', {
+      return res.render('temporary-accommodation/premises/index', {
         ...searchData,
         params,
         status,
@@ -73,7 +73,7 @@ export default class PremisesController {
         subNavArr: showPropertySubNavArray(premisesId, placeContext, 'premises'),
       }
 
-      return res.render('temporary-accommodation/v2/premises/show', bodyData)
+      return res.render('temporary-accommodation/premises/show', bodyData)
     }
   }
 
@@ -97,7 +97,7 @@ export default class PremisesController {
       })
 
       const subNavArr = showPropertySubNavArray(premisesId, placeContext, 'bedspaces')
-      return res.render('temporary-accommodation/v2/premises/show', {
+      return res.render('temporary-accommodation/premises/show', {
         premises,
         bedspaceSummaries,
         actions: premisesActions(premises, placeContext),
@@ -135,7 +135,7 @@ export default class PremisesController {
 
       const { localAuthorities, characteristics, probationRegions, pdus } = referenceData
 
-      return res.render('temporary-accommodation/v2/premises/new', {
+      return res.render('temporary-accommodation/premises/new', {
         errors,
         errorSummary,
         localAuthorities,
@@ -211,7 +211,7 @@ export default class PremisesController {
 
       const summary = this.premisesService.shortSummaryList(premises)
 
-      return res.render('temporary-accommodation/v2/premises/edit', {
+      return res.render('temporary-accommodation/premises/edit', {
         premisesId,
         errors,
         errorSummary,
@@ -277,13 +277,13 @@ export default class PremisesController {
         const sortedBedspaceReferences = blockingBedspaceReferences.items.sort((a, b) =>
           a.entityReference.localeCompare(b.entityReference),
         )
-        return res.render('temporary-accommodation/v2/premises/cannot-archive', {
+        return res.render('temporary-accommodation/premises/cannot-archive', {
           premises,
           bedspaces: sortedBedspaceReferences,
         })
       }
 
-      return res.render('temporary-accommodation/v2/premises/archive', {
+      return res.render('temporary-accommodation/premises/archive', {
         premises,
         errors,
         errorSummary,
@@ -369,7 +369,7 @@ export default class PremisesController {
 
       const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
 
-      return res.render('temporary-accommodation/v2/premises/unarchive', {
+      return res.render('temporary-accommodation/premises/unarchive', {
         premises,
         errors,
         errorSummary,
@@ -431,7 +431,7 @@ export default class PremisesController {
 
       const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
 
-      return res.render('temporary-accommodation/v2/premises/cancel-archive', {
+      return res.render('temporary-accommodation/premises/cancel-archive', {
         premises,
         errors,
         errorSummary,
@@ -488,7 +488,7 @@ export default class PremisesController {
 
       const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
 
-      return res.render('temporary-accommodation/v2/premises/cancel-unarchive', {
+      return res.render('temporary-accommodation/premises/cancel-unarchive', {
         premises,
         errors,
         errorSummary,

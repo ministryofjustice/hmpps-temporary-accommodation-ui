@@ -1,10 +1,10 @@
-{% from "../../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
+{% from "components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
-{% from "../../../components/booking-listing/macro.njk" import bookingListing %}
-{% from "../../../components/lost-bed-listing/macro.njk" import lostBedListing %}
+{% from "components/booking-listing/macro.njk" import bookingListing %}
+{% from "components/lost-bed-listing/macro.njk" import lostBedListing %}
 
-{% extends "../../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 
 {% set pageTitle = "View a bedspace - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -26,7 +26,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            {% include "../../../_messages.njk" %}
+            {% include "_messages.njk" %}
 
             {{ mojCasPageHeaderActions({
                 heading: {
@@ -75,7 +75,7 @@
             {% for listingEntry in listingEntries %}
                 {% if listingEntry.type == 'booking' %}
                     {{ bookingListing(listingEntry.body, addPlaceContext(listingEntry.path)) }}
-                {% elif listingEntry.type === 'lost-bed' %}
+                    {% elif listingEntry.type === 'lost-bed' %}
                     {{ lostBedListing(listingEntry.body, addPlaceContext(listingEntry.path)) }}
                 {% endif %}
             {% else %}

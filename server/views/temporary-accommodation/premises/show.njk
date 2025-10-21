@@ -1,10 +1,10 @@
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
-{% from "../../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
+{% from "components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
-{% extends "../../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 
 {% set pageTitle = applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -21,7 +21,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            {% include "../../../_messages.njk" %}
+            {% include "_messages.njk" %}
 
             {% if premises.status === 'archived' %}
                 {% if not successMessages.length %}
@@ -71,7 +71,8 @@
             </div>
         </div>
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds" data-cy-premises="true" data-cy-pdu-id="{{premises.probationDeliveryUnit.id}}">
+            <div class="govuk-grid-column-two-thirds" data-cy-premises="true"
+                 data-cy-pdu-id="{{ premises.probationDeliveryUnit.id }}">
                 {{ govukSummaryList({
                     card: {
                         title: {
@@ -100,9 +101,9 @@
                                         {
                                             text: "View bedspace",
                                             href: addPlaceContext(paths.premises.bedspaces.show({
-                                                premisesId: premises.id,
-                                                bedspaceId: bedspace.id
-                                            }))
+                                            premisesId: premises.id,
+                                            bedspaceId: bedspace.id
+                                        }))
                                         }
                                     ]
                                 }
@@ -112,7 +113,8 @@
                     {% endfor %}
                 {% else %}
                     <p>No bedspaces.</p>
-                    <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.premises.bedspaces.new({ premisesId: premises.id }) }}">
+                    <a class="govuk-link govuk-link--no-visited-state"
+                       href="{{ paths.premises.bedspaces.new({ premisesId: premises.id }) }}">
                         Add a bedspace
                     </a>
                 {% endif %}

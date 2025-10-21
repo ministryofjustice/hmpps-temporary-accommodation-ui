@@ -1,38 +1,42 @@
+{% from "partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "components/formFields/form-page-input/macro.njk" import formPageInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "components/ta-radios/macro.njk" import taRadios %}
 
-{% extends "../../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 
 {% set mainClasses = "govuk-body" %}
 
 {% block beforeContent %}
     {{ govukBackLink({
-        text: "Back",
-        href: paths.premises.show({ premisesId: premises.id }),
-        classes: "govuk-!-display-none-print"
+        text: 'Back',
+        href: paths.premises.bedspaces.show({ premisesId: premisesId, bedspaceId: bedspaceId }),
+        classes: 'govuk-!-display-none-print'
     }) }}
 {% endblock %}
 
 {% block content %}
-    {% include "../../../_messages.njk" %}
+    {% include "_messages.njk" %}
 
     {{ showErrorSummary(errorSummary) }}
 
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form action="{{ paths.premises.cancelArchive({ premisesId: premises.id })}}" method="post">
+            <form action="{{ paths.premises.bedspaces.cancelUnarchive({ premisesId: premisesId, bedspaceId: bedspaceId }) }}"
+                  method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                            <h1 class="govuk-fieldset__heading">Are you sure you want to cancel the scheduled archive on {{ premisesEndDate }}?</h1>
+                            <h1 class="govuk-fieldset__heading">Are you sure you want to cancel the scheduled online
+                                date of {{ scheduleUnarchiveDate }}?</h1>
                         </legend>
-                        
-                        {{ govukRadios({
-                            name: "cancelArchive",
+                        {{ taRadios({
                             items: [
                                 {
                                     value: "yes",
@@ -43,11 +47,10 @@
                                     text: "No"
                                 }
                             ],
-                            errorMessage: errors.cancelArchive
-                        }) }}
+                            fieldName: "bedspaceId"
+                        }, fetchContext()) }}
                     </fieldset>
                 </div>
-
                 {{ govukButton({
                     text: "Submit",
                     preventDoubleClick: true

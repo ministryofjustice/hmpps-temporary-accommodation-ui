@@ -3,36 +3,36 @@ import { Property } from '@temporary-accommodation-ui/e2e'
 import { BasePage } from '../basePage'
 
 export class ListPropertiesPage extends BasePage {
-  static async initialize(page: Page) {
-    await expect(page.locator('h1')).toContainText('List of properties')
+  static async initialise(page: Page) {
+    await expect(page.locator('h1')).toContainText('Online properties')
     return new ListPropertiesPage(page)
   }
 
-  async clickAddPremisesButton() {
+  static async goto(page: Page) {
+    await page.goto('/properties')
+  }
+
+  async clickAddPropertyButton() {
     await this.page.getByRole('button', { name: 'Add a property' }).click()
   }
 
-  async getPropertyRow(property: Property) {
-    return this.getTableRow(`${property.addressLine1}, ${property.postcode}`)
-  }
-
-  async clickManageLink(rowNumber: number) {
-    await this.page.getByRole('link', { name: 'Manage' }).nth(rowNumber).click()
-  }
-
-  async searchForPostcodeOrAddress(postcodeOrAddress: string) {
-    await this.page.getByLabel('Find a property').fill(postcodeOrAddress)
+  async searchForOnlineProperty(address: string) {
+    await this.page.getByLabel('Find an online property').fill(address)
     await this.page.getByRole('button', { name: 'Search' }).click()
   }
 
-  async checkAllEntriesMatchPostcodeOrAddress(postcodeOrAddress: string) {
-    const tableRows = await this.page.locator('main table tbody tr').all()
+  async checkAllEntriesMatchAddress(address: string) {
+    const tableRows = await this.page.locator('table tbody tr').all()
 
     const promises = tableRows.map(async row => {
-      const textContent = await row.textContent()
-      expect(textContent).toContain(postcodeOrAddress)
+      const text = await row.textContent()
+      expect(text).toContain(address)
     })
 
     await Promise.all(promises)
+  }
+
+  async clickManageLink(property: Property) {
+    await this.page.locator('table tr').getByText(property.addressLine1).locator('..').getByText('Manage').click()
   }
 }

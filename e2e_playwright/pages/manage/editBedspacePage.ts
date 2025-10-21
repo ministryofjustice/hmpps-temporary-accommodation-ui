@@ -1,6 +1,6 @@
 import { Page, expect } from '@playwright/test'
 import { Bedspace, Property } from '@temporary-accommodation-ui/e2e'
-import { BasePage } from '../../basePage'
+import { BasePage } from '../basePage'
 
 export class EditBedspacePage extends BasePage {
   static async initialise(page: Page) {

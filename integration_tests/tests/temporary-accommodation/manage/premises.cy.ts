@@ -5,11 +5,11 @@ import {
   LocalAuthorityArea,
   ProbationDeliveryUnit,
 } from '@approved-premises/api'
-import Page from '../../../../../cypress_shared/pages/page'
-import DashboardPage from '../../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
-import PremisesListPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesList'
-import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesShow'
-import { setupTestUser } from '../../../../../cypress_shared/utils/setupTestUser'
+import Page from '../../../../cypress_shared/pages/page'
+import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
+import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
+import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
+import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   bedFactory,
   bookingFactory,
@@ -21,16 +21,16 @@ import {
   cas3PremisesSearchResultsFactory,
   cas3UpdatePremisesFactory,
   lostBedFactory,
-} from '../../../../../server/testutils/factories'
-import PremisesNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesNew'
-import PremisesEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesEdit'
-import PremisesArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesArchive'
-import PremisesUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesUnarchive'
-import { DateFormats } from '../../../../../server/utils/dateUtils'
-import PremisesCannotArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesCannotArchive'
-import PremisesCancelArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesCancelArchive'
-import BedspaceShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceShow'
-import PremisesCancelUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesCancelUnarchive'
+} from '../../../../server/testutils/factories'
+import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
+import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
+import PremisesArchivePage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesArchive'
+import PremisesUnarchivePage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesUnarchive'
+import { DateFormats } from '../../../../server/utils/dateUtils'
+import PremisesCannotArchivePage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesCannotArchive'
+import PremisesCancelArchivePage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesCancelArchive'
+import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import PremisesCancelUnarchivePage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesCancelUnarchive'
 
 context('Premises', () => {
   beforeEach(() => {

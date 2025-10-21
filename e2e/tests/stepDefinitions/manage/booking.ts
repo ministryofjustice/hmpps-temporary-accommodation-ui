@@ -11,7 +11,7 @@ import { person } from '../utils'
 
 Given("I'm creating a booking", () => {
   cy.then(function _() {
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.bedspace)
     bedspaceShowPage.clickBookBedspaceLink()
 
     const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.bedspace)
@@ -108,7 +108,7 @@ Then('I should see a confirmation for my new booking', () => {
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.bedspace)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })

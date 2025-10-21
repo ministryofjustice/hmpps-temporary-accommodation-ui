@@ -11,17 +11,17 @@ import {
   cas3UpdateBedspaceFactory,
   characteristicFactory,
   lostBedFactory,
-} from '../../../../../server/testutils/factories'
-import BedspaceNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceNew'
+} from '../../../../server/testutils/factories'
+import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 
-import BedspaceShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceShow'
-import { setupTestUser } from '../../../../../cypress_shared/utils/setupTestUser'
-import PremisesListPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesList'
-import Page from '../../../../../cypress_shared/pages/page'
-import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesShow'
-import BedspaceEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceEdit'
-import BedspaceArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceArchive'
-import BedspaceUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceUnarchive'
+import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
+import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
+import Page from '../../../../cypress_shared/pages/page'
+import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
+import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
+import BedspaceArchivePage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceArchive'
+import BedspaceUnarchivePage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceUnarchive'
 
 context('Bedspace', () => {
   beforeEach(() => {

@@ -196,7 +196,7 @@ context('Bedspace Search', () => {
     // I should be able to navigate to a bedspace
     const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
     postSearchPage.clickBedspaceLink(cas3Bedspace)
-    Page.verifyOnPage(BedspaceShowPage, cas3Bedspace)
+    Page.verifyOnPage(BedspaceShowPage, premises, cas3Bedspace)
   })
 
   it("allows me to view an overlapping offender's referral", () => {

@@ -153,12 +153,12 @@ export default class PlaceHelper {
     resultsBedspaceSearchPage.clickBedspaceLink(this.cas3Bedspace)
 
     // I am taken to the bedspace show page
-    Page.verifyOnPage(BedspaceShowPage, this.cas3Bedspace)
+    Page.verifyOnPage(BedspaceShowPage, this.premises, this.cas3Bedspace)
   }
 
   private bedspaceToNewBooking() {
     // Given I am viewing the bedspace show page
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.cas3Bedspace)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.cas3Bedspace)
 
     // And I click "Book bedspace"
     bedspaceShowPage.clickBookBedspaceLink()

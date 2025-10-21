@@ -226,6 +226,7 @@ export interface ReferenceData {
   name: string
   isActive: boolean
   serviceScope: 'approved-premises' | 'temporary-accommodation' | '*'
+  hptEmail?: string
 }
 
 export type PersonRisksUI = PersonRisks
@@ -248,7 +249,7 @@ export type DataServices = Partial<{
   referenceDataService: {
     getLocalAuthorities: (CallConfig: CallConfig) => Promise<Array<LocalAuthorityArea>>
     getPdus: (CallConfig: CallConfig, options: GetPdusOptions = {}) => Promise<Array<ProbationDeliveryUnit>>
-    getProbationRegions: (CallConfig: CallConfig) => Promise<Array<{ id: string; name: string }>>
+    getProbationRegions: (CallConfig: CallConfig) => Promise<Array<ProbationRegion>>
   }
 }>
 

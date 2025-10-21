@@ -8,5 +8,6 @@ export default Factory.define<ReferenceData>(() => {
     name: faker.location.county(),
     isActive: true,
     serviceScope: 'temporary-accommodation',
+    hptEmail: faker.internet.email(),
   }
 })

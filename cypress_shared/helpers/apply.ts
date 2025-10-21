@@ -685,6 +685,18 @@ export default class ApplyHelper {
   }
 
   completePlacementLocationAlternativeRegionWithEvidence() {
+    const stubbedProbationRegions = [
+      referenceDataFactory.probationRegion().build({
+        id: '1',
+        name: 'South West',
+        hptEmail: 'southwest.test@justice.gov.uk',
+      }),
+      referenceDataFactory.probationRegion().build({
+        id: '2',
+        name: 'North West',
+        hptEmail: 'northwest.test@justice.gov.uk',
+      }),
+    ]
     if (this.environment === 'integration') {
       const pdu = referenceDataFactory.pdu().build({
         id: this.application.data['placement-location']['alternative-pdu'].pduId,
@@ -694,16 +706,7 @@ export default class ApplyHelper {
         pdus: [pdu, ...referenceDataFactory.pdu().buildList(5)],
         probationRegionId: '2',
       })
-      cy.task('stubProbationRegions', [
-        referenceDataFactory.probationRegion().build({
-          id: '1',
-          name: 'South West',
-        }),
-        referenceDataFactory.probationRegion().build({
-          id: '2',
-          name: 'North West',
-        }),
-      ])
+      cy.task('stubProbationRegions', stubbedProbationRegions)
     }
 
     // Given I click on the safeguarding and support task
@@ -724,9 +727,10 @@ export default class ApplyHelper {
 
     const pduEvidencePage = new PduEvidencePage(this.application)
     pduEvidencePage.completeForm()
+    pduEvidencePage.shouldHaveCorrectRegionalInformation(stubbedProbationRegions)
     pduEvidencePage.clickSubmit()
 
-    this.pages.placementLocation = [alternativeRegionPage, placementPduPage, differentRegionPage]
+    this.pages.placementLocation = [alternativeRegionPage, placementPduPage, differentRegionPage, pduEvidencePage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)

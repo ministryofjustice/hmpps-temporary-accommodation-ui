@@ -9,7 +9,7 @@ import type { TimeLineFactory } from '../../../server/testutils/factories/timeli
 export default class AssessmentSummaryPage extends Page {
   constructor(
     private readonly assessment: Assessment,
-    private readonly timeline: TimeLineFactory,
+    private readonly timeline?: TimeLineFactory,
   ) {
     super(personName(assessment.application.person, 'Limited access offender'))
     cy.get('.govuk-tag').contains(statusName(assessment.status))

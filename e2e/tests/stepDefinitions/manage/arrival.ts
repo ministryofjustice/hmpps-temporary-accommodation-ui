@@ -52,7 +52,7 @@ Then('I should see the booking with the arrived status', () => {
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.bedspace)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })

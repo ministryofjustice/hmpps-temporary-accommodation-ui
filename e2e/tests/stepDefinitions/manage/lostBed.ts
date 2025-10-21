@@ -14,7 +14,7 @@ import {
 
 Given(`I'm marking a bedspace as void`, () => {
   cy.then(function _() {
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.bedspace)
     bedspaceShowPage.clickVoidBedspaceLink()
 
     const lostBedNewPage = Page.verifyOnPage(LostBedNewPage, this.premises, this.bedspace)
@@ -51,7 +51,7 @@ Then('I should see a confirmation for my new void booking', () => {
 
     lostBedShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.bedspace)
     bedspaceShowPage.shouldShowLostBedDetails(this.lostBed)
   })
 })
@@ -104,7 +104,7 @@ Then('I should see confirmation for my updated void booking', () => {
 
     lostBedShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.bedspace)
     bedspaceShowPage.shouldShowLostBedDetails(this.lostBed)
   })
 })

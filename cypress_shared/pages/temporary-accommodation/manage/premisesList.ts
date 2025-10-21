@@ -139,10 +139,16 @@ export default class PremisesListPage extends Page {
             .get('td')
             .eq(0)
             .then(element => {
-              const [addressLine1] = element.text().split(', ')
+              const addressCellParts = element
+                .html()
+                .split('<br>')
+                .filter(part => !part.includes('govuk-tag'))
+              const addressLine1 = addressCellParts[0]
+              const postcode = addressCellParts[addressCellParts.length - 1]
               const premises = cas3PremisesFactory.build({
                 id: 'unknown',
                 addressLine1,
+                postcode,
                 status: 'online',
               })
 

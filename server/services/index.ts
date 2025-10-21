@@ -26,7 +26,7 @@ import ReferenceDataService from './referenceDataService'
 
 export const services = () => {
   const {
-    premisesClientV2Builder,
+    premisesClientBuilder,
     bookingClientBuilder,
     referenceDataClientBuilder,
     lostBedClientBuilder,
@@ -34,14 +34,14 @@ export const services = () => {
     applicationClientBuilder,
     reportClientBuilder,
     userClientBuilder,
-    bedspaceClientV2Builder,
+    bedspaceClientBuilder,
     assessmentClientBuilder,
     timelineClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(userClientBuilder)
   const auditService = new AuditService(config.apis.audit)
-  const premisesService = new PremisesService(premisesClientV2Builder, referenceDataClientBuilder)
+  const premisesService = new PremisesService(premisesClientBuilder, referenceDataClientBuilder)
   const personService = new PersonService(personClientBuilder)
   const bookingService = new BookingService(bookingClientBuilder, lostBedClientBuilder)
   const arrivalService = new ArrivalService(bookingClientBuilder)
@@ -49,11 +49,11 @@ export const services = () => {
   const cancellationService = new CancellationService(bookingClientBuilder, referenceDataClientBuilder)
   const lostBedService = new LostBedService(lostBedClientBuilder, referenceDataClientBuilder)
   const applicationService = new ApplicationService(applicationClientBuilder)
-  const bedspaceService = new BedspaceService(bedspaceClientV2Builder, referenceDataClientBuilder)
+  const bedspaceService = new BedspaceService(bedspaceClientBuilder, referenceDataClientBuilder)
   const confirmationService = new ConfirmationService(bookingClientBuilder)
   const extensionService = new ExtensionService(bookingClientBuilder)
   const reportService = new ReportService(reportClientBuilder, referenceDataClientBuilder)
-  const bedspaceSearchService = new BedspaceSearchService(bedspaceClientV2Builder, referenceDataClientBuilder)
+  const bedspaceSearchService = new BedspaceSearchService(bedspaceClientBuilder, referenceDataClientBuilder)
   const bookingSearchService = new BookingSearchService(bookingClientBuilder)
   const turnaroundService = new TurnaroundService(bookingClientBuilder)
   const assessmentsService = new AssessmentsService(assessmentClientBuilder, referenceDataClientBuilder)

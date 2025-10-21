@@ -31,7 +31,7 @@ type RestClientBuilder<T> = (callConfig: CallConfig) => T
 
 export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
-  premisesClientV2Builder: ((callConfig: CallConfig) =>
+  premisesClientBuilder: ((callConfig: CallConfig) =>
     new PremisesClient(callConfig)) as RestClientBuilder<PremisesClient>,
   bookingClientBuilder: ((callConfig: CallConfig) => new BookingClient(callConfig)) as RestClientBuilder<BookingClient>,
   referenceDataClientBuilder: ((callConfig: CallConfig) =>
@@ -42,7 +42,7 @@ export const dataAccess = () => ({
     new ApplicationClient(callConfig)) as RestClientBuilder<ApplicationClient>,
   reportClientBuilder: ((callConfig: CallConfig) => new ReportClient(callConfig)) as RestClientBuilder<ReportClient>,
   userClientBuilder: ((callConfig: CallConfig) => new UserClient(callConfig)) as RestClientBuilder<UserClient>,
-  bedspaceClientV2Builder: ((callConfig: CallConfig) =>
+  bedspaceClientBuilder: ((callConfig: CallConfig) =>
     new BedspaceClient(callConfig)) as RestClientBuilder<BedspaceClient>,
   assessmentClientBuilder: ((callConfig: CallConfig) =>
     new AssessmentClient(callConfig)) as RestClientBuilder<AssessmentClient>,

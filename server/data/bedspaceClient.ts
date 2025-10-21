@@ -14,7 +14,7 @@ export default class BedspaceClient {
   restClient: RestClient
 
   constructor(callConfig: CallConfig) {
-    this.restClient = new RestClient('bedspaceClientV2', config.apis.approvedPremises as ApiConfig, callConfig)
+    this.restClient = new RestClient('bedspaceClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async search(searchParameters: Cas3BedspaceSearchParameters) {

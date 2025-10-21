@@ -1,8 +1,8 @@
-{% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
-{% extends "../../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 
 {% block head %}
     {{ super() }}
@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block content %}
-    {% include "../../../_messages.njk" %}
+    {% include "_messages.njk" %}
 
     {{ showErrorSummary(errorSummary) }}
 

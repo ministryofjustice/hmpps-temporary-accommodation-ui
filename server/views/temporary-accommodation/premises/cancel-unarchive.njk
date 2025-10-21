@@ -1,9 +1,9 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% extends "../../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 
 {% set mainClasses = "govuk-body" %}
 
@@ -16,21 +16,22 @@
 {% endblock %}
 
 {% block content %}
-    {% include "../../../_messages.njk" %}
+    {% include "_messages.njk" %}
 
     {{ showErrorSummary(errorSummary) }}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form action="{{ paths.premises.cancelUnarchive({ premisesId: premises.id })}}" method="post">
+            <form action="{{ paths.premises.cancelUnarchive({ premisesId: premises.id }) }}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                
+
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                            <h1 class="govuk-fieldset__heading">Are you sure you want to cancel the scheduled online date of {{ premisesScheduleUnarchiveDate }}?</h1>
+                            <h1 class="govuk-fieldset__heading">Are you sure you want to cancel the scheduled online
+                                date of {{ premisesScheduleUnarchiveDate }}?</h1>
                         </legend>
-                        
+
                         {{ govukRadios({
                             name: "cancelUnarchive",
                             items: [

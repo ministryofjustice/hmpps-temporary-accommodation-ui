@@ -1,12 +1,12 @@
-{% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "../../../components/formFields/form-page-input/macro.njk" import formPageInput %}
+{% from "components/formFields/form-page-input/macro.njk" import formPageInput %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% extends "../../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 
 {% set mainClasses = "govuk-body" %}
 
@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-    {% include "../../../_messages.njk" %}
+    {% include "_messages.njk" %}
 
     {{ showErrorSummary(errorSummary) }}
 
@@ -31,23 +31,21 @@
                 rows: summary.rows
             }) }}
 
-            <form action="{{ addPlaceContext(paths.premises.bedspaces.update({ premisesId: premisesId, bedspaceId: bedspaceId })) }}" method="post">
+            <form action="{{ addPlaceContext(paths.premises.bedspaces.update({ premisesId: premisesId, bedspaceId: bedspaceId })) }}"
+                  method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-                {{ formPageInput(
-                    {
-                        label: {
-                            text: 'Bedspace reference',
-                            classes: "govuk-label--m"
-                        },
-                        classes: "govuk-input--width-20",
-                        hint: {
-                            text: "This will be used to identify the bedspace when making bookings and reporting on the service."
-                        },
-                        fieldName: "reference"
+                {{ formPageInput({
+                    label: {
+                        text: 'Bedspace reference',
+                        classes: "govuk-label--m"
                     },
-                    fetchContext()
-                ) }}
+                    classes: "govuk-input--width-20",
+                    hint: {
+                        text: "This will be used to identify the bedspace when making bookings and reporting on the service."
+                    },
+                    fieldName: "reference"
+                }, fetchContext()) }}
 
                 {{ govukCheckboxes({
                     fieldset: {

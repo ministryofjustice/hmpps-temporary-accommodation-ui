@@ -1,23 +1,20 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
-{% from "../../../components/formFields/form-page-input/macro.njk" import formPageInput %}
-{% from "../../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
+{% from "components/formFields/form-page-input/macro.njk" import formPageInput %}
+{% from "components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
 
-{{ formPageInput(
-    {
-        label: {
+{{ formPageInput({
+    label: {
         text: 'Enter a bedspace reference',
         classes: "govuk-label--m"
     },
-        classes: "govuk-input--width-20",
-        hint: {
-            text: "This will be used to identify the bedspace when making bookings and reporting on the service."
-        },
-        fieldName: "reference"
+    classes: "govuk-input--width-20",
+    hint: {
+        text: "This will be used to identify the bedspace when making bookings and reporting on the service."
     },
-    fetchContext()
-) }}
+    fieldName: "reference"
+}, fetchContext()) }}
 
 {{ formPageDateInput({
     fieldset: {
@@ -31,9 +28,7 @@
         html: '<p class="govuk-hint">You cannot edit the date after it\'s added.</p><p class="govuk-hint">For example, 27 3 2025</p>'
     },
     items: dateFieldValues('startDate', errors)
-},
-    fetchContext()
-) }}
+}, fetchContext()) }}
 
 {{ govukCheckboxes({
     fieldset: {

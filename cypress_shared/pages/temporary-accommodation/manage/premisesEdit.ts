@@ -1,7 +1,7 @@
 import PremisesEditablePage from './premisesEditable'
-import { Cas3Premises } from '../../../../../server/@types/shared'
-import paths from '../../../../../server/paths/temporary-accommodation/manage'
-import { convertToTitleCase } from '../../../../../server/utils/utils'
+import { Cas3Premises } from '../../../../server/@types/shared'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
+import { convertToTitleCase } from '../../../../server/utils/utils'
 
 export default class PremisesEditPage extends PremisesEditablePage {
   constructor() {

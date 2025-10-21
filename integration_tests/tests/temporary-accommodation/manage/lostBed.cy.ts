@@ -239,7 +239,7 @@ context('Lost bed', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, bedspace)
+    Page.verifyOnPage(BedspaceShowPage, premises, bedspace)
   })
 
   it('shows a single active lost bed', () => {
@@ -308,7 +308,7 @@ context('Lost bed', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, bedspace)
+    Page.verifyOnPage(BedspaceShowPage, premises, bedspace)
   })
 
   it('navigates to the update void bedspace page', () => {
@@ -369,7 +369,7 @@ context('Lost bed', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the view bedspace page
-    Page.verifyOnPage(BedspaceShowPage, bedspace)
+    Page.verifyOnPage(BedspaceShowPage, premises, bedspace)
   })
 
   it('allows me to update a void booking', () => {
@@ -491,7 +491,7 @@ context('Lost bed', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the view bedspace page
-    Page.verifyOnPage(BedspaceShowPage, bedspace)
+    Page.verifyOnPage(BedspaceShowPage, premises, bedspace)
   })
 
   it('allows me to cancel a void booking', () => {

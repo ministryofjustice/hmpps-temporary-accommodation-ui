@@ -1,6 +1,6 @@
-import Page from '../../../page'
-import { Cas3Premises } from '../../../../../server/@types/shared'
-import { DateFormats } from '../../../../../server/utils/dateUtils'
+import Page from '../../page'
+import { Cas3Premises } from '../../../../server/@types/shared'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 export default class PremisesCancelArchivePage extends Page {
   constructor(premises: Cas3Premises) {

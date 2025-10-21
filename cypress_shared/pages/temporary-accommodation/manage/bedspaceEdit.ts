@@ -1,7 +1,7 @@
-import Page from '../../../page'
-import { Cas3Bedspace, Cas3Premises } from '../../../../../server/@types/shared'
-import paths from '../../../../../server/paths/temporary-accommodation/manage'
-import { convertToTitleCase } from '../../../../../server/utils/utils'
+import Page from '../../page'
+import { Cas3Bedspace, Cas3Premises } from '../../../../server/@types/shared'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
+import { convertToTitleCase } from '../../../../server/utils/utils'
 
 export default class BedspaceEditPage extends Page {
   constructor() {

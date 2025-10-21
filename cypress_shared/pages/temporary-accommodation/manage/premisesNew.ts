@@ -1,4 +1,4 @@
-import type { Cas3NewPremises } from '@approved-premises/api'
+import { Cas3NewPremises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import PremisesEditablePage from './premisesEditable'
 

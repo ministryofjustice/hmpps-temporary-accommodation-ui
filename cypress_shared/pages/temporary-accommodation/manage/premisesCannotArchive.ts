@@ -1,5 +1,5 @@
-import Page from '../../../page'
-import { Cas3Premises, Cas3ValidationResult } from '../../../../../server/@types/shared'
+import Page from '../../page'
+import { Cas3Premises, Cas3ValidationResult } from '../../../../server/@types/shared'
 
 export default class PremisesCannotArchivePage extends Page {
   constructor(premises: Cas3Premises) {

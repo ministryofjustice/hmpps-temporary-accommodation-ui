@@ -1,21 +1,21 @@
 import type { Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
-import Page from '../../../page'
+import Page from '../../page'
 
-export default class BedspaceArchivePage extends Page {
+export default class BedspaceUnarchivePage extends Page {
   constructor(
     private readonly premises: Cas3Premises,
     private readonly bedspace: Cas3Bedspace,
   ) {
-    super(`When should ${bedspace.reference} be archived?`)
+    super(`When should ${bedspace.reference} go online?`)
   }
 
-  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace): BedspaceArchivePage {
-    cy.visit(`/temporary-accommodation/manage/properties/${premises.id}/bedspaces/${bedspace.id}/archive`)
-    return new BedspaceArchivePage(premises, bedspace)
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace): BedspaceUnarchivePage {
+    cy.visit(`/temporary-accommodation/manage/v2/properties/${premises.id}/bedspaces/${bedspace.id}/unarchive`)
+    return new BedspaceUnarchivePage(premises, bedspace)
   }
 
   shouldShowBedspaceDetails(): void {
-    cy.get('h1').should('contain', `When should ${this.bedspace.reference} be archived?`)
+    cy.get('h1').should('contain', `When should ${this.bedspace.reference} go online?`)
   }
 
   selectTodayOption(): void {
@@ -40,7 +40,7 @@ export default class BedspaceArchivePage extends Page {
     cy.get('.govuk-error-summary').should('contain', errorMessage)
   }
 
-  completeArchiveWithToday(): void {
+  completeUnarchiveWithToday(): void {
     this.selectTodayOption()
     this.clickSubmit()
   }

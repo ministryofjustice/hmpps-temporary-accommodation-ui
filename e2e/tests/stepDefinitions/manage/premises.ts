@@ -38,7 +38,7 @@ Given('I view an existing active premises', () => {
     const premises = this.premisesList[0]
     premisesListPage.clickPremisesViewLink(premises)
 
-    const premisesShowPage = Page.verifyOnPage(PremisesShowPage, premises.addressLine1)
+    const premisesShowPage = Page.verifyOnPage(PremisesShowPage, premises)
     premisesShowPage.getPremises('premises')
   })
 })

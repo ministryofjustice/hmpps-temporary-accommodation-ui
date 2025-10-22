@@ -1,10 +1,11 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
+import { ReferenceData } from '@approved-premises/ui'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import { newPremisesFactory, premisesFactory } from '../../../../server/testutils/factories'
+import { cas3NewPremisesFactory, cas3PremisesFactory } from '../../../../server/testutils/factories'
 import { getUrlEncodedCypressEnv, throwMissingCypressEnvError } from '../utils'
 
 const actingUserProbationRegionId =
@@ -13,7 +14,10 @@ const actingUserProbationRegionName =
   getUrlEncodedCypressEnv('acting_user_probation_region_name') ||
   throwMissingCypressEnvError('acting_user_probation_region_name')
 
-const actingUserProbationRegion = { id: actingUserProbationRegionId, name: actingUserProbationRegionName }
+const actingUserProbationRegion = {
+  id: actingUserProbationRegionId,
+  name: actingUserProbationRegionName,
+} as ReferenceData
 
 Given("I'm creating a premises", () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
@@ -34,7 +38,7 @@ Given('I view an existing active premises', () => {
     const premises = this.premisesList[0]
     premisesListPage.clickPremisesViewLink(premises)
 
-    const premisesShowPage = Page.verifyOnPage(PremisesShowPage, premises.addressLine1)
+    const premisesShowPage = Page.verifyOnPage(PremisesShowPage, premises)
     premisesShowPage.getPremises('premises')
   })
 })
@@ -47,14 +51,14 @@ Given('I create an active premises with all necessary details', () => {
   page.assignCharacteristics('characteristics')
 
   cy.then(function _() {
-    const premises = premisesFactory
+    const premises = cas3PremisesFactory
       .forEnvironment(actingUserProbationRegion, this.pdus, this.localAuthorities, this.characteristics)
-      .active()
       .build({
+        status: 'online',
         id: 'unknown',
       })
 
-    const newPremises = newPremisesFactory.fromPremises(premises).build()
+    const newPremises = cas3NewPremisesFactory.fromPremises(premises).build()
 
     cy.wrap(premises).as('premises')
     page.completeForm(newPremises, premises.localAuthorityArea.name)

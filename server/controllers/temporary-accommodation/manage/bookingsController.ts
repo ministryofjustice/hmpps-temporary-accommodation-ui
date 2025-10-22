@@ -4,7 +4,7 @@ import type { NewBooking } from '@approved-premises/api'
 import { ObjectWithDateParts } from '@approved-premises/ui'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 import {
   assessmentRadioItems,
   bookingActions,
@@ -47,7 +47,7 @@ export default class BookingsController {
         : {}
       const crnPrefill = placeContext ? { crn: placeContext.assessment.application.person.crn } : {}
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const bedspaceStatus = this.bedspacesService.summaryListForBedspaceStatus(bedspace)
 
@@ -155,7 +155,7 @@ export default class BookingsController {
         clearPlaceContext(req, res)
       }
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const backLink = appendQueryString(
@@ -251,7 +251,7 @@ export default class BookingsController {
 
       await preservePlaceContext(req, res, this.assessmentService)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
@@ -272,7 +272,7 @@ export default class BookingsController {
 
       await preservePlaceContext(req, res, this.assessmentService)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)

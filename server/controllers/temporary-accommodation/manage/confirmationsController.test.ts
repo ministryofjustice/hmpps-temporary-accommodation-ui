@@ -7,14 +7,14 @@ import ConfirmationService from '../../../services/confirmationService'
 import {
   bookingFactory,
   cas3BedspaceFactory,
+  cas3PremisesFactory,
   confirmationFactory,
   newConfirmationFactory,
-  premisesFactory,
 } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import ConfirmationsController from './confirmationsController'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -49,7 +49,7 @@ describe('ConfirmationsController', () => {
 
   describe('new', () => {
     it('renders the form', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
@@ -59,7 +59,7 @@ describe('ConfirmationsController', () => {
         bookingId: booking.id,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
@@ -68,7 +68,7 @@ describe('ConfirmationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 

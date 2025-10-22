@@ -60,8 +60,8 @@
 ) }}
 
 {% if not disableTurnarounds %}
-    <p>There will be a turnaround time of {{ premises.turnaroundWorkingDayCount }}
-        working {{ 'day' if premises.turnaroundWorkingDayCount === 1 else 'days' }} after this booking</p>
+    <p>There will be a turnaround time of {{ premises.turnaroundWorkingDays }}
+        working {{ 'day' if premises.turnaroundWorkingDays === 1 else 'days' }} after this booking</p>
 {% endif %}
 
 {{ govukButton({

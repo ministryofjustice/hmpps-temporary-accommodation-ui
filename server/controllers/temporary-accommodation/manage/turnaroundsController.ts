@@ -3,7 +3,7 @@ import type { Request, RequestHandler, Response } from 'express'
 import type { NewTurnaround } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PremisesService, TurnaroundService } from '../../../services'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 import { generateTurnaroundConflictBespokeError } from '../../../utils/bookingUtils'
 import { parseNumber } from '../../../utils/formUtils'
 import extractCallConfig from '../../../utils/restUtils'
@@ -29,7 +29,7 @@ export default class TurnaroundsController {
 
       const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingService.getBooking(callConfig, premisesId, bookingId)
 

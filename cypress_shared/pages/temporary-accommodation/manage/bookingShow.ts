@@ -1,11 +1,10 @@
-import type { Booking, Premises } from '@approved-premises/api'
+import type { Booking, Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import PopDetailsHeaderComponent from '../../../components/popDetailsHeader'
 import Page from '../../page'
-import { Cas3Bedspace } from '../../../../server/@types/shared'
 
 export default class BookingShowPage extends Page {
   private readonly popDetailsHeaderComponent: PopDetailsHeaderComponent
@@ -15,7 +14,7 @@ export default class BookingShowPage extends Page {
   private readonly bookingInfoComponent: BookingInfoComponent
 
   constructor(
-    premises: Premises,
+    premises: Cas3Premises,
     bedspace: Cas3Bedspace,
     private readonly booking: Booking,
   ) {
@@ -26,7 +25,7 @@ export default class BookingShowPage extends Page {
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premises: Premises, bedspace: Cas3Bedspace, booking: Booking): BookingShowPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking): BookingShowPage {
     cy.visit(paths.bookings.show({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))
     return new BookingShowPage(premises, bedspace, booking)
   }

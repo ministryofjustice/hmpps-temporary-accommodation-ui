@@ -6,9 +6,8 @@ import {
   Cas3Premises,
   LostBed,
   Person,
-  TemporaryAccommodationPremises as Premises,
-} from '../../server/@types/shared'
-import { PlaceContext } from '../../server/@types/ui'
+} from '@approved-premises/api'
+import { PlaceContext } from '@approved-premises/ui'
 import {
   assessmentSummaryFactory,
   bedFactory,
@@ -47,8 +46,7 @@ export default class PlaceHelper {
 
   constructor(
     private readonly placeContext: NonNullable<PlaceContext>,
-    private readonly premises: Premises,
-    private readonly cas3Premises: Cas3Premises,
+    private readonly premises: Cas3Premises,
     private readonly cas3Bedspace: Cas3Bedspace,
   ) {
     this.bedspaceSearchResults = bedspaceSearchResultsFactory.build({
@@ -87,8 +85,7 @@ export default class PlaceHelper {
     cy.task('stubBedspaceSearchReferenceData')
     cy.task('stubBedspaceSearch', this.bedspaceSearchResults)
     cy.task('stubSinglePremises', this.premises)
-    cy.task('stubSinglePremisesV2', this.cas3Premises)
-    cy.task('stubBedspaceV2', { premisesId: this.premises.id, bedspace: this.cas3Bedspace })
+    cy.task('stubBedspace', { premisesId: this.premises.id, bedspace: this.cas3Bedspace })
     cy.task('stubFindPerson', { person: this.person })
     cy.task('stubAssessments', { data: this.assessmentSummaries })
     cy.task('stubBookingCreate', { premisesId: this.premises.id, booking: this.booking })
@@ -156,12 +153,12 @@ export default class PlaceHelper {
     resultsBedspaceSearchPage.clickBedspaceLink(this.cas3Bedspace)
 
     // I am taken to the bedspace show page
-    Page.verifyOnPage(BedspaceShowPage, this.cas3Bedspace)
+    Page.verifyOnPage(BedspaceShowPage, this.premises, this.cas3Bedspace)
   }
 
   private bedspaceToNewBooking() {
     // Given I am viewing the bedspace show page
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.cas3Bedspace)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.cas3Bedspace)
 
     // And I click "Book bedspace"
     bedspaceShowPage.clickBookBedspaceLink()

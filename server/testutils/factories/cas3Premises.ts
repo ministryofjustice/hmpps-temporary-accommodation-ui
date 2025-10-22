@@ -2,16 +2,15 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
 
 import type { Cas3Premises, Cas3PremisesArchiveAction } from '@approved-premises/api'
+import { ReferenceData } from '@approved-premises/ui'
 import characteristicFactory from './characteristic'
 import localAuthorityFactory from './localAuthority'
 import referenceDataFactory from './referenceData'
 import { DateFormats } from '../../utils/dateUtils'
+import pduFactory from './pdu'
+import probationRegionFactory from './probationRegion'
 
 class Cas3PremisesFactory extends Factory<Cas3Premises> {
-  withEndDate() {
-    return this.params({ endDate: DateFormats.dateObjToIsoDate(faker.date.future()) })
-  }
-
   withArchiveHistory(length: number = 5) {
     return this.params({
       archiveHistory: Array.from(
@@ -22,6 +21,33 @@ class Cas3PremisesFactory extends Factory<Cas3Premises> {
             status: faker.helpers.arrayElement(['online', 'archived'] as const),
           }) as Cas3PremisesArchiveAction,
       ),
+    })
+  }
+
+  forEnvironment(
+    probationRegion: ReferenceData,
+    pdus: ReferenceData[],
+    localAuthorities: ReferenceData[],
+    characteristics: ReferenceData[],
+  ) {
+    const pdu = pduFactory.build({ ...faker.helpers.arrayElement(pdus) })
+
+    return this.params({
+      probationRegion: probationRegionFactory.build({
+        ...probationRegion,
+      }),
+      localAuthorityArea: localAuthorityFactory.build({
+        ...faker.helpers.arrayElement(localAuthorities),
+      }),
+      probationDeliveryUnit: pdu,
+      characteristics: faker.helpers
+        .arrayElements(characteristics, faker.number.int({ min: 1, max: 5 }))
+        .map(characteristic =>
+          characteristicFactory.build({
+            ...characteristic,
+            modelScope: 'premises',
+          }),
+        ),
     })
   }
 }

@@ -56,7 +56,7 @@ Then('I should see the booking with the extended departure date', () => {
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.bedspace)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })

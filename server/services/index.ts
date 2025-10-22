@@ -8,7 +8,7 @@ import ArrivalService from './arrivalService'
 import AssessmentsService from './assessmentsService'
 import AuditService from './auditService'
 import BedspaceSearchService from './bedspaceSearchService'
-import BedspaceServiceV2 from './v2/bedspaceService'
+import BedspaceService from './bedspaceService'
 import BookingSearchService from './bookingSearchService'
 import BookingService from './bookingService'
 import CancellationService from './cancellationService'
@@ -18,7 +18,6 @@ import ExtensionService from './extensionService'
 import LostBedService from './lostBedService'
 import PersonService from './personService'
 import PremisesService from './premisesService'
-import PremisesServiceV2 from './v2/premisesService'
 import ReportService from './reportService'
 import TurnaroundService from './turnaroundService'
 import TimelineService from './assessments/timelineService'
@@ -28,7 +27,6 @@ import ReferenceDataService from './referenceDataService'
 export const services = () => {
   const {
     premisesClientBuilder,
-    premisesClientV2Builder,
     bookingClientBuilder,
     referenceDataClientBuilder,
     lostBedClientBuilder,
@@ -37,15 +35,13 @@ export const services = () => {
     reportClientBuilder,
     userClientBuilder,
     bedspaceClientBuilder,
-    bedspaceClientV2Builder,
     assessmentClientBuilder,
     timelineClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(userClientBuilder)
   const auditService = new AuditService(config.apis.audit)
-  const premisesService = new PremisesService(premisesClientBuilder)
-  const premisesServiceV2 = new PremisesServiceV2(premisesClientV2Builder, referenceDataClientBuilder)
+  const premisesService = new PremisesService(premisesClientBuilder, referenceDataClientBuilder)
   const personService = new PersonService(personClientBuilder)
   const bookingService = new BookingService(bookingClientBuilder, lostBedClientBuilder)
   const arrivalService = new ArrivalService(bookingClientBuilder)
@@ -53,7 +49,7 @@ export const services = () => {
   const cancellationService = new CancellationService(bookingClientBuilder, referenceDataClientBuilder)
   const lostBedService = new LostBedService(lostBedClientBuilder, referenceDataClientBuilder)
   const applicationService = new ApplicationService(applicationClientBuilder)
-  const bedspaceServiceV2 = new BedspaceServiceV2(bedspaceClientV2Builder, referenceDataClientBuilder)
+  const bedspaceService = new BedspaceService(bedspaceClientBuilder, referenceDataClientBuilder)
   const confirmationService = new ConfirmationService(bookingClientBuilder)
   const extensionService = new ExtensionService(bookingClientBuilder)
   const reportService = new ReportService(reportClientBuilder, referenceDataClientBuilder)
@@ -67,7 +63,6 @@ export const services = () => {
   return {
     userService,
     auditService,
-    premisesService,
     personService,
     bookingService,
     arrivalService,
@@ -84,10 +79,8 @@ export const services = () => {
     assessmentsService,
     referenceDataService,
     timelineService,
-    v2: {
-      premisesService: premisesServiceV2,
-      bedspaceService: bedspaceServiceV2,
-    },
+    premisesService,
+    bedspaceService,
   }
 }
 
@@ -105,7 +98,6 @@ export {
   LostBedService,
   PersonService,
   PremisesService,
-  PremisesServiceV2,
   TurnaroundService,
   UserService,
   ReferenceDataService,

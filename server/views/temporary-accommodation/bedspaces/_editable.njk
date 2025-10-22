@@ -1,0 +1,70 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "components/formFields/form-page-input/macro.njk" import formPageInput %}
+{% from "components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
+
+{{ formPageInput({
+    label: {
+        text: 'Enter a bedspace reference',
+        classes: "govuk-label--m"
+    },
+    classes: "govuk-input--width-20",
+    hint: {
+        text: "This will be used to identify the bedspace when making bookings and reporting on the service."
+    },
+    fieldName: "reference"
+}, fetchContext()) }}
+
+{{ formPageDateInput({
+    fieldset: {
+        legend: {
+            text: "Enter the bedspace start date",
+            classes: "govuk-fieldset__legend--m"
+        }
+    },
+    fieldName: "startDate",
+    hint: {
+        html: '<p class="govuk-hint">You cannot edit the date after it\'s added.</p><p class="govuk-hint">For example, 27 3 2025</p>'
+    },
+    items: dateFieldValues('startDate', errors)
+}, fetchContext()) }}
+
+{{ govukCheckboxes({
+    fieldset: {
+        legend: {
+            text: "Does the bedspace have any of the following details?",
+            classes: "govuk-fieldset__legend--m"
+        }
+    },
+    hint: {
+        text: "Select all that apply:"
+    },
+    items: convertObjectsToCheckboxItems(allCharacteristics, 'name', 'id', 'characteristicIds'),
+    id: "characteristicIds",
+    name: "characteristicIds[]",
+    errorMessage: errors.characteristicIds
+}) }}
+
+{{ govukTextarea({
+    label: {
+        text: "Additional bedspace details",
+        classes: "govuk-label--m"
+    },
+    hint: {
+        text: "This information will be used to help find a suitable bedspace for the person on probation."
+    },
+    id: "notes",
+    name: "notes",
+    value: notes,
+    errorMessage: errors.notes
+}) }}
+
+{% if hasScheduledArchive %}
+    <p>The scheduled archive of the property will be cancelled when this bedspace is added.</p>
+{% endif %}
+
+{{ govukButton({
+    text: "Submit",
+    preventDoubleClick: true
+}) }}

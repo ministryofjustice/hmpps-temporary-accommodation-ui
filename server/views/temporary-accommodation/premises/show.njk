@@ -1,0 +1,125 @@
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+    {{ govukBreadcrumbs({
+        items: [
+            { text: "Home", href: "/" },
+            { text: "List of properties", href: addPlaceContext(paths.premises.online()) }
+        ]
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% include "_messages.njk" %}
+
+            {% if premises.status === 'archived' %}
+                {% if not successMessages.length %}
+                    {% set archivedBannerHtml %}
+                        <p class="govuk-notification-banner__heading">This is an archived property</p>
+                        <p class="govuk-body">You cannot create a new bedspace, or make a new booking.</p>
+                    {% endset %}
+
+                    {{ govukNotificationBanner({
+                        html: archivedBannerHtml
+                    }) }}
+                {% endif %}
+            {% endif %}
+
+            {{ mojCasPageHeaderActions({
+                heading: {
+                    text: premises.addressLine1 + ", " + premises.postcode,
+                    classes: "govuk-heading-l"
+                },
+                actions: actions
+            }) }}
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ mojSubNavigation({
+                label: "Sub navigation",
+                items: subNavArr
+            }) }}
+        </div>
+    </div>
+
+    {% set bedspaceCounts %}
+        {% if premises.totalUpcomingBedspaces > 0 %}
+            <p class="govuk-body govuk-!-margin-bottom-1">Upcoming bedspaces: {{ premises.totalUpcomingBedspaces }}</p>
+        {% endif %}
+        <p class="govuk-body govuk-!-margin-bottom-1">Online bedspaces: {{ premises.totalOnlineBedspaces }}</p>
+        <p class="govuk-body">Archived bedspaces: {{ premises.totalArchivedBedspaces }}</p>
+    {% endset %}
+
+    {% if showPremises %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Property overview</h2>
+                {{ bedspaceCounts | safe }}
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds" data-cy-premises="true"
+                 data-cy-pdu-id="{{ premises.probationDeliveryUnit.id }}">
+                {{ govukSummaryList({
+                    card: {
+                        title: {
+                            text: "Property reference: " + premises.reference
+                        }
+                    },
+                    rows: summary.rows
+                }) }}
+            </div>
+        </div>
+    {% else %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Bedspaces overview</h2>
+
+                {% if bedspaceSummaries.length > 0 %}
+                    {{ bedspaceCounts | safe }}
+                    {% for bedspace in bedspaceSummaries %}
+                        {{ govukSummaryList({
+                            card: {
+                                title: {
+                                    text: "Bedspace reference: " + bedspace.reference
+                                },
+                                actions: {
+                                    items: [
+                                        {
+                                            text: "View bedspace",
+                                            href: addPlaceContext(paths.premises.bedspaces.show({
+                                            premisesId: premises.id,
+                                            bedspaceId: bedspace.id
+                                        }))
+                                        }
+                                    ]
+                                }
+                            },
+                            rows: bedspace.summary.rows
+                        }) }}
+                    {% endfor %}
+                {% else %}
+                    <p>No bedspaces.</p>
+                    <a class="govuk-link govuk-link--no-visited-state"
+                       href="{{ paths.premises.bedspaces.new({ premisesId: premises.id }) }}">
+                        Add a bedspace
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -14,25 +14,25 @@ import ExtensionsController from './extensionsController'
 import LostBedsController from './lostBedsController'
 import ReportsController from './reportsController'
 import TurnaroundsController from './turnaroundsController'
-import PremisesControllerV2 from './v2/premisesController'
-import BedspacesControllerV2 from './v2/bedspacesController'
+import PremisesControllerV2 from './premisesController'
+import BedspacesControllerV2 from './bedspacesController'
 
 export const controllers = (services: Services) => {
   const dashboardController = new DashboardController()
   const premisesControllerV2 = new PremisesControllerV2(
-    services.v2.premisesService,
-    services.v2.bedspaceService,
+    services.premisesService,
+    services.bedspaceService,
     services.assessmentsService,
   )
   const bedspacesControllerV2 = new BedspacesControllerV2(
-    services.v2.premisesService,
-    services.v2.bedspaceService,
+    services.premisesService,
+    services.bedspaceService,
     services.bookingService,
     services.assessmentsService,
   )
   const bookingsController = new BookingsController(
     services.premisesService,
-    services.v2.bedspaceService,
+    services.bedspaceService,
     services.bookingService,
     services.personService,
     services.assessmentsService,
@@ -40,37 +40,37 @@ export const controllers = (services: Services) => {
 
   const confirmationsController = new ConfirmationsController(
     services.premisesService,
-    services.v2.bedspaceService,
+    services.bedspaceService,
     services.bookingService,
     services.confirmationService,
   )
   const arrivalsController = new ArrivalsController(
     services.premisesService,
-    services.v2.bedspaceService,
+    services.bedspaceService,
     services.bookingService,
     services.arrivalService,
   )
   const departuresController = new DeparturesController(
     services.premisesService,
-    services.v2.bedspaceService,
+    services.bedspaceService,
     services.bookingService,
     services.departureService,
   )
   const extensionsController = new ExtensionsController(
     services.premisesService,
-    services.v2.bedspaceService,
+    services.bedspaceService,
     services.bookingService,
     services.extensionService,
   )
   const cancellationsController = new CancellationsController(
     services.premisesService,
-    services.v2.bedspaceService,
+    services.bedspaceService,
     services.bookingService,
     services.cancellationService,
   )
   const turnaroundsController = new TurnaroundsController(
     services.premisesService,
-    services.v2.bedspaceService,
+    services.bedspaceService,
     services.bookingService,
     services.turnaroundService,
   )
@@ -80,7 +80,7 @@ export const controllers = (services: Services) => {
   const lostBedsController = new LostBedsController(
     services.lostBedService,
     services.premisesService,
-    services.v2.bedspaceService,
+    services.bedspaceService,
     services.assessmentsService,
   )
 

@@ -1,8 +1,20 @@
 import { Factory } from 'fishery'
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { Cas3NewPremises } from '@approved-premises/api'
+import { Cas3NewPremises, Cas3Premises } from '@approved-premises/api'
 
-export default Factory.define<Cas3NewPremises>(() => ({
+class Cas3NewPremisesFactory extends Factory<Cas3NewPremises> {
+  fromPremises(premises: Cas3Premises) {
+    return this.params({
+      ...premises,
+      localAuthorityAreaId: premises.localAuthorityArea.id,
+      characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
+      probationRegionId: premises.probationRegion.id,
+      probationDeliveryUnitId: premises.probationDeliveryUnit.id,
+    })
+  }
+}
+
+export default Cas3NewPremisesFactory.define(() => ({
   reference: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   addressLine1: faker.location.streetAddress(),
   addressLine2: faker.location.secondaryAddress(),

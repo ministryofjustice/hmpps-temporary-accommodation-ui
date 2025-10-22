@@ -3,8 +3,8 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 
 import type { NewDeparture } from '@approved-premises/api'
 import referenceDataFactory from './referenceData'
-import premisesFactory from './premises'
 import { DateFormats } from '../../utils/dateUtils'
+import cas3PremisesFactory from './cas3Premises'
 
 export default Factory.define<NewDeparture>(() => {
   const date = faker.date.soon()
@@ -14,6 +14,6 @@ export default Factory.define<NewDeparture>(() => {
     notes: faker.lorem.sentence(),
     moveOnCategoryId: referenceDataFactory.moveOnCategories().build().id,
     destinationProviderId: referenceDataFactory.destinationProviders().build().id,
-    destinationAp: premisesFactory.build().id,
+    destinationAp: cas3PremisesFactory.build().id,
   }
 })

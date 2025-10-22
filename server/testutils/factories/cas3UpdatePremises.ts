@@ -11,7 +11,7 @@ export default Factory.define<Cas3UpdatePremises>(() => ({
   localAuthorityAreaId: faker.string.uuid(),
   probationRegionId: faker.string.uuid(),
   probationDeliveryUnitId: faker.string.uuid(),
-  turnaroundWorkingDayCount: faker.number.int({ min: 1, max: 14 }),
+  turnaroundWorkingDays: faker.number.int({ min: 1, max: 14 }),
   characteristicIds: faker.helpers.multiple(() => faker.string.uuid(), { count: { min: 1, max: 5 } }),
   notes: faker.lorem.sentences(5),
 }))

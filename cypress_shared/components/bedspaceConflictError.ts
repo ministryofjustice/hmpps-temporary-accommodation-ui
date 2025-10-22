@@ -1,14 +1,13 @@
-import type { Booking, LostBed, Premises } from '@approved-premises/api'
+import type { Booking, Cas3Bedspace, Cas3Premises, LostBed } from '@approved-premises/api'
 import errorLookups from '../../server/i18n/en/errors.json'
 import Page from '../pages/page'
 import BookingShowPage from '../pages/temporary-accommodation/manage/bookingShow'
 import LostBedShowPage from '../pages/temporary-accommodation/manage/lostBedShow'
 import Component from './component'
-import { Cas3Bedspace } from '../../server/@types/shared'
 
 export default class BedspaceConflictErrorComponent extends Component {
   constructor(
-    private readonly premises: Premises,
+    private readonly premises: Cas3Premises,
     private readonly bedspace: Cas3Bedspace,
     private readonly source: 'booking' | 'lost-bed' | 'turnaround',
   ) {

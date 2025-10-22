@@ -9,8 +9,8 @@ import {
   arrivalFactory,
   bookingFactory,
   cas3BedspaceFactory,
+  cas3PremisesFactory,
   newArrivalFactory,
-  premisesFactory,
 } from '../../../../server/testutils/factories'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 
@@ -80,12 +80,12 @@ context('Booking arrival', () => {
       cy.signIn()
 
       // And there is a confirmed booking in the database
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.confirmed().build()
 
       cy.task('stubSinglePremises', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBooking', { premisesId: premises.id, booking })
 
       // When I visit the booking confirmation page
@@ -109,13 +109,13 @@ context('Booking arrival', () => {
       cy.signIn()
 
       // And there is a confirmed booking and a conflicting booking in the database
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.confirmed().build()
       const conflictingBooking = bookingFactory.build()
 
       cy.task('stubSinglePremises', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBooking', { premisesId: premises.id, booking })
       cy.task('stubBooking', { premisesId: premises.id, booking: conflictingBooking })
 
@@ -244,12 +244,12 @@ context('Booking arrival', () => {
       cy.signIn()
 
       // And there is a confirmed booking in the database
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
       cy.task('stubSinglePremises', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBooking', { premisesId: premises.id, booking })
 
       // When I visit the booking confirmation page
@@ -273,13 +273,13 @@ context('Booking arrival', () => {
       cy.signIn()
 
       // And there is an arrived booking and a conflicting booking in the database
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
       const conflictingBooking = bookingFactory.build()
 
       cy.task('stubSinglePremises', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBooking', { premisesId: premises.id, booking })
       cy.task('stubBooking', { premisesId: premises.id, booking: conflictingBooking })
 
@@ -309,12 +309,12 @@ context('Booking arrival', () => {
       const futureDate = addDays(currentDate, 7)
 
       // And there is a confirmed booking in the database
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
       cy.task('stubSinglePremises', premises)
-      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
       cy.task('stubBooking', { premisesId: premises.id, booking })
 
       // When I visit the booking confirmation page

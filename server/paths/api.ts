@@ -3,7 +3,6 @@ import { path } from 'static-path'
 const cas3Path = path('/cas3')
 const premisesPath = path('/premises')
 const cas3PremisesPath = cas3Path.path('premises')
-const premisesSummaryPath = cas3PremisesPath.path('summary')
 const singlePremisesPath = premisesPath.path(':premisesId')
 const singlePremisesCas3Path = cas3PremisesPath.path(':premisesId')
 const singleBookingCas3Path = singlePremisesCas3Path.path('bookings/:bookingId')
@@ -43,10 +42,6 @@ const clarificationNotePaths = {
 
 const managePaths = {
   premises: {
-    create: premisesPath,
-    update: singlePremisesPath,
-    index: premisesSummaryPath,
-    show: singlePremisesPath,
     lostBeds: {
       show: singleLostBedPath,
       create: lostBedsPath,
@@ -153,16 +148,12 @@ export default {
     },
   },
   premises: {
-    show: managePaths.premises.show,
     lostBeds: {
       show: managePaths.premises.lostBeds.show,
       create: managePaths.premises.lostBeds.create,
       index: managePaths.premises.lostBeds.index,
       cancel: managePaths.premises.lostBeds.cancel,
       update: managePaths.premises.lostBeds.update,
-    },
-    staffMembers: {
-      index: managePaths.premises.show.path('staff'),
     },
   },
   bedspaces: {

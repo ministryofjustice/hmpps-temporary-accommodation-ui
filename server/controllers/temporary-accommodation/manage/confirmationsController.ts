@@ -3,7 +3,7 @@ import type { Request, RequestHandler, Response } from 'express'
 import type { NewConfirmation } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PremisesService } from '../../../services'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 import ConfirmationService from '../../../services/confirmationService'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
@@ -23,7 +23,7 @@ export default class ConfirmationsController {
 
       const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 

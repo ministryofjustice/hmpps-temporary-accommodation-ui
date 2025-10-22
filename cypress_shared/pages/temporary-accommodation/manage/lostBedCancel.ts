@@ -1,4 +1,4 @@
-import type { Cas3Bedspace, LostBed, NewLostBedCancellation, Premises } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Premises, LostBed, NewLostBedCancellation } from '@approved-premises/api'
 
 import Page from '../../page'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -8,7 +8,7 @@ export default class LostBedCancelPage extends Page {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
   constructor(
-    private readonly premises: Premises,
+    private readonly premises: Cas3Premises,
     private readonly bedspace: Cas3Bedspace,
     private readonly lostBed: LostBed,
   ) {
@@ -17,7 +17,7 @@ export default class LostBedCancelPage extends Page {
     this.locationHeaderComponent = new LocationHeaderComponent({ premises })
   }
 
-  static visit(premises: Premises, bedspace: Cas3Bedspace, lostBed: LostBed): LostBedCancelPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, lostBed: LostBed): LostBedCancelPage {
     cy.visit(
       paths.lostBeds.cancellations.new({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }),
     )

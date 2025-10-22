@@ -1,7 +1,7 @@
-import { Cas3Bedspace, Characteristic, TemporaryAccommodationPremises } from '../../server/@types/shared'
-import { BedspaceSearchFormParameters } from '../../server/@types/ui'
+import { Cas3Bedspace, Cas3Premises, Characteristic } from '@approved-premises/api'
+import { BedspaceSearchFormParameters } from '@approved-premises/ui'
 
-export const characteristicsToSearchAttributes = (premises: TemporaryAccommodationPremises, bedspace: Cas3Bedspace) => {
+export const characteristicsToSearchAttributes = (premises: Cas3Premises, bedspace: Cas3Bedspace) => {
   const occupancyAttributesMap: Record<string, BedspaceSearchFormParameters['occupancyAttribute']> = {
     All: 'all',
     'Shared property': '62a38d3a-4797-4b0f-8681-7befea1035a4',

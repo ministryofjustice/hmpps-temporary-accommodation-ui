@@ -1,0 +1,87 @@
+{% from "components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "components/booking-listing/macro.njk" import bookingListing %}
+{% from "components/lost-bed-listing/macro.njk" import lostBedListing %}
+
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "View a bedspace - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+{% set bodyClasses = "temporary-accommodation-bedspaces-show" %}
+
+{% block beforeContent %}
+    {{ govukBreadcrumbs({
+        items: [
+            { text: "Home", href: "/" },
+            { text: "List of properties", href: addPlaceContext(paths.premises.online()) },
+            {
+                text: premises.addressLine1 + ", " + premises.postcode,
+                href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))
+            }
+        ]
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% include "_messages.njk" %}
+
+            {{ mojCasPageHeaderActions({
+                heading: {
+                    text: "Bedspace reference: " + bedspace.reference,
+                    classes: "govuk-heading-l"
+                },
+                actions: actions
+            }) }}
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+            <h2 class="govuk-heading-s">Property address</h2>
+
+            <p class="govuk-body">
+                {{ premises.fullAddress | safe }}
+            </p>
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+            <h2 class="govuk-heading-s">Property details</h2>
+
+            <p class="govuk-body">
+                {% for characteristic in premises.characteristics %}
+                    <span class="hmpps-tag-filters">{{ characteristic.name }}</span>
+                {% else %}
+                    None
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ govukSummaryList({
+                rows: summary.rows
+            }) }}
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h2>Bookings</h2>
+
+            {% for listingEntry in listingEntries %}
+                {% if listingEntry.type == 'booking' %}
+                    {{ bookingListing(listingEntry.body, addPlaceContext(listingEntry.path)) }}
+                    {% elif listingEntry.type === 'lost-bed' %}
+                    {{ lostBedListing(listingEntry.body, addPlaceContext(listingEntry.path)) }}
+                {% endif %}
+            {% else %}
+                <p>No bookings.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

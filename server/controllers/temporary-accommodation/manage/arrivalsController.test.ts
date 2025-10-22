@@ -9,9 +9,9 @@ import {
   arrivalFactory,
   bookingFactory,
   cas3BedspaceFactory,
+  cas3PremisesFactory,
   confirmationFactory,
   newArrivalFactory,
-  premisesFactory,
 } from '../../../testutils/factories'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -24,7 +24,7 @@ import {
 } from '../../../utils/validation'
 import ArrivalsController from './arrivalsController'
 import config from '../../../config'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -56,7 +56,7 @@ describe('ArrivalsController', () => {
   describe('Adding arrival details', () => {
     describe('new', () => {
       it('renders the form prepopulated with the current booking dates', async () => {
-        const premises = premisesFactory.build()
+        const premises = cas3PremisesFactory.build()
         const bedspace = cas3BedspaceFactory.build()
         const booking = bookingFactory.arrived().build()
 
@@ -66,7 +66,7 @@ describe('ArrivalsController', () => {
           bookingId: booking.id,
         }
 
-        premisesService.getPremises.mockResolvedValue(premises)
+        premisesService.getSinglePremises.mockResolvedValue(premises)
         bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
         bookingService.getBooking.mockResolvedValue(booking)
 
@@ -75,7 +75,7 @@ describe('ArrivalsController', () => {
 
         await requestHandler(request, response, next)
 
-        expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+        expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
         expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
         expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
@@ -248,7 +248,7 @@ describe('ArrivalsController', () => {
   describe('Amending arrival details', () => {
     describe('edit', () => {
       it('renders the form', async () => {
-        const premises = premisesFactory.build()
+        const premises = cas3PremisesFactory.build()
         const bedspace = cas3BedspaceFactory.build()
         const booking = bookingFactory.arrived().build()
 
@@ -258,7 +258,7 @@ describe('ArrivalsController', () => {
           bookingId: booking.id,
         }
 
-        premisesService.getPremises.mockResolvedValue(premises)
+        premisesService.getSinglePremises.mockResolvedValue(premises)
         bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
         bookingService.getBooking.mockResolvedValue(booking)
 
@@ -267,7 +267,7 @@ describe('ArrivalsController', () => {
 
         await requestHandler(request, response, next)
 
-        expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+        expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
         expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
         expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
@@ -442,7 +442,7 @@ describe('ArrivalsController', () => {
     })
 
     it('does not show the NDelius update message when creating', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
@@ -452,7 +452,7 @@ describe('ArrivalsController', () => {
         bookingId: booking.id,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
@@ -461,7 +461,7 @@ describe('ArrivalsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 

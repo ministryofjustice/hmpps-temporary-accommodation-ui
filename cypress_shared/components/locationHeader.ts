@@ -1,9 +1,9 @@
-import { Cas3Bedspace, Premises } from '../../server/@types/shared'
+import { Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
 import Component from './component'
 
 export default class LocationHeaderComponent extends Component {
   constructor(
-    private readonly details: { premises?: Premises; bedspace?: Cas3Bedspace },
+    private readonly details: { premises?: Cas3Premises; bedspace?: Cas3Bedspace },
     private readonly hideAddress: boolean = false,
   ) {
     super()

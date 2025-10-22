@@ -4,14 +4,14 @@ import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, LostBedService, PremisesService } from '../../../services'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 import {
   cas3BedspaceFactory,
+  cas3PremisesFactory,
   lostBedCancellationFactory,
   lostBedFactory,
   newLostBedCancellationFactory,
   newLostBedFactory,
-  premisesFactory,
   referenceDataFactory,
   updateLostBedFactory,
 } from '../../../testutils/factories'
@@ -65,10 +65,10 @@ describe('LostBedsController', () => {
         bedspaceId,
       }
 
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
 
       const requestHandler = lostBedsController.new()
@@ -76,7 +76,7 @@ describe('LostBedsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/lost-beds/new', {
@@ -190,12 +190,12 @@ describe('LostBedsController', () => {
 
     describe('show', () => {
       it('renders the template for viewing a lost bed', async () => {
-        const premises = premisesFactory.build()
+        const premises = cas3PremisesFactory.build()
         const bedspace = cas3BedspaceFactory.build()
         const lostBed = lostBedFactory.build()
         const mockActions = [{ classes: 'mock', href: '', text: 'mock' }]
 
-        premisesService.getPremises.mockResolvedValue(premises)
+        premisesService.getSinglePremises.mockResolvedValue(premises)
         bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
         lostBedService.find.mockResolvedValue(lostBed)
         ;(lostBedActions as jest.MockedFn<typeof lostBedActions>).mockReturnValue(mockActions)
@@ -222,7 +222,7 @@ describe('LostBedsController', () => {
 
     describe('update', () => {
       it('updates a lostBed and redirects to the show lostBed page', async () => {
-        const premises = premisesFactory.build()
+        const premises = cas3PremisesFactory.build()
         const bedspace = cas3BedspaceFactory.build()
         const lostBed = lostBedFactory.build()
         const lostBedUpdate = updateLostBedFactory.build({ ...lostBed, reason: lostBed.reason.id })
@@ -330,13 +330,13 @@ describe('LostBedsController', () => {
 
   describe('edit', () => {
     it('renders the template for updating a lost bed', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const lostBed = lostBedFactory.build()
       const updateLostBed = updateLostBedFactory.build({ ...lostBed, reason: lostBed.reason.id })
       const lostBedReasons = referenceDataFactory.lostBedReasons().buildList(2)
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       lostBedService.getUpdateLostBed.mockResolvedValue(updateLostBed)
       lostBedService.getReferenceData.mockResolvedValue(lostBedReasons)
@@ -368,11 +368,11 @@ describe('LostBedsController', () => {
 
   describe('newCancellation', () => {
     it('renders the template for cancelling a lost bed', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const lostBed = lostBedFactory.active().build()
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       lostBedService.find.mockResolvedValue(lostBed)
 

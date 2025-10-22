@@ -4,15 +4,15 @@ import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, ExtensionService, PremisesService } from '../../../services'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 import {
   bookingFactory,
   cas3BedspaceFactory,
+  cas3PremisesFactory,
   departureFactory,
   extensionFactory,
   newDepartureFactory,
   newExtensionFactory,
-  premisesFactory,
 } from '../../../testutils/factories'
 import { generateConflictBespokeError, getLatestExtension } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -59,7 +59,7 @@ describe('ExtensionsController', () => {
 
   describe('new', () => {
     it('renders the form prepopulated with the current departure dates', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
@@ -69,7 +69,7 @@ describe('ExtensionsController', () => {
         bookingId: booking.id,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
@@ -91,7 +91,7 @@ describe('ExtensionsController', () => {
     })
 
     it('renders the form prepopulated with the current departure dates and latest extension notes', async () => {
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build({
         extensions: extensionFactory.buildList(2),
@@ -103,7 +103,7 @@ describe('ExtensionsController', () => {
         bookingId: booking.id,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
       ;(getLatestExtension as jest.MockedFunction<typeof getLatestExtension>).mockImplementation(
@@ -115,7 +115,7 @@ describe('ExtensionsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 

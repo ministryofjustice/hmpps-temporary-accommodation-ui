@@ -51,6 +51,6 @@ export default defineConfig({
     acting_user_probation_region_id: 'ca979718-b15d-4318-9944-69aaff281cad',
     acting_user_probation_region_name: 'East of England',
   },
-  numTestsKeptInMemory: 0,
-  retries: 1,
+  numTestsKeptInMemory: process.env.CI ? 0 : 20,
+  retries: process.env.CI ? 1 : 0,
 })

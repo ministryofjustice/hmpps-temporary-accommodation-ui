@@ -5,17 +5,17 @@ import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
-import BedspaceService from '../../../services/v2/bedspaceService'
+import BedspaceService from '../../../services/bedspaceService'
 import {
   applicationFactory,
   assessmentFactory,
   assessmentSummaryFactory,
   bookingFactory,
   cas3BedspaceFactory,
+  cas3PremisesFactory,
   newBookingFactory,
   personFactory,
   placeContextFactory,
-  premisesFactory,
 } from '../../../testutils/factories'
 import {
   assessmentRadioItems,
@@ -89,13 +89,13 @@ describe('BookingsController', () => {
         crn: 'some-crn',
       }
 
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({
         id: bedspaceId,
         endDate: DateFormats.dateObjToIsoDate(faker.date.future({ years: 1 })),
       })
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
 
       const requestHandler = bookingsController.new()
@@ -103,7 +103,7 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
 
@@ -139,7 +139,7 @@ describe('BookingsController', () => {
       }
       request.query = {}
 
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
       const placeContext = placeContextFactory.build({
         arrivalDate: '2024-02-01',
@@ -150,7 +150,7 @@ describe('BookingsController', () => {
         }),
       })
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
 
@@ -509,7 +509,7 @@ describe('BookingsController', () => {
   describe('confirm', () => {
     it('renders the confirmation page', async () => {
       const newBooking = newBookingFactory.build()
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
       const person = personFactory.build()
 
@@ -524,7 +524,7 @@ describe('BookingsController', () => {
         assessmentId,
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       personService.findByCrn.mockResolvedValue(person)
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
@@ -533,7 +533,7 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
       expect(appendQueryString).toHaveBeenCalledWith(
@@ -561,10 +561,10 @@ describe('BookingsController', () => {
 
       const requestHandler = bookingsController.confirm()
 
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
@@ -591,10 +591,10 @@ describe('BookingsController', () => {
 
       const requestHandler = bookingsController.confirm()
 
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
@@ -615,7 +615,7 @@ describe('BookingsController', () => {
 
     it('renders with an error if no assessment ID is provided', async () => {
       const newBooking = newBookingFactory.build()
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
       const person = personFactory.build()
 
@@ -629,7 +629,7 @@ describe('BookingsController', () => {
         ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       personService.findByCrn.mockResolvedValue(person)
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
@@ -653,7 +653,7 @@ describe('BookingsController', () => {
 
     it('clears any place context if the received assessment ID differs from that in the place context', async () => {
       const newBooking = newBookingFactory.build()
-      const premises = premisesFactory.build()
+      const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
       const person = personFactory.build()
       const placeContext = placeContextFactory.build({
@@ -673,7 +673,7 @@ describe('BookingsController', () => {
         assessmentId: 'some-other-id',
       }
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       personService.findByCrn.mockResolvedValue(person)
       ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
@@ -917,11 +917,11 @@ describe('BookingsController', () => {
 
   describe('show', () => {
     it('renders the template for viewing a booking', async () => {
-      const premises = premisesFactory.build({ id: premisesId })
+      const premises = cas3PremisesFactory.build({ id: premisesId })
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
       const booking = bookingFactory.build()
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
       ;(bookingActions as jest.MockedFunction<typeof bookingActions>).mockReturnValue([])
@@ -942,7 +942,7 @@ describe('BookingsController', () => {
         actions: [],
       })
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
@@ -951,11 +951,11 @@ describe('BookingsController', () => {
 
   describe('history', () => {
     it('renders the template for viewing booking history', async () => {
-      const premises = premisesFactory.build({ id: premisesId })
+      const premises = cas3PremisesFactory.build({ id: premisesId })
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
       const booking = bookingFactory.build()
 
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
       ;(deriveBookingHistory as jest.MockedFunction<typeof deriveBookingHistory>).mockReturnValue([
@@ -986,7 +986,7 @@ describe('BookingsController', () => {
         ],
       })
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
       expect(deriveBookingHistory).toHaveBeenCalledWith(booking)

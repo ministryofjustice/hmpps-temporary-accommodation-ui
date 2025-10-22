@@ -42,7 +42,7 @@ describeClient('BookingClient', provider => {
         uponReceiving: 'a request to create a booking',
         withRequest: {
           method: 'POST',
-          path: `/premises/${booking.id}/bookings`,
+          path: paths.premises.bookings.create({ premisesId: booking.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -70,7 +70,7 @@ describeClient('BookingClient', provider => {
         uponReceiving: 'a request for a booking',
         withRequest: {
           method: 'GET',
-          path: `/premises/${premisesId}/bookings/${booking.id}`,
+          path: paths.premises.bookings.show({ premisesId, bookingId: booking.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -97,7 +97,7 @@ describeClient('BookingClient', provider => {
         uponReceiving: 'a request for all bookings for a premises',
         withRequest: {
           method: 'GET',
-          path: `/premises/${premisesId}/bookings`,
+          path: paths.premises.bookings.index({ premisesId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -138,7 +138,7 @@ describeClient('BookingClient', provider => {
         uponReceiving: 'a request to extend a booking',
         withRequest: {
           method: 'POST',
-          path: `/premises/${premisesId}/bookings/${booking.id}/extensions`,
+          path: paths.premises.bookings.extensions({ premisesId, bookingId: booking.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -170,7 +170,7 @@ describeClient('BookingClient', provider => {
         uponReceiving: 'a request to confirm a booking',
         withRequest: {
           method: 'POST',
-          path: `/premises/${premisesId}/bookings/${booking.id}/confirmations`,
+          path: paths.premises.bookings.confirmations({ premisesId, bookingId: booking.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -204,7 +204,7 @@ describeClient('BookingClient', provider => {
         uponReceiving: 'a request to mark a booking as arrived',
         withRequest: {
           method: 'POST',
-          path: `/cas3/premises/${premisesId}/bookings/${booking.id}/arrivals`,
+          path: paths.cas3.premises.bookings.arrivals({ premisesId, bookingId: booking.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -239,7 +239,7 @@ describeClient('BookingClient', provider => {
         uponReceiving: 'a request to cancel a booking',
         withRequest: {
           method: 'POST',
-          path: `/premises/${premisesId}/bookings/${bookingId}/cancellations`,
+          path: paths.premises.bookings.cancellations.create({ premisesId, bookingId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -252,7 +252,7 @@ describeClient('BookingClient', provider => {
         },
       })
 
-      const result = await bookingClient.cancel(premisesId, bookingId, newCancellation)
+      const result = await bookingClient.cancel('premisesId', 'bookingId', newCancellation)
       expect(result).toEqual(cancellation)
     })
   })
@@ -270,7 +270,7 @@ describeClient('BookingClient', provider => {
         uponReceiving: 'a request to mark a booking as departed',
         withRequest: {
           method: 'POST',
-          path: `/cas3/premises/${premisesId}/bookings/${bookingId}/departures`,
+          path: paths.cas3.premises.bookings.departures({ premisesId, bookingId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -300,7 +300,7 @@ describeClient('BookingClient', provider => {
         uponReceiving: 'a request to create a turnaround',
         withRequest: {
           method: 'POST',
-          path: `/premises/${premisesId}/bookings/${bookingId}/turnarounds`,
+          path: paths.premises.bookings.turnarounds.create({ premisesId, bookingId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

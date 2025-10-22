@@ -127,26 +127,26 @@ describe('reportUtils', () => {
 
   describe('getApiReportPath', () => {
     it('returns booking path for booking report', () => {
-      expect(getApiReportPath('booking')).toEqual(paths.reports.bookings({}))
+      expect(getApiReportPath('booking')).toEqual(paths.cas3.reports.bookings({}))
     })
 
     it('returns referrals path for referrals report', () => {
-      expect(getApiReportPath('referral')).toEqual(paths.reports.referrals({}))
+      expect(getApiReportPath('referral')).toEqual(paths.cas3.reports.referrals({}))
     })
 
     it('returns bedspace usage path for bedspace usage report', () => {
-      expect(getApiReportPath('bedUsage')).toEqual(paths.reports.bedspaceUsage({}))
+      expect(getApiReportPath('bedUsage')).toEqual(paths.cas3.reports.bedspaceUsage({}))
     })
     it('returns future bookings path for future bookings report', () => {
-      expect(getApiReportPath('futureBookings')).toEqual(paths.reports.futureBookings({}))
+      expect(getApiReportPath('futureBookings')).toEqual(paths.cas3.reports.futureBookings({}))
     })
 
     it('returns future bookings csv path for future bookings csv report', () => {
-      expect(getApiReportPath('futureBookingsCsv')).toEqual(paths.reports.futureBookingsCsv({}))
+      expect(getApiReportPath('futureBookingsCsv')).toEqual(paths.cas3.reports.futureBookingsCsv({}))
     })
 
     it('returns booking Gap path for booking gap csv report', () => {
-      expect(getApiReportPath('bookingGap')).toEqual(paths.reports.bookingGap({}))
+      expect(getApiReportPath('bookingGap')).toEqual(paths.cas3.reports.bookingGap({}))
     })
   })
 })

@@ -14,7 +14,7 @@ export default class ReportClient {
 
   async bookings(response: Response, filename: string, month: string, year: string): Promise<void> {
     await this.restClient.pipe(response, {
-      path: paths.reports.bookings({}),
+      path: paths.cas3.reports.bookings({}),
       query: { year, month },
       filename,
     })

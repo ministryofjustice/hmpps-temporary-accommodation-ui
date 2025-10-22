@@ -41,7 +41,7 @@ describe('BedspaceClient', () => {
       const payload = bedspaceSearchApiParametersFactory.build()
 
       fakeApprovedPremisesApi
-        .post(paths.bedspaces.search({}))
+        .post(paths.cas3.bedspaces.search({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, results)
 

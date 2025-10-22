@@ -26,7 +26,7 @@ export default function populateCurrentUser(userService: UserService): RequestHa
     } catch (error) {
       if (error instanceof DeliusAccountMissingStaffDetailsError) {
         res.status(403)
-        return res.render('temporary-accommodation/static/userDetailsRequired')
+        return res.redirect('/not-authorised')
       }
       logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.username}`)
       return next(error)

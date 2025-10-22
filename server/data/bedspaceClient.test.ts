@@ -30,7 +30,7 @@ describeClient('BedspaceClient', provider => {
         uponReceiving: 'a request for bedspace search results',
         withRequest: {
           method: 'POST',
-          path: paths.bedspaces.search({}),
+          path: paths.cas3.bedspaces.search({}),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

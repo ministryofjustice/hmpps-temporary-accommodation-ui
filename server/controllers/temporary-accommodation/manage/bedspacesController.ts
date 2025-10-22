@@ -18,7 +18,7 @@ import {
   generateMergeParameters,
 } from '../../../utils/validation'
 import { bedspaceActions, setDefaultStartDate } from '../../../utils/bedspaceUtils'
-import { isPremiseScheduledToBeArchived } from '../../../utils/premisesUtils'
+import { formatAddress, isPremiseScheduledToBeArchived, shortSummaryList } from '../../../utils/premisesUtils'
 import { DateFormats, dateIsInFuture } from '../../../utils/dateUtils'
 import { BookingService } from '../../../services'
 
@@ -70,7 +70,7 @@ export default class BedspacesController {
       const { premisesId, bedspaceId } = req.params
 
       const [premises, bedspace, listingEntries, placeContext] = await Promise.all([
-        this.premisesService.getSinglePremisesDetails(callConfig, premisesId),
+        this.premisesService.getSinglePremises(callConfig, premisesId),
         this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
         this.bookingService.getListingEntries(callConfig, premisesId, bedspaceId),
         preservePlaceContext(req, res, this.assessmentService),
@@ -81,6 +81,7 @@ export default class BedspacesController {
 
       return res.render('temporary-accommodation/bedspaces/show', {
         premises,
+        fullAddress: formatAddress(premises),
         bedspace,
         summary,
         actions,
@@ -143,7 +144,7 @@ export default class BedspacesController {
         preservePlaceContext(req, res, this.assessmentService),
       ])
 
-      const summary = this.premisesService.shortSummaryList(premises)
+      const summary = shortSummaryList(premises)
 
       const { characteristics } = referenceData
 

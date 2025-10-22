@@ -28,6 +28,7 @@ import {
 import extractCallConfig from '../../../utils/restUtils'
 import PremisesService from '../../../services/premisesService'
 import { DateFormats } from '../../../utils/dateUtils'
+import * as premisesUtils from '../../../utils/premisesUtils'
 import { AssessmentsService, BookingService } from '../../../services'
 import { ListingEntry } from '../../../services/bookingService'
 import config from '../../../config'
@@ -233,10 +234,6 @@ describe('BedspacesController', () => {
       town: 'Wigan',
       postcode: 'WG7 7FU',
     })
-    const premisesWithFullAddress = {
-      ...premises,
-      fullAddress: '62 West Wallaby Street<br />Wigan<br />WG7 7FU',
-    }
 
     const onlineBedspace = cas3BedspaceFactory.build({
       id: bedspaceId,
@@ -384,7 +381,7 @@ describe('BedspacesController', () => {
       async (bedspace: Cas3Bedspace, summary: SummaryList, actions: [], bookingsAndLostBeds: Array<ListingEntry>) => {
         const params = { premisesId, bedspaceId }
 
-        premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
+        premisesService.getSinglePremises.mockResolvedValue(premises)
         bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
         bedspaceService.summaryList.mockReturnValue(summary)
         bookingService.getListingEntries.mockResolvedValue(bookingsAndLostBeds)
@@ -404,14 +401,15 @@ describe('BedspacesController', () => {
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/show', {
-          premises: premisesWithFullAddress,
+          premises,
+          fullAddress: '62 West Wallaby Street<br />Wigan<br />WG7 7FU',
           summary,
           bedspace,
           actions,
           listingEntries: bookingsAndLostBeds,
         })
 
-        expect(premisesService.getSinglePremisesDetails).toHaveBeenCalledWith(callConfig, premisesId)
+        expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premisesId)
         expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
         expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspace)
         expect(bookingService.getListingEntries).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
@@ -438,9 +436,12 @@ describe('BedspacesController', () => {
       ],
     }
 
+    beforeEach(() => {
+      jest.spyOn(premisesUtils, 'shortSummaryList').mockReturnValue(summaryList)
+    })
+
     it('should render the form', async () => {
       premisesService.getSinglePremises.mockResolvedValue(premises)
-      premisesService.shortSummaryList.mockReturnValue(summaryList)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bedspaceService.getReferenceData.mockResolvedValue(referenceData)
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
@@ -464,14 +465,13 @@ describe('BedspacesController', () => {
       })
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(premisesService.shortSummaryList).toHaveBeenCalledWith(premises)
+      expect(premisesUtils.shortSummaryList).toHaveBeenCalledWith(premises)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
     })
 
     it('should render the form with errors and user input when the backend returns an error', async () => {
       premisesService.getSinglePremises.mockResolvedValue(premises)
-      premisesService.shortSummaryList.mockReturnValue(summaryList)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bedspaceService.getReferenceData.mockResolvedValue(referenceData)
 
@@ -498,7 +498,7 @@ describe('BedspacesController', () => {
       })
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(premisesService.shortSummaryList).toHaveBeenCalledWith(premises)
+      expect(premisesUtils.shortSummaryList).toHaveBeenCalledWith(premises)
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
     })

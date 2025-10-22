@@ -8,7 +8,13 @@ import BedspaceService from '../../../services/bedspaceService'
 import AssessmentsService from '../../../services/assessmentsService'
 import extractCallConfig from '../../../utils/restUtils'
 import { createSubNavArr } from '../../../utils/premisesSearchUtils'
-import { premisesActions, showPropertySubNavArray } from '../../../utils/premisesUtils'
+import {
+  premisesActions,
+  shortSummaryList,
+  showPropertySubNavArray,
+  summaryList,
+  tableRows,
+} from '../../../utils/premisesUtils'
 import {
   InvalidParams,
   catchValidationErrorOrPropogate,
@@ -36,16 +42,11 @@ export default class PremisesController {
 
       const premisesSortBy = req.session.premisesSortBy || 'pdu'
       const placeContext = await preservePlaceContext(req, res, this.assessmentService)
-      const searchData = await this.premisesService.searchDataAndGenerateTableRows(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        status,
-        premisesSortBy,
-      )
+      const searchData = await this.premisesService.search(callConfig, params.postcodeOrAddress, status)
 
       return res.render('temporary-accommodation/premises/index', {
         ...searchData,
+        tableRows: tableRows(searchData, placeContext, status, premisesSortBy),
         params,
         status,
         subNavArr: createSubNavArr(status, placeContext, params.postcodeOrAddress),
@@ -63,7 +64,7 @@ export default class PremisesController {
         await this.premisesService.getSinglePremises(callConfig, premisesId),
         await preservePlaceContext(req, res, this.assessmentService),
       ])
-      const summary = this.premisesService.summaryList(premises)
+      const summary = summaryList(premises)
 
       const bodyData = {
         premises,
@@ -209,7 +210,7 @@ export default class PremisesController {
         ...errorsAndUserInput.userInput,
       }
 
-      const summary = this.premisesService.shortSummaryList(premises)
+      const summary = shortSummaryList(premises)
 
       return res.render('temporary-accommodation/premises/edit', {
         premisesId,

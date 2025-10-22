@@ -1,20 +1,29 @@
 import { path } from 'static-path'
+import config from '../config'
 
 // CAS3 namespaced
 const cas3Path = path('/cas3')
 const cas3PremisesPath = cas3Path.path('premises')
-const singlePremisesCas3Path = cas3PremisesPath.path(':premisesId')
-const singleBookingCas3Path = singlePremisesCas3Path.path('bookings/:bookingId')
+const cas3SinglePremisesPath = cas3PremisesPath.path(':premisesId')
+const cas3SingleBookingPath = cas3SinglePremisesPath.path('bookings/:bookingId')
 
-const bedspacesCas3Path = singlePremisesCas3Path.path('bedspaces')
-const singleBedspacePath = bedspacesCas3Path.path(':bedspaceId')
+const cas3BedspacesPath = cas3SinglePremisesPath.path('bedspaces')
+const cas3SingleBedspacePath = cas3BedspacesPath.path(':bedspaceId')
 
-const reportsCas3Path = cas3Path.path('reports')
+const cas3ReportsPath = cas3Path.path('reports')
 
-const timelineCas3Path = cas3Path.path('timeline').path(':assessmentId')
+const cas3TimelinePath = cas3Path.path('timeline').path(':assessmentId')
 
-const applicationsCas3Path = cas3Path.path('applications')
-const singleApplicationCas3Path = applicationsCas3Path.path(':id')
+const cas3ApplicationsPath = cas3Path.path('applications')
+const cas3SingleApplicationPath = cas3ApplicationsPath.path(':id')
+
+// CAS3v2 namespaced
+const cas3v2Path = config.flags.enableCas3v2Api ? path('/cas3/v2') : path('/cas3')
+const cas3v2PremisesPath = cas3v2Path.path('premises')
+const cas3v2SinglePremisesPath = cas3v2PremisesPath.path(':premisesId')
+
+const cas3v2BedspacesPath = cas3v2SinglePremisesPath.path('bedspaces')
+const cas3v2SingleBedspacePath = cas3v2BedspacesPath.path(':bedspaceId')
 
 // Non-namespaced
 const premisesPath = path('/premises')
@@ -39,42 +48,57 @@ const allocationPath = tasksPath.path('assessment/:id/allocations')
 const assessmentsPath = path('/assessments')
 const singleAssessmentPath = assessmentsPath.path(':id')
 
-const managePathsCas3 = {
+const cas3Api = {
   premises: {
-    search: cas3PremisesPath.path('search'),
-    show: singlePremisesCas3Path,
-    create: cas3PremisesPath,
-    update: singlePremisesCas3Path,
-    canArchive: singlePremisesCas3Path.path('can-archive'),
-    archive: singlePremisesCas3Path.path('archive'),
-    unarchive: singlePremisesCas3Path.path('unarchive'),
-    cancelArchive: singlePremisesCas3Path.path('cancel-archive'),
-    cancelUnarchive: singlePremisesCas3Path.path('cancel-unarchive'),
-    totals: singlePremisesCas3Path.path('bedspace-totals'),
+    search: cas3v2PremisesPath.path('search'), // y
+    show: cas3v2SinglePremisesPath, // y
+    create: cas3v2PremisesPath, // y
+    update: cas3v2SinglePremisesPath, // y
+    canArchive: cas3SinglePremisesPath.path('can-archive'), // N
+    archive: cas3v2SinglePremisesPath.path('archive'), // y
+    unarchive: cas3v2SinglePremisesPath.path('unarchive'), // y
+    cancelArchive: cas3v2SinglePremisesPath.path('cancel-archive'), // y
+    cancelUnarchive: cas3SinglePremisesPath.path('cancel-unarchive'), // N
+    totals: cas3v2SinglePremisesPath.path('bedspace-totals'), // y
     bedspaces: {
-      show: singleBedspacePath,
-      create: bedspacesCas3Path,
-      get: bedspacesCas3Path,
-      update: singleBedspacePath,
-      canArchive: singleBedspacePath.path('can-archive'),
-      archive: singleBedspacePath.path('archive'),
-      unarchive: singleBedspacePath.path('unarchive'),
-      cancelArchive: singleBedspacePath.path('cancel-archive'),
-      cancelUnarchive: singleBedspacePath.path('cancel-unarchive'),
+      show: cas3SingleBedspacePath, // N
+      create: cas3v2BedspacesPath, // y
+      get: cas3v2BedspacesPath, // y
+      update: cas3v2SingleBedspacePath, // y
+      canArchive: cas3SingleBedspacePath.path('can-archive'), // N
+      archive: cas3v2SingleBedspacePath.path('archive'), // y
+      unarchive: cas3v2SingleBedspacePath.path('unarchive'), // y
+      cancelArchive: cas3v2SingleBedspacePath.path('cancel-archive'), // y
+      cancelUnarchive: cas3v2SingleBedspacePath.path('cancel-unarchive'), // y
     },
     bookings: {
-      arrivals: singleBookingCas3Path.path('arrivals'),
-      departures: singleBookingCas3Path.path('departures'),
+      arrivals: cas3SingleBookingPath.path('arrivals'),
+      departures: cas3SingleBookingPath.path('departures'),
     },
   },
+  bedspaces: {
+    search: cas3Path.path('bedspaces/search'),
+  },
   applications: {
-    index: applicationsCas3Path,
-    show: singleApplicationCas3Path,
+    new: cas3ApplicationsPath,
+    show: cas3SingleApplicationPath,
+    index: cas3ApplicationsPath,
+    delete: cas3SingleApplicationPath,
+    submission: cas3SingleApplicationPath.path('submission'),
+  },
+  reports: {
+    bookings: cas3ReportsPath.path('booking'),
+    bedspaceUsage: cas3ReportsPath.path('bedUsage'),
+    bedspaceUtilisation: cas3ReportsPath.path('bedOccupancy'),
+    bookingGap: cas3ReportsPath.path('bookingGap'),
+    futureBookings: cas3ReportsPath.path('futureBookings'),
+    futureBookingsCsv: cas3ReportsPath.path('futureBookingsCsv'),
+    referrals: cas3ReportsPath.path('referral'),
   },
 }
 
 export default {
-  cas3: managePathsCas3,
+  cas3: cas3Api,
   premises: {
     lostBeds: {
       show: singleLostBedPath,
@@ -101,19 +125,11 @@ export default {
       },
     },
   },
-  bedspaces: {
-    search: cas3Path.path('bedspaces/search'),
-  },
   bookings: {
     search: path('/bookings/search'),
   },
   applications: {
-    show: singleApplicationCas3Path,
-    index: applicationsCas3Path,
     update: singleApplicationPath,
-    delete: singleApplicationCas3Path,
-    new: applicationsCas3Path,
-    submission: singleApplicationCas3Path.path('submission'),
     documents: singleApplicationPath.path('documents'),
   },
   assessments: {
@@ -125,7 +141,7 @@ export default {
     acceptance: singleAssessmentPath.path('acceptance'),
     closure: singleAssessmentPath.path('closure'),
     notes: singleAssessmentPath.path('referral-history-notes'),
-    timeline: timelineCas3Path,
+    timeline: cas3TimelinePath,
   },
   people: {
     risks: {
@@ -140,15 +156,6 @@ export default {
     oasys: {
       sections: oasysPath.path('sections'),
     },
-  },
-  reports: {
-    bookings: reportsCas3Path.path('booking'),
-    bedspaceUsage: reportsCas3Path.path('bedUsage'),
-    bedspaceUtilisation: reportsCas3Path.path('bedOccupancy'),
-    bookingGap: reportsCas3Path.path('bookingGap'),
-    futureBookings: reportsCas3Path.path('futureBookings'),
-    futureBookingsCsv: reportsCas3Path.path('futureBookingsCsv'),
-    referrals: reportsCas3Path.path('referral'),
   },
   users: {
     actingUser: {

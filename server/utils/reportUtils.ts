@@ -54,27 +54,27 @@ const filterFilename = (filename: string): string => {
 
 export const getApiReportPath = (reportType: Cas3ReportType): string => {
   if (reportType === 'booking') {
-    return paths.reports.bookings({})
+    return paths.cas3.reports.bookings({})
   }
   if (reportType === 'referral') {
-    return paths.reports.referrals({})
+    return paths.cas3.reports.referrals({})
   }
   if (reportType === 'bedUsage') {
-    return paths.reports.bedspaceUsage({})
+    return paths.cas3.reports.bedspaceUsage({})
   }
   if (reportType === 'futureBookings') {
-    return paths.reports.futureBookings({})
+    return paths.cas3.reports.futureBookings({})
   }
 
   if (reportType === 'futureBookingsCsv') {
-    return paths.reports.futureBookingsCsv({})
+    return paths.cas3.reports.futureBookingsCsv({})
   }
 
   if (reportType === 'bookingGap') {
-    return paths.reports.bookingGap({})
+    return paths.cas3.reports.bookingGap({})
   }
 
-  return paths.reports.bedspaceUtilisation({})
+  return paths.cas3.reports.bedspaceUtilisation({})
 }
 
 export const allReportProbationRegions = (regions: Array<ProbationRegion>): Array<ProbationRegion> => [

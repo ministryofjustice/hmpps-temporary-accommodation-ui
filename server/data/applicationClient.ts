@@ -19,7 +19,7 @@ export default class ApplicationClient {
 
   async find(applicationId: string) {
     return this.restClient.get<Application>({
-      path: paths.applications.show({ id: applicationId }),
+      path: paths.cas3.applications.show({ id: applicationId }),
     })
   }
 
@@ -27,14 +27,14 @@ export default class ApplicationClient {
     const { convictionId, deliusEventNumber, offenceId } = activeOffence
 
     return this.restClient.post<Application>({
-      path: `${paths.applications.new.pattern}?createWithRisks=${!config.flags.oasysDisabled}`,
+      path: `${paths.cas3.applications.new.pattern}?createWithRisks=${!config.flags.oasysDisabled}`,
       data: { crn: crn.trim(), convictionId, deliusEventNumber, offenceId },
     })
   }
 
   async delete(applicationId: string) {
     return this.restClient.delete<Application>({
-      path: paths.applications.delete({ id: applicationId }),
+      path: paths.cas3.applications.delete({ id: applicationId }),
     })
   }
 
@@ -46,12 +46,12 @@ export default class ApplicationClient {
   }
 
   async all() {
-    return this.restClient.get<Array<ApplicationSummary>>({ path: paths.applications.index.pattern })
+    return this.restClient.get<Array<ApplicationSummary>>({ path: paths.cas3.applications.index.pattern })
   }
 
   async submit(applicationId: string, submissionData: SubmitApplication) {
     return this.restClient.post<void>({
-      path: paths.applications.submission({ id: applicationId }),
+      path: paths.cas3.applications.submission({ id: applicationId }),
       data: submissionData,
     })
   }

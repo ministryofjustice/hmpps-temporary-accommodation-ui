@@ -40,7 +40,7 @@ describe('ApplicationClient', () => {
       const offence = activeOffenceFactory.build()
 
       fakeApprovedPremisesApi
-        .post(`${paths.applications.new.pattern}?createWithRisks=true`, {
+        .post(`${paths.cas3.applications.new.pattern}?createWithRisks=true`, {
           crn: application.person.crn,
           convictionId: offence.convictionId,
           deliusEventNumber: offence.deliusEventNumber,
@@ -65,7 +65,7 @@ describe('ApplicationClient', () => {
         const offence = activeOffenceFactory.build()
 
         fakeApprovedPremisesApi
-          .post(`${paths.applications.new.pattern}?createWithRisks=false`, {
+          .post(`${paths.cas3.applications.new.pattern}?createWithRisks=false`, {
             crn: application.person.crn,
             convictionId: offence.convictionId,
             deliusEventNumber: offence.deliusEventNumber,
@@ -87,7 +87,7 @@ describe('ApplicationClient', () => {
       const application = applicationFactory.build()
 
       fakeApprovedPremisesApi
-        .get(paths.applications.show({ id: application.id }))
+        .get(paths.cas3.applications.show({ id: application.id }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, application)
 
@@ -123,7 +123,7 @@ describe('ApplicationClient', () => {
       const previousApplications = applicationFactory.build()
 
       fakeApprovedPremisesApi
-        .get(paths.applications.index.pattern)
+        .get(paths.cas3.applications.index.pattern)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, previousApplications)
 
@@ -145,7 +145,7 @@ describe('ApplicationClient', () => {
       }
 
       fakeApprovedPremisesApi
-        .post(paths.applications.submission({ id: application.id }), JSON.stringify({ ...data }))
+        .post(paths.cas3.applications.submission({ id: application.id }), JSON.stringify({ ...data }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201)
 
@@ -177,7 +177,7 @@ describe('ApplicationClient', () => {
       const application = applicationFactory.build()
 
       fakeApprovedPremisesApi
-        .delete(paths.applications.delete({ id: application.id }))
+        .delete(paths.cas3.applications.delete({ id: application.id }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200)
 

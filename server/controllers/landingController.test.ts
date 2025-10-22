@@ -5,7 +5,6 @@ import paths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { userFactory } from '../testutils/factories'
-import { UnauthorizedError } from '../utils/errors'
 import { isApplyEnabledForUser } from '../utils/userUtils'
 import LandingController from './landingController'
 

@@ -2,7 +2,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
 import { ErrorsAndUserInput, PremisesShowTabs, SummaryList } from '@approved-premises/ui'
-import type { Cas3Premises, Cas3PremisesSearchResult } from '@approved-premises/api'
+import type { Cas3Premises } from '@approved-premises/api'
 import { CallConfig } from '../../../data/restClient'
 import PremisesService from '../../../services/premisesService'
 import {
@@ -12,6 +12,8 @@ import {
   cas3BedspacesReferenceFactory,
   cas3NewPremisesFactory,
   cas3PremisesFactory,
+  cas3PremisesSearchResultFactory,
+  cas3PremisesSearchResultsFactory,
   cas3UpdatePremisesFactory,
   placeContextFactory,
   probationRegionFactory,
@@ -29,8 +31,10 @@ import {
 } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
 import { DateFormats } from '../../../utils/dateUtils'
+import * as premisesUtils from '../../../utils/premisesUtils'
 import { AssessmentsService } from '../../../services'
 import cas3BedspaceReferenceFactory from '../../../testutils/factories/cas3BedspaceReference'
+import { tableRows } from '../../../utils/premisesUtils'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -67,6 +71,7 @@ describe('PremisesController', () => {
   const premisesController = new PremisesController(premisesService, bedspaceService, assessmentService)
 
   beforeEach(() => {
+    jest.clearAllMocks()
     request = createMock<Request>({
       session: {
         probationRegion: probationRegionFactory.build(),
@@ -75,42 +80,25 @@ describe('PremisesController', () => {
     })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
     assessmentService.findAssessment.mockResolvedValue(assessment)
+
+    jest.spyOn(premisesUtils, 'tableRows')
+    jest.spyOn(premisesUtils, 'summaryList')
   })
 
   describe('index', () => {
-    const premisesRow1 = [
-      { html: '32 Windsor Gardens<br />London<br />W9 3RQ' },
-      { html: 'No bedspaces' },
-      { text: 'Hammersmith, Fulham, Kensington, Chelsea and Westminster' },
-      { html: 'Manage' },
-    ]
-    const premisesRow2 = [
-      { html: '221c Baker Street<br />London<br />NW1 6XE' },
-      { html: '<a>Bedspace 1</a><br /><a>Bedspace 2</a>(Archived)' },
-      { text: 'Hammersmith, Fulham, Kensington, Chelsea and Westminster' },
-      { html: 'Manage' },
-    ]
-    const premisesRow3 = [
-      { html: '62 West Wallaby Street<br />Wigan<br />WG7 7FU' },
-      { html: '<a>Bedspace A</a><br /><a>Bedspace B</a>' },
-      { text: 'Wigan' },
-      { html: 'Manage' },
-    ]
-
     it('searches online premises data and returns as table rows when no status parameter is provided', async () => {
-      const postcodeOrAddress: string | undefined = undefined
+      const postcodeOrAddress: string = undefined
       const params = {
         postcodeOrAddress,
         placeContextAssessmentId: placeContext.assessment.id,
         placeContextArrivalDate: placeContext.arrivalDate,
       }
-      const searchData = {
-        results: [] as Array<Cas3PremisesSearchResult>,
+      const searchData = cas3PremisesSearchResultsFactory.build({
+        results: cas3PremisesSearchResultFactory.buildList(3),
         totalPremises: 3,
         totalOnlineBedspaces: 5,
         totalUpcomingBedspaces: 2,
-        tableRows: [premisesRow2, premisesRow1, premisesRow3],
-      }
+      })
 
       request = createMock<Request>({
         session: {
@@ -120,7 +108,7 @@ describe('PremisesController', () => {
         path: '/properties/online',
       })
 
-      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+      premisesService.search.mockResolvedValue(searchData)
 
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
@@ -142,15 +130,9 @@ describe('PremisesController', () => {
           },
         ],
         ...searchData,
+        tableRows: tableRows(searchData, placeContext, 'online', 'pdu'),
       })
-
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        'online',
-        'pdu',
-      )
+      expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'online')
     })
 
     it('searches online premises data and returns as table rows when status=online parameter is provided', async () => {
@@ -160,13 +142,12 @@ describe('PremisesController', () => {
         placeContextAssessmentId: placeContext.assessment.id,
         placeContextArrivalDate: placeContext.arrivalDate,
       }
-      const searchData = {
-        results: [] as Array<Cas3PremisesSearchResult>,
+      const searchData = cas3PremisesSearchResultsFactory.build({
+        results: cas3PremisesSearchResultFactory.buildList(3),
         totalPremises: 3,
         totalOnlineBedspaces: 5,
         totalUpcomingBedspaces: 2,
-        tableRows: [premisesRow2, premisesRow1, premisesRow3],
-      }
+      })
 
       request = createMock<Request>({
         session: {
@@ -176,7 +157,7 @@ describe('PremisesController', () => {
         path: '/properties/online',
       })
 
-      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+      premisesService.search.mockResolvedValue(searchData)
 
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
@@ -198,15 +179,10 @@ describe('PremisesController', () => {
           },
         ],
         ...searchData,
+        tableRows: tableRows(searchData, placeContext, 'online', 'pdu'),
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        'online',
-        'pdu',
-      )
+      expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'online')
     })
 
     it('searches online premises data by postcode or address and returns as table rows when searched for a postcode or address', async () => {
@@ -215,15 +191,14 @@ describe('PremisesController', () => {
         placeContextAssessmentId: placeContext.assessment.id,
         placeContextArrivalDate: placeContext.arrivalDate,
       }
-      const searchData = {
-        results: [] as Array<Cas3PremisesSearchResult>,
+      const searchData = cas3PremisesSearchResultsFactory.build({
+        results: cas3PremisesSearchResultFactory.buildList(3),
         totalPremises: 3,
         totalOnlineBedspaces: 5,
         totalUpcomingBedspaces: 2,
-        tableRows: [premisesRow2, premisesRow1, premisesRow3],
-      }
+      })
 
-      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+      premisesService.search.mockResolvedValue(searchData)
 
       request = createMock<Request>({
         session: {
@@ -253,15 +228,10 @@ describe('PremisesController', () => {
           },
         ],
         ...searchData,
+        tableRows: tableRows(searchData, placeContext, 'online', 'pdu'),
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        'online',
-        'pdu',
-      )
+      expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'online')
     })
 
     it('returns empty search data when there are no properties in the database', async () => {
@@ -271,13 +241,12 @@ describe('PremisesController', () => {
         placeContextAssessmentId: placeContext.assessment.id,
         placeContextArrivalDate: placeContext.arrivalDate,
       }
-      const searchData = {
-        results: [] as Array<Cas3PremisesSearchResult>,
+      const searchData = cas3PremisesSearchResultsFactory.build({
+        results: [],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
-        tableRows: [] as Array<never>,
-      }
+      })
 
       request = createMock<Request>({
         session: {
@@ -287,7 +256,7 @@ describe('PremisesController', () => {
         path: '/properties/online',
       })
 
-      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+      premisesService.search.mockResolvedValue(searchData)
 
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
@@ -309,15 +278,10 @@ describe('PremisesController', () => {
           },
         ],
         ...searchData,
+        tableRows: [],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        'online',
-        'pdu',
-      )
+      expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'online')
     })
 
     it('returns zero online properties data when no properties exist in database', async () => {
@@ -327,13 +291,12 @@ describe('PremisesController', () => {
         placeContextAssessmentId: placeContext.assessment.id,
         placeContextArrivalDate: placeContext.arrivalDate,
       }
-      const searchData = {
-        results: [] as Array<Cas3PremisesSearchResult>,
+      const searchData = cas3PremisesSearchResultsFactory.build({
+        results: [],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
-        tableRows: [] as Array<never>,
-      }
+      })
 
       request = createMock<Request>({
         session: {
@@ -343,7 +306,7 @@ describe('PremisesController', () => {
         path: '/properties/online',
       })
 
-      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+      premisesService.search.mockResolvedValue(searchData)
 
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
@@ -371,13 +334,7 @@ describe('PremisesController', () => {
         tableRows: [],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        'online',
-        'pdu',
-      )
+      expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'online')
     })
 
     it('returns online properties data with search term and bedspace counts when search has results', async () => {
@@ -386,13 +343,12 @@ describe('PremisesController', () => {
         placeContextAssessmentId: placeContext.assessment.id,
         placeContextArrivalDate: placeContext.arrivalDate,
       }
-      const searchData = {
-        results: [] as Array<Cas3PremisesSearchResult>,
+      const searchData = cas3PremisesSearchResultsFactory.build({
+        results: cas3PremisesSearchResultFactory.buildList(2),
         totalPremises: 2,
         totalOnlineBedspaces: 8,
         totalUpcomingBedspaces: 3,
-        tableRows: [premisesRow1, premisesRow2],
-      }
+      })
 
       request = createMock<Request>({
         session: {
@@ -402,7 +358,7 @@ describe('PremisesController', () => {
         path: '/properties/online',
       })
 
-      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+      premisesService.search.mockResolvedValue(searchData)
 
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
@@ -423,20 +379,11 @@ describe('PremisesController', () => {
             active: false,
           },
         ],
-        totalPremises: 2,
-        totalOnlineBedspaces: 8,
-        totalUpcomingBedspaces: 3,
-        results: [],
-        tableRows: [premisesRow1, premisesRow2],
+        ...searchData,
+        tableRows: tableRows(searchData, placeContext, 'online', 'pdu'),
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        'online',
-        'pdu',
-      )
+      expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'online')
     })
 
     it('returns zero online properties data with search term when search returns no results', async () => {
@@ -445,13 +392,12 @@ describe('PremisesController', () => {
         placeContextAssessmentId: placeContext.assessment.id,
         placeContextArrivalDate: placeContext.arrivalDate,
       }
-      const searchData = {
-        results: [] as Array<Cas3PremisesSearchResult>,
+      const searchData = cas3PremisesSearchResultsFactory.build({
+        results: [],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
-        tableRows: [] as Array<never>,
-      }
+      })
 
       request = createMock<Request>({
         session: {
@@ -461,7 +407,7 @@ describe('PremisesController', () => {
         path: '/properties/online',
       })
 
-      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+      premisesService.search.mockResolvedValue(searchData)
 
       const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
@@ -489,13 +435,7 @@ describe('PremisesController', () => {
         tableRows: [],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        'online',
-        'pdu',
-      )
+      expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'online')
     })
 
     it('returns zero archived properties data when no archived properties exist in database', async () => {
@@ -505,13 +445,12 @@ describe('PremisesController', () => {
         placeContextAssessmentId: placeContext.assessment.id,
         placeContextArrivalDate: placeContext.arrivalDate,
       }
-      const searchData = {
-        results: [] as Array<Cas3PremisesSearchResult>,
+      const searchData = cas3PremisesSearchResultsFactory.build({
+        results: [],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
-        tableRows: [] as Array<never>,
-      }
+      })
 
       request = createMock<Request>({
         session: {
@@ -521,7 +460,7 @@ describe('PremisesController', () => {
         path: '/properties/archived',
       })
 
-      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+      premisesService.search.mockResolvedValue(searchData)
 
       const requestHandler = premisesController.index('archived')
       await requestHandler(request, response, next)
@@ -549,13 +488,7 @@ describe('PremisesController', () => {
         tableRows: [],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        'archived',
-        'pdu',
-      )
+      expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'archived')
     })
 
     it('returns archived properties data with search term when search has results', async () => {
@@ -564,13 +497,12 @@ describe('PremisesController', () => {
         placeContextAssessmentId: placeContext.assessment.id,
         placeContextArrivalDate: placeContext.arrivalDate,
       }
-      const searchData = {
-        results: [] as Array<Cas3PremisesSearchResult>,
+      const searchData = cas3PremisesSearchResultsFactory.build({
+        results: cas3PremisesSearchResultFactory.buildList(3),
         totalPremises: 3,
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
-        tableRows: [premisesRow1, premisesRow2, premisesRow3],
-      }
+      })
 
       request = createMock<Request>({
         session: {
@@ -580,7 +512,7 @@ describe('PremisesController', () => {
         path: '/properties/archived',
       })
 
-      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+      premisesService.search.mockResolvedValue(searchData)
 
       const requestHandler = premisesController.index('archived')
       await requestHandler(request, response, next)
@@ -601,20 +533,11 @@ describe('PremisesController', () => {
             active: true,
           },
         ],
-        totalPremises: 3,
-        totalOnlineBedspaces: 0,
-        totalUpcomingBedspaces: 0,
-        results: [],
-        tableRows: [premisesRow1, premisesRow2, premisesRow3],
+        ...searchData,
+        tableRows: tableRows(searchData, placeContext, 'archived', 'pdu'),
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        'archived',
-        'pdu',
-      )
+      expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'archived')
     })
 
     it('returns zero archived properties data with search term when search returns no results', async () => {
@@ -623,13 +546,12 @@ describe('PremisesController', () => {
         placeContextAssessmentId: placeContext.assessment.id,
         placeContextArrivalDate: placeContext.arrivalDate,
       }
-      const searchData = {
-        results: [] as Array<Cas3PremisesSearchResult>,
+      const searchData = cas3PremisesSearchResultsFactory.build({
+        results: [],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
-        tableRows: [] as Array<never>,
-      }
+      })
 
       request = createMock<Request>({
         session: {
@@ -639,7 +561,7 @@ describe('PremisesController', () => {
         path: '/properties/archived',
       })
 
-      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+      premisesService.search.mockResolvedValue(searchData)
 
       const requestHandler = premisesController.index('archived')
       await requestHandler(request, response, next)
@@ -667,13 +589,7 @@ describe('PremisesController', () => {
         tableRows: [],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        'archived',
-        'pdu',
-      )
+      expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'archived')
     })
   })
 
@@ -684,13 +600,12 @@ describe('PremisesController', () => {
       placeContextAssessmentId: placeContext.assessment.id,
       placeContextArrivalDate: placeContext.arrivalDate,
     }
-    const searchData = {
-      results: [] as Array<Cas3PremisesSearchResult>,
+    const searchData = cas3PremisesSearchResultsFactory.build({
+      results: cas3PremisesSearchResultFactory.buildList(1),
       totalPremises: 1,
       totalOnlineBedspaces: 2,
       totalUpcomingBedspaces: 0,
-      tableRows: [] as Array<never>,
-    }
+    })
 
     request = createMock<Request>({
       session: {
@@ -701,7 +616,7 @@ describe('PremisesController', () => {
       path: '/properties/online',
     })
 
-    premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+    premisesService.search.mockResolvedValue(searchData)
 
     const requestHandler = premisesController.index('online')
     await requestHandler(request, response, next)
@@ -723,15 +638,10 @@ describe('PremisesController', () => {
         },
       ],
       ...searchData,
+      tableRows: tableRows(searchData, placeContext, 'online', 'la'),
     })
 
-    expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
-      callConfig,
-      params.postcodeOrAddress,
-      placeContext,
-      'online',
-      'la',
-    )
+    expect(premisesService.search).toHaveBeenCalledWith(callConfig, params.postcodeOrAddress, 'online')
   })
 
   describe('toggleSort', () => {
@@ -848,7 +758,7 @@ describe('PremisesController', () => {
         },
         {
           key: { text: 'Additional property details' },
-          value: { text: property.notes },
+          value: { html: property.notes },
         },
       ],
     }
@@ -910,7 +820,6 @@ describe('PremisesController', () => {
       })
 
       premisesService.getSinglePremises.mockResolvedValue(property)
-      premisesService.summaryList.mockReturnValue(summaryList)
       assessmentService.findAssessment.mockResolvedValue(assessment)
 
       const requestHandler = premisesController.showPremisesTab()
@@ -942,7 +851,7 @@ describe('PremisesController', () => {
       })
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, property.id)
-      expect(premisesService.summaryList).toHaveBeenCalledWith(property)
+      expect(premisesUtils.summaryList).toHaveBeenCalledWith(property)
     })
 
     it('shows the bedspace summary tab for an online premises', async () => {
@@ -1109,14 +1018,17 @@ describe('PremisesController', () => {
       ],
     }
 
-    it('should render the form', async () => {
-      premisesService.getSinglePremises.mockResolvedValue(premises)
-      premisesService.shortSummaryList.mockReturnValue(summaryList)
+    beforeEach(() => {
+      jest.spyOn(premisesUtils, 'shortSummaryList').mockReturnValue(summaryList)
       premisesService.getReferenceData.mockResolvedValue(referenceData)
       ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+    })
+
+    it('should render the form', async () => {
+      premisesService.getSinglePremises.mockResolvedValue(premises)
 
       const requestHandler = premisesController.edit()
-      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       request.params.premisesId = premises.id
 
@@ -1153,12 +1065,8 @@ describe('PremisesController', () => {
         characteristics: undefined,
       }
       premisesService.getSinglePremises.mockResolvedValue(premisesWithMissingOptionalFields)
-      premisesService.shortSummaryList.mockReturnValue(summaryList)
-      premisesService.getReferenceData.mockResolvedValue(referenceData)
-      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
 
       const requestHandler = premisesController.edit()
-      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       request.params.premisesId = premises.id
 
@@ -1190,10 +1098,6 @@ describe('PremisesController', () => {
 
     it('should render the form with errors and user input when the backend returns an error', async () => {
       premisesService.getSinglePremises.mockResolvedValue(premises)
-      premisesService.shortSummaryList.mockReturnValue(summaryList)
-
-      premisesService.getReferenceData.mockResolvedValue(referenceData)
-      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
 
       const requestHandler = premisesController.edit()
       const errorsAndUserInput = createMock<ErrorsAndUserInput>()

@@ -15,6 +15,7 @@ import {
   summaryList,
   tableRows,
 } from '../../../utils/premisesUtils'
+import { summaryList as bedspaceSummaryList } from '../../../utils/bedspaceUtils'
 import {
   InvalidParams,
   catchValidationErrorOrPropogate,
@@ -89,7 +90,7 @@ export default class PremisesController {
         await preservePlaceContext(req, res, this.assessmentService),
       ])
       const bedspaceSummaries = bedspaces.bedspaces.map(bedspace => {
-        const bedspaceSummary = this.bedspaceService.summaryList(bedspace)
+        const bedspaceSummary = bedspaceSummaryList(bedspace)
         return {
           id: bedspace.id,
           reference: bedspace.reference,

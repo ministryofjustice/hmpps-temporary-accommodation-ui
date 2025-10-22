@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import { NextFunction, Request, Response } from 'express'
 import { Cas3Bedspace, Cas3PremisesBedspaceTotals } from '@approved-premises/api'
-import { ErrorsAndUserInput, SummaryList } from '@approved-premises/ui'
+import { ErrorsAndUserInput } from '@approved-premises/ui'
 import { CallConfig } from '../../../data/restClient'
 import BedspaceService from '../../../services/bedspaceService'
 import BedspacesController from './bedspacesController'
@@ -29,6 +29,7 @@ import extractCallConfig from '../../../utils/restUtils'
 import PremisesService from '../../../services/premisesService'
 import { DateFormats } from '../../../utils/dateUtils'
 import * as premisesUtils from '../../../utils/premisesUtils'
+import * as bedspaceUtils from '../../../utils/bedspaceUtils'
 import { AssessmentsService, BookingService } from '../../../services'
 import { ListingEntry } from '../../../services/bookingService'
 import config from '../../../config'
@@ -241,28 +242,6 @@ describe('BedspacesController', () => {
       startDate: '2024-11-23',
       characteristics: [characteristic1, characteristic2],
     })
-    const onlineBedspaceSummary: SummaryList = {
-      rows: [
-        {
-          key: { text: 'Bedspace status' },
-          value: { html: `<strong class="govuk-tag govuk-tag--green">Online</strong>` },
-        },
-        {
-          key: { text: 'Start date' },
-          value: { text: '23 November 2024' },
-        },
-        {
-          key: { text: 'Bedspace details' },
-          value: {
-            html: `<span class="hmpps-tag-filters">Characteristic 1</span> <span class="hmpps-tag-filters">Characteristic 2</span>`,
-          },
-        },
-        {
-          key: { text: 'Additional bedspace details' },
-          value: { text: onlineBedspace.notes },
-        },
-      ],
-    }
     const onlineBedspaceActions = [
       {
         text: 'Book bedspace',
@@ -291,26 +270,6 @@ describe('BedspacesController', () => {
       startDate: '2023-10-22',
       characteristics: [characteristic1],
     })
-    const archivedBedspaceSummary: SummaryList = {
-      rows: [
-        {
-          key: { text: 'Bedspace status' },
-          value: { html: `<strong class="govuk-tag govuk-tag--grey">Archived</strong>` },
-        },
-        {
-          key: { text: 'Start date' },
-          value: { text: '22 October 2023' },
-        },
-        {
-          key: { text: 'Bedspace details' },
-          value: { html: `<span class="hmpps-tag-filters">Characteristic 1</span>` },
-        },
-        {
-          key: { text: 'Additional bedspace details' },
-          value: { text: archivedBedspace.notes },
-        },
-      ],
-    }
     const archivedBedspaceActions = [
       {
         text: 'Make bedspace online',
@@ -330,26 +289,6 @@ describe('BedspacesController', () => {
       archiveHistory: [{ status: 'archived', date: '2024-01-01' }],
       characteristics: [characteristic2],
     })
-    const upcomingBedspaceSummary: SummaryList = {
-      rows: [
-        {
-          key: { text: 'Bedspace status' },
-          value: { html: `<strong class="govuk-tag govuk-tag--blue">Upcoming</strong>` },
-        },
-        {
-          key: { text: 'Start date' },
-          value: { text: '21 September 2025' },
-        },
-        {
-          key: { text: 'Bedspace details' },
-          value: { html: `<span class="hmpps-tag-filters">Characteristic 2</span>` },
-        },
-        {
-          key: { text: 'Additional bedspace details' },
-          value: { text: upcomingBedspace.notes },
-        },
-      ],
-    }
     const upcomingBedspaceActions = [
       {
         text: 'Cancel scheduled bedspace online date',
@@ -372,18 +311,22 @@ describe('BedspacesController', () => {
       type: 'lost-bed',
       path: `/properties/${premisesId}/bedspaces/${bedspaceId}/void/${lostBedId}`,
     }
+
+    beforeEach(() => {
+      jest.spyOn(bedspaceUtils, 'summaryList')
+    })
+
     it.each([
-      [onlineBedspace, onlineBedspaceSummary, onlineBedspaceActions, [bookingEntry, lostBedEntry]],
-      [archivedBedspace, archivedBedspaceSummary, archivedBedspaceActions, []],
-      [upcomingBedspace, upcomingBedspaceSummary, upcomingBedspaceActions, []],
+      [onlineBedspace, onlineBedspaceActions, [bookingEntry, lostBedEntry]],
+      [archivedBedspace, archivedBedspaceActions, []],
+      [upcomingBedspace, upcomingBedspaceActions, []],
     ])(
       'should return a bedspace',
-      async (bedspace: Cas3Bedspace, summary: SummaryList, actions: [], bookingsAndLostBeds: Array<ListingEntry>) => {
+      async (bedspace: Cas3Bedspace, actions: [], bookingsAndLostBeds: Array<ListingEntry>) => {
         const params = { premisesId, bedspaceId }
 
         premisesService.getSinglePremises.mockResolvedValue(premises)
         bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
-        bedspaceService.summaryList.mockReturnValue(summary)
         bookingService.getListingEntries.mockResolvedValue(bookingsAndLostBeds)
 
         request = createMock<Request>({
@@ -403,7 +346,7 @@ describe('BedspacesController', () => {
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/show', {
           premises,
           fullAddress: '62 West Wallaby Street<br />Wigan<br />WG7 7FU',
-          summary,
+          summary: bedspaceUtils.summaryList(bedspace),
           bedspace,
           actions,
           listingEntries: bookingsAndLostBeds,
@@ -411,7 +354,7 @@ describe('BedspacesController', () => {
 
         expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premisesId)
         expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
-        expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspace)
+        expect(bedspaceUtils.summaryList).toHaveBeenCalledWith(bedspace)
         expect(bookingService.getListingEntries).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       },
     )
@@ -421,23 +364,8 @@ describe('BedspacesController', () => {
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online' })
 
-    const summaryList: SummaryList = {
-      rows: [
-        {
-          key: { text: 'Status' },
-          value: { html: `<strong class="govuk-tag govuk-tag--green">Online</strong>` },
-        },
-        {
-          key: { text: 'Address' },
-          value: {
-            html: `${premises.addressLine1}<br />${premises.addressLine2}<br />${premises.town}<br />${premises.postcode}`,
-          },
-        },
-      ],
-    }
-
     beforeEach(() => {
-      jest.spyOn(premisesUtils, 'shortSummaryList').mockReturnValue(summaryList)
+      jest.spyOn(premisesUtils, 'shortSummaryList')
     })
 
     it('should render the form', async () => {
@@ -455,7 +383,7 @@ describe('BedspacesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
         premisesId: premises.id,
         bedspaceId: bedspace.id,
-        summary: summaryList,
+        summary: premisesUtils.shortSummaryList(premises),
         errors: {},
         errorSummary: [],
         characteristics: referenceData.characteristics.filter(ch => ch.propertyName !== 'other'),
@@ -487,7 +415,7 @@ describe('BedspacesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
         premisesId: premises.id,
         bedspaceId: bedspace.id,
-        summary: summaryList,
+        summary: premisesUtils.shortSummaryList(premises),
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         characteristics: referenceData.characteristics.filter(ch => ch.propertyName !== 'other'),

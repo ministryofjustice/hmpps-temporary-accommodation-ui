@@ -24,6 +24,7 @@ import {
   insertBespokeError,
   insertGenericError,
 } from '../../../utils/validation'
+import { summaryListForBedspaceStatus } from '../../../utils/bedspaceUtils'
 
 export default class BookingsController {
   constructor(
@@ -49,7 +50,7 @@ export default class BookingsController {
 
       const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
-      const bedspaceStatus = this.bedspacesService.summaryListForBedspaceStatus(bedspace)
+      const bedspaceStatus = summaryListForBedspaceStatus(bedspace)
 
       return res.render('temporary-accommodation/bookings/new', {
         premises,

@@ -32,6 +32,7 @@ import {
 import BedspaceService from '../../../services/bedspaceService'
 import { DateFormats } from '../../../utils/dateUtils'
 import * as premisesUtils from '../../../utils/premisesUtils'
+import * as bedspaceUtils from '../../../utils/bedspaceUtils'
 import { AssessmentsService } from '../../../services'
 import cas3BedspaceReferenceFactory from '../../../testutils/factories/cas3BedspaceReference'
 import { tableRows } from '../../../utils/premisesUtils'
@@ -718,80 +719,6 @@ describe('PremisesController', () => {
       totalUpcomingBedspaces: 0,
       totalArchivedBedspaces: 0,
     })
-    const summaryList: SummaryList = {
-      rows: [
-        {
-          key: { text: 'Property status' },
-          value: { html: `<strong class="govuk-tag govuk-tag--green">Online</strong>` },
-        },
-        {
-          key: { text: 'Start date' },
-          value: { text: '1 February 2025' },
-        },
-        {
-          key: { text: 'Address' },
-          value: {
-            html: `${property.addressLine1}<br />${property.addressLine2}<br />${property.town}<br />${property.postcode}`,
-          },
-        },
-        {
-          key: { text: 'Local authority' },
-          value: { text: property.localAuthorityArea.name },
-        },
-        {
-          key: { text: 'Probation region' },
-          value: { text: property.probationRegion.name },
-        },
-        {
-          key: { text: 'Probation delivery unit' },
-          value: { text: property.probationDeliveryUnit.name },
-        },
-        {
-          key: { text: 'Expected turn around time' },
-          value: { text: `${property.turnaroundWorkingDays} working days` },
-        },
-        {
-          key: { text: 'Property details' },
-          value: {
-            html: property.characteristics.map(char => `<span class="hmpps-tag-filters">${char.name}</span>`).join(' '),
-          },
-        },
-        {
-          key: { text: 'Additional property details' },
-          value: { html: property.notes },
-        },
-      ],
-    }
-
-    const bedspaceSummaryLists: Array<{ id: string; reference: string; summary: SummaryList }> =
-      bedspaces.bedspaces.map(bedspace => ({
-        id: bedspace.id,
-        reference: bedspace.reference,
-        summary: {
-          rows: [
-            {
-              key: { text: 'Bedspace status' },
-              value: { html: '<strong class="govuk-tag govuk-tag--green">Online</strong>' },
-            },
-            {
-              key: { text: 'Start date' },
-              value: { text: '1 February 2025' },
-            },
-            {
-              key: { text: 'Bedspace details' },
-              value: {
-                html: bedspace.characteristics
-                  .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
-                  .join(' '),
-              },
-            },
-            {
-              key: { text: 'Additional bedspace details' },
-              value: { text: bedspace.notes },
-            },
-          ],
-        },
-      }))
 
     const navArr = (activeTab: PremisesShowTabs) => [
       {
@@ -828,7 +755,7 @@ describe('PremisesController', () => {
       const subNavArr = navArr('premises')
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/show', {
         premises: property,
-        summary: summaryList,
+        summary: premisesUtils.summaryList(property),
         actions: [
           {
             text: 'Add a bedspace',
@@ -867,16 +794,17 @@ describe('PremisesController', () => {
 
       premisesService.getSinglePremises.mockResolvedValue(property)
       bedspaceService.getBedspacesForPremises.mockResolvedValue(bedspaces)
-      bedspaceService.summaryList.mockReturnValueOnce(bedspaceSummaryLists[0].summary)
-      bedspaceService.summaryList.mockReturnValueOnce(bedspaceSummaryLists[1].summary)
-      bedspaceService.summaryList.mockReturnValueOnce(bedspaceSummaryLists[2].summary)
 
       const requestHandler = premisesController.showBedspacesTab()
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/show', {
         premises: property,
-        bedspaceSummaries: bedspaceSummaryLists,
+        bedspaceSummaries: bedspaces.bedspaces.map(bedspace => ({
+          id: bedspace.id,
+          reference: bedspace.reference,
+          summary: bedspaceUtils.summaryList(bedspace),
+        })),
         actions: [
           {
             text: 'Add a bedspace',
@@ -899,10 +827,6 @@ describe('PremisesController', () => {
       })
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, property.id)
-      expect(bedspaceService.summaryList).toHaveBeenCalledTimes(3)
-      expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspaces.bedspaces[0])
-      expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspaces.bedspaces[1])
-      expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspaces.bedspaces[2])
     })
   })
 

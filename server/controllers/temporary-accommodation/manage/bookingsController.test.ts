@@ -36,6 +36,7 @@ import {
   insertGenericError,
 } from '../../../utils/validation'
 import BookingsController from './bookingsController'
+import { summaryListForBedspaceStatus } from '../../../utils/bedspaceUtils'
 
 jest.mock('../../../utils/bookingUtils')
 jest.mock('../../../utils/restUtils')
@@ -110,22 +111,7 @@ describe('BookingsController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/new', {
         premises,
         bedspace,
-        bedspaceStatus: {
-          rows: [
-            {
-              key: 'Bedspace status',
-              value: {
-                html: '<span class="govuk-tag govuk-tag--green">Online</span>',
-              },
-            },
-            {
-              key: 'Bedspace end date',
-              value: {
-                text: DateFormats.isoDateToUIDate(bedspace.endDate),
-              },
-            },
-          ],
-        },
+        bedspaceStatus: summaryListForBedspaceStatus(bedspace),
         errors: {},
         errorSummary: [],
         crn: 'some-crn',

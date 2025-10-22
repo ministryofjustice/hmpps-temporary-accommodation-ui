@@ -21,7 +21,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: `/applications?createWithRisks=true`,
+        url: `/cas3/applications?createWithRisks=true`,
       },
       response: {
         status: 201,
@@ -108,7 +108,7 @@ export default {
     (
       await getMatchingRequests({
         method: 'POST',
-        url: `/applications?createWithRisks=true`,
+        url: `/cas3/applications?createWithRisks=true`,
       })
     ).body.requests,
   verifyApplicationUpdate: async (applicationId: string) =>

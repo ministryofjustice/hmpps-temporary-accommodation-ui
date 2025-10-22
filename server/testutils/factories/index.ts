@@ -65,6 +65,7 @@ import cas3UpdateBedspaceFactory from './cas3UpdateBedspace'
 import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
 import cas3BedspaceReferenceFactory from './cas3BedspaceReference'
 import cas3BedspacesReferenceFactory from './cas3BedspacesReference'
+import cas3ApplicationFactory from './cas3Application'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
@@ -148,6 +149,7 @@ export {
   cas3BedspaceReferenceFactory,
   cas3BedspacesReferenceFactory,
   prisonCaseNotesFactory,
+  cas3ApplicationFactory,
   probationRegionFactory,
   referenceDataFactory,
   referralHistoryDomainEventNoteFactory,

@@ -167,7 +167,7 @@ export default {
     index: applicationsCas3Path,
     update: applyPaths.applications.update,
     delete: deleteApplicationCas3Path,
-    new: applyPaths.applications.create,
+    new: applicationsCas3Path,
     submission: applyPaths.applications.submission,
     documents: applyPaths.applications.show.path('documents'),
   },

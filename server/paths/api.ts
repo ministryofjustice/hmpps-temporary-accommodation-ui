@@ -22,6 +22,9 @@ const assessmentsCas3Path = cas3Path.path('assessments')
 const premisesPath = path('/premises')
 const singlePremisesPath = premisesPath.path(':premisesId')
 
+const bookingsPath = singlePremisesPath.path('bookings')
+const singleBookingPath = bookingsPath.path(':bookingId')
+
 const lostBedsPath = singlePremisesPath.path('lost-beds')
 const singleLostBedPath = lostBedsPath.path(':lostBedId')
 
@@ -62,8 +65,8 @@ const managePathsCas3 = {
       cancelUnarchive: singleBedspacePath.path('cancel-unarchive'),
     },
     bookings: {
-      arrival: singleBookingCas3Path.path('arrivals'),
-      departure: singleBookingCas3Path.path('departures'),
+      arrivals: singleBookingCas3Path.path('arrivals'),
+      departures: singleBookingCas3Path.path('departures'),
     },
   },
   applications: {
@@ -84,6 +87,23 @@ export default {
       index: lostBedsPath,
       cancel: singleLostBedPath.path('cancellations'),
       update: singleLostBedPath,
+    },
+    bookings: {
+      index: bookingsPath,
+      create: bookingsPath,
+      show: singleBookingPath,
+      extensions: singleBookingPath.path('extensions'),
+      confirmations: singleBookingPath.path('confirmations'),
+      cancellations: {
+        create: singleBookingPath.path('cancellations'),
+        show: singleBookingPath.path('cancellations/:cancellationId'),
+      },
+      departures: {
+        show: singleBookingPath.path('departures/:departureId'),
+      },
+      turnarounds: {
+        create: singleBookingPath.path('turnarounds'),
+      },
     },
   },
   bedspaces: {

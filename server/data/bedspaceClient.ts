@@ -19,7 +19,7 @@ export default class BedspaceClient {
 
   async search(searchParameters: Cas3BedspaceSearchParameters) {
     return this.restClient.post<Cas3BedspaceSearchResults>({
-      path: paths.bedspaces.search({}),
+      path: paths.cas3.bedspaces.search({}),
       data: searchParameters,
     })
   }

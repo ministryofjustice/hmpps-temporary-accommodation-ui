@@ -28,7 +28,7 @@ describeClient('ReportClient', provider => {
         uponReceiving: 'a request for bedspace utilisation report',
         withRequest: {
           method: 'GET',
-          path: paths.reports.bedspaceUtilisation({}),
+          path: paths.cas3.reports.bedspaceUtilisation({}),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

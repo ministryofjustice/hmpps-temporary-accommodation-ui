@@ -52,6 +52,7 @@ export default {
     domainEventsEmit: get('DOMAIN_EVENTS_EMIT_ENABLED', ''),
     cancelScheduledArchiveEnabled: get('CANCEL_SCHEDULED_ARCHIVE_ENABLED', 'false') === 'true',
     showGapReportButton: get('SHOW_GAP_REPORT_BUTTON', 'false') === 'true',
+    enableCas3v2Api: get('ENABLE_CAS3V2_API', 'false') === 'true',
   },
   environment,
   sentry: {

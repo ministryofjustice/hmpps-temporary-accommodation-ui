@@ -31,7 +31,8 @@ export default class LandingController {
         return res.redirect(managePaths.reports.index({}))
       }
 
-      throw new UnauthorizedError()
+      res.status(403)
+      return res.render('temporary-accommodation/static/userDetailsRequired')
     }
   }
 }

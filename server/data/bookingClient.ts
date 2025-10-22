@@ -36,57 +36,57 @@ export default class BookingClient {
 
   async create(premisesId: string, data: NewBooking) {
     return this.restClient.post<Booking>({
-      path: this.bookingsPath(premisesId),
+      path: paths.premises.bookings.create({ premisesId }),
       data: { crn: data.crn.trim(), ...data },
     })
   }
 
   async find(premisesId: string, bookingId: string) {
-    return this.restClient.get<Booking>({ path: this.bookingPath(premisesId, bookingId) })
+    return this.restClient.get<Booking>({ path: paths.premises.bookings.show({ premisesId, bookingId }) })
   }
 
   async allBookingsForPremisesId(premisesId: string) {
-    return this.restClient.get<Array<Booking>>({ path: this.bookingsPath(premisesId) })
+    return this.restClient.get<Array<Booking>>({ path: paths.premises.bookings.index({ premisesId }) })
   }
 
   async extendBooking(premisesId: string, bookingId: string, bookingExtension: NewExtension) {
     return this.restClient.post<Extension>({
-      path: `/premises/${premisesId}/bookings/${bookingId}/extensions`,
+      path: paths.premises.bookings.extensions({ premisesId, bookingId }),
       data: bookingExtension,
     })
   }
 
   async markAsConfirmed(premisesId: string, bookingId: string, confirmation: NewConfirmation) {
     return this.restClient.post<Confirmation>({
-      path: `${this.bookingPath(premisesId, bookingId)}/confirmations`,
+      path: paths.premises.bookings.confirmations({ premisesId, bookingId }),
       data: confirmation,
     })
   }
 
   async markAsArrived(premisesId: string, bookingId: string, arrival: NewArrival) {
     return this.restClient.post<Arrival>({
-      path: paths.cas3.premises.bookings.arrival({ premisesId, bookingId }),
+      path: paths.cas3.premises.bookings.arrivals({ premisesId, bookingId }),
       data: arrival,
     })
   }
 
   async cancel(premisesId: string, bookingId: string, cancellation: NewCancellation) {
     return this.restClient.post<Cancellation>({
-      path: `${this.bookingPath(premisesId, bookingId)}/cancellations`,
+      path: paths.premises.bookings.cancellations.create({ premisesId, bookingId }),
       data: cancellation,
     })
   }
 
   async markDeparture(premisesId: string, bookingId: string, departure: Cas3NewDeparture) {
     return this.restClient.post<Cas3Departure>({
-      path: paths.cas3.premises.bookings.departure({ premisesId, bookingId }),
+      path: paths.cas3.premises.bookings.departures({ premisesId, bookingId }),
       data: departure,
     })
   }
 
   async createTurnaround(premisesId: string, bookingId: string, turnaround: NewTurnaround) {
     return this.restClient.post<Turnaround>({
-      path: `${this.bookingPath(premisesId, bookingId)}/turnarounds`,
+      path: paths.premises.bookings.turnarounds.create({ premisesId, bookingId }),
       data: turnaround,
     })
   }
@@ -116,13 +116,5 @@ export default class BookingClient {
       totalPages: Number(header['x-pagination-totalpages']),
       totalResults: Number(header['x-pagination-totalresults']),
     }
-  }
-
-  private bookingsPath(premisesId: string): string {
-    return `/premises/${premisesId}/bookings`
-  }
-
-  private bookingPath(premisesId: string, bookingId: string): string {
-    return [this.bookingsPath(premisesId), bookingId].join('/')
   }
 }

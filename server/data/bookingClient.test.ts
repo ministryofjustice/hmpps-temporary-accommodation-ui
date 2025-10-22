@@ -54,7 +54,7 @@ describe('BookingClient', () => {
       })
 
       fakeApprovedPremisesApi
-        .post(`/premises/some-uuid/bookings`)
+        .post(paths.premises.bookings.create({ premisesId: 'some-uuid' }), payload)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, booking)
 
@@ -70,7 +70,7 @@ describe('BookingClient', () => {
       const booking = bookingFactory.build()
 
       fakeApprovedPremisesApi
-        .get(`/premises/premisesId/bookings/bookingId`)
+        .get(paths.premises.bookings.show({ premisesId: 'premisesId', bookingId: 'bookingId' }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, booking)
 
@@ -86,7 +86,7 @@ describe('BookingClient', () => {
       const bookings = bookingFactory.buildList(5)
 
       fakeApprovedPremisesApi
-        .get(`/premises/some-uuid/bookings`)
+        .get(paths.premises.bookings.index({ premisesId: 'some-uuid' }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, bookings)
 
@@ -109,7 +109,7 @@ describe('BookingClient', () => {
       }
 
       fakeApprovedPremisesApi
-        .post(`/premises/premisesId/bookings/${booking.id}/extensions`)
+        .post(paths.premises.bookings.extensions({ premisesId: 'premisesId', bookingId: booking.id }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, booking)
 
@@ -128,7 +128,7 @@ describe('BookingClient', () => {
       })
 
       fakeApprovedPremisesApi
-        .post(`/premises/premisesId/bookings/bookingId/confirmations`, payload)
+        .post(paths.premises.bookings.confirmations({ premisesId: 'premisesId', bookingId: 'bookingId' }), payload)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, confirmation)
 
@@ -149,7 +149,7 @@ describe('BookingClient', () => {
       })
 
       fakeApprovedPremisesApi
-        .post(`/cas3/premises/premisesId/bookings/bookingId/arrivals`, payload)
+        .post(paths.cas3.premises.bookings.arrivals({ premisesId: 'premisesId', bookingId: 'bookingId' }), payload)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, arrival)
 
@@ -170,7 +170,10 @@ describe('BookingClient', () => {
       const cancellation = cancellationFactory.build()
 
       fakeApprovedPremisesApi
-        .post(`/premises/premisesId/bookings/bookingId/cancellations`, newCancellation)
+        .post(
+          paths.premises.bookings.cancellations.create({ premisesId: 'premisesId', bookingId: 'bookingId' }),
+          newCancellation,
+        )
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, cancellation)
 
@@ -186,7 +189,13 @@ describe('BookingClient', () => {
       const cancellation = cancellationFactory.build()
 
       fakeApprovedPremisesApi
-        .get(`/premises/premisesId/bookings/bookingId/cancellations/${cancellation.id}`)
+        .get(
+          paths.premises.bookings.cancellations.show({
+            premisesId: 'premisesId',
+            bookingId: 'bookingId',
+            cancellationId: cancellation.id,
+          }),
+        )
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, cancellation)
 
@@ -202,7 +211,7 @@ describe('BookingClient', () => {
       const departure = cas3NewDepartureFactory.build()
 
       fakeApprovedPremisesApi
-        .post(`/cas3/premises/premisesId/bookings/bookingId/departures`, departure)
+        .post(paths.cas3.premises.bookings.departures({ premisesId: 'premisesId', bookingId: 'bookingId' }), departure)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, departure)
 
@@ -218,7 +227,13 @@ describe('BookingClient', () => {
       const departure = departureFactory.build()
 
       fakeApprovedPremisesApi
-        .get(`/premises/premisesId/bookings/bookingId/departures/${departure.id}`)
+        .get(
+          paths.premises.bookings.departures.show({
+            premisesId: 'premisesId',
+            bookingId: 'bookingId',
+            departureId: departure.id,
+          }),
+        )
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, departure)
 
@@ -235,7 +250,7 @@ describe('BookingClient', () => {
       const payload = newTurnaroundFactory.build()
 
       fakeApprovedPremisesApi
-        .post(`/premises/premisesId/bookings/bookingId/turnarounds`, payload)
+        .post(paths.premises.bookings.turnarounds.create({ premisesId: 'premisesId', bookingId: 'bookingId' }), payload)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, turnaround)
 

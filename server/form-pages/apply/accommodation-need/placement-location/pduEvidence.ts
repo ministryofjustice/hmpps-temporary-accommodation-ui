@@ -1,5 +1,6 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import type { PageResponse, TaskListErrors, YesOrNo } from '@approved-premises/ui'
+import type { DataServices, PageResponse, TaskListErrors, YesOrNo } from '@approved-premises/ui'
+import { CallConfig } from '../../../../data/restClient'
 import { Page } from '../../../utils/decorators'
 import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
@@ -29,9 +30,22 @@ export default class PduEvidence implements TasklistPage {
     const regionName = application.data?.['placement-location']?.['different-region'].regionName
     this.pduName = pduName || ''
     this.regionName = regionName || ''
-    this.email = ''
     this.title = `Evidence from ${this.pduName} PDU that they’ll consider a CAS3 bedspace for ${name}`
     this.htmlDocumentTitle = this.title
+  }
+
+  static async initialize(
+    body: ConsentRefusedBody,
+    application: Application,
+    callConfig: CallConfig,
+    dataServices: DataServices,
+  ) {
+    const regions = await dataServices.referenceDataService.getProbationRegions(callConfig)
+    const instance = new PduEvidence(body, application)
+    instance.regionName = application.data?.['placement-location']?.['different-region'].regionName
+    instance.email = regions.find((region: { name: string }) => region.name === instance.regionName)?.hptEmail || ''
+
+    return instance
   }
 
   set body(value) {

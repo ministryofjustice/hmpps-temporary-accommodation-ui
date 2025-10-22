@@ -15,6 +15,9 @@ async function setupNodeEvents(
     'file:preprocessor',
     createBundler({
       plugins: [NodeModulesPolyfillPlugin(), createEsbuildPlugin(config)],
+      define: {
+        'process.env': JSON.stringify({}),
+      },
     }),
   )
 

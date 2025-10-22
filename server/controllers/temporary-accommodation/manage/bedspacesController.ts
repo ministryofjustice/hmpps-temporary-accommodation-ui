@@ -17,7 +17,7 @@ import {
   generateErrorSummary,
   generateMergeParameters,
 } from '../../../utils/validation'
-import { bedspaceActions, setDefaultStartDate } from '../../../utils/bedspaceUtils'
+import { bedspaceActions, setDefaultStartDate, summaryList } from '../../../utils/bedspaceUtils'
 import { formatAddress, isPremiseScheduledToBeArchived, shortSummaryList } from '../../../utils/premisesUtils'
 import { DateFormats, dateIsInFuture } from '../../../utils/dateUtils'
 import { BookingService } from '../../../services'
@@ -76,7 +76,7 @@ export default class BedspacesController {
         preservePlaceContext(req, res, this.assessmentService),
       ])
 
-      const summary = this.bedspaceService.summaryList(bedspace)
+      const summary = summaryList(bedspace)
       const actions: Array<PageHeadingBarItem> = bedspaceActions(premises, bedspace, placeContext)
 
       return res.render('temporary-accommodation/bedspaces/show', {

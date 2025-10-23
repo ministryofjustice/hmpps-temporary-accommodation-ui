@@ -4,7 +4,7 @@ import BookingTurnaroundNewPage from '../../../../cypress_shared/pages/temporary
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
-  bookingFactory,
+  cas3BookingFactory,
   lostBedFactory,
   newTurnaroundFactory,
   turnaroundFactory,
@@ -21,7 +21,7 @@ context('Booking turnarounds', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a booking in the database
-    const booking = bookingFactory.provisional().build()
+    const booking = cas3BookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
@@ -39,7 +39,7 @@ context('Booking turnarounds', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page
@@ -73,7 +73,7 @@ context('Booking turnarounds', () => {
     cy.signIn()
 
     // And there is an arrived booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page
@@ -97,7 +97,7 @@ context('Booking turnarounds', () => {
     cy.signIn()
 
     // And there is a booking and a conflicting lost bed in the database
-    const booking = bookingFactory.departed().build()
+    const booking = cas3BookingFactory.departed().build()
     const conflictingLostBed = lostBedFactory.build()
 
     const { premises, bedspace } = setupBookingStateStubs(booking)
@@ -129,7 +129,7 @@ context('Booking turnarounds', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page

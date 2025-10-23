@@ -4,7 +4,7 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import BookingCancellationEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingCancellationEdit'
 import BookingCancellationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingCancellationNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import { bookingFactory, cancellationFactory, newCancellationFactory } from '../../../../server/testutils/factories'
+import { cancellationFactory, cas3BookingFactory, newCancellationFactory } from '../../../../server/testutils/factories'
 
 Given('I cancel the booking', () => {
   cy.then(function _() {
@@ -26,7 +26,7 @@ Given('I cancel the booking', () => {
     bookingCancellationPage.shouldShowBookingDetails()
     bookingCancellationPage.completeForm(newCancellation)
 
-    const cancelledBooking = bookingFactory.build({
+    const cancelledBooking = cas3BookingFactory.build({
       ...this.booking,
       status: 'cancelled',
       cancellation,
@@ -72,7 +72,7 @@ Given('I edit the cancelled booking', () => {
     bookingCancellationPage.shouldShowBookingDetails()
     bookingCancellationPage.completeForm(newCancellation)
 
-    const cancelledBooking = bookingFactory.build({
+    const cancelledBooking = cas3BookingFactory.build({
       ...this.booking,
       status: 'cancelled',
       cancellation,

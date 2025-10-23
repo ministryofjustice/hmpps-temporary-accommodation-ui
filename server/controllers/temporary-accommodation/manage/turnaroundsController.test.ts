@@ -5,8 +5,8 @@ import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PremisesService, TurnaroundService } from '../../../services'
 import {
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
   newTurnaroundFactory,
   turnaroundFactory,
@@ -58,7 +58,7 @@ describe('TurnaroundsController', () => {
     it('renders the form prepopulated with the current turnaround days', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build()
+      const booking = cas3BookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,

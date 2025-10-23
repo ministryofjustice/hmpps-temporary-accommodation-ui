@@ -7,9 +7,8 @@ import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommod
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   assessmentSummaryFactory,
-  bedFactory,
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
   lostBedFactory,
   newBookingFactory,
@@ -29,9 +28,9 @@ context('Booking', () => {
     // And there is an active premises and a bedspace the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2023-10-18' })
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
     const lostBeds = lostBedFactory
@@ -62,9 +61,9 @@ context('Booking', () => {
     // And there is a premises, a bedspace, and bookings in the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
     const lostBeds = lostBedFactory
@@ -114,7 +113,7 @@ context('Booking', () => {
     bookingNewPage.shouldShowBookingDetails()
 
     // And when I fill out the form
-    const booking = bookingFactory.build({ person, assessmentId: assessmentSummaries[0].id })
+    const booking = cas3BookingFactory.build({ person, assessmentId: assessmentSummaries[0].id })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
@@ -180,7 +179,7 @@ context('Booking', () => {
     bookingNewPage.shouldShowBookingDetails()
 
     // And when I fill out the form
-    const booking = bookingFactory.build({ person })
+    const booking = cas3BookingFactory.build({ person })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
@@ -259,7 +258,7 @@ context('Booking', () => {
     const bookingNewPage = BookingNewPage.visit(premises, bedspace)
 
     // And when I fill out the form with a CRN that is not found in the API
-    const booking = bookingFactory.build({ person })
+    const booking = cas3BookingFactory.build({ person })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
@@ -305,9 +304,9 @@ context('Booking', () => {
     // And there is a premises, a bedspace, and a conflicting lost bed in the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2023-10-18' })
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
     const lostBeds = lostBedFactory
@@ -331,7 +330,7 @@ context('Booking', () => {
     const bookingNewPage = BookingNewPage.visit(premises, bedspace)
 
     // And I fill out the form with dates that conflict with an existing booking
-    const booking = bookingFactory.build({
+    const booking = cas3BookingFactory.build({
       person,
     })
     const newBooking = newBookingFactory.build({
@@ -382,7 +381,7 @@ context('Booking', () => {
     const bookingNewPage = BookingNewPage.visit(premises, bedspace)
 
     // And I fill out the form with dates that conflict with the bedspace end date
-    const booking = bookingFactory.build({
+    const booking = cas3BookingFactory.build({
       person,
     })
     const newBooking = newBookingFactory.build({
@@ -432,7 +431,7 @@ context('Booking', () => {
     const bookingNewPage = BookingNewPage.visit(premises, bedspace)
 
     // And I fill out the form with a CRN the user does not have permission to access
-    const booking = bookingFactory.build({
+    const booking = cas3BookingFactory.build({
       person,
     })
     const newBooking = newBookingFactory.build({
@@ -468,7 +467,7 @@ context('Booking', () => {
     const bookingNewPage = BookingNewPage.visit(premises, bedspace)
 
     // And when I fill out the form
-    const booking = bookingFactory.build({ person })
+    const booking = cas3BookingFactory.build({ person })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
@@ -492,9 +491,9 @@ context('Booking', () => {
     // And there is a premises and a bedspace the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
     const lostBeds = lostBedFactory
@@ -540,7 +539,7 @@ context('Booking', () => {
     const bookingNewPage = BookingNewPage.visit(premises, bedspace)
 
     // And I fill out the form
-    const booking = bookingFactory.build({ person })
+    const booking = cas3BookingFactory.build({ person })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
@@ -572,7 +571,7 @@ context('Booking', () => {
     // And there is a premises, a bedspace, and a booking in the database
     const premises = cas3PremisesFactory.build()
     const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-    const booking = bookingFactory.build()
+    const booking = cas3BookingFactory.build()
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -592,9 +591,9 @@ context('Booking', () => {
     // And there is a premises, a bedspace, and bookings in the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
     const lostBeds = lostBedFactory

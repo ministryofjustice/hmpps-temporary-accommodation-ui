@@ -4,8 +4,8 @@ import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, DepartureService, PremisesService } from '../../../services'
 import {
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
   departureFactory,
   newDepartureFactory,
@@ -52,7 +52,7 @@ describe('DeparturesController', () => {
     it('renders the form', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
 
       request.params = {
         premisesId: premises.id,
@@ -194,7 +194,7 @@ describe('DeparturesController', () => {
     it('renders the form', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
 
       request.params = {
         premisesId: premises.id,
@@ -316,7 +316,7 @@ describe('DeparturesController', () => {
     it('does not show the NDelius update message when creating', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
 
       request.params = {
         premisesId: premises.id,

@@ -4,7 +4,7 @@ import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import BookingExtensionNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingExtensionNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import { bookingFactory, extensionFactory, newExtensionFactory } from '../../../../server/testutils/factories'
+import { cas3BookingFactory, extensionFactory, newExtensionFactory } from '../../../../server/testutils/factories'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 
 Given('I extend the booking', () => {
@@ -26,7 +26,7 @@ Given('I extend the booking', () => {
     bookingExtensionPage.shouldShowBookingDetails()
     bookingExtensionPage.completeForm(newExtension)
 
-    const extendedBooking = bookingFactory.build({
+    const extendedBooking = cas3BookingFactory.build({
       ...this.booking,
       departureDate: newExtension.newDepartureDate,
       extensions: [extension],

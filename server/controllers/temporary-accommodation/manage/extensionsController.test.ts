@@ -6,8 +6,8 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, ExtensionService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import {
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
   departureFactory,
   extensionFactory,
@@ -61,7 +61,7 @@ describe('ExtensionsController', () => {
     it('renders the form prepopulated with the current departure dates', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build()
+      const booking = cas3BookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
@@ -93,7 +93,7 @@ describe('ExtensionsController', () => {
     it('renders the form prepopulated with the current departure dates and latest extension notes', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build({
+      const booking = cas3BookingFactory.arrived().build({
         extensions: extensionFactory.buildList(2),
       })
 

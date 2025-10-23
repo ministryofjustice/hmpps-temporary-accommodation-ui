@@ -7,8 +7,8 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { ArrivalService, BookingService, PremisesService } from '../../../services'
 import {
   arrivalFactory,
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
   confirmationFactory,
   newArrivalFactory,
@@ -58,7 +58,7 @@ describe('ArrivalsController', () => {
       it('renders the form prepopulated with the current booking dates', async () => {
         const premises = cas3PremisesFactory.build()
         const bedspace = cas3BedspaceFactory.build()
-        const booking = bookingFactory.arrived().build()
+        const booking = cas3BookingFactory.arrived().build()
 
         request.params = {
           premisesId: premises.id,
@@ -250,7 +250,7 @@ describe('ArrivalsController', () => {
       it('renders the form', async () => {
         const premises = cas3PremisesFactory.build()
         const bedspace = cas3BedspaceFactory.build()
-        const booking = bookingFactory.arrived().build()
+        const booking = cas3BookingFactory.arrived().build()
 
         request.params = {
           premisesId: premises.id,
@@ -289,7 +289,7 @@ describe('ArrivalsController', () => {
 
         const arrival = arrivalFactory.build()
         const newArrival = newArrivalFactory.build()
-        const booking = bookingFactory.build()
+        const booking = cas3BookingFactory.build()
         booking.departureDate = newArrival.expectedDepartureDate
         bookingService.getBooking.mockResolvedValue(booking)
 
@@ -444,7 +444,7 @@ describe('ArrivalsController', () => {
     it('does not show the NDelius update message when creating', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build()
+      const booking = cas3BookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,

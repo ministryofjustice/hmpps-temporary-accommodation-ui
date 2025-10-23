@@ -1,11 +1,11 @@
-import type { Booking } from '@approved-premises/api'
+import type { Cas3Booking } from '@approved-premises/api'
 import { getLatestExtension, shortenedOrExtended, statusName } from '../../server/utils/bookingUtils'
 import { DateFormats } from '../../server/utils/dateUtils'
 import { assignModifiedBookingForTurnarounds } from '../utils/booking'
 import Component from './component'
 
 export default class BookingInfoComponent extends Component {
-  constructor(private readonly booking: Booking) {
+  constructor(private readonly booking: Cas3Booking) {
     super()
   }
 

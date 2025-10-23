@@ -5,6 +5,7 @@ import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import { PaginatedResponse } from '../@types/ui'
+import { bookingSearchResultsToCas3BookingSearchResults } from '../utils/bookingUtils'
 
 export default class BookingSearchService {
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
@@ -25,7 +26,7 @@ export default class BookingSearchService {
       totalPages,
       totalResults,
       url,
-      data: data.map(summary => {
+      data: bookingSearchResultsToCas3BookingSearchResults(data).map(summary => {
         return [
           this.textValue(summary.person.name || 'Limited access offender'),
           this.textValue(summary.person.crn),
@@ -35,7 +36,7 @@ export default class BookingSearchService {
           this.htmlValue(
             `<a href="${paths.bookings.show({
               premisesId: summary.premises.id,
-              bedspaceId: summary.bed.id,
+              bedspaceId: summary.bedspace.id,
               bookingId: summary.booking.id,
             })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${summary.person.crn}</span></a>`,
           ),

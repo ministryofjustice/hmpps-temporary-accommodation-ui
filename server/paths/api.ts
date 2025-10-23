@@ -25,6 +25,9 @@ const cas3v2SinglePremisesPath = cas3v2PremisesPath.path(':premisesId')
 const cas3v2BedspacesPath = cas3v2SinglePremisesPath.path('bedspaces')
 const cas3v2SingleBedspacePath = cas3v2BedspacesPath.path(':bedspaceId')
 
+const cas3v2BookingsPath = cas3v2SinglePremisesPath.path('bookings')
+const cas3v2SingleBookingPath = cas3v2BookingsPath.path(':bookingId')
+
 // Non-namespaced
 const premisesPath = path('/premises')
 const singlePremisesPath = premisesPath.path(':premisesId')
@@ -72,12 +75,28 @@ const cas3Api = {
       cancelUnarchive: cas3v2SingleBedspacePath.path('cancel-unarchive'), // y
     },
     bookings: {
-      arrivals: cas3SingleBookingPath.path('arrivals'),
-      departures: cas3SingleBookingPath.path('departures'),
+      create: cas3v2BookingsPath,
+      show: cas3v2SingleBookingPath,
+      index: cas3v2BookingsPath,
+      arrivals: cas3v2SingleBookingPath.path('arrivals'),
+      departures: {
+        create: cas3v2SingleBookingPath.path('departures'),
+        show: cas3v2SingleBookingPath.path('departures/:departureId'),
+      },
+      confirmations: cas3SingleBookingPath.path('confirmations'),
+      extensions: cas3v2SingleBookingPath.path('extensions'),
+      cancellations: {
+        create: cas3v2SingleBookingPath.path('cancellations'),
+        show: cas3v2SingleBookingPath.path('cancellations/:cancellationId'),
+      },
+      turnarounds: cas3v2SingleBookingPath.path('turnarounds'),
     },
   },
   bedspaces: {
     search: cas3Path.path('bedspaces/search'),
+  },
+  bookings: {
+    search: cas3v2Path.path('bookings/search'),
   },
   applications: {
     new: cas3ApplicationsPath,

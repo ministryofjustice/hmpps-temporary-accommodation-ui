@@ -1,4 +1,5 @@
 import type { BookingSearchApiStatus, BookingSearchParameters, TableRow } from '@approved-premises/ui'
+import { BookingSearchResult, Cas3BookingSearchResult } from '@approved-premises/api'
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
@@ -26,7 +27,9 @@ export default class BookingSearchService {
       totalPages,
       totalResults,
       url,
-      data: bookingSearchResultsToCas3BookingSearchResults(data).map(summary => {
+      data: bookingSearchResultsToCas3BookingSearchResults(
+        data as Array<BookingSearchResult> | Array<Cas3BookingSearchResult>,
+      ).map(summary => {
         return [
           this.textValue(summary.person.name || 'Limited access offender'),
           this.textValue(summary.person.crn),

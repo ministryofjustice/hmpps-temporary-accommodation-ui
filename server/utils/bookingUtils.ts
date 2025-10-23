@@ -1,4 +1,14 @@
-import type { Booking, Cancellation, Cas3AssessmentSummary, Departure, Extension } from '@approved-premises/api'
+import {
+  Booking,
+  BookingSearchResult,
+  Cancellation,
+  Cas3AssessmentSummary,
+  Cas3Booking,
+  Cas3BookingSearchResult,
+  Cas3BookingStatus,
+  Departure,
+  Extension,
+} from '@approved-premises/api'
 import type { BespokeError, PageHeadingBarItem, RadioItem } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
@@ -12,7 +22,11 @@ type ParsedConflictError = {
 
 export const noAssessmentId = 'no-assessment'
 
-export function bookingActions(premisesId: string, bedspaceId: string, booking: Booking): Array<PageHeadingBarItem> {
+export function bookingActions(
+  premisesId: string,
+  bedspaceId: string,
+  booking: Cas3Booking,
+): Array<PageHeadingBarItem> {
   const items = []
   const bookingId = booking.id
 
@@ -96,7 +110,7 @@ export function bookingActions(premisesId: string, bedspaceId: string, booking: 
   return items
 }
 
-export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass: string }> = [
+export const allStatuses: Array<{ name: string; id: Cas3Booking['status']; tagClass: string }> = [
   {
     name: 'Provisional',
     id: 'provisional',
@@ -129,17 +143,17 @@ export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass:
   },
 ]
 
-export const statusTag = (statusId: Booking['status']) => {
+export const statusTag = (statusId: Cas3Booking['status']) => {
   const status = allStatuses.find(({ id }) => id === statusId)
   return `<strong class="govuk-tag ${status.tagClass}">${status.name}</strong>`
 }
 
-export const statusName = (statusId: Booking['status']) => {
+export const statusName = (statusId: Cas3Booking['status']) => {
   const status = allStatuses.find(({ id }) => id === statusId)
   return status.name
 }
 
-export const getLatestExtension = (booking: Booking) => {
+export const getLatestExtension = (booking: Cas3Booking) => {
   return booking.extensions.reduce((latestExtension, testExtension) => {
     const latestTime = DateFormats.isoToDateObj(latestExtension.createdAt).getTime()
     const testTime = DateFormats.isoToDateObj(testExtension.createdAt).getTime()
@@ -148,12 +162,12 @@ export const getLatestExtension = (booking: Booking) => {
   }, booking.extensions?.[0])
 }
 
-export const deriveBookingHistory = (booking: Booking) => {
+export const deriveBookingHistory = (booking: Cas3Booking) => {
   const extensions = [...booking.extensions].sort(compareBookingState)
   const departures = [...booking.departures].sort(compareBookingState)
   const cancellations = [...booking.cancellations].sort(compareBookingState)
 
-  const bookingWithSortedExensions: Booking = {
+  const bookingWithSortedExensions: Cas3Booking = {
     ...booking,
     status: booking.status === 'closed' ? 'departed' : booking.status,
     extensions,
@@ -277,7 +291,7 @@ const parseConflictError = (detail: string): ParsedConflictError => {
   return { conflictingEntityId, conflictingEntityType }
 }
 
-const getUpdatedAt = (booking: Booking): string => {
+const getUpdatedAt = (booking: Cas3Booking): string => {
   if (booking.status === 'departed') {
     return booking.departure.createdAt
   }
@@ -296,7 +310,7 @@ const getUpdatedAt = (booking: Booking): string => {
   return booking.createdAt
 }
 
-const getPredecessorForBooking = (booking: Booking): Booking => {
+const getPredecessorForBooking = (booking: Cas3Booking): Cas3Booking => {
   switch (booking.status) {
     case 'departed':
       return getPredecessorForDepartedBooking(booking)
@@ -311,7 +325,7 @@ const getPredecessorForBooking = (booking: Booking): Booking => {
   }
 }
 
-const getPredecessorForDepartedBooking = (booking: Booking): Booking => {
+const getPredecessorForDepartedBooking = (booking: Cas3Booking): Cas3Booking => {
   if (booking.departures.length > 1) {
     return {
       ...booking,
@@ -338,7 +352,7 @@ const getPredecessorForDepartedBooking = (booking: Booking): Booking => {
   }
 }
 
-const getPredecessorForArrivedBooking = (booking: Booking): Booking => {
+const getPredecessorForArrivedBooking = (booking: Cas3Booking): Cas3Booking => {
   if (booking.extensions.length > 1) {
     return {
       ...booking,
@@ -363,7 +377,7 @@ const getPredecessorForArrivedBooking = (booking: Booking): Booking => {
   }
 }
 
-const getPredecessorForCancelledBooking = (booking: Booking): Booking => {
+const getPredecessorForCancelledBooking = (booking: Cas3Booking): Cas3Booking => {
   if (booking.cancellations.length > 1) {
     return {
       ...booking,
@@ -378,7 +392,7 @@ const getPredecessorForCancelledBooking = (booking: Booking): Booking => {
   }
 }
 
-const getPredecessorForConfirmedBooking = (booking: Booking): Booking => {
+const getPredecessorForConfirmedBooking = (booking: Cas3Booking): Cas3Booking => {
   return {
     ...booking,
     status: 'provisional',
@@ -402,3 +416,45 @@ const assessmentRadioItemText = (assessmentSummary: Cas3AssessmentSummary) => {
     assessmentSummary.createdAt,
   )}`
 }
+
+// TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities and all usages
+export const isCas3Booking = (booking: Booking | Cas3Booking): booking is Cas3Booking =>
+  Boolean((booking as Cas3Booking).bedspace)
+
+export const bookingToCas3Booking = (booking: Booking | Cas3Booking): Cas3Booking => {
+  if (isCas3Booking(booking)) return booking
+
+  const { bed, status, ...sharedProperties } = booking
+
+  return {
+    ...sharedProperties,
+    bedspace: {
+      id: bed?.id || '',
+      reference: bed?.name || '',
+    },
+    status: status as Cas3BookingStatus,
+  }
+}
+
+export const isCas3BookingSearchResults = (
+  results: Array<BookingSearchResult> | Array<Cas3BookingSearchResult>,
+): results is Array<Cas3BookingSearchResult> =>
+  Boolean(results.length === 0 || (results[0] as Cas3BookingSearchResult).bedspace?.reference)
+
+export const bookingSearchResultsToCas3BookingSearchResults = (
+  results: Array<BookingSearchResult> | Array<Cas3BookingSearchResult>,
+): Array<Cas3BookingSearchResult> =>
+  isCas3BookingSearchResults(results)
+    ? results
+    : results.map(result => ({
+        bedspace: {
+          id: result.bed.id,
+          reference: result.bed.name,
+        },
+        booking: {
+          ...result.booking,
+          status: result.booking.status as Cas3BookingStatus,
+        },
+        person: result.person,
+        premises: result.premises,
+      }))

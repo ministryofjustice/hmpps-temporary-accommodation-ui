@@ -67,6 +67,17 @@ import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
 import cas3BedspaceReferenceFactory from './cas3BedspaceReference'
 import cas3BedspacesReferenceFactory from './cas3BedspacesReference'
 import cas3ReferralHistoryUserNoteFactory from './cas3ReferralHistoryUserNote'
+import cas3BookingFactory from './cas3Booking'
+import cas3NewBookingFactory from './cas3NewBooking'
+import cas3BookingSearchResultFactory from './cas3BookingSearchResult'
+import cas3ExtensionFactory from './cas3Extension'
+import cas3ConfirmationFactory from './cas3Confirmation'
+import cas3ArrivalFactory from './cas3Arrival'
+import cas3CancellationFactory from './cas3Cancellation'
+import cas3DepartureFactory from './cas3Departure'
+import cas3TurnaroundFactory from './cas3Turnaround'
+import cas3BookingPremisesSummaryFactory from './cas3BookingPremisesSummary'
+import cas3BookingSearchResultsFactory from './cas3BookingSearchResults'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
@@ -151,6 +162,17 @@ export {
   cas3BedspaceSummaryFactory,
   cas3BedspaceReferenceFactory,
   cas3BedspacesReferenceFactory,
+  cas3BookingFactory,
+  cas3NewBookingFactory,
+  cas3BookingSearchResultFactory,
+  cas3ExtensionFactory,
+  cas3ConfirmationFactory,
+  cas3ArrivalFactory,
+  cas3CancellationFactory,
+  cas3DepartureFactory,
+  cas3TurnaroundFactory,
+  cas3BookingPremisesSummaryFactory,
+  cas3BookingSearchResultsFactory,
   prisonCaseNotesFactory,
   probationRegionFactory,
   referenceDataFactory,

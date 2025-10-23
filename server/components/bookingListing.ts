@@ -1,10 +1,10 @@
-import type { Booking } from '@approved-premises/api'
+import type { Cas3Booking } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
 import { statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { isFullPerson } from '../utils/personUtils'
 
-export const personSummaryListRows = (booking: Booking): SummaryList['rows'] => {
+export const personSummaryListRows = (booking: Cas3Booking): SummaryList['rows'] => {
   const rows = [
     {
       key: textValue('CRN'),
@@ -22,7 +22,7 @@ export const personSummaryListRows = (booking: Booking): SummaryList['rows'] => 
   return rows
 }
 
-export const statusSummaryListRows = (booking: Booking): SummaryList['rows'] => {
+export const statusSummaryListRows = (booking: Cas3Booking): SummaryList['rows'] => {
   const rows = [
     {
       key: textValue('Status'),
@@ -33,7 +33,7 @@ export const statusSummaryListRows = (booking: Booking): SummaryList['rows'] => 
   return rows
 }
 
-export const placementSummaryListRows = (booking: Booking): SummaryList['rows'] => {
+export const placementSummaryListRows = (booking: Cas3Booking): SummaryList['rows'] => {
   const rows = [] as SummaryList['rows']
 
   const { status, arrivalDate, departureDate } = booking
@@ -75,7 +75,7 @@ export const placementSummaryListRows = (booking: Booking): SummaryList['rows'] 
   return rows
 }
 
-export const turnaroundSummaryListRows = (booking: Booking): SummaryList['rows'] => {
+export const turnaroundSummaryListRows = (booking: Cas3Booking): SummaryList['rows'] => {
   if (booking.status === 'cancelled' || !booking.turnaround || booking.turnaround.workingDays === 0) {
     return []
   }

@@ -1,0 +1,136 @@
+import { fakerEN_GB as faker } from '@faker-js/faker'
+import { addDays } from 'date-fns'
+import { Factory } from 'fishery'
+
+import type { Cas3Booking } from '@approved-premises/api'
+import { DateFormats } from '../../utils/dateUtils'
+import { fullPersonFactory as personFactory } from './person'
+import cas3BedspaceFactory from './cas3Bedspace'
+import cas3ArrivalFactory from './cas3Arrival'
+import cas3CancellationFactory from './cas3Cancellation'
+import cas3ConfirmationFactory from './cas3Confirmation'
+import cas3DepartureFactory from './cas3Departure'
+import cas3ExtensionFactory from './cas3Extension'
+import cas3TurnaroundFactory from './cas3Turnaround'
+import cas3BookingPremisesSummaryFactory from './cas3BookingPremisesSummary'
+
+const soon = () =>
+  DateFormats.dateObjToIsoDate(
+    faker.date.soon({ days: 5, refDate: addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1) }),
+  )
+const past = () => DateFormats.dateObjToIsoDate(faker.date.past())
+const future = () => DateFormats.dateObjToIsoDate(faker.date.future())
+
+class Cas3BookingFactory extends Factory<Cas3Booking> {
+  provisional() {
+    return this.params({
+      arrivalDate: soon(),
+      departureDate: future(),
+      status: 'provisional',
+      extensions: [],
+      confirmation: null,
+      arrival: null,
+      departure: null,
+      departures: [],
+      cancellation: null,
+      cancellations: [],
+    })
+  }
+
+  confirmed() {
+    return this.provisional().params({
+      status: 'confirmed',
+      confirmation: cas3ConfirmationFactory.build(),
+    })
+  }
+
+  arrived() {
+    return this.confirmed().params({
+      arrivalDate: past(),
+      departureDate: future(),
+      status: 'arrived',
+      arrival: cas3ArrivalFactory.build(),
+    })
+  }
+
+  departed() {
+    const departure = cas3DepartureFactory.build()
+
+    return this.arrived().params({
+      arrivalDate: past(),
+      departureDate: past(),
+      status: 'departed',
+      departure,
+      departures: [departure],
+    })
+  }
+
+  closed() {
+    return this.departed().params({
+      status: 'closed',
+    })
+  }
+
+  cancelled(source: 'provisional' | 'confirmed' = 'provisional') {
+    const cancellation = cas3CancellationFactory.build()
+
+    if (source === 'provisional') {
+      return this.provisional().params({
+        status: 'cancelled',
+        cancellation,
+        cancellations: [cancellation],
+      })
+    }
+    return this.confirmed().params({
+      status: 'cancelled',
+      cancellation,
+      cancellations: [cancellation],
+    })
+  }
+}
+
+export default Cas3BookingFactory.define(() => {
+  const originalArrivalDate = faker.date.soon()
+  const arrivalDate = faker.date.soon()
+  const departureDate = faker.date.soon({ days: 84, refDate: arrivalDate })
+  const turnaroundStartDate = faker.date.soon({ days: 1, refDate: departureDate })
+  const effectiveEndDate = faker.date.soon({ days: 5, refDate: departureDate })
+
+  const cancellations = faker.helpers.arrayElements(cas3CancellationFactory.buildList(5))
+  const departures = faker.helpers.arrayElements(cas3DepartureFactory.buildList(5))
+  const turnarounds = faker.helpers.arrayElements(cas3TurnaroundFactory.buildList(5))
+
+  return {
+    person: personFactory.build(),
+    originalArrivalDate: DateFormats.dateObjToIsoDate(originalArrivalDate),
+    originalDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future({ years: 1, refDate: originalArrivalDate })),
+    arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),
+    departureDate: DateFormats.dateObjToIsoDate(departureDate),
+    turnaroundStartDate: DateFormats.dateObjToIsoDate(turnaroundStartDate),
+    effectiveEndDate: DateFormats.dateObjToIsoDate(effectiveEndDate),
+    name: `${faker.person.firstName()} ${faker.person.lastName()}`,
+    id: faker.string.uuid(),
+    status: faker.helpers.arrayElement([
+      'provisional',
+      'confirmed',
+      'arrived',
+      'departed',
+      'closed',
+      'cancelled',
+    ] as const),
+    bedspace: cas3BedspaceFactory.build(),
+    arrival: cas3ArrivalFactory.build(),
+    departure: departures[0],
+    departures,
+    confirmation: cas3ConfirmationFactory.build(),
+    cancellation: cancellations[0],
+    cancellations,
+    extensions: faker.helpers.arrayElements(cas3ExtensionFactory.buildList(5)),
+    turnaround: turnarounds[0],
+    turnarounds,
+    serviceName: 'temporary-accommodation' as const,
+    createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+    assessmentId: faker.string.uuid(),
+    premises: cas3BookingPremisesSummaryFactory.build(),
+  }
+})

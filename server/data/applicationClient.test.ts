@@ -3,7 +3,12 @@ import nock from 'nock'
 import { Cas3SubmitApplication as SubmitApplication, UpdateApplication } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
-import { activeOffenceFactory, applicationFactory, documentFactory } from '../testutils/factories'
+import {
+  activeOffenceFactory,
+  applicationFactory,
+  cas3ApplicationFactory,
+  documentFactory,
+} from '../testutils/factories'
 import ApplicationClient from './applicationClient'
 import { CallConfig } from './restClient'
 
@@ -31,7 +36,7 @@ describe('ApplicationClient', () => {
 
   describe('create', () => {
     it('should return an application when a crn is posted', async () => {
-      const application = applicationFactory.build()
+      const application = cas3ApplicationFactory.build()
       const offence = activeOffenceFactory.build()
 
       fakeApprovedPremisesApi
@@ -56,7 +61,7 @@ describe('ApplicationClient', () => {
       })
 
       it('should request that the risks are skipped', async () => {
-        const application = applicationFactory.build()
+        const application = cas3ApplicationFactory.build()
         const offence = activeOffenceFactory.build()
 
         fakeApprovedPremisesApi

@@ -1,6 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 
-import type { NewBooking } from '@approved-premises/api'
+import type { Cas3NewBooking } from '@approved-premises/api'
 import { ObjectWithDateParts } from '@approved-premises/ui'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
@@ -208,11 +208,8 @@ export default class BookingsController {
       const { arrivalDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate')
       const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'departureDate')
 
-      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
-
-      const newBooking: NewBooking = {
-        service: 'temporary-accommodation',
-        ...req.body,
+      const newBooking: Cas3NewBooking = {
+        serviceName: 'temporary-accommodation',
         crn: crn.trim(),
         assessmentId: assessmentId === noAssessmentId ? undefined : assessmentId,
         arrivalDate,
@@ -220,7 +217,7 @@ export default class BookingsController {
       }
 
       try {
-        const booking = await this.bookingsService.createForBedspace(callConfig, premisesId, bedspace.id, newBooking)
+        const booking = await this.bookingsService.createForBedspace(callConfig, premisesId, bedspaceId, newBooking)
 
         req.flash('success', 'Booking created')
         clearUserInput(req)

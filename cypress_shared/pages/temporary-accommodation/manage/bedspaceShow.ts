@@ -1,4 +1,4 @@
-import type { Booking, Cas3Bedspace, Cas3Premises, LostBed } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3Premises, LostBed } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingListingComponent from '../../../components/bookingListing'
@@ -68,7 +68,7 @@ export default class BedspaceShowPage extends Page {
     cy.get('main').contains('No bookings.')
   }
 
-  shouldShowBookingDetails(booking: Booking): void {
+  shouldShowBookingDetails(booking: Cas3Booking): void {
     const bookingListingComponent = new BookingListingComponent(booking)
     bookingListingComponent.shouldShowBookingDetails()
   }
@@ -107,7 +107,7 @@ export default class BedspaceShowPage extends Page {
     })
   }
 
-  clickBookingLink(booking: Booking): void {
+  clickBookingLink(booking: Cas3Booking): void {
     const bookingListingComponent = new BookingListingComponent(booking)
     bookingListingComponent.clickLink()
   }

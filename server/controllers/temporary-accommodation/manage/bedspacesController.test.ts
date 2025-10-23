@@ -7,9 +7,9 @@ import BedspaceService from '../../../services/bedspaceService'
 import BedspacesController from './bedspacesController'
 import {
   assessmentFactory,
-  bookingFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
   cas3UpdateBedspaceFactory,
   characteristicFactory,
@@ -302,7 +302,7 @@ describe('BedspacesController', () => {
       },
     ]
     const bookingEntry = {
-      body: bookingFactory.build({ id: bookingId }),
+      body: cas3BookingFactory.build({ id: bookingId }),
       type: 'booking',
       path: `/properties/${premisesId}/bedspaces/${bedspaceId}/bookings/${bookingId}`,
     }

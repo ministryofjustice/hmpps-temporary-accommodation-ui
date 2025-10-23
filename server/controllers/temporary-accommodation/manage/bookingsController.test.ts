@@ -10,8 +10,9 @@ import {
   applicationFactory,
   assessmentFactory,
   assessmentSummaryFactory,
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
+  cas3NewBookingFactory,
   cas3PremisesFactory,
   newBookingFactory,
   personFactory,
@@ -677,9 +678,10 @@ describe('BookingsController', () => {
       const requestHandler = bookingsController.create()
 
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
-      const booking = bookingFactory.build()
-      const newBooking = newBookingFactory.build({
-        ...booking,
+      const booking = cas3BookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build({
+        crn: booking.person.crn,
+        bedspaceId: undefined,
       })
 
       request.params = {
@@ -687,10 +689,10 @@ describe('BookingsController', () => {
         bedspaceId,
       }
       request.body = {
-        ...newBooking,
         ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
         ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
-        assessmentId,
+        assessmentId: newBooking.assessmentId,
+        crn: newBooking.crn,
       }
 
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
@@ -698,12 +700,7 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.createForBedspace).toHaveBeenCalledWith(
-        callConfig,
-        premisesId,
-        bedspace.id,
-        expect.objectContaining({ ...newBooking, assessmentId }),
-      )
+      expect(bookingService.createForBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspace.id, newBooking)
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking created')
       expect(response.redirect).toHaveBeenCalledWith(
@@ -719,7 +716,7 @@ describe('BookingsController', () => {
       const crn = 'XJKEGDJHEJ'
       const crnWithSpaces = `  ${crn}  `
 
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
       const newBooking = newBookingFactory.build({
         ...booking,
         crn: crnWithSpaces,
@@ -754,7 +751,7 @@ describe('BookingsController', () => {
 
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
 
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
       const newBooking = newBookingFactory.build({
         ...booking,
       })
@@ -800,7 +797,7 @@ describe('BookingsController', () => {
       })
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
       const newBooking = newBookingFactory.build({
         ...booking,
       })
@@ -841,7 +838,7 @@ describe('BookingsController', () => {
       )
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
       const newBooking = newBookingFactory.build({
         ...booking,
       })
@@ -878,7 +875,7 @@ describe('BookingsController', () => {
       })
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
       const newBooking = newBookingFactory.build({
         ...booking,
       })
@@ -905,7 +902,7 @@ describe('BookingsController', () => {
     it('renders the template for viewing a booking', async () => {
       const premises = cas3PremisesFactory.build({ id: premisesId })
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
 
       premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
@@ -939,7 +936,7 @@ describe('BookingsController', () => {
     it('renders the template for viewing booking history', async () => {
       const premises = cas3PremisesFactory.build({ id: premisesId })
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
 
       premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)

@@ -4,7 +4,11 @@ import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSearch'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { bookingSearchResultFactory, bookingSearchResultsFactory } from '../../../../server/testutils/factories/index'
+import {
+  bookingSearchResultFactory,
+  bookingSearchResultsFactory,
+  cas3BookingSearchResultsFactory,
+} from '../../../../server/testutils/factories/index'
 import { MockPagination } from '../../../mockApis/bookingSearch'
 
 context('Booking search', () => {
@@ -18,7 +22,7 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are bookings in the database
-    const { data: bookings } = bookingSearchResultsFactory.build()
+    const { data: bookings } = cas3BookingSearchResultsFactory.build()
 
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
 

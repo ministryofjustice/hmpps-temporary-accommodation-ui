@@ -1,5 +1,5 @@
-import type { Booking, Cas3Bedspace, Cas3Premises, LostBed } from '@approved-premises/api'
-import { NewTurnaround } from '../../../../server/@types/shared'
+import type { Cas3Bedspace, Cas3Premises, LostBed } from '@approved-premises/api'
+import { Cas3Booking, NewTurnaround } from '../../../../server/@types/shared'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import BookingInfoComponent from '../../../components/bookingInfo'
@@ -21,7 +21,7 @@ export default class BookingTurnaroundNewPage extends Page {
   constructor(
     premises: Cas3Premises,
     bedspace: Cas3Bedspace,
-    private readonly booking: Booking,
+    private readonly booking: Cas3Booking,
   ) {
     super('Change turnaround time')
 
@@ -31,7 +31,7 @@ export default class BookingTurnaroundNewPage extends Page {
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking): BookingTurnaroundNewPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Cas3Booking): BookingTurnaroundNewPage {
     cy.visit(
       paths.bookings.turnarounds.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
     )
@@ -47,7 +47,7 @@ export default class BookingTurnaroundNewPage extends Page {
   }
 
   shouldShowDateConflictErrorMessages(
-    conflictingEntity: Booking | LostBed,
+    conflictingEntity: Cas3Booking | LostBed,
     conflictingEntityType: 'booking' | 'lost-bed',
   ): void {
     this.bedspaceConflictErrorComponent.shouldShowDateConflictErrorMessages(

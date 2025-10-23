@@ -1,10 +1,10 @@
-import { Booking, BookingStatus, Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
+import { BookingStatus, Cas3Bedspace, Cas3Booking, Cas3Premises } from '@approved-premises/api'
 import { cas3BedspaceFactory, cas3PremisesFactory } from '../../server/testutils/factories'
 import { statusName } from '../../server/utils/bookingUtils'
 
-export const setupBookingStateStubs = (booking: Booking): { premises: Cas3Premises; bedspace: Cas3Bedspace } => {
+export const setupBookingStateStubs = (booking: Cas3Booking): { premises: Cas3Premises; bedspace: Cas3Bedspace } => {
   const premises = cas3PremisesFactory.build()
-  const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+  const bedspace = cas3BedspaceFactory.build({ status: 'online', id: booking.bedspace.id })
 
   cy.task('stubSinglePremises', premises)
   cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -14,7 +14,7 @@ export const setupBookingStateStubs = (booking: Booking): { premises: Cas3Premis
 }
 
 export const assignModifiedBookingForTurnarounds = (
-  booking: Booking,
+  booking: Cas3Booking,
   statusElement: JQuery<HTMLElement>,
   alias: string,
 ) => {

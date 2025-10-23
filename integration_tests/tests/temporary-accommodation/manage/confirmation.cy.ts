@@ -3,7 +3,11 @@ import BookingConfirmationNewPage from '../../../../cypress_shared/pages/tempora
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { bookingFactory, confirmationFactory, newConfirmationFactory } from '../../../../server/testutils/factories'
+import {
+  cas3BookingFactory,
+  cas3ConfirmationFactory,
+  newConfirmationFactory,
+} from '../../../../server/testutils/factories'
 
 context('Booking confirmation', () => {
   beforeEach(() => {
@@ -16,7 +20,7 @@ context('Booking confirmation', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a provisional booking in the database
-    const booking = bookingFactory.provisional().build()
+    const booking = cas3BookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
@@ -34,7 +38,7 @@ context('Booking confirmation', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a provisional booking in the database
-    const booking = bookingFactory.provisional().build()
+    const booking = cas3BookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking confirmation page
@@ -42,7 +46,7 @@ context('Booking confirmation', () => {
     page.shouldShowBookingDetails()
 
     // And I fill out the form
-    const confirmation = confirmationFactory.build()
+    const confirmation = cas3ConfirmationFactory.build()
     const newConfirmation = newConfirmationFactory.build({
       ...confirmation,
     })
@@ -69,7 +73,7 @@ context('Booking confirmation', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a provisional booking in the database
-    const booking = bookingFactory.provisional().build()
+    const booking = cas3BookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking confirmation page

@@ -1,4 +1,9 @@
-import { bookingFactory, personFactory, restrictedPersonFactory, turnaroundFactory } from '../testutils/factories'
+import {
+  cas3BookingFactory,
+  cas3TurnaroundFactory,
+  personFactory,
+  restrictedPersonFactory,
+} from '../testutils/factories'
 import { statusTag } from '../utils/bookingUtils'
 import {
   personSummaryListRows,
@@ -12,7 +17,7 @@ jest.mock('../utils/bookingUtils')
 describe('BookingListing', () => {
   describe('personSummaryListRows', () => {
     it('returns summary list rows for the person of a booking', () => {
-      const booking = bookingFactory.build({
+      const booking = cas3BookingFactory.build({
         person: personFactory.build({
           dateOfBirth: '1980-04-08',
         }),
@@ -33,7 +38,7 @@ describe('BookingListing', () => {
     })
 
     it('returns summary list rows for the person of a booking when the person is a LAO', () => {
-      const booking = bookingFactory.build({
+      const booking = cas3BookingFactory.build({
         person: restrictedPersonFactory.build(),
       })
 
@@ -50,7 +55,7 @@ describe('BookingListing', () => {
 
   describe('statusSummaryListRows', () => {
     it('returns a summary list row for the booking status', () => {
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
 
       const statusHtml = '<strong>Some status</strong>'
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
@@ -68,7 +73,7 @@ describe('BookingListing', () => {
 
   describe('placementSummaryListRows', () => {
     it('returns a summary list row for a provisional booking placement', () => {
-      const booking = bookingFactory.provisional().build({
+      const booking = cas3BookingFactory.provisional().build({
         arrivalDate: '2023-02-21',
         departureDate: '2023-05-07',
       })
@@ -88,7 +93,7 @@ describe('BookingListing', () => {
     })
 
     it('returns a summary list row for an arrived booking placement', () => {
-      const booking = bookingFactory.arrived().build({
+      const booking = cas3BookingFactory.arrived().build({
         arrivalDate: '2023-02-21',
         departureDate: '2023-05-07',
       })
@@ -108,7 +113,7 @@ describe('BookingListing', () => {
     })
 
     it('returns a summary list row for a departed booking placement', () => {
-      const booking = bookingFactory.departed().build({
+      const booking = cas3BookingFactory.departed().build({
         arrivalDate: '2023-02-21',
         departureDate: '2023-05-07',
       })
@@ -130,7 +135,7 @@ describe('BookingListing', () => {
 
   describe('turnaroundSummaryListRows', () => {
     it('returns empty summary list rows for a booking without a turnaround', () => {
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
       delete booking.turnaround
 
       const result = turnaroundSummaryListRows(booking)
@@ -139,8 +144,8 @@ describe('BookingListing', () => {
     })
 
     it('returns empty summary list rows for a booking without a zero-day turnaround', () => {
-      const booking = bookingFactory.build({
-        turnaround: turnaroundFactory.build({
+      const booking = cas3BookingFactory.build({
+        turnaround: cas3TurnaroundFactory.build({
           workingDays: 0,
         }),
       })
@@ -151,7 +156,7 @@ describe('BookingListing', () => {
     })
 
     it('returns empty summary list rows for a cancelled booking', () => {
-      const booking = bookingFactory.cancelled().build()
+      const booking = cas3BookingFactory.cancelled().build()
 
       const result = turnaroundSummaryListRows(booking)
 
@@ -159,7 +164,7 @@ describe('BookingListing', () => {
     })
 
     it('returns summary list rows for a booking with a non-trivial turnaround', () => {
-      const booking = bookingFactory.arrived().build({
+      const booking = cas3BookingFactory.arrived().build({
         turnaroundStartDate: '2024-11-04',
         effectiveEndDate: '2024-12-20',
       })

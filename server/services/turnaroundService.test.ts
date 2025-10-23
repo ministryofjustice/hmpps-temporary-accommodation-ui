@@ -1,6 +1,6 @@
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
-import { newTurnaroundFactory, turnaroundFactory } from '../testutils/factories'
+import { cas3TurnaroundFactory, newTurnaroundFactory } from '../testutils/factories'
 import TurnaroundService from './turnaroundService'
 
 jest.mock('../data/bookingClient.ts')
@@ -22,7 +22,7 @@ describe('TurnaroundService', () => {
 
   describe('createTurnaround', () => {
     it('on success returns the turnaround that has been posted', async () => {
-      const turnaround = turnaroundFactory.build()
+      const turnaround = cas3TurnaroundFactory.build()
       const payload = newTurnaroundFactory.build()
 
       bookingClient.createTurnaround.mockResolvedValue(turnaround)

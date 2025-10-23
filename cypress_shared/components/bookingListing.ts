@@ -1,4 +1,4 @@
-import type { Booking } from '@approved-premises/api'
+import type { Cas3Booking } from '@approved-premises/api'
 import { statusName } from '../../server/utils/bookingUtils'
 import { DateFormats } from '../../server/utils/dateUtils'
 import { isFullPerson, personName } from '../../server/utils/personUtils'
@@ -6,7 +6,7 @@ import { assignModifiedBookingForTurnarounds } from '../utils/booking'
 import Component from './component'
 
 export default class BookingListingComponent extends Component {
-  constructor(private readonly booking: Booking) {
+  constructor(private readonly booking: Cas3Booking) {
     super()
   }
 
@@ -25,7 +25,7 @@ export default class BookingListingComponent extends Component {
       const { shouldShowKeyAndValue } = this
 
       cy.then(function _() {
-        const booking = this.modifiedBooking as Booking
+        const booking = this.modifiedBooking as Cas3Booking
         const { status, arrivalDate, departureDate } = booking
 
         if (booking.status === 'arrived' || booking.status === 'departed') {

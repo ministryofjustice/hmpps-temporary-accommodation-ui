@@ -1,21 +1,28 @@
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
 import {
-  arrivalFactory,
   assessmentSummaryFactory,
   bookingFactory,
-  departureFactory,
-  extensionFactory,
+  bookingSearchResultFactory,
+  cas3ArrivalFactory,
+  cas3BookingFactory,
+  cas3BookingSearchResultFactory,
+  cas3DepartureFactory,
+  cas3ExtensionFactory,
   personFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
 import {
   assessmentRadioItems,
   bookingActions,
+  bookingSearchResultsToCas3BookingSearchResults,
+  bookingToCas3Booking,
   deriveBookingHistory,
   generateConflictBespokeError,
   generateTurnaroundConflictBespokeError,
   getLatestExtension,
+  isCas3Booking,
+  isCas3BookingSearchResults,
   shortenedOrExtended,
   statusName,
   statusTag,
@@ -41,7 +48,7 @@ const changeTurnaroundAction = {
 describe('bookingUtils', () => {
   describe('bookingActions', () => {
     it('returns a mark as confirmed action for a provisional booking', () => {
-      const booking = bookingFactory.provisional().build({ id: bookingId })
+      const booking = cas3BookingFactory.provisional().build({ id: bookingId })
 
       expect(bookingActions(premisesId, bedspaceId, booking)).toEqual([
         {
@@ -55,7 +62,7 @@ describe('bookingUtils', () => {
     })
 
     it('returns a mark as active action for a confirmed booking', () => {
-      const booking = bookingFactory.confirmed().build({ id: bookingId })
+      const booking = cas3BookingFactory.confirmed().build({ id: bookingId })
 
       expect(bookingActions('premisesId', 'bedspaceId', booking)).toEqual([
         {
@@ -69,7 +76,7 @@ describe('bookingUtils', () => {
     })
 
     it('returns mark as departed, change date, and extend actions for an arrived booking', () => {
-      const booking = bookingFactory.arrived().build({ id: bookingId })
+      const booking = cas3BookingFactory.arrived().build({ id: bookingId })
 
       expect(bookingActions('premisesId', 'bedspaceId', booking)).toEqual([
         {
@@ -92,7 +99,7 @@ describe('bookingUtils', () => {
     })
 
     it('returns edit departed booking for a departed booking', () => {
-      const booking = bookingFactory.departed().build({ id: bookingId })
+      const booking = cas3BookingFactory.departed().build({ id: bookingId })
 
       expect(bookingActions('premisesId', 'bedspaceId', booking)).toEqual([
         {
@@ -105,7 +112,7 @@ describe('bookingUtils', () => {
     })
 
     it('returns edit departed booking for a closed booking', () => {
-      const booking = bookingFactory.closed().build({ id: bookingId })
+      const booking = cas3BookingFactory.closed().build({ id: bookingId })
 
       expect(bookingActions('premisesId', 'bedspaceId', booking)).toEqual([
         {
@@ -118,7 +125,7 @@ describe('bookingUtils', () => {
     })
 
     it('returns edit cancelled booking for a cancelled booking', () => {
-      const booking = bookingFactory.cancelled().build({ id: bookingId })
+      const booking = cas3BookingFactory.cancelled().build({ id: bookingId })
 
       expect(bookingActions('premisesId', 'bedspaceId', booking)).toEqual([
         {
@@ -144,23 +151,23 @@ describe('bookingUtils', () => {
 
   describe('getLatestExtension', () => {
     it('returns undefined when the booking has no extensions', () => {
-      const booking = bookingFactory.arrived().build()
+      const booking = cas3BookingFactory.arrived().build()
 
       expect(getLatestExtension(booking)).toEqual(undefined)
     })
 
     it('returns the most recent extension when the booking has extensions', () => {
-      const extension1 = extensionFactory.build({
+      const extension1 = cas3ExtensionFactory.build({
         createdAt: '2022-01-03',
       })
-      const extension2 = extensionFactory.build({
+      const extension2 = cas3ExtensionFactory.build({
         createdAt: '2022-09-23',
       })
-      const extension3 = extensionFactory.build({
+      const extension3 = cas3ExtensionFactory.build({
         createdAt: '2023-04-11',
       })
 
-      const booking = bookingFactory.arrived().build({
+      const booking = cas3BookingFactory.arrived().build({
         extensions: [extension2, extension3, extension1],
       })
 
@@ -171,32 +178,32 @@ describe('bookingUtils', () => {
   describe('deriveBookingHistory', () => {
     it('derives the booking history of a departed and extended booking', () => {
       const extensions = [
-        extensionFactory.build({
+        cas3ExtensionFactory.build({
           newDepartureDate: '2022-03-03',
           createdAt: '2022-04-01',
         }),
 
-        extensionFactory.build({
+        cas3ExtensionFactory.build({
           newDepartureDate: '2022-03-04',
           createdAt: '2022-04-02',
         }),
 
-        extensionFactory.build({
+        cas3ExtensionFactory.build({
           newDepartureDate: '2022-03-05',
           createdAt: '2022-04-03',
         }),
       ]
 
-      const booking = bookingFactory.departed().build({
+      const booking = cas3BookingFactory.departed().build({
         originalArrivalDate: '2022-01-01',
         originalDepartureDate: '2022-03-01',
         arrivalDate: '2022-01-02',
         departureDate: '2022-03-06',
-        departure: departureFactory.build({
+        departure: cas3DepartureFactory.build({
           dateTime: '2022-03-06',
         }),
         extensions: [extensions[2], extensions[0], extensions[1]],
-        arrival: arrivalFactory.build({
+        arrival: cas3ArrivalFactory.build({
           arrivalDate: '2022-01-02',
           expectedDepartureDate: '2022-03-02',
         }),
@@ -280,15 +287,15 @@ describe('bookingUtils', () => {
     })
 
     it('derives the booking history of a departed booking without extensions', () => {
-      const booking = bookingFactory.departed().build({
+      const booking = cas3BookingFactory.departed().build({
         originalArrivalDate: '2022-01-01',
         originalDepartureDate: '2022-03-01',
         arrivalDate: '2022-01-02',
         departureDate: '2022-03-03',
-        departure: departureFactory.build({
+        departure: cas3DepartureFactory.build({
           dateTime: '2022-03-03',
         }),
-        arrival: arrivalFactory.build({
+        arrival: cas3ArrivalFactory.build({
           arrivalDate: '2022-01-02',
           expectedDepartureDate: '2022-03-02',
         }),
@@ -338,7 +345,7 @@ describe('bookingUtils', () => {
     })
 
     it('derives the booking history of a cancelled confirmed booking', () => {
-      const booking = bookingFactory.cancelled('confirmed').build()
+      const booking = cas3BookingFactory.cancelled('confirmed').build()
 
       const expected = [
         {
@@ -367,7 +374,7 @@ describe('bookingUtils', () => {
     })
 
     it('derives the booking history of a cancelled provisional booking', () => {
-      const booking = bookingFactory.cancelled('provisional').build()
+      const booking = cas3BookingFactory.cancelled('provisional').build()
 
       const expected = [
         {
@@ -391,7 +398,7 @@ describe('bookingUtils', () => {
 
   describe('shortenedOrExtended', () => {
     it("returns 'shortened' for an extension that sets an earlier departure date", () => {
-      const extension = extensionFactory.build({
+      const extension = cas3ExtensionFactory.build({
         newDepartureDate: '2021-06-18',
         previousDepartureDate: '2021-06-24',
       })
@@ -400,7 +407,7 @@ describe('bookingUtils', () => {
     })
 
     it("returns 'extended' for an extension that sets a later departure date", () => {
-      const extension = extensionFactory.build({
+      const extension = cas3ExtensionFactory.build({
         newDepartureDate: '2024-08-01',
         previousDepartureDate: '2024-07-15',
       })
@@ -409,7 +416,7 @@ describe('bookingUtils', () => {
     })
 
     it("returns 'extended' for an extension that leaves the departure date unchanged", () => {
-      const extension = extensionFactory.build({
+      const extension = cas3ExtensionFactory.build({
         newDepartureDate: '2017-11-04',
         previousDepartureDate: '2017-11-04',
       })
@@ -635,6 +642,84 @@ describe('bookingUtils', () => {
           value: 'no-assessment',
         },
       ])
+    })
+  })
+
+  // TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities tests
+  describe('Cas3 casting utilities', () => {
+    describe('isCas3Booking', () => {
+      it('returns true for a Cas3Booking', () => {
+        expect(isCas3Booking(cas3BookingFactory.build())).toEqual(true)
+      })
+
+      it('returns false for a Booking', () => {
+        expect(isCas3Booking(bookingFactory.build())).toEqual(false)
+      })
+    })
+
+    describe('bookingToCas3Booking', () => {
+      it('returns a Cas3Booking directly', () => {
+        const booking = cas3BookingFactory.build()
+
+        const result = bookingToCas3Booking(booking)
+
+        expect(isCas3Booking(result)).toEqual(true)
+        expect(result).toEqual(booking)
+      })
+
+      it('transforms a Booking into a Cas3Booking', () => {
+        const booking = bookingFactory.build()
+
+        const result = bookingToCas3Booking(booking)
+
+        expect(isCas3Booking(result)).toEqual(true)
+        expect(result.bedspace.reference).toEqual(booking.bed.name)
+      })
+    })
+
+    describe('isCas3BookingSearchResult', () => {
+      it('returns true for an array of Cas3BookingSearchResult', () => {
+        const searchResults = cas3BookingSearchResultFactory.buildList(3)
+
+        expect(isCas3BookingSearchResults(searchResults)).toEqual(true)
+      })
+
+      it('returns true for an empty array', () => {
+        expect(isCas3BookingSearchResults([])).toEqual(true)
+      })
+
+      it('returns false for an array of BookingSearchResult', () => {
+        const searchResults = bookingSearchResultFactory.buildList(3)
+
+        expect(isCas3BookingSearchResults(searchResults)).toEqual(false)
+      })
+    })
+
+    describe('bookingSearchResultsToCas3BookingSearchResults', () => {
+      it('returns an empty array directly', () => {
+        const result = bookingSearchResultsToCas3BookingSearchResults([])
+
+        expect(isCas3BookingSearchResults(result)).toEqual(true)
+        expect(result).toEqual([])
+      })
+
+      it('returns an array of Cas3BookingSearchResult directly', () => {
+        const bookingSearchResults = cas3BookingSearchResultFactory.buildList(3)
+
+        const result = bookingSearchResultsToCas3BookingSearchResults(bookingSearchResults)
+
+        expect(isCas3BookingSearchResults(result)).toEqual(true)
+        expect(result).toEqual(bookingSearchResults)
+      })
+
+      it('transforms an array of BookingSearchResult into an array of Cas3BookingSearchResult', () => {
+        const bookingSearchResults = bookingSearchResultFactory.buildList(3)
+
+        const result = bookingSearchResultsToCas3BookingSearchResults(bookingSearchResults)
+
+        expect(isCas3BookingSearchResults(result)).toEqual(true)
+        expect(result[0].bedspace.reference).toEqual(bookingSearchResults[0].bed.name)
+      })
     })
   })
 })

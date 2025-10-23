@@ -5,10 +5,10 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PremisesService } from '../../../services'
 import ConfirmationService from '../../../services/confirmationService'
 import {
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
+  cas3ConfirmationFactory,
   cas3PremisesFactory,
-  confirmationFactory,
   newConfirmationFactory,
 } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
@@ -51,7 +51,7 @@ describe('ConfirmationsController', () => {
     it('renders the form', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build()
+      const booking = cas3BookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
@@ -86,7 +86,7 @@ describe('ConfirmationsController', () => {
     it('creates a confirmation and redirects to the show booking page', async () => {
       const requestHandler = confirmationsController.create()
 
-      const confirmation = confirmationFactory.build()
+      const confirmation = cas3ConfirmationFactory.build()
       const newConfirmation = newConfirmationFactory.build({
         ...confirmation,
       })
@@ -118,7 +118,7 @@ describe('ConfirmationsController', () => {
     it('renders with errors if the API returns an error', async () => {
       const requestHandler = confirmationsController.create()
 
-      const confirmation = confirmationFactory.build()
+      const confirmation = cas3ConfirmationFactory.build()
       const newConfirmation = newConfirmationFactory.build({
         ...confirmation,
       })

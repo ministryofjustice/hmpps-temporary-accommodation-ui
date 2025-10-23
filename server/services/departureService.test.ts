@@ -3,7 +3,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import DepartureService from './departureService'
 
 import { CallConfig } from '../data/restClient'
-import { departureFactory, newDepartureFactory, referenceDataFactory } from '../testutils/factories'
+import { cas3DepartureFactory, newDepartureFactory, referenceDataFactory } from '../testutils/factories'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -28,7 +28,7 @@ describe('DepartureService', () => {
   describe('createDeparture', () => {
     it('on success returns the departure that has been posted', async () => {
       const newDeparture = newDepartureFactory.build()
-      const departure = departureFactory.build()
+      const departure = cas3DepartureFactory.build()
 
       bookingClient.markDeparture.mockResolvedValue(departure)
 

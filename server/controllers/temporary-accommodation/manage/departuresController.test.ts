@@ -4,10 +4,10 @@ import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, DepartureService, PremisesService } from '../../../services'
 import {
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
+  cas3DepartureFactory,
   cas3PremisesFactory,
-  departureFactory,
   newDepartureFactory,
 } from '../../../testutils/factories'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -52,7 +52,7 @@ describe('DeparturesController', () => {
     it('renders the form', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
 
       request.params = {
         premisesId: premises.id,
@@ -94,7 +94,7 @@ describe('DeparturesController', () => {
     it('creates a departure and redirects to the show booking page', async () => {
       const requestHandler = departuresController.create()
 
-      const departure = departureFactory.build()
+      const departure = cas3DepartureFactory.build()
       const newDeparture = newDepartureFactory.build({
         ...departure,
       })
@@ -130,7 +130,7 @@ describe('DeparturesController', () => {
     it('renders with errors if the API returns an error', async () => {
       const requestHandler = departuresController.create()
 
-      const departure = departureFactory.build()
+      const departure = cas3DepartureFactory.build()
       const newDeparture = newDepartureFactory.build({
         ...departure,
       })
@@ -163,7 +163,7 @@ describe('DeparturesController', () => {
     it('renders with errors if the departure date is in the future', async () => {
       const requestHandler = departuresController.create()
 
-      const departure = departureFactory.build()
+      const departure = cas3DepartureFactory.build()
       const newDeparture = newDepartureFactory.build({
         ...departure,
         dateTime: DateFormats.dateObjToIsoDate(new Date(Date.now() + 24 * 60 * 60 * 1000)),
@@ -194,7 +194,7 @@ describe('DeparturesController', () => {
     it('renders the form', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
 
       request.params = {
         premisesId: premises.id,
@@ -239,7 +239,7 @@ describe('DeparturesController', () => {
     it('creates a new departure and redirects to the show booking page', async () => {
       const requestHandler = departuresController.update()
 
-      const departure = departureFactory.build()
+      const departure = cas3DepartureFactory.build()
       const newDeparture = newDepartureFactory.build({
         ...departure,
       })
@@ -272,7 +272,7 @@ describe('DeparturesController', () => {
     it('renders with errors if the API returns an error', async () => {
       const requestHandler = departuresController.update()
 
-      const departure = departureFactory.build()
+      const departure = cas3DepartureFactory.build()
       const newDeparture = newDepartureFactory.build({
         ...departure,
       })
@@ -316,7 +316,7 @@ describe('DeparturesController', () => {
     it('does not show the NDelius update message when creating', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
 
       request.params = {
         premisesId: premises.id,
@@ -346,7 +346,7 @@ describe('DeparturesController', () => {
     it('renders a different success message after creating', async () => {
       const requestHandler = departuresController.create()
 
-      const departure = departureFactory.build()
+      const departure = cas3DepartureFactory.build()
       const newDeparture = newDepartureFactory.build({
         ...departure,
       })

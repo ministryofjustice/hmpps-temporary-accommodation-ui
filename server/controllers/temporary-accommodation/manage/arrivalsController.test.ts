@@ -1,16 +1,16 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 import { addDays } from 'date-fns'
-import { BespokeError } from '../../../@types/ui'
+import { BespokeError } from '@approved-premises/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { ArrivalService, BookingService, PremisesService } from '../../../services'
 import {
-  arrivalFactory,
-  bookingFactory,
+  cas3ArrivalFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
+  cas3ConfirmationFactory,
   cas3PremisesFactory,
-  confirmationFactory,
   newArrivalFactory,
 } from '../../../testutils/factories'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
@@ -58,7 +58,7 @@ describe('ArrivalsController', () => {
       it('renders the form prepopulated with the current booking dates', async () => {
         const premises = cas3PremisesFactory.build()
         const bedspace = cas3BedspaceFactory.build()
-        const booking = bookingFactory.arrived().build()
+        const booking = cas3BookingFactory.arrived().build()
 
         request.params = {
           premisesId: premises.id,
@@ -94,7 +94,7 @@ describe('ArrivalsController', () => {
 
     describe('create', () => {
       it('creates an arrival and redirects to the show booking page', async () => {
-        const arrival = arrivalFactory.build()
+        const arrival = cas3ArrivalFactory.build()
         const newArrival = newArrivalFactory.build()
 
         request.params = {
@@ -130,7 +130,7 @@ describe('ArrivalsController', () => {
       it('renders with errors if the API returns an error', async () => {
         const requestHandler = arrivalsController.create()
 
-        const arrival = confirmationFactory.build()
+        const arrival = cas3ConfirmationFactory.build()
         const newArrival = newArrivalFactory.build({
           ...arrival,
         })
@@ -164,7 +164,7 @@ describe('ArrivalsController', () => {
       it('renders with errors if the API returns a 409 Conflict status', async () => {
         const requestHandler = arrivalsController.create()
 
-        const arrival = confirmationFactory.build()
+        const arrival = cas3ConfirmationFactory.build()
         const newArrival = newArrivalFactory.build({
           ...arrival,
         })
@@ -209,7 +209,7 @@ describe('ArrivalsController', () => {
       it('renders with errors if arrival date is in future', async () => {
         const requestHandler = arrivalsController.create()
 
-        const arrival = confirmationFactory.build()
+        const arrival = cas3ConfirmationFactory.build()
         const newArrival = newArrivalFactory.build({
           ...arrival,
         })
@@ -250,7 +250,7 @@ describe('ArrivalsController', () => {
       it('renders the form', async () => {
         const premises = cas3PremisesFactory.build()
         const bedspace = cas3BedspaceFactory.build()
-        const booking = bookingFactory.arrived().build()
+        const booking = cas3BookingFactory.arrived().build()
 
         request.params = {
           premisesId: premises.id,
@@ -287,9 +287,9 @@ describe('ArrivalsController', () => {
       it('updates an arrival and redirects to the show booking page', async () => {
         const requestHandler = arrivalsController.update()
 
-        const arrival = arrivalFactory.build()
+        const arrival = cas3ArrivalFactory.build()
         const newArrival = newArrivalFactory.build()
-        const booking = bookingFactory.build()
+        const booking = cas3BookingFactory.build()
         booking.departureDate = newArrival.expectedDepartureDate
         bookingService.getBooking.mockResolvedValue(booking)
 
@@ -321,7 +321,7 @@ describe('ArrivalsController', () => {
       it('renders with errors if the API returns an error', async () => {
         const requestHandler = arrivalsController.update()
 
-        const arrival = confirmationFactory.build()
+        const arrival = cas3ConfirmationFactory.build()
         const newArrival = newArrivalFactory.build({
           ...arrival,
         })
@@ -354,7 +354,7 @@ describe('ArrivalsController', () => {
       it('renders with errors if the API returns a 409 Conflict status', async () => {
         const requestHandler = arrivalsController.update()
 
-        const arrival = confirmationFactory.build()
+        const arrival = cas3ConfirmationFactory.build()
         const newArrival = newArrivalFactory.build({
           ...arrival,
         })
@@ -398,7 +398,7 @@ describe('ArrivalsController', () => {
         const currentDate = new Date()
         const futureDate = addDays(currentDate, 7)
 
-        const arrival = confirmationFactory.build()
+        const arrival = cas3ConfirmationFactory.build()
         const newArrival = newArrivalFactory.build({
           ...arrival,
         })
@@ -444,7 +444,7 @@ describe('ArrivalsController', () => {
     it('does not show the NDelius update message when creating', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build()
+      const booking = cas3BookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
@@ -474,7 +474,7 @@ describe('ArrivalsController', () => {
     })
 
     it('renders a different success message after creating', async () => {
-      const arrival = arrivalFactory.build()
+      const arrival = cas3ArrivalFactory.build()
       const newArrival = newArrivalFactory.build()
 
       request.params = {

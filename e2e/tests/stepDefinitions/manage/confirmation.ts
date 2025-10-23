@@ -3,7 +3,7 @@ import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import BookingConfirmationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirmationNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import { bookingFactory, confirmationFactory, newConfirmationFactory } from '../../../../server/testutils/factories'
+import { cas3BookingFactory, confirmationFactory, newConfirmationFactory } from '../../../../server/testutils/factories'
 
 Given('I confirm the booking', () => {
   cy.then(function _() {
@@ -24,7 +24,7 @@ Given('I confirm the booking', () => {
     bookingConfirmationPage.shouldShowBookingDetails()
     bookingConfirmationPage.completeForm(newConfirmation)
 
-    const confirmedBooking = bookingFactory.build({
+    const confirmedBooking = cas3BookingFactory.build({
       ...this.booking,
       status: 'confirmed',
       confirmation,

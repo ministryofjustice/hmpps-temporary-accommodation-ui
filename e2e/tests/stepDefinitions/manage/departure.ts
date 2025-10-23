@@ -6,7 +6,7 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import BookingDepartureEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureEdit'
 import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import { bookingFactory, departureFactory, newDepartureFactory } from '../../../../server/testutils/factories'
+import { cas3BookingFactory, departureFactory, newDepartureFactory } from '../../../../server/testutils/factories'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 
 Given('I mark the booking as departed', () => {
@@ -32,7 +32,7 @@ Given('I mark the booking as departed', () => {
     bookingDeparturePage.shouldShowBookingDetails()
     bookingDeparturePage.completeForm(newDeparture)
 
-    const departedBooking = bookingFactory.build({
+    const departedBooking = cas3BookingFactory.build({
       ...this.booking,
       status: 'unknown-departed-or-closed' as BookingStatus,
       departureDate: newDeparture.dateTime,
@@ -75,7 +75,7 @@ Given('I edit the departed booking', () => {
     bookingDeparturePage.shouldShowBookingDetails()
     bookingDeparturePage.completeForm(newDeparture)
 
-    const departedBooking = bookingFactory.build({
+    const departedBooking = cas3BookingFactory.build({
       ...this.booking,
       departureDate: newDeparture.dateTime,
       departure,

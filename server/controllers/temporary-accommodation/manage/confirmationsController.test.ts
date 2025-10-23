@@ -5,8 +5,8 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PremisesService } from '../../../services'
 import ConfirmationService from '../../../services/confirmationService'
 import {
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
   confirmationFactory,
   newConfirmationFactory,
@@ -51,7 +51,7 @@ describe('ConfirmationsController', () => {
     it('renders the form', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build()
+      const booking = cas3BookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,

@@ -4,7 +4,7 @@ import BookingCancellationNewPage from '../../../../cypress_shared/pages/tempora
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { bookingFactory, cancellationFactory, newCancellationFactory } from '../../../../server/testutils/factories'
+import { cancellationFactory, cas3BookingFactory, newCancellationFactory } from '../../../../server/testutils/factories'
 
 context('Booking cancellation', () => {
   beforeEach(() => {
@@ -17,7 +17,7 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a provisional booking in the database
-    const booking = bookingFactory.provisional().build()
+    const booking = cas3BookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
@@ -36,7 +36,7 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a cancelled booking in the database
-    const booking = bookingFactory.cancelled().build()
+    const booking = cas3BookingFactory.cancelled().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
@@ -55,7 +55,7 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a provisional booking in the database
-    const booking = bookingFactory.provisional().build()
+    const booking = cas3BookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking cancellation page
@@ -93,7 +93,7 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a provisional booking in the database
-    const booking = bookingFactory.provisional().build()
+    const booking = cas3BookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking cancellation page
@@ -117,7 +117,7 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a provisional booking in the database
-    const booking = bookingFactory.provisional().build()
+    const booking = cas3BookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking cancellation page
@@ -136,7 +136,7 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a cancelled booking in the database
-    const booking = bookingFactory.cancelled().build()
+    const booking = cas3BookingFactory.cancelled().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit cancelled booking page
@@ -174,7 +174,7 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a cancelled booking in the database
-    const booking = bookingFactory.cancelled().build()
+    const booking = cas3BookingFactory.cancelled().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit cancelled booking page
@@ -199,7 +199,7 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a cancelled booking in the database
-    const booking = bookingFactory.cancelled().build()
+    const booking = cas3BookingFactory.cancelled().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit cancelled booking page

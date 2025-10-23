@@ -37,7 +37,7 @@ describe('ReportClient', () => {
       const month = '3'
 
       fakeApprovedPremisesApi
-        .get(paths.reports.bookings({}))
+        .get(paths.cas3.reports.bookings({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .query({ year, month })
         .reply(200, data, { 'content-type': 'some-content-type' })
@@ -62,7 +62,7 @@ describe('ReportClient', () => {
       const month = '0'
 
       fakeApprovedPremisesApi
-        .get(paths.reports.bookings({}))
+        .get(paths.cas3.reports.bookings({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .query({ year, month })
         .reply(200, data, { 'content-type': 'some-content-type' })
@@ -89,7 +89,7 @@ describe('ReportClient', () => {
       const type = 'bedOccupancy'
 
       fakeApprovedPremisesApi
-        .get(paths.reports.bedspaceUtilisation({}))
+        .get(paths.cas3.reports.bedspaceUtilisation({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .query({ probationRegionId: probationRegion.id, startDate, endDate })
         .reply(200, data, { 'content-type': 'some-content-type' })

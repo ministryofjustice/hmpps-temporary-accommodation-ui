@@ -108,7 +108,7 @@ const applyPaths = {
     create: applicationsPath,
     index: applicationsPath,
     delete: singleApplicationPath.path('delete'),
-    update: singleApplicationPath,
+    update: singleApplicationCas3Path,
     submission: submitApplicationCas3Path,
   },
 }

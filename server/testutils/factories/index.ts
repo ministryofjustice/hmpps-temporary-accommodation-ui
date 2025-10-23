@@ -2,6 +2,7 @@ import acctAlertFactory from './acctAlert'
 import activeOffenceFactory from './activeOffence'
 import adjudicationFactory from './adjudication'
 import applicationFactory from './application'
+import cas3ApplicationFactory from './cas3Application'
 import applicationSummaryFactory from './applicationSummary'
 import arrivalFactory from './arrival'
 import assessmentFactory from './assessment'
@@ -65,7 +66,6 @@ import cas3UpdateBedspaceFactory from './cas3UpdateBedspace'
 import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
 import cas3BedspaceReferenceFactory from './cas3BedspaceReference'
 import cas3BedspacesReferenceFactory from './cas3BedspacesReference'
-import cas3ApplicationFactory from './cas3Application'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
@@ -85,6 +85,7 @@ export {
   activeOffenceFactory,
   adjudicationFactory,
   applicationFactory,
+  cas3ApplicationFactory,
   applicationSummaryFactory,
   arrivalFactory,
   assessmentFactory,
@@ -149,7 +150,6 @@ export {
   cas3BedspaceReferenceFactory,
   cas3BedspacesReferenceFactory,
   prisonCaseNotesFactory,
-  cas3ApplicationFactory,
   probationRegionFactory,
   referenceDataFactory,
   referralHistoryDomainEventNoteFactory,

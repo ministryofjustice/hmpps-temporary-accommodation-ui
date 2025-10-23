@@ -1,11 +1,11 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { TemporaryAccommodationApplication } from '@approved-premises/api'
+import type { Cas3Application, TemporaryAccommodationApplication } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '.'
 
 export default {
-  stubApplications: (applications: TemporaryAccommodationApplication): SuperAgentRequest =>
+  stubApplications: (applications: Array<Cas3Application>): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -17,7 +17,7 @@ export default {
         jsonBody: applications,
       },
     }),
-  stubApplicationCreate: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>
+  stubApplicationCreate: (args: { application: Cas3Application }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
@@ -29,11 +29,11 @@ export default {
         jsonBody: { ...args.application, data: null },
       },
     }),
-  stubApplicationUpdate: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>
+  stubApplicationUpdate: (args: { application: Cas3Application }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'PUT',
-        url: `/applications/${args.application.id}`,
+        url: `/cas3/applications/${args.application.id}`,
       },
       response: {
         status: 201,
@@ -51,7 +51,7 @@ export default {
         transformers: ['response-template'],
       },
     }),
-  stubApplicationGet: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>
+  stubApplicationGet: (args: { application: Cas3Application }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -63,10 +63,7 @@ export default {
         jsonBody: args.application,
       },
     }),
-  stubApplicationReferralHistoryGet: (args: {
-    application: TemporaryAccommodationApplication
-    referralNotes
-  }): SuperAgentRequest =>
+  stubApplicationReferralHistoryGet: (args: { application: Cas3Application; referralNotes }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -93,7 +90,7 @@ export default {
         jsonBody: args.documents,
       },
     }),
-  stubApplicationSubmit: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>
+  stubApplicationSubmit: (args: { application: Cas3Application }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
@@ -115,7 +112,7 @@ export default {
     (
       await getMatchingRequests({
         method: 'PUT',
-        url: `/applications/${applicationId}`,
+        url: `/cas3/applications/${applicationId}`,
       })
     ).body.requests,
   verifyApplicationSubmit: async (applicationId: string) =>
@@ -125,7 +122,7 @@ export default {
         url: `/cas3/applications/${applicationId}/submission`,
       })
     ).body.requests,
-  stubApplicationDelete: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>
+  stubApplicationDelete: (args: { application: Cas3Application }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'DELETE',

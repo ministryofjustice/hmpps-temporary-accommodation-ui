@@ -1,6 +1,6 @@
 import nock from 'nock'
 
-import { Cas3SubmitApplication as SubmitApplication, UpdateApplication } from '../@types/shared'
+import { Cas3SubmitApplication, Cas3UpdateApplication } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
 import {
@@ -100,14 +100,13 @@ describe('ApplicationClient', () => {
 
   describe('update', () => {
     it('should return an application when a PUT request is made', async () => {
-      const application = applicationFactory.build()
-      const data: UpdateApplication = {
+      const application = cas3ApplicationFactory.build()
+      const data: Cas3UpdateApplication = {
         data: application.data,
-        type: 'CAS3',
       }
 
       fakeApprovedPremisesApi
-        .put(paths.applications.update({ id: application.id }), JSON.stringify({ ...data, type: 'CAS3' }))
+        .put(paths.applications.update({ id: application.id }), JSON.stringify({ ...data }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, application)
 
@@ -137,7 +136,7 @@ describe('ApplicationClient', () => {
   describe('submit', () => {
     it('should submit the application', async () => {
       const application = applicationFactory.build()
-      const data: SubmitApplication = {
+      const data: Cas3SubmitApplication = {
         arrivalDate: application.data?.eligibility?.['accommodation-required-from-date']?.accommodationRequiredFromDate,
         summaryData: {},
         probationDeliveryUnitId: application.data?.['contact-details']?.['probation-practitioner']?.pdu?.id,

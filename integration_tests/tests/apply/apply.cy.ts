@@ -21,7 +21,7 @@ import { setupTestUser } from '../../../cypress_shared/utils/setupTestUser'
 import paths from '../../../server/paths/api'
 import {
   activeOffenceFactory,
-  applicationFactory,
+  cas3ApplicationFactory,
   personFactory,
   referralHistorySystemNoteFactory,
   risksFactory,
@@ -49,7 +49,7 @@ context('Apply', () => {
         const accommodationRequiredFromDate = faker.date.soon({ days: 90 })
 
         const person = personFactory.build()
-        const application = applicationFactory.build({ person })
+        const application = cas3ApplicationFactory.build({ person })
         const risks = risksFactory.retrived().build({
           crn: person.crn,
           tier: tierEnvelopeFactory.build({ status: 'retrieved', value: { level: 'A3' } }),
@@ -214,7 +214,7 @@ context('Apply', () => {
       confirmationPage.linkToFeedbackSurvey()
 
       // Given there are applications in the database
-      const applications = applicationFactory.buildList(5)
+      const applications = cas3ApplicationFactory.buildList(5)
       cy.task('stubApplications', applications)
 
       // And there are risks in the database
@@ -660,7 +660,7 @@ context('Apply', () => {
 
       cy.fixture('applicationData.json').then(applicationData => {
         const person = personFactory.build()
-        const application = applicationFactory.build({ person })
+        const application = cas3ApplicationFactory.build({ person })
 
         const offences = activeOffenceFactory.buildList(1)
         application.data = applicationData

@@ -2,9 +2,10 @@ import type {
   ActiveOffence,
   TemporaryAccommodationApplication as Application,
   TemporaryAccommodationApplicationSummary as ApplicationSummary,
+  Cas3Application,
+  Cas3UpdateApplication,
   Document,
   Cas3SubmitApplication as SubmitApplication,
-  UpdateTemporaryAccommodationApplication as UpdateApplication,
 } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
@@ -38,8 +39,8 @@ export default class ApplicationClient {
     })
   }
 
-  async update(applicationId: string, updateData: UpdateApplication) {
-    return this.restClient.put<UpdateApplication>({
+  async update(applicationId: string, updateData: Cas3UpdateApplication) {
+    return this.restClient.put<Cas3Application>({
       path: paths.applications.update({ id: applicationId }),
       data: updateData,
     })

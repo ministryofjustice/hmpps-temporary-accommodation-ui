@@ -2,4 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RequestForPlacementType = 'manual' | 'automatic';
+export type Cas3ReferenceData = {
+    description: string;
+    id: string;
+    name?: string;
+};
+

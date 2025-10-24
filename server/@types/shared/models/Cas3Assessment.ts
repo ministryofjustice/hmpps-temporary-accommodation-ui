@@ -2,19 +2,25 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Assessment } from './Assessment';
+import type { AssessmentDecision } from './AssessmentDecision';
+import type { ClarificationNote } from './ClarificationNote';
 import type { TemporaryAccommodationApplication } from './TemporaryAccommodationApplication';
 import type { TemporaryAccommodationAssessmentStatus } from './TemporaryAccommodationAssessmentStatus';
 import type { TemporaryAccommodationUser } from './TemporaryAccommodationUser';
-export type TemporaryAccommodationAssessment = (Assessment & {
+export type Cas3Assessment = {
     accommodationRequiredFromDate?: string;
+    allocatedAt?: string;
     allocatedToStaffMember?: TemporaryAccommodationUser;
-    application?: TemporaryAccommodationApplication;
+    application: TemporaryAccommodationApplication;
+    clarificationNotes: Array<ClarificationNote>;
+    createdAt: string;
+    data?: any;
+    decision?: AssessmentDecision;
+    id: string;
+    rejectionRationale?: string;
     releaseDate?: string;
     status?: TemporaryAccommodationAssessmentStatus;
-    summaryData?: any;
-} & {
-    application: TemporaryAccommodationApplication;
+    submittedAt?: string;
     summaryData: any;
-});
+};
 

@@ -1,12 +1,9 @@
-import { readFileSync } from 'fs'
-import path from 'path'
 import { SuperAgentRequest } from 'superagent'
 import qs from 'qs'
 
 import type {
   ActiveOffence,
   Adjudication,
-  Document,
   OASysSections,
   Person,
   PersonAcctAlert,
@@ -151,24 +148,6 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: args.oasysSections,
-      },
-    }),
-
-  stubPersonDocument: (args: { person: Person; document: Document }) =>
-    stubFor({
-      request: {
-        method: 'GET',
-        url: `/documents/${args.person.crn}/${args.document.id}`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/octet-stream',
-          'content-disposition': `attachment; filename=${args.document.fileName}`,
-        },
-        base64Body: readFileSync(path.resolve(__dirname, '..', '..', 'cypress_shared', 'fixtures', 'document.pdf'), {
-          encoding: 'base64',
-        }),
       },
     }),
 }

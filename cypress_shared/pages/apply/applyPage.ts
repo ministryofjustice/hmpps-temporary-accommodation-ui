@@ -1,4 +1,4 @@
-import { Document, TemporaryAccommodationApplication } from '@approved-premises/api'
+import { TemporaryAccommodationApplication } from '@approved-premises/api'
 import TasklistPage from '../../../server/form-pages/tasklistPage'
 import Page from '../page'
 
@@ -80,18 +80,6 @@ export default class ApplyPage extends Page {
           .should('contain', summary.answer)
           .type(`. With an extra comment ${summary.questionNumber}`)
       }
-    })
-  }
-
-  shouldBeAbleToDownloadDocuments(documents: Array<Document>) {
-    documents.forEach(document => {
-      this.expectDownload()
-
-      cy.get(`a[data-cy-documentId="${document.id}"]`).click()
-
-      const downloadsFolder = Cypress.config('downloadsFolder')
-      const downloadedFilename = `${downloadsFolder}/${document.fileName}`
-      cy.readFile(downloadedFilename, 'binary', { timeout: 300 })
     })
   }
 }

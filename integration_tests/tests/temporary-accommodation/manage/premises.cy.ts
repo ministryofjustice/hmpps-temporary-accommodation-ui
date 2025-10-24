@@ -892,13 +892,6 @@ context('Premises', () => {
         cas3PremisesSearchResultFactory.build({ pdu: 'PDU B', localAuthorityAreaName: 'LA Y' }),
       ],
     })
-    cy.task('stubPremisesSearch', {
-      searchResults: pduResults,
-      postcodeOrAddress: '',
-      premisesStatus: 'online',
-      sortBy: 'pdu',
-    })
-
     // Stub for LA sort
     const laResults = cas3PremisesSearchResultsFactory.build({
       results: [
@@ -907,10 +900,9 @@ context('Premises', () => {
       ],
     })
     cy.task('stubPremisesSearch', {
-      searchResults: laResults,
+      searchResults: pduResults,
       postcodeOrAddress: '',
       premisesStatus: 'online',
-      sortBy: 'la',
     })
 
     // When I visit the premises page
@@ -921,6 +913,12 @@ context('Premises', () => {
     cy.get('table thead th').should('contain', 'PDU')
     page.shouldShowPremises(pduResults.results)
 
+    cy.task('stubPremisesSearch', {
+      searchResults: laResults,
+      postcodeOrAddress: '',
+      premisesStatus: 'online',
+    })
+
     // When I click the sort toggle button or link
     page.toggleSortBy()
 
@@ -928,6 +926,12 @@ context('Premises', () => {
     page.shouldShowSortByHeader('local authority')
     cy.get('table thead th').should('contain', 'LA')
     page.shouldShowPremises(laResults.results, 'la')
+
+    cy.task('stubPremisesSearch', {
+      searchResults: pduResults,
+      postcodeOrAddress: '',
+      premisesStatus: 'online',
+    })
 
     // When I toggle again
     page.toggleSortBy()
@@ -951,7 +955,6 @@ context('Premises', () => {
       searchResults,
       postcodeOrAddress: postcode,
       premisesStatus: 'online',
-      sortBy: 'la',
     })
 
     // Visit and search

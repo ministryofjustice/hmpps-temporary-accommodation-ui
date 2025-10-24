@@ -1,11 +1,10 @@
 import {
   Adjudication,
-  TemporaryAccommodationApplicationSummary as ApplicationSummary,
+  Cas3ApplicationSummary as ApplicationSummary,
   TemporaryAccommodationAssessment as Assessment,
   AssessmentSortField,
   AssessmentStatus,
   BookingSearchSortField,
-  Document,
   LocalAuthorityArea,
   OASysQuestion,
   OASysSections,
@@ -15,7 +14,6 @@ import {
   PrisonCaseNote,
   ProbationDeliveryUnit,
   SortDirection,
-  TemporaryAccommodationApplication,
   TemporaryAccommodationAssessmentStatus,
   User,
 } from '@approved-premises/api'
@@ -240,9 +238,6 @@ export type DataServices = Partial<{
     getOasysSections: (callConfig: CallConfig, crn: string, selectedSections?: Array<number>) => Promise<OASysSections>
     getPersonRisks: (callConfig: CallConfig, crn: string) => Promise<PersonRisksUI>
   }
-  applicationService: {
-    getDocuments: (callConfig: CallConfig, application: TemporaryAccommodationApplication) => Promise<Array<Document>>
-  }
   userService: {
     getUserById: (callConfig: CallConfig, id: string) => Promise<User>
   }
@@ -353,3 +348,4 @@ export type PremisesSearchParameters = {
 }
 
 export type PremisesShowTabs = 'premises' | 'bedspaces'
+export type PremisesSortBy = 'pdu' | 'la'

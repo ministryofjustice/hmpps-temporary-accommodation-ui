@@ -2,7 +2,6 @@ import type {
   Cas3Premises,
   Cas3PremisesBedspaceTotals,
   Cas3PremisesSearchResults,
-  Cas3PremisesSortBy,
   Cas3PremisesStatus,
   Cas3ValidationResults,
 } from '@approved-premises/api'
@@ -21,7 +20,6 @@ type SearchArguments = {
   searchResults: Cas3PremisesSearchResults
   postcodeOrAddress: string
   premisesStatus: Cas3PremisesStatus
-  sortBy?: Cas3PremisesSortBy
 }
 
 const stubPremisesSearch = (args: SearchArguments) =>
@@ -32,7 +30,6 @@ const stubPremisesSearch = (args: SearchArguments) =>
       queryParameters: {
         postcodeOrAddress: { equalTo: args.postcodeOrAddress },
         premisesStatus: { equalTo: args.premisesStatus },
-        sortBy: { equalTo: args.sortBy ?? 'pdu' },
       },
     },
     response: {

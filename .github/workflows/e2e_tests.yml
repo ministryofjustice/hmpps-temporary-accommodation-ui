@@ -69,31 +69,34 @@ jobs:
   #
 
   cas3_ndelius_cleanup_2:
+
     name: "X371199 address clean up"
-    runs-on: [ self-hosted, hmpps-github-actions-runner ]
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-        with:
-          # Repository is specified to run the workflow from the API repository
-          repository: 'ministryofjustice/hmpps-temporary-accommodation-ui'
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.node-version'
-          cache: 'npm'
+    uses: ministryofjustice/hmpps-probation-integration-e2e-tests/.github/workflows/delete-data.yml@main
+    secrets: inherit
+    with:
+      project: 'delete-previous-addresses-for-offender'
+      crn: 'X371199'
 
-      - name: Install dependencies
-        run: npm ci --no-audit
+#    runs-on: [ self-hosted, hmpps-github-actions-runner ]
+#    steps:
+#      - name: Check out code
+#        uses: actions/checkout@v4
+#        with:
+#          # Repository is specified to run the workflow from the API repository
+#          repository: 'ministryofjustice/hmpps-temporary-accommodation-ui'
+#
+#      - name: Setup Node.js environment
+#        uses: actions/setup-node@v4
+#        with:
+#          node-version-file: '.node-version'
+#          cache: 'npm'
+#
+#      - name: Install dependencies
+#        run: npm ci --no-audit
+#
+#      - name: Install Playwright
+#        run: npx playwright install chromium
 
-      - name: Install Playwright
-        run: npx playwright install chromium
-
-      - name: Start clean up job
-        uses: ministryofjustice/hmpps-probation-integration-e2e-tests/.github/workflows/delete-data.yml@main
-        with:
-          project: 'delete-previous-addresses-for-offender'
-          crn: 'X371199'
 #
 #  e2e_test_cypress:
 #    name: "CAS3 E2E Tests 🧪 (Cypress)"

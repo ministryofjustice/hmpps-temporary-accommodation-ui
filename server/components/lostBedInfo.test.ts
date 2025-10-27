@@ -1,25 +1,19 @@
-import { lostBedFactory } from '../testutils/factories'
+import { cas3VoidBedspaceFactory } from '../testutils/factories'
 import { statusTag } from '../utils/lostBedUtils'
 import { formatLines } from '../utils/viewUtils'
 import summaryListRows from './lostBedInfo'
 
-jest.mock('../utils/viewUtils', () => {
-  return {
-    formatLines: (text: string) => text,
-  }
-})
-
 describe('LostBedInfo', () => {
   describe('lostBed summaryListRows', () => {
-    it('returns summary list rows for an active lost bed', async () => {
-      const lostBed = lostBedFactory.active().build({
+    it('returns summary list rows for an active lost bed', () => {
+      const lostBed = cas3VoidBedspaceFactory.active().build({
         startDate: '2023-03-21',
         endDate: '2023-03-24',
         reason: { name: 'some active void Reason' },
         costCentre: 'HMPPS',
       })
 
-      const result = await summaryListRows(lostBed)
+      const result = summaryListRows(lostBed)
 
       expect(result).toEqual([
         {
@@ -72,15 +66,15 @@ describe('LostBedInfo', () => {
         },
       ])
     })
-    it('returns summary list rows for a cancelled lost bed', async () => {
-      const lostBed = lostBedFactory.cancelled().build({
+    it('returns summary list rows for a cancelled lost bed', () => {
+      const lostBed = cas3VoidBedspaceFactory.cancelled().build({
         startDate: '2023-04-21',
         endDate: '2023-04-24',
         reason: { name: 'some cancelled void Reason' },
-        costCentre: 'HMPPS',
+        costCentre: 'SUPPLIER',
       })
 
-      const result = await summaryListRows(lostBed)
+      const result = summaryListRows(lostBed)
 
       expect(result).toEqual([
         {
@@ -112,7 +106,7 @@ describe('LostBedInfo', () => {
             text: 'Cost Centre',
           },
           value: {
-            text: 'HMPPS',
+            text: 'Supplier',
           },
         },
         {
@@ -128,7 +122,7 @@ describe('LostBedInfo', () => {
             text: 'Notes',
           },
           value: {
-            html: formatLines(lostBed.cancellation.notes),
+            html: formatLines(lostBed.cancellationNotes),
           },
         },
       ])

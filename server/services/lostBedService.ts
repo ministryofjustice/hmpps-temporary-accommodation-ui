@@ -1,81 +1,89 @@
 import type {
-  LostBed,
-  LostBedCancellation,
-  NewLostBed,
-  NewLostBedCancellation,
-  UpdateLostBed,
+  Cas3VoidBedspace,
+  Cas3VoidBedspaceCancellation,
+  Cas3VoidBedspaceReason,
+  Cas3VoidBedspaceRequest,
 } from '@approved-premises/api'
-import type { ReferenceData } from '@approved-premises/ui'
 import type { LostBedClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
+import { lostBedToCas3VoidBedspace } from '../utils/lostBedUtils'
 
-export type LostBedReferenceData = Array<ReferenceData>
 export default class LostBedService {
   constructor(
     private readonly lostBedClientFactory: RestClientBuilder<LostBedClient>,
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
-  async create(callConfig: CallConfig, premisesId: string, lostBed: NewLostBed): Promise<LostBed> {
+  async create(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+    lostBed: Cas3VoidBedspaceRequest,
+  ): Promise<Cas3VoidBedspace> {
     const lostBedClient = this.lostBedClientFactory(callConfig)
 
-    const confirmedLostBed = await lostBedClient.create(premisesId, lostBed)
-
-    return confirmedLostBed
+    return lostBedToCas3VoidBedspace(await lostBedClient.create(premisesId, bedspaceId, lostBed))
   }
 
-  async find(callConfig: CallConfig, premisesID: string, lostBedId: string): Promise<LostBed> {
+  async find(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+    lostBedId: string,
+  ): Promise<Cas3VoidBedspace> {
     const lostBedClient = this.lostBedClientFactory(callConfig)
 
-    const lostBed = await lostBedClient.find(premisesID, lostBedId)
-
-    return lostBed
+    return lostBedToCas3VoidBedspace(await lostBedClient.find(premisesId, bedspaceId, lostBedId))
   }
 
   async update(
     callConfig: CallConfig,
     premisesId: string,
+    bedspaceId: string,
     lostBedId: string,
-    lostBedUpdate: UpdateLostBed,
-  ): Promise<LostBed> {
+    lostBedUpdate: Cas3VoidBedspaceRequest,
+  ): Promise<Cas3VoidBedspace> {
     const lostBedClient = this.lostBedClientFactory(callConfig)
 
-    const updatedLostBed = await lostBedClient.update(premisesId, lostBedId, lostBedUpdate)
-
-    return updatedLostBed
+    return lostBedToCas3VoidBedspace(await lostBedClient.update(premisesId, bedspaceId, lostBedId, lostBedUpdate))
   }
 
-  async getUpdateLostBed(callConfig: CallConfig, premisesId: string, lostBedId: string): Promise<UpdateLostBed> {
+  async getUpdateLostBed(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+    lostBedId: string,
+  ): Promise<Cas3VoidBedspaceRequest> {
     const lostBedClient = this.lostBedClientFactory(callConfig)
 
-    const lostBed = await lostBedClient.find(premisesId, lostBedId)
+    const lostBed = lostBedToCas3VoidBedspace(await lostBedClient.find(premisesId, bedspaceId, lostBedId))
 
     return {
       ...lostBed,
-      reason: lostBed.reason.id,
+      reasonId: lostBed.reason.id,
     }
   }
 
   async cancel(
     callConfig: CallConfig,
     premisesId: string,
+    bedspaceId: string,
     lostBedId: string,
-    newLostBedCancellation: NewLostBedCancellation,
-  ): Promise<LostBedCancellation> {
+    newLostBedCancellation: Cas3VoidBedspaceCancellation,
+  ): Promise<Cas3VoidBedspaceCancellation> {
     const lostBedClient = this.lostBedClientFactory(callConfig)
 
-    const lostBedCancellation = await lostBedClient.cancel(premisesId, lostBedId, newLostBedCancellation)
-
-    return lostBedCancellation
+    return (await lostBedClient.cancel(
+      premisesId,
+      bedspaceId,
+      lostBedId,
+      newLostBedCancellation,
+    )) as Cas3VoidBedspaceCancellation
   }
 
-  async getReferenceData(callConfig: CallConfig): Promise<LostBedReferenceData> {
+  async getReferenceData(callConfig: CallConfig): Promise<Array<Cas3VoidBedspaceReason>> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
-    const reasons = (await referenceDataClient.getReferenceData('lost-bed-reasons')).sort((a, b) =>
-      a.name.localeCompare(b.name),
-    )
-
-    return reasons
+    return (await referenceDataClient.getReferenceData('lost-bed-reasons')).sort((a, b) => a.name.localeCompare(b.name))
   }
 }

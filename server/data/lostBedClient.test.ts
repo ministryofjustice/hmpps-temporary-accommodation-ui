@@ -1,36 +1,45 @@
 import { faker } from '@faker-js/faker/.'
 import paths from '../paths/api'
 import {
+  cas3VoidBedspaceCancellationFactory,
+  cas3VoidBedspaceFactory,
+  cas3VoidBedspaceRequestFactory,
   lostBedCancellationFactory,
   lostBedFactory,
-  newLostBedCancellationFactory,
-  newLostBedFactory,
-  updateLostBedFactory,
 } from '../testutils/factories'
 import LostBedClient from './lostBedClient'
 import { CallConfig } from './restClient'
 import describeClient from '../testutils/describeClient'
+import config from '../config'
 
 describeClient('LostBedClient', provider => {
   let lostBedClient: LostBedClient
   const callConfig = { token: 'some-token' } as CallConfig
 
+  const flagsConfigOriginal = config.flags
+
   beforeEach(() => {
+    config.flags.enableCas3v2Api = true
+
     lostBedClient = new LostBedClient(callConfig)
+  })
+
+  afterEach(() => {
+    config.flags = flagsConfigOriginal
   })
 
   describe('create', () => {
     it('should create a lostBed', async () => {
       const premisesId = faker.string.uuid()
-      const lostBed = lostBedFactory.build()
-      const newLostBed = newLostBedFactory.build()
+      const lostBed = cas3VoidBedspaceFactory.build()
+      const newLostBed = cas3VoidBedspaceRequestFactory.build()
 
       await provider.addInteraction({
         state: 'Lost bed can be created',
         uponReceiving: 'a request to create a lost bed',
         withRequest: {
           method: 'POST',
-          path: paths.premises.lostBeds.create({ premisesId }),
+          path: paths.cas3.premises.voidBedspaces.create({ premisesId, bedspaceId: lostBed.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -43,7 +52,7 @@ describeClient('LostBedClient', provider => {
         },
       })
 
-      const result = await lostBedClient.create(premisesId, newLostBed)
+      const result = await lostBedClient.create(premisesId, lostBed.id, newLostBed)
       expect(result).toEqual(lostBed)
     })
   })
@@ -51,14 +60,15 @@ describeClient('LostBedClient', provider => {
   describe('find', () => {
     it('should return the lost bed that has been requested', async () => {
       const premisesId = faker.string.uuid()
-      const lostBed = lostBedFactory.build()
+      const bedspaceId = faker.string.uuid()
+      const lostBed = cas3VoidBedspaceFactory.build()
 
       await provider.addInteraction({
         state: 'Lost bed exists',
         uponReceiving: 'a request for a lost bed',
         withRequest: {
           method: 'GET',
-          path: paths.premises.lostBeds.show({ premisesId, lostBedId: lostBed.id }),
+          path: paths.cas3.premises.voidBedspaces.show({ premisesId, bedspaceId, voidBedspaceId: lostBed.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -70,7 +80,7 @@ describeClient('LostBedClient', provider => {
         },
       })
 
-      const result = await lostBedClient.find(premisesId, lostBed.id)
+      const result = await lostBedClient.find(premisesId, bedspaceId, lostBed.id)
       expect(result).toEqual(lostBed)
     })
   })
@@ -78,14 +88,14 @@ describeClient('LostBedClient', provider => {
   describe('allLostBedsForPremisesId', () => {
     it('should return all lost beds for a given premises ID', async () => {
       const premisesId = faker.string.uuid()
-      const lostBeds = lostBedFactory.buildList(5)
+      const lostBeds = cas3VoidBedspaceFactory.buildList(5)
 
       await provider.addInteraction({
         state: 'Lost beds exist for premises',
         uponReceiving: 'a request for all lost beds for a premises',
         withRequest: {
           method: 'GET',
-          path: paths.premises.lostBeds.index({ premisesId }),
+          path: paths.cas3.premises.voidBedspaces.index({ premisesId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -105,18 +115,19 @@ describeClient('LostBedClient', provider => {
   describe('update', () => {
     it('updates and returns the given lost bed', async () => {
       const premisesId = faker.string.uuid()
-      const lostBed = lostBedFactory.build()
-      const payload = updateLostBedFactory.build({
-        ...lostBed,
-        reason: lostBed.reason.id,
-      })
+      const lostBed = cas3VoidBedspaceFactory.build()
+      const payload = cas3VoidBedspaceRequestFactory.build(lostBed)
 
       await provider.addInteraction({
         state: 'Lost bed can be updated',
         uponReceiving: 'a request to update a lost bed',
         withRequest: {
           method: 'PUT',
-          path: paths.premises.lostBeds.update({ premisesId, lostBedId: lostBed.id }),
+          path: paths.cas3.premises.voidBedspaces.update({
+            premisesId,
+            bedspaceId: lostBed.bedspaceId,
+            voidBedspaceId: lostBed.id,
+          }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -129,7 +140,7 @@ describeClient('LostBedClient', provider => {
         },
       })
 
-      const result = await lostBedClient.update(premisesId, lostBed.id, payload)
+      const result = await lostBedClient.update(premisesId, lostBed.bedspaceId, lostBed.id, payload)
       expect(result).toEqual(lostBed)
     })
   })
@@ -137,16 +148,19 @@ describeClient('LostBedClient', provider => {
   describe('cancel', () => {
     it('should create a cancellation', async () => {
       const premisesId = faker.string.uuid()
-      const lostBed = lostBedFactory.build()
-      const newLostBedCancellation = newLostBedCancellationFactory.build()
-      const cancellation = lostBedCancellationFactory.build({ id: lostBed.id })
+      const lostBed = cas3VoidBedspaceFactory.build()
+      const newLostBedCancellation = cas3VoidBedspaceCancellationFactory.build()
 
       await provider.addInteraction({
         state: 'Lost bed can be cancelled',
         uponReceiving: 'a request to cancel a lost bed',
         withRequest: {
-          method: 'POST',
-          path: paths.premises.lostBeds.cancel({ premisesId, lostBedId: lostBed.id }),
+          method: 'PUT',
+          path: paths.cas3.premises.voidBedspaces.cancel({
+            premisesId,
+            bedspaceId: lostBed.bedspaceId,
+            voidBedspaceId: lostBed.id,
+          }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -155,12 +169,182 @@ describeClient('LostBedClient', provider => {
         willRespondWith: {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-          body: cancellation,
+          body: newLostBedCancellation,
         },
       })
 
-      const result = await lostBedClient.cancel(premisesId, lostBed.id, newLostBedCancellation)
-      expect(result).toEqual(cancellation)
+      const result = await lostBedClient.cancel(premisesId, lostBed.bedspaceId, lostBed.id, newLostBedCancellation)
+      expect(result).toEqual(newLostBedCancellation)
+    })
+  })
+
+  describe('with the ENABLE_CAS3V2_API flag off', () => {
+    beforeEach(() => {
+      config.flags.enableCas3v2Api = false
+    })
+
+    describe('create', () => {
+      it('should create a lostBed', async () => {
+        const premisesId = faker.string.uuid()
+        const lostBed = lostBedFactory.build()
+        const newLostBed = cas3VoidBedspaceRequestFactory.build()
+
+        const { reasonId, ...sharedProperties } = newLostBed
+        const payload = {
+          ...sharedProperties,
+          reason: reasonId,
+          bedId: lostBed.bedId,
+        }
+
+        await provider.addInteraction({
+          state: 'Lost bed can be created',
+          uponReceiving: 'a request to create a lost bed',
+          withRequest: {
+            method: 'POST',
+            path: paths.premises.lostBeds.create({ premisesId }),
+            headers: {
+              authorization: `Bearer ${callConfig.token}`,
+            },
+            body: payload,
+          },
+          willRespondWith: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: lostBed,
+          },
+        })
+
+        const result = await lostBedClient.create(premisesId, lostBed.bedId, newLostBed)
+        expect(result).toEqual(lostBed)
+      })
+    })
+
+    describe('find', () => {
+      it('should return the lost bed that has been requested', async () => {
+        const premisesId = faker.string.uuid()
+        const lostBed = lostBedFactory.build()
+
+        await provider.addInteraction({
+          state: 'Lost bed exists',
+          uponReceiving: 'a request for a lost bed',
+          withRequest: {
+            method: 'GET',
+            path: paths.premises.lostBeds.show({ premisesId, lostBedId: lostBed.id }),
+            headers: {
+              authorization: `Bearer ${callConfig.token}`,
+            },
+          },
+          willRespondWith: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: lostBed,
+          },
+        })
+
+        const result = await lostBedClient.find(premisesId, lostBed.bedId, lostBed.id)
+        expect(result).toEqual(lostBed)
+      })
+    })
+
+    describe('allLostBedsForPremisesId', () => {
+      it('should return all lost beds for a given premises ID', async () => {
+        const premisesId = faker.string.uuid()
+        const lostBeds = lostBedFactory.buildList(5)
+
+        await provider.addInteraction({
+          state: 'Lost beds exist for premises',
+          uponReceiving: 'a request for all lost beds for a premises',
+          withRequest: {
+            method: 'GET',
+            path: paths.premises.lostBeds.index({ premisesId }),
+            headers: {
+              authorization: `Bearer ${callConfig.token}`,
+            },
+          },
+          willRespondWith: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: lostBeds,
+          },
+        })
+
+        const result = await lostBedClient.allLostBedsForPremisesId(premisesId)
+        expect(result).toEqual(lostBeds)
+      })
+    })
+
+    describe('update', () => {
+      it('updates and returns the given lost bed', async () => {
+        const premisesId = faker.string.uuid()
+        const lostBed = lostBedFactory.build()
+        const updateLostBed = cas3VoidBedspaceRequestFactory.build({
+          ...lostBed,
+          reasonId: lostBed.reason.id,
+        })
+
+        const { reasonId, ...sharedProperties } = updateLostBed
+        const payload = {
+          ...sharedProperties,
+          reason: reasonId,
+          bedId: lostBed.bedId,
+        }
+
+        await provider.addInteraction({
+          state: 'Lost bed can be updated',
+          uponReceiving: 'a request to update a lost bed',
+          withRequest: {
+            method: 'PUT',
+            path: paths.premises.lostBeds.update({ premisesId, lostBedId: lostBed.id }),
+            headers: {
+              authorization: `Bearer ${callConfig.token}`,
+            },
+            body: payload,
+          },
+          willRespondWith: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: lostBed,
+          },
+        })
+
+        const result = await lostBedClient.update(premisesId, lostBed.bedId, lostBed.id, updateLostBed)
+        expect(result).toEqual(lostBed)
+      })
+    })
+
+    describe('cancel', () => {
+      it('should create a cancellation', async () => {
+        const premisesId = faker.string.uuid()
+        const lostBed = lostBedFactory.build()
+        const newLostBedCancellation = cas3VoidBedspaceCancellationFactory.build()
+        const cancellation = lostBedCancellationFactory.build({
+          id: lostBed.id,
+          notes: newLostBedCancellation.cancellationNotes,
+        })
+
+        await provider.addInteraction({
+          state: 'Lost bed can be cancelled',
+          uponReceiving: 'a request to cancel a lost bed',
+          withRequest: {
+            method: 'POST',
+            path: paths.premises.lostBeds.cancel({ premisesId, lostBedId: lostBed.id }),
+            headers: {
+              authorization: `Bearer ${callConfig.token}`,
+            },
+            body: {
+              notes: newLostBedCancellation.cancellationNotes,
+            },
+          },
+          willRespondWith: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: cancellation,
+          },
+        })
+
+        const result = await lostBedClient.cancel(premisesId, lostBed.bedId, lostBed.id, newLostBedCancellation)
+        expect(result).toEqual(cancellation)
+      })
     })
   })
 })

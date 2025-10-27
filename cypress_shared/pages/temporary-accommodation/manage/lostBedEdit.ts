@@ -1,4 +1,4 @@
-import type { Cas3Bedspace, Cas3Premises, LostBed, UpdateLostBed } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Premises, Cas3VoidBedspace, Cas3VoidBedspaceRequest } from '@approved-premises/api'
 import LostBedEditablePage from './lostBedEditable'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -12,7 +12,7 @@ export default class LostBedEditPage extends LostBedEditablePage {
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, bedspace })
   }
 
-  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, lostBed: LostBed): LostBedEditPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, lostBed: Cas3VoidBedspace): LostBedEditPage {
     cy.visit(paths.lostBeds.edit({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }))
     return new LostBedEditPage(premises, bedspace)
   }
@@ -28,7 +28,7 @@ export default class LostBedEditPage extends LostBedEditablePage {
     super.clearRadioByName('costCentre')
   }
 
-  completeForm(updateLostBed: UpdateLostBed): void {
+  completeForm(updateLostBed: Cas3VoidBedspaceRequest): void {
     super.completeEditableForm(updateLostBed)
   }
 }

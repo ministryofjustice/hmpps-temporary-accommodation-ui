@@ -1,8 +1,8 @@
-import type { LostBed } from '@approved-premises/api'
+import type { Cas3VoidBedspace } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
 import { DateFormats } from '../utils/dateUtils'
 
-export const summaryListRows = (lostBed: LostBed): SummaryList['rows'] => {
+export const summaryListRows = (lostBed: Cas3VoidBedspace): SummaryList['rows'] => {
   const rows = [
     {
       key: textValue('Start date'),

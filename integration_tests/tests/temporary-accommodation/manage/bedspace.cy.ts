@@ -8,8 +8,8 @@ import {
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3UpdateBedspaceFactory,
+  cas3VoidBedspaceFactory,
   characteristicFactory,
-  lostBedFactory,
 } from '../../../../server/testutils/factories'
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 
@@ -48,10 +48,10 @@ context('Bedspace', () => {
         bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
 
@@ -104,10 +104,10 @@ context('Bedspace', () => {
         bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
     cy.task('stubSinglePremises', premises)
@@ -170,10 +170,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -304,10 +304,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
       cy.task('stubSinglePremises', premises)
@@ -336,10 +336,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
       cy.task('stubSinglePremises', premises)
@@ -365,10 +365,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -397,10 +397,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -429,10 +429,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -462,10 +462,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -536,10 +536,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -668,10 +668,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -725,10 +725,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -783,7 +783,7 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(1)
-      const lostBeds = lostBedFactory.buildList(1)
+      const lostBeds = cas3VoidBedspaceFactory.buildList(1)
 
       cy.task('stubSinglePremises', premises)
       cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -832,10 +832,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -897,10 +897,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
       cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -949,10 +949,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
       cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -1001,10 +1001,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -1044,10 +1044,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -1088,10 +1088,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -1143,10 +1143,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -1205,10 +1205,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
       cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -1253,10 +1253,10 @@ context('Bedspace', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 

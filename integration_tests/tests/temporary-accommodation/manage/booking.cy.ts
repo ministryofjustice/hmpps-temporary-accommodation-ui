@@ -10,7 +10,7 @@ import {
   cas3BedspaceFactory,
   cas3BookingFactory,
   cas3PremisesFactory,
-  lostBedFactory,
+  cas3VoidBedspaceFactory,
   newBookingFactory,
   personFactory,
 } from '../../../../server/testutils/factories'
@@ -33,10 +33,10 @@ context('Booking', () => {
         bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
     cy.task('stubSinglePremises', premises)
@@ -66,10 +66,10 @@ context('Booking', () => {
         bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
 
@@ -309,14 +309,14 @@ context('Booking', () => {
         bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
     const person = personFactory.build()
-    const conflictingLostBed = lostBedFactory.build({ bedspaceId: bedspace.id })
+    const conflictingLostBed = cas3VoidBedspaceFactory.build({ bedspaceId: bedspace.id })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -496,10 +496,10 @@ context('Booking', () => {
         bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
 
@@ -596,10 +596,10 @@ context('Booking', () => {
         bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
 

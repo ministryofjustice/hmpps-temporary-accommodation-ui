@@ -19,7 +19,7 @@ import {
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3UpdatePremisesFactory,
-  lostBedFactory,
+  cas3VoidBedspaceFactory,
 } from '../../../../server/testutils/factories'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
@@ -1592,10 +1592,10 @@ context('Premises', () => {
           bedspace: cas3BedspaceFactory.build({ id: bedspaces[0].id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspaces[0].id,
+          bedspaceId: bedspaces[0].id,
         })
         .buildList(5)
       const bedspacesReference: Cas3ValidationResults = {

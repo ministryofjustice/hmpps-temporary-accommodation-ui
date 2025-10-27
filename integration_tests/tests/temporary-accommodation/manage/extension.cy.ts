@@ -5,8 +5,8 @@ import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   cas3BookingFactory,
+  cas3VoidBedspaceFactory,
   extensionFactory,
-  lostBedFactory,
   newExtensionFactory,
 } from '../../../../server/testutils/factories'
 

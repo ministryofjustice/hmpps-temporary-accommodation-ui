@@ -13,7 +13,7 @@ import {
   cas3BedspaceFactory,
   cas3BookingFactory,
   cas3PremisesFactory,
-  lostBedFactory,
+  cas3VoidBedspaceFactory,
   overlapFactory,
   personFactory,
   placeContextFactory,
@@ -171,10 +171,10 @@ context('Bedspace Search', () => {
         bedspace: cas3BedspaceFactory.build({ id: cas3Bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: cas3Bedspace.id,
+        bedspaceId: cas3Bedspace.id,
       })
       .buildList(5)
 

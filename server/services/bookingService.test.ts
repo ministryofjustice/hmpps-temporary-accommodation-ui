@@ -13,15 +13,11 @@ import {
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
 import { bookingToCas3Booking } from '../utils/bookingUtils'
+import { lostBedToCas3VoidBedspace } from '../utils/lostBedUtils'
 
 jest.mock('../data/bookingClient')
 jest.mock('../data/referenceDataClient')
-jest.mock('../utils/bookingUtils', () => ({
-  ...jest.requireActual('../utils/bookingUtils'),
-  statusTag: jest.fn(),
-}))
 jest.mock('../data/lostBedClient')
-jest.mock('../utils/lostBedUtils')
 
 describe('BookingService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
@@ -105,7 +101,7 @@ describe('BookingService', () => {
       expect(result).toEqual([
         expect.objectContaining({
           path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed2.id }),
-          body: lostBed2,
+          body: lostBedToCas3VoidBedspace(lostBed2),
           type: 'lost-bed',
         }),
         expect.objectContaining({
@@ -115,7 +111,7 @@ describe('BookingService', () => {
         }),
         expect.objectContaining({
           path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed1.id }),
-          body: lostBed1,
+          body: lostBedToCas3VoidBedspace(lostBed1),
           type: 'lost-bed',
         }),
         expect.objectContaining({

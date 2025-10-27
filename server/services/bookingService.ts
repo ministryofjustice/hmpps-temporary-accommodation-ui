@@ -1,10 +1,11 @@
-import type { Cas3Booking, Cas3NewBooking, LostBed } from '@approved-premises/api'
+import type { Cas3Booking, Cas3NewBooking, Cas3VoidBedspace } from '@approved-premises/api'
 
 import type { LostBedClient, RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
 import { bookingToCas3Booking } from '../utils/bookingUtils'
+import { lostBedToCas3VoidBedspace } from '../utils/lostBedUtils'
 
 export type BookingListingEntry = {
   path: string
@@ -14,7 +15,7 @@ export type BookingListingEntry = {
 
 export type LostBedListingEntry = {
   path: string
-  body: LostBed
+  body: Cas3VoidBedspace
   type: 'lost-bed'
 }
 
@@ -70,7 +71,8 @@ export default class BookingService {
       }))
 
     const lostBedEntries: Array<LostBedListingEntry & { sortingValue: string }> = premisesLostBeds
-      .filter(lostBed => lostBed.bedId === bedspaceId && lostBed.status === 'active')
+      .map(lostBedToCas3VoidBedspace)
+      .filter(lostBed => lostBed.bedspaceId === bedspaceId && lostBed.status === 'active')
       .map(lostBed => ({
         body: lostBed,
         type: 'lost-bed' as const,

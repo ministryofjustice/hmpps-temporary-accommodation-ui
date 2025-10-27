@@ -12,8 +12,8 @@ import {
   cas3BookingFactory,
   cas3PremisesFactory,
   cas3UpdateBedspaceFactory,
+  cas3VoidBedspaceFactory,
   characteristicFactory,
-  lostBedFactory,
   placeContextFactory,
   probationRegionFactory,
   referenceDataFactory,
@@ -307,7 +307,7 @@ describe('BedspacesController', () => {
       path: `/properties/${premisesId}/bedspaces/${bedspaceId}/bookings/${bookingId}`,
     }
     const lostBedEntry = {
-      body: lostBedFactory.build({ id: lostBedId }),
+      body: cas3VoidBedspaceFactory.build({ id: lostBedId }),
       type: 'lost-bed',
       path: `/properties/${premisesId}/bedspaces/${bedspaceId}/void/${lostBedId}`,
     }

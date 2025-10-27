@@ -1,9 +1,9 @@
-import { LostBed } from '../../server/@types/shared'
+import { Cas3VoidBedspace } from '../../server/@types/shared'
 import { DateFormats } from '../../server/utils/dateUtils'
 import Component from './component'
 
 export default class LostBedListingComponent extends Component {
-  constructor(private readonly lostBed: LostBed) {
+  constructor(private readonly lostBed: Cas3VoidBedspace) {
     super()
   }
 

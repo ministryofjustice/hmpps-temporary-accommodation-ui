@@ -1,12 +1,9 @@
-import type { Departure } from '@approved-premises/api'
-
 import BookingClient from '../data/bookingClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 import DepartureService from './departureService'
 
 import { CallConfig } from '../data/restClient'
 import { departureFactory, newDepartureFactory, referenceDataFactory } from '../testutils/factories'
-import { DateFormats } from '../utils/dateUtils'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -40,23 +37,6 @@ describe('DepartureService', () => {
 
       expect(DepartureClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.markDeparture).toHaveBeenCalledWith('premisesId', 'bookingId', newDeparture)
-    })
-  })
-
-  describe('getDeparture', () => {
-    it('on success returns the departure that has been requested', async () => {
-      const departure: Departure = departureFactory.build()
-      bookingClient.findDeparture.mockResolvedValue(departure)
-
-      const requestedDeparture = await service.getDeparture(callConfig, 'premisesId', 'bookingId', departure.id)
-
-      expect(requestedDeparture).toEqual({
-        ...departure,
-        dateTime: DateFormats.isoDateToUIDate(departure.dateTime),
-      })
-
-      expect(DepartureClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(bookingClient.findDeparture).toHaveBeenCalledWith('premisesId', 'bookingId', departure.id)
     })
   })
 

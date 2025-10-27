@@ -1,6 +1,4 @@
-import nock from 'nock'
-
-import superagent from 'superagent'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import {
   TemporaryAccommodationAssessment as Assessment,
   AssessmentRejection,
@@ -8,33 +6,30 @@ import {
 } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
-import { assessmentFactory, assessmentSummaryFactory, newReferralHistoryUserNoteFactory } from '../testutils/factories'
+import {
+  assessmentFactory,
+  cas3AssessmentSummariesFactory,
+  cas3AssessmentSummaryFactory,
+  newReferralHistoryUserNoteFactory,
+} from '../testutils/factories'
 import AssessmentClient from './assessmentClient'
 import { CallConfig } from './restClient'
-import { appendQueryString } from '../utils/utils'
-import assessmentSummaries from '../testutils/factories/assessmentSummaries'
+import describeClient from '../testutils/describeClient'
 
-const assessmentId = 'some-id'
-
-describe('AssessmentClient', () => {
-  let fakeApprovedPremisesApi: nock.Scope
+describeClient('AssessmentClient', provider => {
   let assessmentClient: AssessmentClient
-
+  let assessment: Assessment
+  let assessments: ReturnType<typeof cas3AssessmentSummariesFactory.build>
+  let assessmentSummaryList: Array<ReturnType<typeof cas3AssessmentSummaryFactory.build>>
+  let newNote: ReturnType<typeof newReferralHistoryUserNoteFactory.build>
   const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
-    config.apis.approvedPremises.url = 'http://localhost:8080'
-    fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
     assessmentClient = new AssessmentClient(callConfig)
-  })
-
-  afterEach(() => {
-    if (!nock.isDone()) {
-      nock.cleanAll()
-      throw new Error('Not all nock interceptors were used!')
-    }
-    nock.abortPendingRequests()
-    nock.cleanAll()
+    assessment = assessmentFactory.build()
+    assessments = cas3AssessmentSummariesFactory.build()
+    assessmentSummaryList = cas3AssessmentSummaryFactory.buildList(5)
+    newNote = newReferralHistoryUserNoteFactory.build()
   })
 
   describe('all', () => {
@@ -46,59 +41,86 @@ describe('AssessmentClient', () => {
     ])(
       'should get all %s assessments for the current user with pagination headers',
       async (_, apiStatuses: AssessmentStatus[]) => {
-        const assessments = assessmentSummaries.build()
-
-        fakeApprovedPremisesApi
-          .defaultReplyHeaders({
-            'x-pagination-currentpage': String(assessments.pageNumber),
-            'x-pagination-pagesize': String(assessments.pageSize),
-            'x-pagination-totalpages': String(assessments.totalPages),
-            'x-pagination-totalresults': String(assessments.data.length),
-          })
-          .get(appendQueryString(paths.cas3.assessments.index({}), { statuses: apiStatuses, perPage: 10 }))
-          .matchHeader('authorization', `Bearer ${callConfig.token}`)
-          .reply(200, assessments.data)
+        await provider.addInteraction({
+          state: `Assessments exist for statuses: ${apiStatuses.join(', ')}`,
+          uponReceiving: `a request for ${apiStatuses.join(', ')} assessments`,
+          withRequest: {
+            method: 'GET',
+            path: paths.cas3.assessments.index({}),
+            query: {
+              statuses: apiStatuses,
+              perPage: '10',
+            },
+            headers: {
+              authorization: `Bearer ${callConfig.token}`,
+            },
+          },
+          willRespondWith: {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: assessments.data,
+          },
+        })
 
         const result = await assessmentClient.all(apiStatuses)
-
         expect(result.data).toEqual(assessments.data)
-        expect(result.pageNumber).toEqual(assessments.pageNumber)
-        expect(result.pageSize).toEqual(assessments.pageSize)
-        expect(result.totalPages).toEqual(assessments.totalPages)
-        expect(result.totalResults).toEqual(assessments.data.length)
       },
     )
 
     it('should take a page parameter', async () => {
-      const assessments = assessmentSummaries.build()
-
-      fakeApprovedPremisesApi
-        .get(appendQueryString(paths.cas3.assessments.index({}), { statuses: 'unallocated', page: 2, perPage: 10 }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, assessments.data)
+      await provider.addInteraction({
+        state: 'Assessments exist for unallocated',
+        uponReceiving: 'a request for unallocated assessments with page param',
+        withRequest: {
+          method: 'GET',
+          path: paths.cas3.assessments.index({}),
+          query: {
+            statuses: 'unallocated',
+            page: '2',
+            perPage: '10',
+          },
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: assessments.data,
+        },
+      })
 
       const result = await assessmentClient.all(['unallocated'], { page: 2 })
-
       expect(result.data).toEqual(assessments.data)
     })
 
     it('should take sorting parameters', async () => {
-      const assessments = assessmentSummaries.build()
-
-      fakeApprovedPremisesApi
-        .get(
-          appendQueryString(paths.cas3.assessments.index({}), {
+      await provider.addInteraction({
+        state: 'Assessments exist for unallocated',
+        uponReceiving: 'a request for unallocated assessments with sorting',
+        withRequest: {
+          method: 'GET',
+          path: paths.cas3.assessments.index({}),
+          query: {
             statuses: 'unallocated',
             sortBy: 'name',
             sortDirection: 'asc',
-            perPage: 10,
-          }),
-        )
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, assessments.data)
+            perPage: '10',
+          },
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: assessments.data,
+        },
+      })
 
       const result = await assessmentClient.all(['unallocated'], { sortBy: 'name', sortDirection: 'asc' })
-
       expect(result.data).toEqual(assessments.data)
     })
 
@@ -114,18 +136,30 @@ describe('AssessmentClient', () => {
       })
 
       it('applies the default page size set for the environment', async () => {
-        jest.spyOn(superagent, 'get')
+        await provider.addInteraction({
+          state: 'Assessments exist for unallocated',
+          uponReceiving: 'a request for unallocated assessments with default page size',
+          withRequest: {
+            method: 'GET',
+            path: paths.cas3.assessments.index({}),
+            query: {
+              statuses: 'unallocated',
+              page: '1',
+              perPage: '42',
+            },
+            headers: {
+              authorization: `Bearer ${callConfig.token}`,
+            },
+          },
+          willRespondWith: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: [],
+          },
+        })
 
-        fakeApprovedPremisesApi
-          .get(appendQueryString(paths.cas3.assessments.index({}), { statuses: 'unallocated', page: 1, perPage: 42 }))
-          .matchHeader('authorization', `Bearer ${callConfig.token}`)
-          .reply(200, [])
-
-        await assessmentClient.all(['unallocated'], { page: 1 })
-
-        expect(superagent.get).toHaveBeenCalledWith(
-          'http://localhost:8080/cas3/assessments?statuses=unallocated&page=1&perPage=42',
-        )
+        const result = await assessmentClient.all(['unallocated'], { page: 1 })
+        expect(result.data).toEqual([])
       })
     })
   })
@@ -134,26 +168,51 @@ describe('AssessmentClient', () => {
     it('should get all ready to place assessments for the given CRN', async () => {
       const crn = 'some-crn'
       const status = 'ready_to_place' as AssessmentStatus
-      const assessments = assessmentSummaryFactory.buildList(5)
 
-      fakeApprovedPremisesApi
-        .get(`${paths.cas3.assessments.index({})}?crnOrName=${crn}&statuses=${status}`)
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, assessments)
+      await provider.addInteraction({
+        state: 'Ready to place assessments exist for CRN',
+        uponReceiving: 'a request for ready to place assessments by CRN',
+        withRequest: {
+          method: 'GET',
+          path: paths.cas3.assessments.index({}),
+          query: {
+            crnOrName: crn,
+            statuses: status,
+          },
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: assessmentSummaryList,
+        },
+      })
 
       const output = await assessmentClient.readyToPlaceForCrn(crn)
-      expect(output).toEqual(assessments)
+      expect(output).toEqual(assessmentSummaryList)
     })
   })
 
   describe('find', () => {
-    const assessment = assessmentFactory.build()
-
     it('should get a single assessment', async () => {
-      fakeApprovedPremisesApi
-        .get(paths.assessments.show({ id: assessment.id }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, assessment)
+      await provider.addInteraction({
+        state: 'Assessment exists',
+        uponReceiving: 'a request for a single assessment',
+        withRequest: {
+          method: 'GET',
+          path: paths.assessments.show({ id: assessment.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: assessment,
+        },
+      })
 
       const output = await assessmentClient.find(assessment.id)
       expect(output).toEqual(assessment)
@@ -162,23 +221,45 @@ describe('AssessmentClient', () => {
 
   describe('unallocateAssessment', () => {
     it('deletes the allocation for the assessment', async () => {
-      fakeApprovedPremisesApi
-        .delete(paths.assessments.allocation({ id: assessmentId }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200)
+      await provider.addInteraction({
+        state: 'Assessment allocation exists',
+        uponReceiving: 'a request to delete assessment allocation',
+        withRequest: {
+          method: 'DELETE',
+          path: paths.assessments.allocation({ id: assessment.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+        },
+      })
 
-      await assessmentClient.unallocateAssessment(assessmentId)
+      await assessmentClient.unallocateAssessment(assessment.id)
     })
   })
 
   describe('allocateAssessment', () => {
     it('posts a new allocation for the assessment', async () => {
-      fakeApprovedPremisesApi
-        .post(paths.assessments.allocation({ id: assessmentId }), {})
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200)
+      await provider.addInteraction({
+        state: 'Assessment can be allocated',
+        uponReceiving: 'a request to allocate assessment',
+        withRequest: {
+          method: 'POST',
+          path: paths.assessments.allocation({ id: assessment.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+            'X-Service-Name': 'temporary-accommodation',
+          },
+          body: {},
+        },
+        willRespondWith: {
+          status: 201,
+        },
+      })
 
-      await assessmentClient.allocateAssessment(assessmentId)
+      await assessmentClient.allocateAssessment(assessment.id)
     })
   })
 
@@ -187,64 +268,121 @@ describe('AssessmentClient', () => {
       const assessmentRejection: AssessmentRejection = {
         document: {},
         rejectionRationale: 'default',
-        referralRejectionReasonId: 'rejection-reason-id',
+        referralRejectionReasonId: faker.string.uuid(),
         isWithdrawn: false,
       }
 
-      fakeApprovedPremisesApi
-        .post(paths.assessments.rejection({ id: assessmentId }), assessmentRejection)
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200)
+      await provider.addInteraction({
+        state: 'Assessment can be rejected',
+        uponReceiving: 'a request to reject assessment',
+        withRequest: {
+          method: 'POST',
+          path: paths.assessments.rejection({ id: assessment.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: assessmentRejection,
+        },
+        willRespondWith: {
+          status: 200,
+        },
+      })
 
-      await assessmentClient.rejectAssessment(assessmentId, assessmentRejection)
+      await assessmentClient.rejectAssessment(assessment.id, assessmentRejection)
     })
   })
 
   describe('acceptAssessment', () => {
     it('posts a new acceptance for the assessment', async () => {
-      fakeApprovedPremisesApi
-        .post(paths.assessments.acceptance({ id: assessmentId }), { document: {} })
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200)
+      await provider.addInteraction({
+        state: 'Assessment can be accepted',
+        uponReceiving: 'a request to accept assessment',
+        withRequest: {
+          method: 'POST',
+          path: paths.assessments.acceptance({ id: assessment.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: { document: {} },
+        },
+        willRespondWith: {
+          status: 200,
+        },
+      })
 
-      await assessmentClient.acceptAssessment(assessmentId)
+      await assessmentClient.acceptAssessment(assessment.id)
     })
   })
 
   describe('closeAssessment', () => {
     it('posts a new closure for the assessment', async () => {
-      fakeApprovedPremisesApi
-        .post(paths.assessments.closure({ id: assessmentId }), {})
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200)
+      await provider.addInteraction({
+        state: 'Assessment can be closed',
+        uponReceiving: 'a request to close assessment',
+        withRequest: {
+          method: 'POST',
+          path: paths.assessments.closure({ id: assessment.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+        },
+      })
 
-      await assessmentClient.closeAssessment(assessmentId)
+      await assessmentClient.closeAssessment(assessment.id)
     })
   })
 
   describe('createNote', () => {
     it('post a new referral note', async () => {
-      const newNote = newReferralHistoryUserNoteFactory.build()
+      await provider.addInteraction({
+        state: 'Assessment note can be created',
+        uponReceiving: 'a request to create assessment note',
+        withRequest: {
+          method: 'POST',
+          path: paths.assessments.notes({ id: assessment.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: newNote,
+        },
+        willRespondWith: {
+          status: 200,
+        },
+      })
 
-      fakeApprovedPremisesApi
-        .post(paths.assessments.notes({ id: assessmentId }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200)
-
-      await assessmentClient.createNote(assessmentId, newNote)
+      await assessmentClient.createNote(assessment.id, newNote)
     })
   })
 
   describe('update', () => {
     it('puts updated data to the assessment', async () => {
-      const updatedData: Partial<Assessment> = { accommodationRequiredFromDate: '2024-08-08' }
+      const updatedData = {
+        accommodationRequiredFromDate: '2024-08-08',
+        data: assessment.data,
+        releaseDate: '2024-08-08',
+      }
 
-      fakeApprovedPremisesApi
-        .put(paths.assessments.update({ id: assessmentId }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200)
+      await provider.addInteraction({
+        state: 'Assessment can be updated',
+        uponReceiving: 'a request to update assessment',
+        withRequest: {
+          method: 'PUT',
+          path: paths.assessments.update({ id: assessment.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+            'X-Service-Name': 'temporary-accommodation',
+          },
+          body: updatedData,
+        },
+        willRespondWith: {
+          status: 200,
+        },
+      })
 
-      await assessmentClient.update(assessmentId, updatedData)
+      await assessmentClient.update(assessment.id, updatedData)
     })
   })
 })

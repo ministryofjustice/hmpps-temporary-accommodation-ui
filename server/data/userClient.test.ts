@@ -1,45 +1,42 @@
-import nock from 'nock'
-
-import config from '../config'
-import paths from '../paths/api'
+import { Matchers } from '@pact-foundation/pact'
 import { userProfileFactory } from '../testutils/factories'
 import { CallConfig } from './restClient'
 import UserClient from './userClient'
+import paths from '../paths/api'
+import describeClient from '../testutils/describeClient'
 
-describe('UserClient', () => {
-  let fakeApprovedPremisesApi: nock.Scope
+describeClient('UserClient', provider => {
   let userClient: UserClient
-
   const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
-    config.apis.approvedPremises.url = 'http://localhost:8080'
-    fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
     userClient = new UserClient(callConfig)
-  })
-
-  afterEach(() => {
-    if (!nock.isDone()) {
-      nock.cleanAll()
-      throw new Error('Not all nock interceptors were used!')
-    }
-    nock.abortPendingRequests()
-    nock.cleanAll()
   })
 
   describe('getUserProfile', () => {
     it('should return the profile for the current user', async () => {
       const userProfile = userProfileFactory.build()
 
-      fakeApprovedPremisesApi
-        .get(paths.users.actingUser.profile({}))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, userProfile)
+      await provider.addInteraction({
+        state: 'User exists',
+        uponReceiving: 'a request for the current user profile',
+        withRequest: {
+          method: 'GET',
+          path: paths.users.actingUser.profile({}),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+            'X-Service-Name': 'temporary-accommodation',
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: Matchers.like(userProfile),
+        },
+      })
 
       const result = await userClient.getUserProfile()
-
       expect(result).toEqual(userProfile)
-      expect(nock.isDone()).toBeTruthy()
     })
   })
 })

@@ -5,13 +5,20 @@ import type { Departure } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 import referenceDataFactory from './referenceData'
 
-export default Factory.define<Departure>(() => ({
+class DepartureFactory extends Factory<Departure> {
+  withDestinationProvider() {
+    return this.params({
+      destinationProvider: referenceDataFactory.destinationProviders().build(),
+    })
+  }
+}
+
+export default DepartureFactory.define(() => ({
   id: faker.string.uuid(),
   dateTime: DateFormats.dateObjToIsoDateTime(faker.date.past()),
   bookingId: faker.string.uuid(),
   reason: referenceDataFactory.departureReasons().build(),
   notes: faker.lorem.sentence(),
+  createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
   moveOnCategory: referenceDataFactory.moveOnCategories().build(),
-  destinationProvider: referenceDataFactory.destinationProviders().build(),
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

@@ -8,8 +8,8 @@ import { DateFormats } from '../../utils/dateUtils'
 export default Factory.define<PrisonCaseNote>(({ sequence }) => ({
   authorName: faker.person.fullName(),
   id: faker.string.uuid(),
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
-  occurredAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
+  occurredAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
   sensitive: faker.datatype.boolean(),
   subType: faker.helpers.arrayElement([
     'Well--Being Check',

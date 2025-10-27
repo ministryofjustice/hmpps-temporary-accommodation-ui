@@ -10,5 +10,5 @@ export default Factory.define<Extension>(() => ({
   newDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future()),
   bookingId: faker.string.uuid(),
   notes: faker.lorem.sentence(),
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
 }))

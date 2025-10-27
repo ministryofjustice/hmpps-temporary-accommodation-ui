@@ -12,5 +12,5 @@ export default Factory.define<Cancellation>(() => ({
   bookingId: faker.string.uuid(),
   reason: referenceDataFactory.cancellationReasons().build(),
   notes: faker.lorem.sentence(),
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
 }))

@@ -75,6 +75,7 @@ jobs:
       - name: Start clean up job
         uses: ministryofjustice/hmpps-probation-integration-e2e-tests/.github/workflows/delete-data.yml@main
         with:
+          app-id: ${{ secrets.BOT_APP_ID }}
           project: 'delete-previous-addresses-for-offender'
           crn: 'X371199'
 #

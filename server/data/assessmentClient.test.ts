@@ -55,7 +55,7 @@ describe('AssessmentClient', () => {
             'x-pagination-totalpages': String(assessments.totalPages),
             'x-pagination-totalresults': String(assessments.data.length),
           })
-          .get(appendQueryString(paths.assessments.index({}), { statuses: apiStatuses, perPage: 10 }))
+          .get(appendQueryString(paths.cas3.assessments.index({}), { statuses: apiStatuses, perPage: 10 }))
           .matchHeader('authorization', `Bearer ${callConfig.token}`)
           .reply(200, assessments.data)
 
@@ -73,7 +73,7 @@ describe('AssessmentClient', () => {
       const assessments = assessmentSummaries.build()
 
       fakeApprovedPremisesApi
-        .get(appendQueryString(paths.assessments.index({}), { statuses: 'unallocated', page: 2, perPage: 10 }))
+        .get(appendQueryString(paths.cas3.assessments.index({}), { statuses: 'unallocated', page: 2, perPage: 10 }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, assessments.data)
 
@@ -87,7 +87,7 @@ describe('AssessmentClient', () => {
 
       fakeApprovedPremisesApi
         .get(
-          appendQueryString(paths.assessments.index({}), {
+          appendQueryString(paths.cas3.assessments.index({}), {
             statuses: 'unallocated',
             sortBy: 'name',
             sortDirection: 'asc',
@@ -117,14 +117,14 @@ describe('AssessmentClient', () => {
         jest.spyOn(superagent, 'get')
 
         fakeApprovedPremisesApi
-          .get(appendQueryString(paths.assessments.index({}), { statuses: 'unallocated', page: 1, perPage: 42 }))
+          .get(appendQueryString(paths.cas3.assessments.index({}), { statuses: 'unallocated', page: 1, perPage: 42 }))
           .matchHeader('authorization', `Bearer ${callConfig.token}`)
           .reply(200, [])
 
         await assessmentClient.all(['unallocated'], { page: 1 })
 
         expect(superagent.get).toHaveBeenCalledWith(
-          'http://localhost:8080/assessments?statuses=unallocated&page=1&perPage=42',
+          'http://localhost:8080/cas3/assessments?statuses=unallocated&page=1&perPage=42',
         )
       })
     })
@@ -137,7 +137,7 @@ describe('AssessmentClient', () => {
       const assessments = assessmentSummaryFactory.buildList(5)
 
       fakeApprovedPremisesApi
-        .get(`${paths.assessments.index({})}?crnOrName=${crn}&statuses=${status}`)
+        .get(`${paths.cas3.assessments.index({})}?crnOrName=${crn}&statuses=${status}`)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, assessments)
 

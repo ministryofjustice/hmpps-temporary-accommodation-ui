@@ -72,7 +72,11 @@ jobs:
     name: "X371199 address clean up"
     runs-on: [ self-hosted, hmpps-github-actions-runner ]
     steps:
-      -
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          # Repository is specified to run the workflow from the API repository
+          repository: 'ministryofjustice/hmpps-temporary-accommodation-ui'
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:

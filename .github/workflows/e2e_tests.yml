@@ -59,27 +59,24 @@ jobs:
 #          retention-days: 30
 #          if-no-files-found: ignore
 
-  cas3_ndelius_cleanup:
+  #  cas3_ndelius_cleanup:
+  #    name: "X371199 address clean up"
+  #    uses: ministryofjustice/hmpps-probation-integration-e2e-tests/.github/workflows/delete-data.yml@main
+  #    with:
+  #      project: delete-previous-addresses-for-offender
+  #      crn: X371199
+  #    secrets: inherit
+  #
+
+  cas3_ndelius_cleanup_2:
     name: "X371199 address clean up"
-    uses: ministryofjustice/hmpps-probation-integration-e2e-tests/.github/workflows/delete-data.yml@main
-    with:
-      project: delete-previous-addresses-for-offender
-      crn: "X371199"
-    secrets: inherit
-#
-#  e2e_test_playwright_failure:
-#    name: "Playwright E2E failure notification"
-#    needs: e2e_test_playwright
-#    if: ${{ always() && needs.e2e_test_playwright.result == 'failure' }}
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Send Slack notification
-#        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@main
-#        with:
-#          title: "CAS3 E2E Tests (Playwright)"
-#          job: "e2e_test_playwright"
-#          channel_id: ${{ vars.SECURITY_ALERTS_SLACK_CHANNEL_ID }}
-#          slack_bot_token: ${{ secrets.HMPPS_SLACK_BOT_TOKEN }}
+    runs-on: [ self-hosted, hmpps-github-actions-runner ]
+    steps:
+      - name: Start clean up job
+        uses: ministryofjustice/hmpps-probation-integration-e2e-tests/.github/workflows/delete-data.yml@main
+        with:
+          project: 'delete-previous-addresses-for-offender'
+          crn: 'X371199'
 #
 #  e2e_test_cypress:
 #    name: "CAS3 E2E Tests 🧪 (Cypress)"

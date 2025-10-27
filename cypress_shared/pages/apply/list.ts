@@ -1,4 +1,4 @@
-import { TemporaryAccommodationApplication as Application } from '../../../server/@types/shared'
+import { Cas3Application } from '../../../server/@types/shared'
 import paths from '../../../server/paths/apply'
 import { DateFormats } from '../../../server/utils/dateUtils'
 import { isFullPerson, personName } from '../../../server/utils/personUtils'
@@ -6,24 +6,24 @@ import Page from '../page'
 
 export default class ListPage extends Page {
   constructor(
-    private readonly inProgressApplications: Array<Application>,
-    private readonly submittedApplications: Array<Application>,
-    private readonly rejectedApplications: Array<Application>,
+    private readonly inProgressApplications: Array<Cas3Application>,
+    private readonly submittedApplications: Array<Cas3Application>,
+    private readonly rejectedApplications: Array<Cas3Application>,
   ) {
     super('Transitional Accommodation (CAS3) referrals')
   }
 
   static visit(
-    inProgressApplications: Array<Application>,
-    submittedApplications: Array<Application>,
-    rejectedApplications: Array<Application>,
+    inProgressApplications: Array<Cas3Application>,
+    submittedApplications: Array<Cas3Application>,
+    rejectedApplications: Array<Cas3Application>,
   ): ListPage {
     cy.visit(paths.applications.index.pattern)
 
     return new ListPage(inProgressApplications, submittedApplications, rejectedApplications)
   }
 
-  clickApplication(application: Application) {
+  clickApplication(application: Cas3Application) {
     if (isFullPerson(application.person)) {
       cy.get('a').contains(application.person.name).click()
     } else {
@@ -31,7 +31,7 @@ export default class ListPage extends Page {
     }
   }
 
-  clickSubmittedApplication(application: Application) {
+  clickSubmittedApplication(application: Cas3Application) {
     cy.get('#applications-submitted').within(() => {
       if (isFullPerson(application.person)) {
         cy.get('a').contains(application.person.name).click()
@@ -49,7 +49,7 @@ export default class ListPage extends Page {
     this.shouldShowApplications(this.submittedApplications, 'applications-submitted')
   }
 
-  shouldShowInProgressApplication(application: Application): void {
+  shouldShowInProgressApplication(application: Cas3Application): void {
     cy.get('#in-progress').within(() => {
       cy.get(`a[href*="${paths.applications.show({ id: application.id })}"]`)
         .parent()
@@ -62,7 +62,7 @@ export default class ListPage extends Page {
     })
   }
 
-  shouldShowSubmittedApplication(application: Application, checkSubmittedAtDate = true): void {
+  shouldShowSubmittedApplication(application: Cas3Application, checkSubmittedAtDate = true): void {
     cy.get('#applications-submitted').within(() => {
       cy.get(`a[href*="${paths.applications.full({ id: application.id })}"]`)
         .parent()
@@ -86,7 +86,7 @@ export default class ListPage extends Page {
     cy.get('a').contains('Submitted').click()
   }
 
-  private shouldShowApplications(applications: Array<Application>, containerId: string): void {
+  private shouldShowApplications(applications: Array<Cas3Application>, containerId: string): void {
     cy.get(`#${containerId}`).find('tbody>tr').should('have.length', applications.length)
 
     applications.forEach(application => {

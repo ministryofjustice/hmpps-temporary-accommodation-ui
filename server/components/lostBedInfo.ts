@@ -1,10 +1,10 @@
-import type { LostBed } from '@approved-premises/api'
+import type { Cas3VoidBedspace } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
 import { DateFormats } from '../utils/dateUtils'
 import { formatLines } from '../utils/viewUtils'
 import { statusTag } from '../utils/lostBedUtils'
 
-export default (lostBed: LostBed): SummaryList['rows'] => {
+export default (lostBed: Cas3VoidBedspace): SummaryList['rows'] => {
   const { status, startDate, endDate, reason, costCentre } = lostBed
 
   const rows: SummaryList['rows'] = []
@@ -39,7 +39,7 @@ export default (lostBed: LostBed): SummaryList['rows'] => {
     value:
       lostBed.status === 'active'
         ? htmlValue(formatLines(lostBed.notes))
-        : htmlValue(formatLines(lostBed.cancellation.notes)),
+        : htmlValue(formatLines(lostBed.cancellationNotes)),
   })
 
   return rows

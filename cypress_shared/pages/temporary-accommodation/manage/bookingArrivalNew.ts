@@ -2,7 +2,7 @@ import type {
   Cas3Bedspace,
   Cas3Booking,
   Cas3Premises,
-  LostBed,
+  Cas3VoidBedspace,
   NewCas3Arrival as NewArrival,
 } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -49,7 +49,7 @@ export default class BookingArrivalNewPage extends Page {
   }
 
   shouldShowDateConflictErrorMessages(
-    conflictingEntity: Cas3Booking | LostBed,
+    conflictingEntity: Cas3Booking | Cas3VoidBedspace,
     conflictingEntityType: 'booking' | 'lost-bed',
   ): void {
     this.bedspaceConflictErrorComponent.shouldShowDateConflictErrorMessages(

@@ -1,4 +1,4 @@
-import type { Cas3Bedspace, Cas3Booking, Cas3Premises, LostBed, NewBooking } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3Premises, Cas3VoidBedspace, NewBooking } from '@approved-premises/api'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import Page from '../../page'
@@ -13,7 +13,7 @@ export default abstract class BookingEditablePage extends Page {
   }
 
   shouldShowDateConflictErrorMessages(
-    conflictingEntity: Cas3Booking | LostBed | null,
+    conflictingEntity: Cas3Booking | Cas3VoidBedspace | null,
     conflictingEntityType: 'booking' | 'lost-bed' | 'bedspace-end-date',
   ): void {
     this.bedspaceConflictErrorComponent.shouldShowDateConflictErrorMessages(

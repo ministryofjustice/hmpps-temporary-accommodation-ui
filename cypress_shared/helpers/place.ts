@@ -4,7 +4,7 @@ import {
   Cas3BedspaceSearchResults,
   Cas3Booking,
   Cas3Premises,
-  LostBed,
+  Cas3VoidBedspace,
   Person,
 } from '@approved-premises/api'
 import { PlaceContext } from '@approved-premises/ui'
@@ -15,7 +15,7 @@ import {
   bedspaceSearchResultsFactory,
   cas3BedspaceFactory,
   cas3BookingFactory,
-  lostBedFactory,
+  cas3VoidBedspaceFactory,
   newBookingFactory,
   timelineEventsFactory,
 } from '../../server/testutils/factories'
@@ -42,7 +42,7 @@ export default class PlaceHelper {
 
   private readonly bookings: Array<Cas3Booking>
 
-  private readonly lostBeds: Array<LostBed>
+  private readonly lostBeds: Array<Cas3VoidBedspace>
 
   constructor(
     private readonly placeContext: NonNullable<PlaceContext>,
@@ -57,10 +57,10 @@ export default class PlaceHelper {
       person: this.person,
       bedspace: cas3BedspaceFactory.build({ id: cas3Bedspace.id }),
     })
-    this.lostBeds = lostBedFactory
+    this.lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: cas3Bedspace.id,
+        bedspaceId: cas3Bedspace.id,
       })
       .buildList(5)
 

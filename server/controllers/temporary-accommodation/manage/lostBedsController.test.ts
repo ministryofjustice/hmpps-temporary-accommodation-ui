@@ -8,12 +8,10 @@ import BedspaceService from '../../../services/bedspaceService'
 import {
   cas3BedspaceFactory,
   cas3PremisesFactory,
-  lostBedCancellationFactory,
-  lostBedFactory,
-  newLostBedCancellationFactory,
-  newLostBedFactory,
-  referenceDataFactory,
-  updateLostBedFactory,
+  cas3VoidBedspaceCancellationFactory,
+  cas3VoidBedspaceFactory,
+  cas3VoidBedspaceReasonFactory,
+  cas3VoidBedspaceRequestFactory,
 } from '../../../testutils/factories'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -91,8 +89,8 @@ describe('LostBedsController', () => {
       it('creates a lost bed and redirects to the show lost bed page', async () => {
         const requestHandler = lostBedsController.create()
 
-        const lostBed = lostBedFactory.build()
-        const newLostBed = newLostBedFactory.build({ ...lostBed, reason: lostBed.reason.id })
+        const lostBed = cas3VoidBedspaceFactory.build()
+        const newLostBed = cas3VoidBedspaceRequestFactory.build({ ...lostBed, reasonId: lostBed.reason.id })
 
         lostBedService.create.mockResolvedValue(lostBed)
 
@@ -109,7 +107,12 @@ describe('LostBedsController', () => {
 
         await requestHandler(request, response, next)
 
-        expect(lostBedService.create).toHaveBeenCalledWith(callConfig, premisesId, expect.objectContaining(newLostBed))
+        expect(lostBedService.create).toHaveBeenCalledWith(
+          callConfig,
+          premisesId,
+          bedspaceId,
+          expect.objectContaining(newLostBed),
+        )
 
         expect(request.flash).toHaveBeenCalledWith('success', 'Void created')
         expect(response.redirect).toHaveBeenCalledWith(
@@ -192,7 +195,7 @@ describe('LostBedsController', () => {
       it('renders the template for viewing a lost bed', async () => {
         const premises = cas3PremisesFactory.build()
         const bedspace = cas3BedspaceFactory.build()
-        const lostBed = lostBedFactory.build()
+        const lostBed = cas3VoidBedspaceFactory.build()
         const mockActions = [{ classes: 'mock', href: '', text: 'mock' }]
 
         premisesService.getSinglePremises.mockResolvedValue(premises)
@@ -224,8 +227,8 @@ describe('LostBedsController', () => {
       it('updates a lostBed and redirects to the show lostBed page', async () => {
         const premises = cas3PremisesFactory.build()
         const bedspace = cas3BedspaceFactory.build()
-        const lostBed = lostBedFactory.build()
-        const lostBedUpdate = updateLostBedFactory.build({ ...lostBed, reason: lostBed.reason.id })
+        const lostBed = cas3VoidBedspaceFactory.build()
+        const lostBedUpdate = cas3VoidBedspaceRequestFactory.build({ ...lostBed, reasonId: lostBed.reason.id })
 
         request.params.premisesId = premises.id
         request.params.bedspaceId = bedspace.id
@@ -244,6 +247,7 @@ describe('LostBedsController', () => {
         expect(lostBedService.update).toHaveBeenCalledWith(
           callConfig,
           premises.id,
+          bedspace.id,
           lostBed.id,
           expect.objectContaining(lostBedUpdate),
         )
@@ -332,9 +336,9 @@ describe('LostBedsController', () => {
     it('renders the template for updating a lost bed', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const lostBed = lostBedFactory.build()
-      const updateLostBed = updateLostBedFactory.build({ ...lostBed, reason: lostBed.reason.id })
-      const lostBedReasons = referenceDataFactory.lostBedReasons().buildList(2)
+      const lostBed = cas3VoidBedspaceFactory.build()
+      const updateLostBed = cas3VoidBedspaceRequestFactory.build({ ...lostBed, reasonId: lostBed.reason.id })
+      const lostBedReasons = cas3VoidBedspaceReasonFactory.buildList(2)
 
       premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
@@ -370,7 +374,7 @@ describe('LostBedsController', () => {
     it('renders the template for cancelling a lost bed', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const lostBed = lostBedFactory.active().build()
+      const lostBed = cas3VoidBedspaceFactory.active().build()
 
       premisesService.getSinglePremises.mockResolvedValue(premises)
       bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
@@ -393,8 +397,8 @@ describe('LostBedsController', () => {
         premises,
         bedspace,
         lostBed,
-        notes: lostBed.notes,
         allStatuses,
+        cancellationNotes: lostBed.notes,
       })
     })
   })
@@ -403,11 +407,10 @@ describe('LostBedsController', () => {
     it('cancels a lost bed and redirects to the show lost bed page', async () => {
       const requestHandler = lostBedsController.createCancellation()
 
-      const lostBed = lostBedFactory.build()
-      const newLostBedCancellation = newLostBedCancellationFactory.build()
-      const lostBedCancellation = lostBedCancellationFactory.build()
+      const lostBed = cas3VoidBedspaceFactory.build()
+      const newLostBedCancellation = cas3VoidBedspaceCancellationFactory.build()
 
-      lostBedService.cancel.mockResolvedValue(lostBedCancellation)
+      lostBedService.cancel.mockResolvedValue(newLostBedCancellation)
 
       request.params = {
         premisesId,
@@ -421,7 +424,13 @@ describe('LostBedsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(lostBedService.cancel).toHaveBeenCalledWith(callConfig, premisesId, lostBed.id, newLostBedCancellation)
+      expect(lostBedService.cancel).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bedspaceId,
+        lostBed.id,
+        newLostBedCancellation,
+      )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Void booking cancelled')
       expect(response.redirect).toHaveBeenCalledWith(

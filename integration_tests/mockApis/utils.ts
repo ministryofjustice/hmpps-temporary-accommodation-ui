@@ -1,4 +1,4 @@
-import { LostBed } from '../../server/@types/shared'
+import { Cas3VoidBedspace } from '@approved-premises/api'
 
 const getCombinations = (arr: Array<string>) => {
   const result: Array<Array<string>> = []
@@ -52,7 +52,7 @@ const errorStub = (fields: Array<string>, pattern: string, method: string) => {
 }
 
 const bedspaceConflictResponseBody = (
-  entityId: string | LostBed,
+  entityId: string | Cas3VoidBedspace,
   entityType: 'booking' | 'lost-bed' | 'bedspace-end-date',
 ) => {
   let detail: string

@@ -19,6 +19,10 @@ const cas3v2SinglePremisesPath = cas3v2PremisesPath.path(':premisesId')
 const cas3v2BedspacesPath = cas3v2SinglePremisesPath.path('bedspaces')
 const cas3v2SingleBedspacePath = cas3v2BedspacesPath.path(':bedspaceId')
 
+const cas3v2AllVoidBedspacesPath = cas3v2BedspacesPath.path('void-bedspaces')
+const cas3v2VoidBedspacesPath = cas3v2SingleBedspacePath.path('void-bedspaces')
+const cas3v2SingleVoidBedspacePath = cas3v2VoidBedspacesPath.path(':voidBedspaceId')
+
 const cas3v2BookingsPath = cas3v2SinglePremisesPath.path('bookings')
 const cas3v2SingleBookingPath = cas3v2BookingsPath.path(':bookingId')
 
@@ -69,6 +73,13 @@ const cas3Api = {
       unarchive: cas3v2SingleBedspacePath.path('unarchive'),
       cancelArchive: cas3v2SingleBedspacePath.path('cancel-archive'),
       cancelUnarchive: cas3v2SingleBedspacePath.path('cancel-unarchive'),
+    },
+    voidBedspaces: {
+      index: cas3v2AllVoidBedspacesPath,
+      create: cas3v2VoidBedspacesPath,
+      show: cas3v2SingleVoidBedspacePath,
+      update: cas3v2SingleVoidBedspacePath,
+      cancel: cas3v2SingleVoidBedspacePath.path('cancellations'),
     },
     bookings: {
       create: cas3v2BookingsPath,

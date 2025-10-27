@@ -212,7 +212,7 @@ const formatBedspaceDate = (dateString: string | undefined | null): string => {
 }
 
 const formatBedspaceDetails = (characteristics: Array<Characteristic>): string => {
-  return characteristics
+  return (characteristics || [])
     .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
     .join(' ')
 }

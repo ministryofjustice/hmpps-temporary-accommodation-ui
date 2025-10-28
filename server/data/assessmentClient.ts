@@ -26,7 +26,7 @@ export default class AssessmentClient {
     statuses: AssessmentStatus[],
     params?: AssessmentSearchParameters,
   ): Promise<PaginatedResponse<AssessmentSummary>> {
-    const path = appendQueryString(paths.assessments.index.pattern, {
+    const path = appendQueryString(paths.cas3.assessments.index.pattern, {
       statuses,
       ...params,
       perPage: config.assessmentsDefaultPageSize,
@@ -51,7 +51,7 @@ export default class AssessmentClient {
     const status: AssessmentSummary['status'] = 'ready_to_place'
 
     return this.restClient.get<Array<AssessmentSummary>>({
-      path: appendQueryString(paths.assessments.index.pattern, { crnOrName: crnOrName.trim(), statuses: status }),
+      path: appendQueryString(paths.cas3.assessments.index.pattern, { crnOrName: crnOrName.trim(), statuses: status }),
     })
   }
 

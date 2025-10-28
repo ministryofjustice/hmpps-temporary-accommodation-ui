@@ -12,7 +12,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        urlPath: api.assessments.index({}),
+        urlPath: api.cas3.assessments.index({}),
       },
       response: {
         status: 200,

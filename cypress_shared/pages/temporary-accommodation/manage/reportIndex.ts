@@ -52,6 +52,8 @@ export default class ReportIndexPage extends Page {
       cy.get('button').contains('Download occupancy report').click()
     } else if (type === 'referral') {
       cy.get('button').contains('Download referrals report').click()
+    } else if (type === 'bookingGap') {
+      cy.get('button').contains('Download gap report').click()
     }
   }
 

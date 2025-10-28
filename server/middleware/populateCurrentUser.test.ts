@@ -59,7 +59,7 @@ describe('populateCurrentUser', () => {
     expect(next).toHaveBeenCalledWith()
   })
 
-  it('renders the dedicated 403 page when staff record is missing', async () => {
+  it('redirects to not authorised when staff record is missing', async () => {
     const request = createMock<Request>()
     const response = createMock<Response>()
     const next = jest.fn()
@@ -71,7 +71,7 @@ describe('populateCurrentUser', () => {
     await populateCurrentUser(userService)(request, response, next)
 
     expect(response.status).toHaveBeenCalledWith(403)
-    expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/userDetailsRequired')
+    expect(response.redirect).toHaveBeenCalledWith('/not-authorised')
     expect(next).not.toHaveBeenCalledWith(expect.any(Error))
   })
 

@@ -9,19 +9,14 @@ import { ValidationError } from '../utils/errors'
 import ApplicationService from './applicationService'
 
 import {
-  SubmitTemporaryAccommodationApplication as SubmitApplication,
+  Cas3SubmitApplication as SubmitApplication,
   UpdateTemporaryAccommodationApplication as UpdateApplication,
 } from '../@types/shared'
 import { CallConfig } from '../data/restClient'
 import Apply from '../form-pages/apply'
 import Review from '../form-pages/apply/check-your-answers/review'
 import { TasklistPageInterface } from '../form-pages/tasklistPage'
-import {
-  activeOffenceFactory,
-  applicationFactory,
-  applicationSummaryFactory,
-  documentFactory,
-} from '../testutils/factories'
+import { activeOffenceFactory, applicationFactory } from '../testutils/factories'
 import { getApplicationSubmissionData, getApplicationUpdateData } from '../utils/applications/getApplicationData'
 
 const FirstPage = jest.fn()
@@ -56,9 +51,9 @@ describe('ApplicationService', () => {
   })
 
   describe('getAllForLoggedInUser', () => {
-    const submittedApplications = applicationSummaryFactory.buildList(5, { status: 'submitted' })
-    const inProgressApplications = applicationSummaryFactory.buildList(2, { status: 'inProgress' })
-    const rejectedApplications = applicationSummaryFactory.buildList(3, { status: 'rejected' })
+    const submittedApplications = applicationFactory.buildList(5, { status: 'submitted' })
+    const inProgressApplications = applicationFactory.buildList(2, { status: 'inProgress' })
+    const rejectedApplications = applicationFactory.buildList(3, { status: 'rejected' })
 
     const applications = [submittedApplications, inProgressApplications, rejectedApplications].flat()
 
@@ -111,24 +106,6 @@ describe('ApplicationService', () => {
 
       expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
       expect(applicationClient.find).toHaveBeenCalledWith(application.id)
-    })
-  })
-
-  describe('getDocuments', () => {
-    it('calls the documents method and returns a list of documents', async () => {
-      const application = applicationFactory.build()
-      const documents = documentFactory.buildList(5)
-
-      const callConfig = { token: 'some-token' } as CallConfig
-
-      applicationClient.documents.mockResolvedValue(documents)
-
-      const result = await service.getDocuments(callConfig, application)
-
-      expect(result).toEqual(documents)
-
-      expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(applicationClient.documents).toHaveBeenCalledWith(application)
     })
   })
 

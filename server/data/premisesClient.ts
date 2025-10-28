@@ -3,7 +3,6 @@ import {
   Cas3Premises,
   Cas3PremisesBedspaceTotals,
   Cas3PremisesSearchResults,
-  Cas3PremisesSortBy,
   Cas3PremisesStatus,
   Cas3UpdatePremises,
   Cas3ValidationResults,
@@ -19,10 +18,10 @@ export default class PremisesClient {
     this.restClient = new RestClient('premisesClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async search(postcodeOrAddress: string, premisesStatus: Cas3PremisesStatus, sortBy: Cas3PremisesSortBy) {
+  async search(postcodeOrAddress: string, premisesStatus: Cas3PremisesStatus) {
     return this.restClient.get<Cas3PremisesSearchResults>({
       path: paths.cas3.premises.search({}),
-      query: { postcodeOrAddress, premisesStatus, sortBy },
+      query: { postcodeOrAddress, premisesStatus },
     })
   }
 

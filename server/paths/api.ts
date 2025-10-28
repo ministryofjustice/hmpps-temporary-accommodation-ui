@@ -173,7 +173,6 @@ export default {
     delete: deleteApplicationCas3Path,
     new: applicationsCas3Path,
     submission: applyPaths.applications.submission,
-    documents: applyPaths.applications.show.path('documents'),
   },
   assessments: {
     index: assessPaths.assessments,

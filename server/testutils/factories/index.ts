@@ -2,8 +2,6 @@ import acctAlertFactory from './acctAlert'
 import activeOffenceFactory from './activeOffence'
 import adjudicationFactory from './adjudication'
 import applicationFactory from './application'
-import cas3ApplicationFactory from './cas3Application'
-import applicationSummaryFactory from './applicationSummary'
 import arrivalFactory from './arrival'
 import assessmentFactory from './assessment'
 import assessmentSearchParametersFactory from './assessmentSearchParameters'
@@ -26,7 +24,6 @@ import cancellationFactory from './cancellation'
 import characteristicFactory from './characteristic'
 import confirmationFactory from './confirmation'
 import departureFactory from './departure'
-import documentFactory from './document'
 import extensionFactory from './extension'
 import flagsFactory from './flags'
 import localAuthorityFactory from './localAuthority'
@@ -54,7 +51,6 @@ import cas3NewPremisesFactory from './cas3NewPremises'
 import cas3UpdatePremisesFactory from './cas3UpdatePremises'
 import cas3PremisesBedspaceTotalsFactory from './cas3PremisesBedspaceTotals'
 import cas3BedspacesFactory from './cas3Bedspaces'
-import cas3PremisesSummaryFactory from './cas3PremisesSummary'
 import cas3PremisesSearchResultFactory from './cas3PremisesSearchResult'
 import cas3PremisesSearchResultsFactory from './cas3PremisesSearchResults'
 import cas3ArchivePremisesFactory from './cas3ArchivePremises'
@@ -66,6 +62,7 @@ import cas3UpdateBedspaceFactory from './cas3UpdateBedspace'
 import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
 import cas3BedspaceReferenceFactory from './cas3BedspaceReference'
 import cas3BedspacesReferenceFactory from './cas3BedspacesReference'
+import cas3ApplicationFactory from './cas3Application'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
@@ -85,8 +82,6 @@ export {
   activeOffenceFactory,
   adjudicationFactory,
   applicationFactory,
-  cas3ApplicationFactory,
-  applicationSummaryFactory,
   arrivalFactory,
   assessmentFactory,
   assessmentSearchParametersFactory,
@@ -109,7 +104,6 @@ export {
   characteristicFactory,
   confirmationFactory,
   departureFactory,
-  documentFactory,
   extensionFactory,
   flagsFactory,
   localAuthorityFactory,
@@ -136,7 +130,6 @@ export {
   cas3NewPremisesFactory,
   cas3UpdatePremisesFactory,
   cas3PremisesBedspaceTotalsFactory,
-  cas3PremisesSummaryFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3ArchivePremisesFactory,
@@ -149,6 +142,7 @@ export {
   cas3BedspaceSummaryFactory,
   cas3BedspaceReferenceFactory,
   cas3BedspacesReferenceFactory,
+  cas3ApplicationFactory,
   prisonCaseNotesFactory,
   probationRegionFactory,
   referenceDataFactory,

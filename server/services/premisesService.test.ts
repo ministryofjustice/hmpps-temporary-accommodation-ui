@@ -290,7 +290,7 @@ describe('PremisesService', () => {
       })
       expect(result.tableRows).toHaveLength(2)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.search).toHaveBeenCalledWith('London', 'online', 'pdu')
+      expect(premisesClient.search).toHaveBeenCalledWith('London', 'online')
     })
 
     it('returns search results with table rows for specified status', async () => {
@@ -317,7 +317,7 @@ describe('PremisesService', () => {
       })
       expect(result.tableRows).toHaveLength(1)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.search).toHaveBeenCalledWith('London', 'archived', 'pdu')
+      expect(premisesClient.search).toHaveBeenCalledWith('London', 'archived')
     })
 
     it('returns empty search results when there are no properties in the database', async () => {
@@ -341,7 +341,7 @@ describe('PremisesService', () => {
       expect(result.totalPremises).toBe(0)
       expect(result.totalOnlineBedspaces).toBe(0)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.search).toHaveBeenCalledWith('', 'online', 'pdu')
+      expect(premisesClient.search).toHaveBeenCalledWith('', 'online')
     })
   })
 

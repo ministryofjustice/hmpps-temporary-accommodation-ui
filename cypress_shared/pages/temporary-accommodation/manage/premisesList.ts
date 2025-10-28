@@ -1,4 +1,5 @@
-import { Cas3Premises, Cas3PremisesSearchResult, Cas3PremisesSortBy } from '@approved-premises/api'
+import { Cas3Premises, Cas3PremisesSearchResult } from '@approved-premises/api'
+import { PremisesSortBy } from '@approved-premises/ui'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { cas3PremisesFactory } from '../../../../server/testutils/factories'
 import Page from '../../page'
@@ -23,7 +24,7 @@ export default class PremisesListPage extends Page {
     return new PremisesListPage('Archived properties')
   }
 
-  shouldShowPremises(premises: Array<Cas3PremisesSearchResult>, sortBy: Cas3PremisesSortBy = 'pdu'): void {
+  shouldShowPremises(premises: Array<Cas3PremisesSearchResult>, sortBy: PremisesSortBy = 'pdu'): void {
     premises.forEach((item: Cas3PremisesSearchResult) => {
       cy.contains(item.addressLine1)
         .contains(item.addressLine2)
@@ -54,7 +55,7 @@ export default class PremisesListPage extends Page {
     })
   }
 
-  shouldShowArchivedPremises(premises: Array<Cas3PremisesSearchResult>, sortBy: Cas3PremisesSortBy = 'pdu'): void {
+  shouldShowArchivedPremises(premises: Array<Cas3PremisesSearchResult>, sortBy: PremisesSortBy = 'pdu'): void {
     premises.forEach((item: Cas3PremisesSearchResult) => {
       cy.contains(item.addressLine1)
         .contains(item.addressLine2)

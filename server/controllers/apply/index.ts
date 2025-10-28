@@ -14,7 +14,6 @@ export const controllers = (services: Services) => {
   const applicationsController = new ApplicationsController(applicationService, timelineService, personService)
   const pagesController = new PagesController(applicationService, {
     personService,
-    applicationService,
     referenceDataService,
   })
   const offencesController = new OffencesController(personService)

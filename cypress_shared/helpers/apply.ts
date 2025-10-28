@@ -1,7 +1,6 @@
 import {
   ActiveOffence,
   Adjudication,
-  Document,
   OASysQuestion,
   OASysSupportingInformationQuestion,
   Person,
@@ -21,12 +20,10 @@ import { hasSubmittedDtr } from '../../server/form-pages/utils'
 import {
   acctAlertFactory,
   adjudicationFactory,
-  documentFactory,
   localAuthorityFactory,
   oasysSectionsFactory,
   referenceDataFactory,
 } from '../../server/testutils/factories'
-import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import applicationDataJson from '../fixtures/applicationData.json'
 import Page from '../pages'
 import {
@@ -140,7 +137,6 @@ export default class ApplyHelper {
     this.stubAdjudicationEndpoints()
     this.stubAcctAlertsEndpoint()
     this.stubOasysEndpoints()
-    this.stubDocumentEndpoints()
     this.stubOffences()
   }
 
@@ -219,6 +215,7 @@ export default class ApplyHelper {
     cy.task('stubApplicationCreate', { application: this.application })
     cy.task('stubApplicationUpdate', { application: this.application })
     cy.task('stubApplicationGet', { application: this.application })
+    cy.task('stubApplicationSubmit', { application: this.application })
   }
 
   private stubAdjudicationEndpoints() {
@@ -267,20 +264,6 @@ export default class ApplyHelper {
       },
       selectedSections: [1, 2, 3, 4],
     })
-  }
-
-  private stubDocumentEndpoints() {
-    // And there are documents in the database
-    this.selectedDocuments = documentsFromApplication(this.application)
-    this.documents = [this.selectedDocuments, documentFactory.buildList(4)].flat()
-
-    cy.task('stubApplicationDocuments', { application: this.application, documents: this.documents })
-    this.documents.forEach(document => {
-      cy.task('stubPersonDocument', { person: this.person, document })
-    })
-
-    // And the application exists in the database
-    cy.task('stubApplicationSubmit', { application: this.application })
   }
 
   completeOffenceAndBehaviourSummary() {

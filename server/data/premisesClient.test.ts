@@ -48,11 +48,10 @@ describe('PremisesClient', () => {
         .query({
           postcodeOrAddress: 'NE1 1AB',
           premisesStatus: 'online',
-          sortBy: 'pdu',
         })
         .reply(200, searchResults)
 
-      const output = await premisesClient.search('NE1 1AB', 'online', 'pdu')
+      const output = await premisesClient.search('NE1 1AB', 'online')
       expect(output).toEqual(searchResults)
     })
   })

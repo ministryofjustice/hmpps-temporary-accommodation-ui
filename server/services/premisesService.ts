@@ -7,7 +7,6 @@ import {
   Cas3PremisesBedspaceTotals,
   Cas3PremisesSearchResult,
   Cas3PremisesSearchResults,
-  Cas3PremisesSortBy,
   Cas3PremisesStatus,
   Cas3UnarchivePremises,
   Cas3UpdatePremises,
@@ -16,7 +15,7 @@ import {
   ProbationDeliveryUnit,
   ProbationRegion,
 } from '@approved-premises/api'
-import { PlaceContext, SummaryList, TableRow } from '@approved-premises/ui'
+import { PlaceContext, PremisesSortBy, SummaryList, TableRow } from '@approved-premises/ui'
 import { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../data'
 
 import { CallConfig } from '../data/restClient'
@@ -46,11 +45,11 @@ export default class PremisesService {
     postcodeOrAddress: string | undefined,
     placeContext: PlaceContext,
     status: Cas3PremisesStatus = 'online',
-    premisesSortBy: Cas3PremisesSortBy = 'pdu',
+    premisesSortBy: PremisesSortBy = 'pdu',
   ): Promise<Cas3PremisesSearchResults & { tableRows: Array<TableRow> }> {
     const premisesClient = this.premisesClientFactory(callConfig)
 
-    const premises = await premisesClient.search(postcodeOrAddress ?? '', status, premisesSortBy)
+    const premises = await premisesClient.search(postcodeOrAddress ?? '', status)
 
     return {
       ...premises,
@@ -148,7 +147,7 @@ export default class PremisesService {
     premises: Cas3PremisesSearchResults,
     placeContext: PlaceContext,
     status: Cas3PremisesStatus,
-    premisesSortBy: Cas3PremisesSortBy = 'pdu',
+    premisesSortBy: PremisesSortBy = 'pdu',
   ): Array<TableRow> {
     return premises.results === undefined
       ? []

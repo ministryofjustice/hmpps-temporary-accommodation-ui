@@ -1,10 +1,9 @@
 import type {
   ActiveOffence,
   TemporaryAccommodationApplication as Application,
-  TemporaryAccommodationApplicationSummary as ApplicationSummary,
+  Cas3ApplicationSummary as ApplicationSummary,
   Cas3Application,
   Cas3UpdateApplication,
-  Document,
   Cas3SubmitApplication as SubmitApplication,
 } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
@@ -54,12 +53,6 @@ export default class ApplicationClient {
     return this.restClient.post<void>({
       path: paths.applications.submission({ id: applicationId }),
       data: submissionData,
-    })
-  }
-
-  async documents(application: Application) {
-    return this.restClient.get<Array<Document>>({
-      path: paths.applications.documents({ id: application.id }),
     })
   }
 }

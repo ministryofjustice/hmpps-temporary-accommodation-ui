@@ -322,8 +322,13 @@ describe('applicationUtils', () => {
         status: 'submitted',
         submittedAt: submittedAtDate,
       })
+      const applicationC = applicationFactory.build({
+        person: personFactory.build({ name: 'C' }),
+        status: 'rejected',
+        submittedAt: submittedAtDate,
+      })
 
-      const result = dashboardTableRows([applicationA, applicationB])
+      const result = dashboardTableRows([applicationA, applicationB, applicationC])
 
       expect(result).toEqual([
         [
@@ -348,9 +353,21 @@ describe('applicationUtils', () => {
             text: DateFormats.isoDateToUIDate(submittedAtDate),
           },
         ],
+        [
+          {
+            html: `<a href=${paths.applications.full({ id: applicationC.id })}>C</a>`,
+          },
+          {
+            text: applicationC.person.crn,
+          },
+          {
+            text: DateFormats.isoDateToUIDate(applicationC.submittedAt),
+          },
+        ],
       ])
       expect(personName).toHaveBeenCalledWith(applicationA.person, 'Limited access offender')
       expect(personName).toHaveBeenCalledWith(applicationB.person, 'Limited access offender')
+      expect(personName).toHaveBeenCalledWith(applicationC.person, 'Limited access offender')
     })
   })
 
@@ -474,10 +491,10 @@ describe('applicationUtils', () => {
       })
     })
 
-    describe('when the application has submitted status', () => {
+    describe('when the application has rejected status', () => {
       it('returns the name in an anchor tag to the full application page', () => {
         const application = applicationFactory.build({
-          status: 'submitted',
+          status: 'rejected',
         })
 
         expect(createNameAnchorElement('Limited access offender', application)).toEqual({

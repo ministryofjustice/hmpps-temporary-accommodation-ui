@@ -1,6 +1,6 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { Cas3Application, TemporaryAccommodationApplication } from '@approved-premises/api'
+import type { Cas3Application } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '.'
 
@@ -73,21 +73,6 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: args.referralNotes,
-      },
-    }),
-  stubApplicationDocuments: (args: {
-    application: TemporaryAccommodationApplication
-    documents: Array<Document>
-  }): SuperAgentRequest =>
-    stubFor({
-      request: {
-        method: 'GET',
-        url: `/applications/${args.application.id}/documents`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: args.documents,
       },
     }),
   stubApplicationSubmit: (args: { application: Cas3Application }): SuperAgentRequest =>

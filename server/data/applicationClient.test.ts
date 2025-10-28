@@ -3,12 +3,7 @@ import nock from 'nock'
 import { Cas3SubmitApplication, Cas3UpdateApplication } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
-import {
-  activeOffenceFactory,
-  applicationFactory,
-  cas3ApplicationFactory,
-  documentFactory,
-} from '../testutils/factories'
+import { activeOffenceFactory, applicationFactory, cas3ApplicationFactory } from '../testutils/factories'
 import ApplicationClient from './applicationClient'
 import { CallConfig } from './restClient'
 
@@ -150,23 +145,6 @@ describe('ApplicationClient', () => {
 
       await applicationClient.submit(application.id, data)
 
-      expect(nock.isDone()).toBeTruthy()
-    })
-  })
-
-  describe('documents', () => {
-    it('should return documents for an application', async () => {
-      const application = applicationFactory.build()
-      const documents = documentFactory.buildList(5)
-
-      fakeApprovedPremisesApi
-        .get(paths.applications.documents({ id: application.id }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, documents)
-
-      const result = await applicationClient.documents(application)
-
-      expect(result).toEqual(documents)
       expect(nock.isDone()).toBeTruthy()
     })
   })

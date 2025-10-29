@@ -1,5 +1,5 @@
 import {
-  TemporaryAccommodationAssessment as Assessment,
+  Cas3Assessment as Assessment,
   AssessmentSortField,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,

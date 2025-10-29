@@ -151,7 +151,7 @@ describe('AssessmentClient', () => {
 
     it('should get a single assessment', async () => {
       fakeApprovedPremisesApi
-        .get(paths.assessments.show({ id: assessment.id }))
+        .get(paths.cas3.assessments.show({ id: assessment.id }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, assessment)
 

@@ -1,5 +1,5 @@
 import {
-  TemporaryAccommodationAssessment as Assessment,
+  Cas3Assessment as Assessment,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
 } from '../../../server/@types/shared'
 import paths from '../../../server/paths/temporary-accommodation/manage'

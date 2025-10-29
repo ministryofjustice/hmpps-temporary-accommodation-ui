@@ -7,7 +7,7 @@ import type {
   TableRow,
 } from '@approved-premises/ui'
 import type {
-  TemporaryAccommodationAssessment as Assessment,
+  Cas3Assessment as Assessment,
   AssessmentRejection,
   NewReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,

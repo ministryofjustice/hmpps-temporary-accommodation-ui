@@ -4,6 +4,7 @@ const cookiesPath = temporaryAccommodationPath.path('cookies')
 const useNDeliusPath = temporaryAccommodationPath.path('use-ndelius')
 const notAuthorisedPath = temporaryAccommodationPath.path('not-authorised')
 const accessibilityStatementPath = temporaryAccommodationPath.path('accessibility-statement')
+const maintenancePath = temporaryAccommodationPath.path('maintenance')
 
 const paths = {
   static: {
@@ -11,6 +12,7 @@ const paths = {
     accessibilityStatement: accessibilityStatementPath,
     useNDelius: useNDeliusPath,
     notAuthorised: notAuthorisedPath,
+    maintenance: maintenancePath,
   },
 }
 

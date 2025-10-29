@@ -27,6 +27,7 @@ import type { Controllers } from './controllers'
 import type { Services } from './services'
 import setUpDomainRedirect from './middleware/setUpDomainRedirect'
 import config from './config'
+import setUpMaintenancePageRedirect from './middleware/setUpMaintenancePageRedirect'
 
 export default function createApp(controllers: Controllers, services: Services): express.Application {
   const app = express()
@@ -58,6 +59,7 @@ export default function createApp(controllers: Controllers, services: Services):
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
   nunjucksSetup(app, path)
+  app.use(setUpMaintenancePageRedirect())
   app.use((req, res, next) => {
     res.locals.infoMessages = req.flash('info')
     res.locals.successMessages = req.flash('success')

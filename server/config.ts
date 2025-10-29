@@ -47,6 +47,7 @@ export default {
   https: production,
   staticResourceCacheDuration: 20,
   flags: {
+    maintenanceMode: get('IN_MAINTENANCE_MODE', 'false') === 'true',
     oasysDisabled: process.env.OASYS_DISABLED || false,
     applyEnabledForAllRegions: ['local', 'dev', 'test'].includes(environment),
     domainEventsEmit: get('DOMAIN_EVENTS_EMIT_ENABLED', ''),

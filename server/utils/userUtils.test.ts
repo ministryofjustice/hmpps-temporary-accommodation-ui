@@ -4,6 +4,7 @@ import { probationRegionFactory, userFactory } from '../testutils/factories'
 import {
   filterProbationRegions,
   isApplyEnabledForUser,
+  userHasAdminRole,
   userHasAssessorRole,
   userHasAssessorRoleAndIsApplyEnabled,
   userHasReferrerRole,
@@ -129,6 +130,18 @@ describe('userHasReporterRole', () => {
   it('returns false when user hasnt got the role "reporter"', () => {
     const user = userFactory.build({ roles: ['referrer'] })
     expect(userHasReporterRole(user)).toBe(false)
+  })
+})
+
+describe('userHasAdminRole', () => {
+  it('returns true when the user has the role "admin"', () => {
+    const user = userFactory.build({ roles: ['admin'] })
+    expect(userHasAdminRole(user)).toBe(true)
+  })
+
+  it('returns false when user hasnt got the role "admin"', () => {
+    const user = userFactory.build({ roles: ['reporter'] })
+    expect(userHasAdminRole(user)).toBe(false)
   })
 })
 

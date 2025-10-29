@@ -23,6 +23,10 @@ export function userHasReporterRole(user: User): boolean {
   return user.roles.includes('reporter')
 }
 
+export function userHasAdminRole(user: User): boolean {
+  return user.roles.includes('admin')
+}
+
 export function userHasReferrerRoleAndIsApplyEnabled(user: User): boolean {
   return userHasReferrerRole(user) && isApplyEnabledForUser(user)
 }

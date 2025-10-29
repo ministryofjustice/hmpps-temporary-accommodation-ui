@@ -1,10 +1,10 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
 
-import type { NewCas3Arrival as NewArrival } from '@approved-premises/api'
+import type { NewCas3Arrival } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 
-export default Factory.define<NewArrival>(({ params }) => {
+export default Factory.define<NewCas3Arrival>(({ params }) => {
   const sevenDays = new Date()
   sevenDays.setDate(sevenDays.getDate() - 7)
 

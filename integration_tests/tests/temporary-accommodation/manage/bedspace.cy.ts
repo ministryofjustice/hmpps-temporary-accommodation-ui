@@ -1,16 +1,15 @@
 import { Cas3BedspaceStatus, Cas3Premises, Cas3PremisesBedspaceTotals, Characteristic } from '@approved-premises/api'
 import {
-  bedFactory,
-  bookingFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
+  cas3BookingFactory,
   cas3NewBedspaceFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3UpdateBedspaceFactory,
+  cas3VoidBedspaceFactory,
   characteristicFactory,
-  lostBedFactory,
 } from '../../../../server/testutils/factories'
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 
@@ -44,15 +43,15 @@ context('Bedspace', () => {
       reference: bedspace.reference,
     }
     const premises = cas3PremisesFactory.build({ status: 'online' })
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
 
@@ -100,15 +99,15 @@ context('Bedspace', () => {
       totalUpcomingBedspaces: 0,
       totalArchivedBedspaces: 0,
     })
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
     cy.task('stubSinglePremises', premises)
@@ -166,15 +165,15 @@ context('Bedspace', () => {
         startDate: bedspace.startDate,
       })
 
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -300,15 +299,15 @@ context('Bedspace', () => {
       })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2024-01-02' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
       cy.task('stubSinglePremises', premises)
@@ -332,15 +331,15 @@ context('Bedspace', () => {
       })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2024-01-02' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
       cy.task('stubSinglePremises', premises)
@@ -361,15 +360,15 @@ context('Bedspace', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2024-01-02' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -393,15 +392,15 @@ context('Bedspace', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'archived', startDate: '2024-02-03' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -425,15 +424,15 @@ context('Bedspace', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'upcoming', startDate: '2024-03-04' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -458,15 +457,15 @@ context('Bedspace', () => {
       // And there is online premises in the database with an online bedspace
       const bedspace = cas3BedspaceFactory.build({ status: 'online' })
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -532,15 +531,15 @@ context('Bedspace', () => {
       ]
       const bedspace = cas3BedspaceFactory.build({ status: 'online', characteristics })
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -664,15 +663,15 @@ context('Bedspace', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -721,15 +720,15 @@ context('Bedspace', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -779,12 +778,12 @@ context('Bedspace', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(1)
-      const lostBeds = lostBedFactory.buildList(1)
+      const lostBeds = cas3VoidBedspaceFactory.buildList(1)
 
       cy.task('stubSinglePremises', premises)
       cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -828,15 +827,15 @@ context('Bedspace', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -893,15 +892,15 @@ context('Bedspace', () => {
         startDate: '2024-02-03',
         endDate: '2026-08-01',
       })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
       cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -945,15 +944,15 @@ context('Bedspace', () => {
         startDate: '2024-02-03',
         endDate: '2026-08-01',
       })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
       cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -997,15 +996,15 @@ context('Bedspace', () => {
         startDate: '2024-02-03',
         endDate: '2026-08-01',
       })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -1040,15 +1039,15 @@ context('Bedspace', () => {
         startDate: '2024-02-03',
         endDate: '2126-08-01',
       })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -1084,15 +1083,15 @@ context('Bedspace', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       // And there is an archived bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'archived' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -1139,15 +1138,15 @@ context('Bedspace', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       // And there is an archived bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'archived' })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 
@@ -1201,15 +1200,15 @@ context('Bedspace', () => {
         scheduleUnarchiveDate: '2124-02-03',
         archiveHistory: [{ status: 'archived', date: '2024-01-01' }],
       })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
       cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -1249,15 +1248,15 @@ context('Bedspace', () => {
         scheduleUnarchiveDate: '2126-08-01',
         archiveHistory: [{ status: 'archived', date: '2024-01-01' }],
       })
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspace.id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspace.id,
+          bedspaceId: bedspace.id,
         })
         .buildList(5)
 

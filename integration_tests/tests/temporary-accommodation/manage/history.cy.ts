@@ -3,7 +3,7 @@ import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accom
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { bookingFactory } from '../../../../server/testutils/factories'
+import { cas3BookingFactory } from '../../../../server/testutils/factories'
 import { deriveBookingHistory } from '../../../../server/utils/bookingUtils'
 
 context('Booking history', () => {
@@ -17,7 +17,7 @@ context('Booking history', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a booking in the database
-    const booking = bookingFactory.build()
+    const booking = cas3BookingFactory.build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
@@ -41,7 +41,7 @@ context('Booking history', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a booking in the database
-    const booking = bookingFactory.build()
+    const booking = cas3BookingFactory.build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking history page
@@ -61,7 +61,7 @@ context('Booking history', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a booking in the database
-    const booking = bookingFactory.build()
+    const booking = cas3BookingFactory.build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking history page

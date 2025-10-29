@@ -7,14 +7,13 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   assessmentFactory,
-  bedFactory,
   bedspaceSearchFormParametersFactory,
   bedspaceSearchResultFactory,
   bedspaceSearchResultsFactory,
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
-  lostBedFactory,
+  cas3VoidBedspaceFactory,
   overlapFactory,
   personFactory,
   placeContextFactory,
@@ -167,15 +166,15 @@ context('Bedspace Search', () => {
     // And when I fill out the form
     const premises = cas3PremisesFactory.build({ id: premisesId, status: 'online', reference: 'Test premises' })
     const cas3Bedspace = cas3BedspaceFactory.build({ id: bedspaceId, reference: 'Test bedspace', status: 'online' })
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: cas3Bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: cas3Bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: cas3Bedspace.id,
+        bedspaceId: cas3Bedspace.id,
       })
       .buildList(5)
 

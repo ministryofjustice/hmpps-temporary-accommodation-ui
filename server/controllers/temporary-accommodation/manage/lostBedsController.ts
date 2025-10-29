@@ -1,6 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 
-import type { NewLostBed, NewLostBedCancellation, UpdateLostBed } from '@approved-premises/api'
+import type { Cas3VoidBedspaceCancellation, Cas3VoidBedspaceRequest } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, LostBedService } from '../../../services'
 import PremisesService from '../../../services/premisesService'
@@ -54,14 +54,14 @@ export default class LostBedsController {
       const { premisesId, bedspaceId } = req.params
       const callConfig = extractCallConfig(req)
 
-      const newLostBed: NewLostBed = {
+      const newLostBed: Cas3VoidBedspaceRequest = {
         ...req.body,
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'startDate'),
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate'),
       }
 
       try {
-        const lostBed = await this.lostBedsService.create(callConfig, premisesId, newLostBed)
+        const lostBed = await this.lostBedsService.create(callConfig, premisesId, bedspaceId, newLostBed)
 
         req.flash('success', 'Void created')
         res.redirect(paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed.id }))
@@ -93,7 +93,7 @@ export default class LostBedsController {
       const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
-      const lostBed = await this.lostBedsService.find(callConfig, premisesId, lostBedId)
+      const lostBed = await this.lostBedsService.find(callConfig, premisesId, bedspaceId, lostBedId)
 
       return res.render('temporary-accommodation/lost-beds/show', {
         premises,
@@ -110,14 +110,20 @@ export default class LostBedsController {
       const { premisesId, bedspaceId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
 
-      const lostBedUpdate: UpdateLostBed = {
+      const lostBedUpdate: Cas3VoidBedspaceRequest = {
         ...req.body,
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'startDate'),
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate'),
       }
 
       try {
-        const updatedLostBed = await this.lostBedsService.update(callConfig, premisesId, lostBedId, lostBedUpdate)
+        const updatedLostBed = await this.lostBedsService.update(
+          callConfig,
+          premisesId,
+          bedspaceId,
+          lostBedId,
+          lostBedUpdate,
+        )
 
         req.flash('success', 'Void booking updated')
         res.redirect(paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: updatedLostBed.id }))
@@ -151,7 +157,7 @@ export default class LostBedsController {
 
       const lostBedReasons = await this.lostBedsService.getReferenceData(callConfig)
 
-      const updateLostBed = await this.lostBedsService.getUpdateLostBed(callConfig, premisesId, lostBedId)
+      const updateLostBed = await this.lostBedsService.getUpdateLostBed(callConfig, premisesId, bedspaceId, lostBedId)
 
       return res.render('temporary-accommodation/lost-beds/edit', {
         lostBedReasons,
@@ -179,7 +185,7 @@ export default class LostBedsController {
       const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
       const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
-      const lostBed = await this.lostBedsService.find(callConfig, premisesId, lostBedId)
+      const lostBed = await this.lostBedsService.find(callConfig, premisesId, bedspaceId, lostBedId)
 
       return res.render('temporary-accommodation/lost-beds/cancel', {
         errors,
@@ -188,7 +194,7 @@ export default class LostBedsController {
         bedspace,
         lostBed,
         allStatuses,
-        notes: lostBed.notes,
+        cancellationNotes: lostBed.notes,
         ...userInput,
       })
     }
@@ -199,12 +205,12 @@ export default class LostBedsController {
       const { premisesId, bedspaceId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
 
-      const lostBedCancellation: NewLostBedCancellation = {
+      const lostBedCancellation: Cas3VoidBedspaceCancellation = {
         ...req.body,
       }
 
       try {
-        await this.lostBedsService.cancel(callConfig, premisesId, lostBedId, lostBedCancellation)
+        await this.lostBedsService.cancel(callConfig, premisesId, bedspaceId, lostBedId, lostBedCancellation)
 
         req.flash('success', 'Void booking cancelled')
         res.redirect(paths.lostBeds.show({ premisesId, bedspaceId, lostBedId }))

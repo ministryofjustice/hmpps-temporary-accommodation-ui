@@ -1,4 +1,4 @@
-import type { Booking, Cas3Bedspace, Cas3Premises, NewCancellation } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3Premises, NewCancellation } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -15,7 +15,7 @@ export default class BookingCancellationEditPage extends BookingCancellationEdit
   constructor(
     premises: Cas3Premises,
     bedspace: Cas3Bedspace,
-    private readonly booking: Booking,
+    private readonly booking: Cas3Booking,
   ) {
     super('Update cancelled booking')
 
@@ -24,7 +24,7 @@ export default class BookingCancellationEditPage extends BookingCancellationEdit
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking): BookingCancellationEditPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Cas3Booking): BookingCancellationEditPage {
     cy.visit(
       paths.bookings.cancellations.edit({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
     )

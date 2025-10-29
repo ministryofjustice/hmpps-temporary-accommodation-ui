@@ -204,7 +204,7 @@ context('Apply', () => {
       cy.task('verifyApplicationSubmit', this.application.id).then(requests => {
         expect(requests).to.have.length(1)
 
-        expect(requests[0].url).to.equal(paths.applications.submission({ id: this.application.id }))
+        expect(requests[0].url).to.equal(paths.cas3.applications.submission({ id: this.application.id }))
       })
 
       // And I should be taken to the confirmation page

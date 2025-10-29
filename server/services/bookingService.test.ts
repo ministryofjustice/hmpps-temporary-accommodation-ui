@@ -6,21 +6,18 @@ import {
   bedFactory,
   bookingFactory,
   cas3BedspaceFactory,
+  cas3NewBookingFactory,
   lostBedFactory,
-  newBookingFactory,
 } from '../testutils/factories'
 
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
+import { bookingToCas3Booking } from '../utils/bookingUtils'
+import { lostBedToCas3VoidBedspace } from '../utils/lostBedUtils'
 
 jest.mock('../data/bookingClient')
 jest.mock('../data/referenceDataClient')
-jest.mock('../utils/bookingUtils', () => ({
-  ...jest.requireActual('../utils/bookingUtils'),
-  statusTag: jest.fn(),
-}))
 jest.mock('../data/lostBedClient')
-jest.mock('../utils/lostBedUtils')
 
 describe('BookingService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
@@ -44,7 +41,7 @@ describe('BookingService', () => {
   describe('createForBedspace', () => {
     it('posts a new booking with a bed ID, and on success returns the created booking', async () => {
       const booking = bookingFactory.build()
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
       bookingClient.create.mockResolvedValue(booking)
 
       const bedspace = cas3BedspaceFactory.build({
@@ -52,7 +49,7 @@ describe('BookingService', () => {
       })
 
       const postedBooking = await service.createForBedspace(callConfig, premisesId, bedspace.id, newBooking)
-      expect(postedBooking).toEqual(booking)
+      expect(postedBooking).toEqual(bookingToCas3Booking(booking))
 
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, {
@@ -104,22 +101,22 @@ describe('BookingService', () => {
       expect(result).toEqual([
         expect.objectContaining({
           path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed2.id }),
-          body: lostBed2,
+          body: lostBedToCas3VoidBedspace(lostBed2),
           type: 'lost-bed',
         }),
         expect.objectContaining({
           path: paths.bookings.show({ premisesId, bedspaceId, bookingId: booking2.id }),
-          body: booking2,
+          body: bookingToCas3Booking(booking2),
           type: 'booking',
         }),
         expect.objectContaining({
           path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed1.id }),
-          body: lostBed1,
+          body: lostBedToCas3VoidBedspace(lostBed1),
           type: 'lost-bed',
         }),
         expect.objectContaining({
           path: paths.bookings.show({ premisesId, bedspaceId, bookingId: booking1.id }),
-          body: booking1,
+          body: bookingToCas3Booking(booking1),
           type: 'booking',
         }),
       ])
@@ -160,7 +157,7 @@ describe('BookingService', () => {
 
       const result = await service.getBooking(callConfig, premisesId, booking.id)
 
-      expect(result).toEqual(booking)
+      expect(result).toEqual(bookingToCas3Booking(booking))
 
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)

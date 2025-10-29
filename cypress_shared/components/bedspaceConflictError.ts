@@ -1,4 +1,4 @@
-import type { Booking, Cas3Bedspace, Cas3Premises, LostBed } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3Premises, Cas3VoidBedspace } from '@approved-premises/api'
 import errorLookups from '../../server/i18n/en/errors.json'
 import Page from '../pages/page'
 import BookingShowPage from '../pages/temporary-accommodation/manage/bookingShow'
@@ -16,7 +16,7 @@ export default class BedspaceConflictErrorComponent extends Component {
 
   shouldShowDateConflictErrorMessages(
     fields: Array<string>,
-    conflictingEntity: Booking | LostBed | null,
+    conflictingEntity: Cas3Booking | Cas3VoidBedspace | null,
     conflictingEntityType: 'booking' | 'lost-bed' | 'bedspace-end-date',
   ): void {
     fields.forEach(field => {
@@ -33,9 +33,9 @@ export default class BedspaceConflictErrorComponent extends Component {
       cy.get('.govuk-error-summary a').click()
 
       if (conflictingEntityType === 'booking') {
-        Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, conflictingEntity as Booking)
+        Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, conflictingEntity as Cas3Booking)
       } else {
-        Page.verifyOnPage(LostBedShowPage, this.premises, this.bedspace, conflictingEntity as LostBed)
+        Page.verifyOnPage(LostBedShowPage, this.premises, this.bedspace, conflictingEntity as Cas3VoidBedspace)
       }
       cy.go('back')
     }

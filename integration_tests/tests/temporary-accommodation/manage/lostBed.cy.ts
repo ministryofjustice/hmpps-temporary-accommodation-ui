@@ -6,14 +6,12 @@ import LostBedNewPage from '../../../../cypress_shared/pages/temporary-accommoda
 import LostBedShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedShow'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
-  bedFactory,
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
-  lostBedFactory,
-  newLostBedCancellationFactory,
-  newLostBedFactory,
-  updateLostBedFactory,
+  cas3VoidBedspaceCancellationFactory,
+  cas3VoidBedspaceFactory,
+  cas3VoidBedspaceRequestFactory,
 } from '../../../../server/testutils/factories'
 
 context('Lost bed', () => {
@@ -29,15 +27,15 @@ context('Lost bed', () => {
     // And there is an active premises and a bedspace the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2023-10-18' })
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
 
@@ -64,15 +62,15 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace, and lost beds the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2023-10-18' })
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
 
@@ -111,14 +109,13 @@ context('Lost bed', () => {
     page.shouldShowBedspaceDetails()
 
     // And when I fill out the form
-    const lostBed = lostBedFactory.build({
-      bedId: bedspace.id,
+    const lostBed = cas3VoidBedspaceFactory.build({
+      bedspaceId: bedspace.id,
     })
 
-    const newLostBed = newLostBedFactory.build({
+    const newLostBed = cas3VoidBedspaceRequestFactory.build({
       ...lostBed,
-      reason: lostBed.reason.id,
-      bedId: lostBed.bedId,
+      reasonId: lostBed.reason.id,
     })
 
     cy.task('stubLostBedCreate', { premisesId: premises.id, lostBed })
@@ -127,12 +124,15 @@ context('Lost bed', () => {
     page.completeForm(newLostBed)
 
     // Then a lost bed should have been created in the API
-    cy.task('verifyLostBedCreate', { premisesId: premises.id }).then(requests => {
+    cy.task('verifyLostBedCreate', { premisesId: premises.id, bedspaceId: bedspace.id }).then(requests => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      expect(requestBody.bedId).equal(newLostBed.bedId)
-      expect(requestBody.reason).equal(newLostBed.reason)
+      if (Cypress.env('ENABLE_CAS3V2_API') === true) {
+        expect(requestBody.reasonId).equal(newLostBed.reasonId)
+      } else {
+        expect(requestBody.reason).equal(newLostBed.reasonId)
+      }
       expect(requestBody.startDate).equal(newLostBed.startDate)
       expect(requestBody.endDate).equal(newLostBed.endDate)
       expect(requestBody.notes).equal(newLostBed.notes)
@@ -161,6 +161,7 @@ context('Lost bed', () => {
     // And I miss required fields
     cy.task('stubLostBedErrors', {
       premisesId: premises.id,
+      bedspaceId: bedspace.id,
       params: ['startDate', 'endDate'],
     })
     page.clickSubmit()
@@ -176,7 +177,7 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace, and a conflicting booking in the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const conflictingBooking = bookingFactory.build()
+    const conflictingBooking = cas3BookingFactory.build()
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -187,16 +188,17 @@ context('Lost bed', () => {
     const page = LostBedNewPage.visit(premises, bedspace)
 
     // And I fill out the form with dates that conflict with an existing lost bed
-    const lostBed = lostBedFactory.build({
-      bedId: bedspace.id,
+    const lostBed = cas3VoidBedspaceFactory.build({
+      bedspaceId: bedspace.id,
     })
-    const newLostBed = newLostBedFactory.build({
+    const newLostBed = cas3VoidBedspaceRequestFactory.build({
       ...lostBed,
-      reason: lostBed.reason.id,
+      reasonId: lostBed.reason.id,
     })
 
     cy.task('stubLostBedCreateConflictError', {
       premisesId: premises.id,
+      bedspaceId: bedspace.id,
       conflictingEntityId: conflictingBooking.id,
       conflictingEntityType: 'booking',
     })
@@ -214,15 +216,15 @@ context('Lost bed', () => {
     // And there is a premises and a bedspace the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const bookings = bookingFactory
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
 
@@ -249,7 +251,9 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace, and an active lost bed in the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const lostBed = lostBedFactory.active().build()
+    const lostBed = cas3VoidBedspaceFactory.active().build({
+      bedspaceId: bedspace.id,
+    })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -269,7 +273,7 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace, and a cancelled lost bed in the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const lostBed = lostBedFactory.build({ status: 'cancelled' })
+    const lostBed = cas3VoidBedspaceFactory.build({ status: 'cancelled', bedspaceId: bedspace.id })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -289,9 +293,9 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace, and lost beds in the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
 
@@ -318,7 +322,7 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace and an active lost bed the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const lostBed = lostBedFactory.active().build()
+    const lostBed = cas3VoidBedspaceFactory.active().build({ bedspaceId: bedspace.id })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -342,16 +346,16 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace and an active lost bed the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const lostBed = lostBedFactory.active().build()
-    const bookings = bookingFactory
+    const lostBed = cas3VoidBedspaceFactory.active().build({ bedspaceId: bedspace.id })
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
-    const lostBeds = lostBedFactory
+    const lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: bedspace.id,
+        bedspaceId: bedspace.id,
       })
       .buildList(5)
 
@@ -379,7 +383,7 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace and an active lost bed the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const lostBed = lostBedFactory.active().build()
+    const lostBed = cas3VoidBedspaceFactory.active().build({ bedspaceId: bedspace.id })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -394,16 +398,20 @@ context('Lost bed', () => {
 
     // And when I fill out the form
     cy.task('stubLostBedUpdate', { premisesId: premises.id, lostBed })
-    const updateLostBed = updateLostBedFactory.build()
+    const updateLostBed = cas3VoidBedspaceRequestFactory.build()
     page.clearForm()
     page.completeForm(updateLostBed)
 
     // Then the lost bed should have been updated in the API
-    cy.task('verifyLostBedUpdate', { premisesId: premises.id, lostBedId: lostBed.id }).then(requests => {
+    cy.task('verifyLostBedUpdate', { premisesId: premises.id, lostBed }).then(requests => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      expect(requestBody.reason).equal(updateLostBed.reason)
+      if (Cypress.env('ENABLE_CAS3V2_API') === true) {
+        expect(requestBody.reasonId).equal(updateLostBed.reasonId)
+      } else {
+        expect(requestBody.reason).equal(updateLostBed.reasonId)
+      }
       expect(requestBody.startDate).equal(updateLostBed.startDate)
       expect(requestBody.endDate).equal(updateLostBed.endDate)
       expect(requestBody.notes).equal(updateLostBed.notes)
@@ -417,7 +425,7 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace and an active lost bed the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const lostBed = lostBedFactory.active().build()
+    const lostBed = cas3VoidBedspaceFactory.active().build({ bedspaceId: bedspace.id })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -431,7 +439,7 @@ context('Lost bed', () => {
     page.clearForm()
     cy.task('stubLostBedUpdateErrors', {
       premisesId: premises.id,
-      lostBedId: lostBed.id,
+      lostBed,
       params: ['startDate', 'endDate'],
     })
     page.clickSubmit()
@@ -447,7 +455,7 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace and an active lost bed the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const lostBed = lostBedFactory.active().build()
+    const lostBed = cas3VoidBedspaceFactory.active().build({ bedspaceId: bedspace.id })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -470,10 +478,10 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace and an active lost bed the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const lostBed = lostBedFactory.active().build()
-    const bookings = bookingFactory
+    const lostBed = cas3VoidBedspaceFactory.active().build({ bedspaceId: bedspace.id })
+    const bookings = cas3BookingFactory
       .params({
-        bed: bedFactory.build({ id: bedspace.id }),
+        bedspace: cas3BedspaceFactory.build({ id: bedspace.id }),
       })
       .buildList(5)
     const lostBeds = [lostBed]
@@ -501,7 +509,7 @@ context('Lost bed', () => {
     // And there is a premises, a bedspace and an active lost bed the database
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
-    const lostBed = lostBedFactory.active().build()
+    const lostBed = cas3VoidBedspaceFactory.active().build({ bedspaceId: bedspace.id })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -515,15 +523,19 @@ context('Lost bed', () => {
 
     // And when I fill out the form
     cy.task('stubLostBedCancel', { premisesId: premises.id, lostBed })
-    const cancelLostBed = newLostBedCancellationFactory.build()
+    const cancelLostBed = cas3VoidBedspaceCancellationFactory.build()
     page.completeForm(cancelLostBed)
 
     // Then the lost bed should have been cancelled in the API
-    cy.task('verifyLostBedCancel', { premisesId: premises.id, lostBedId: lostBed.id }).then(requests => {
+    cy.task('verifyLostBedCancel', { premisesId: premises.id, lostBed }).then(requests => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      expect(requestBody.notes).equal(cancelLostBed.notes)
+      if (Cypress.env('ENABLE_CAS3V2_API') === true) {
+        expect(requestBody.cancellationNotes).equal(cancelLostBed.cancellationNotes)
+      } else {
+        expect(requestBody.notes).equal(cancelLostBed.cancellationNotes)
+      }
     })
   })
 })

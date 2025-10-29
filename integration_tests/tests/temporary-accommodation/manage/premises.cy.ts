@@ -11,16 +11,15 @@ import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommo
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
-  bedFactory,
-  bookingFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
+  cas3BookingFactory,
   cas3NewPremisesFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3UpdatePremisesFactory,
-  lostBedFactory,
+  cas3VoidBedspaceFactory,
 } from '../../../../server/testutils/factories'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
@@ -1588,15 +1587,15 @@ context('Premises', () => {
       // And there is an online premises in the database with some upcoming bedspace bookings
       const premises = cas3PremisesFactory.build({ status: 'online' })
       const bedspaces = cas3BedspaceFactory.buildList(4)
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspaces[0].id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspaces[0].id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspaces[0].id,
+          bedspaceId: bedspaces[0].id,
         })
         .buildList(5)
       const bedspacesReference: Cas3ValidationResults = {

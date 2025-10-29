@@ -5,9 +5,9 @@ import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, CancellationService, PremisesService } from '../../../services'
 import {
-  bookingFactory,
   cancellationFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
   newCancellationFactory,
 } from '../../../testutils/factories'
@@ -51,7 +51,7 @@ describe('CancellationsController', () => {
     it('renders the form', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build()
+      const booking = cas3BookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
@@ -162,7 +162,7 @@ describe('CancellationsController', () => {
     it('renders the form', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.cancelled().build()
+      const booking = cas3BookingFactory.cancelled().build()
 
       request.params = {
         premisesId: premises.id,

@@ -1,4 +1,4 @@
-import type { Cas3Bedspace, Cas3Premises, NewLostBed } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Premises, Cas3VoidBedspaceRequest } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import LostBedEditablePage from './lostBedEditable'
@@ -21,7 +21,7 @@ export default class LostBedNewPage extends LostBedEditablePage {
     this.locationHeaderComponent.shouldShowLocationDetails(true)
   }
 
-  completeForm(newLostBed: NewLostBed): void {
+  completeForm(newLostBed: Cas3VoidBedspaceRequest): void {
     super.completeEditableForm(newLostBed)
   }
 }

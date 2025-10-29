@@ -1,4 +1,10 @@
-import { Booking, Cas3Bedspace, Cas3Premises, LostBed, NewLostBed, UpdateLostBed } from '@approved-premises/api'
+import {
+  Cas3Bedspace,
+  Cas3Booking,
+  Cas3Premises,
+  Cas3VoidBedspace,
+  Cas3VoidBedspaceRequest,
+} from '@approved-premises/api'
 import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import Page from '../../page'
 
@@ -12,7 +18,7 @@ export default abstract class LostBedEditablePage extends Page {
   }
 
   shouldShowDateConflictErrorMessages(
-    conflictingEntity: Booking | LostBed,
+    conflictingEntity: Cas3Booking | Cas3VoidBedspace,
     conflictingEntityType: 'booking' | 'lost-bed',
   ): void {
     this.bedspaceConflictErrorComponent.shouldShowDateConflictErrorMessages(
@@ -26,7 +32,7 @@ export default abstract class LostBedEditablePage extends Page {
     this.getSelectOptionsAsReferenceData('What is the reason for this void?', alias)
   }
 
-  protected completeEditableForm(newOrUpdateLostBed: NewLostBed | UpdateLostBed): void {
+  protected completeEditableForm(newOrUpdateLostBed: Cas3VoidBedspaceRequest): void {
     this.getLegend('What is the start date?')
     this.completeDateInputs('startDate', newOrUpdateLostBed.startDate)
 
@@ -34,7 +40,7 @@ export default abstract class LostBedEditablePage extends Page {
     this.completeDateInputs('endDate', newOrUpdateLostBed.endDate)
 
     this.getLabel('What is the reason for this void?')
-    this.getSelectInputByIdAndSelectAnEntry('reason', newOrUpdateLostBed.reason)
+    this.getSelectInputByIdAndSelectAnEntry('reasonId', newOrUpdateLostBed.reasonId)
 
     this.getLegend('Who pays the cost?')
     this.checkRadioByNameAndValue('costCentre', newOrUpdateLostBed.costCentre)

@@ -2,8 +2,15 @@ import type {
   Arrival,
   Booking,
   Cancellation,
+  Cas3Arrival,
+  Cas3Booking,
+  Cas3BookingSearchResult,
+  Cas3Cancellation,
+  Cas3Confirmation,
   Cas3Departure,
+  Cas3Extension,
   Cas3NewDeparture,
+  Cas3Turnaround,
   Confirmation,
   Departure,
   Extension,
@@ -25,7 +32,7 @@ import { PaginatedResponse } from '../@types/ui'
 import { BookingSearchResult } from '../@types/shared'
 
 type SearchResponse = {
-  results: Array<BookingSearchResult>
+  results: Array<BookingSearchResult> | Array<Cas3BookingSearchResult>
 }
 
 export default class BookingClient {
@@ -36,70 +43,132 @@ export default class BookingClient {
   }
 
   async create(premisesId: string, data: NewBooking) {
-    return this.restClient.post<Booking>({
-      path: this.bookingsPath(premisesId),
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.post<Booking>({
+        path: paths.premises.bookings.create({ premisesId }),
+        data: { crn: data.crn.trim(), ...data },
+      })
+    }
+
+    return this.restClient.post<Cas3Booking>({
+      path: paths.cas3.premises.bookings.create({ premisesId }),
       data: { crn: data.crn.trim(), ...data },
     })
   }
 
   async find(premisesId: string, bookingId: string) {
-    return this.restClient.get<Booking>({ path: this.bookingPath(premisesId, bookingId) })
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.get<Booking>({ path: paths.premises.bookings.show({ premisesId, bookingId }) })
+    }
+
+    return this.restClient.get<Cas3Booking>({ path: paths.cas3.premises.bookings.show({ premisesId, bookingId }) })
   }
 
   async allBookingsForPremisesId(premisesId: string) {
-    return this.restClient.get<Array<Booking>>({ path: this.bookingsPath(premisesId) })
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.get<Array<Booking>>({ path: paths.premises.bookings.index({ premisesId }) })
+    }
+
+    return this.restClient.get<Array<Cas3Booking>>({ path: paths.cas3.premises.bookings.index({ premisesId }) })
   }
 
   async extendBooking(premisesId: string, bookingId: string, bookingExtension: NewExtension) {
-    return this.restClient.post<Extension>({
-      path: `/premises/${premisesId}/bookings/${bookingId}/extensions`,
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.post<Extension>({
+        path: paths.premises.bookings.extensions({ premisesId, bookingId }),
+        data: bookingExtension,
+      })
+    }
+
+    return this.restClient.post<Cas3Extension>({
+      path: paths.cas3.premises.bookings.extensions({ premisesId, bookingId }),
       data: bookingExtension,
     })
   }
 
   async markAsConfirmed(premisesId: string, bookingId: string, confirmation: NewConfirmation) {
-    return this.restClient.post<Confirmation>({
-      path: `${this.bookingPath(premisesId, bookingId)}/confirmations`,
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.post<Confirmation>({
+        path: paths.premises.bookings.confirmations({ premisesId, bookingId }),
+        data: confirmation,
+      })
+    }
+
+    return this.restClient.post<Cas3Confirmation>({
+      path: paths.cas3.premises.bookings.confirmations({ premisesId, bookingId }),
       data: confirmation,
     })
   }
 
   async markAsArrived(premisesId: string, bookingId: string, arrival: NewArrival) {
-    return this.restClient.post<Arrival>({
-      path: paths.cas3.premises.bookings.arrival({ premisesId, bookingId }),
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.post<Arrival>({
+        path: paths.cas3.premises.bookings.arrivals({ premisesId, bookingId }),
+        data: arrival,
+      })
+    }
+
+    return this.restClient.post<Cas3Arrival>({
+      path: paths.cas3.premises.bookings.arrivals({ premisesId, bookingId }),
       data: arrival,
     })
   }
 
   async cancel(premisesId: string, bookingId: string, cancellation: NewCancellation) {
-    return this.restClient.post<Cancellation>({
-      path: `${this.bookingPath(premisesId, bookingId)}/cancellations`,
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.post<Cancellation>({
+        path: paths.premises.bookings.cancellations.create({ premisesId, bookingId }),
+        data: cancellation,
+      })
+    }
+
+    return this.restClient.post<Cas3Cancellation>({
+      path: paths.cas3.premises.bookings.cancellations.create({ premisesId, bookingId }),
       data: cancellation,
     })
   }
 
-  async findCancellation(premisesId: string, bookingId: string, departureId: string) {
-    return this.restClient.get<Cancellation>({
-      path: `${this.bookingPath(premisesId, bookingId)}/cancellations/${departureId}`,
+  async findCancellation(premisesId: string, bookingId: string, cancellationId: string) {
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.get<Cancellation>({
+        path: paths.premises.bookings.cancellations.show({ premisesId, bookingId, cancellationId }),
+      })
+    }
+
+    return this.restClient.get<Cas3Cancellation>({
+      path: paths.cas3.premises.bookings.cancellations.show({ premisesId, bookingId, cancellationId }),
     })
   }
 
   async markDeparture(premisesId: string, bookingId: string, departure: Cas3NewDeparture) {
     return this.restClient.post<Cas3Departure>({
-      path: paths.cas3.premises.bookings.departure({ premisesId, bookingId }),
+      path: paths.cas3.premises.bookings.departures.create({ premisesId, bookingId }),
       data: departure,
     })
   }
 
   async findDeparture(premisesId: string, bookingId: string, departureId: string) {
-    return this.restClient.get<Departure>({
-      path: `${this.bookingPath(premisesId, bookingId)}/departures/${departureId}`,
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.get<Departure>({
+        path: paths.premises.bookings.departures.show({ premisesId, bookingId, departureId }),
+      })
+    }
+
+    return this.restClient.get<Cas3Departure>({
+      path: paths.cas3.premises.bookings.departures.show({ premisesId, bookingId, departureId }),
     })
   }
 
   async createTurnaround(premisesId: string, bookingId: string, turnaround: NewTurnaround) {
-    return this.restClient.post<Turnaround>({
-      path: `${this.bookingPath(premisesId, bookingId)}/turnarounds`,
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.post<Turnaround>({
+        path: paths.premises.bookings.turnarounds.create({ premisesId, bookingId }),
+        data: turnaround,
+      })
+    }
+
+    return this.restClient.post<Cas3Turnaround>({
+      path: paths.cas3.premises.bookings.turnarounds({ premisesId, bookingId }),
       data: turnaround,
     })
   }
@@ -107,8 +176,10 @@ export default class BookingClient {
   async search(
     status: BookingSearchApiStatus,
     params: BookingSearchParameters,
-  ): Promise<PaginatedResponse<BookingSearchResult>> {
-    const path = appendQueryString(paths.bookings.search({ status }), {
+  ): Promise<PaginatedResponse<BookingSearchResult | Cas3BookingSearchResult>> {
+    const basePath = config.flags.enableCas3v2Api ? paths.cas3.bookings.search : paths.bookings.search
+
+    const path = appendQueryString(basePath({ status }), {
       status,
       crnOrName: params.crnOrName,
       page: !params.page ? 1 : params.page, // also handles NaN & <1
@@ -129,13 +200,5 @@ export default class BookingClient {
       totalPages: Number(header['x-pagination-totalpages']),
       totalResults: Number(header['x-pagination-totalresults']),
     }
-  }
-
-  private bookingsPath(premisesId: string): string {
-    return `/premises/${premisesId}/bookings`
-  }
-
-  private bookingPath(premisesId: string, bookingId: string): string {
-    return [this.bookingsPath(premisesId), bookingId].join('/')
   }
 }

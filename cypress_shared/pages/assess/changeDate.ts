@@ -1,5 +1,5 @@
 import Page from '../page'
-import { TemporaryAccommodationAssessment as Assessment } from '../../../server/@types/shared'
+import { Cas3Assessment as Assessment } from '../../../server/@types/shared'
 import { AssessmentUpdatableDateField } from '../../../server/@types/ui'
 import { personName } from '../../../server/utils/personUtils'
 import paths from '../../../server/paths/temporary-accommodation/manage'

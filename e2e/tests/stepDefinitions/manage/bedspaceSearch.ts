@@ -5,8 +5,8 @@ import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodat
 import BedspaceSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceSearch'
 import {
   bedspaceSearchFormParametersFactory,
-  bedspaceSearchResultFactory,
-  bedspaceSearchResultsFactory,
+  cas3v2BedspaceSearchResultFactory,
+  cas3v2BedspaceSearchResultsFactory,
 } from '../../../../server/testutils/factories'
 import { characteristicsToSearchAttributes } from '../../../../cypress_shared/utils/bedspaceSearch'
 
@@ -55,9 +55,9 @@ Given('I search for a bedspace', () => {
 
 Then('I should see the bedspace search results', () => {
   cy.then(function _() {
-    const results = bedspaceSearchResultsFactory.build({
+    const results = cas3v2BedspaceSearchResultsFactory.build({
       results: [
-        bedspaceSearchResultFactory.forBedspace(this.premises, this.bedspace).build({
+        cas3v2BedspaceSearchResultFactory.forBedspace(this.premises, this.bedspace).build({
           overlaps: [],
         }),
       ],

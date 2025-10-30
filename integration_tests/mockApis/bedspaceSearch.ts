@@ -1,5 +1,5 @@
 import type { Response, SuperAgentRequest } from 'superagent'
-import { Cas3BedspaceSearchResults } from '@approved-premises/api'
+import { Cas3v2BedspaceSearchResults } from '@approved-premises/api'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
@@ -7,7 +7,7 @@ import { characteristics, pdus } from '../../server/testutils/stubs/referenceDat
 import { errorStub } from './utils'
 
 export default {
-  stubBedspaceSearch: (searchResults: Cas3BedspaceSearchResults): SuperAgentRequest =>
+  stubBedspaceSearch: (searchResults: Cas3v2BedspaceSearchResults): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',

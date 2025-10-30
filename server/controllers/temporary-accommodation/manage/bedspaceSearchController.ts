@@ -1,5 +1,9 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { type Cas3BedspaceSearchParameters, Cas3BedspaceSearchResults } from '../../../@types/shared'
+import {
+  type Cas3BedspaceSearchParameters,
+  Cas3BedspaceSearchResults,
+  Cas3v2BedspaceSearchResults,
+} from '../../../@types/shared'
 import { ObjectWithDateParts } from '../../../@types/ui'
 
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -78,7 +82,7 @@ export default class BedspaceSearchController {
         ? DateFormats.isoToDateAndTimeInputs(placeContextArrivalDate, 'startDate')
         : {}
 
-      let results: Cas3BedspaceSearchResults['results']
+      let results: Cas3v2BedspaceSearchResults['results']
       let startDate: string
 
       try {

@@ -9,6 +9,7 @@ import {
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
   cas3UpdateBedspaceFactory,
+  cas3v2BedspaceSearchResultsFactory,
 } from '../testutils/factories'
 import paths from '../paths/api'
 
@@ -17,11 +18,15 @@ describe('BedspaceClient', () => {
   let bedspaceClient: BedspaceClient
 
   const callConfig = { token: 'some-token' } as CallConfig
+
+  const flagsConfigOriginal = config.flags
+
   const premisesId = 'some-premises-id'
   const bedspaceId = 'some-bedspace-id'
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
+    config.flags.enableCas3v2Api = true
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
     bedspaceClient = new BedspaceClient(callConfig)
   })
@@ -33,11 +38,13 @@ describe('BedspaceClient', () => {
     }
     nock.abortPendingRequests()
     nock.cleanAll()
+
+    config.flags = flagsConfigOriginal
   })
 
   describe('search', () => {
     it('returns search results', async () => {
-      const results = bedspaceSearchResultsFactory.build()
+      const results = cas3v2BedspaceSearchResultsFactory.build()
       const payload = bedspaceSearchApiParametersFactory.build()
 
       fakeApprovedPremisesApi
@@ -130,6 +137,29 @@ describe('BedspaceClient', () => {
 
       const result = await bedspaceClient.cancelArchive(premisesId, bedspaceId)
       expect(result).toEqual(bedspace)
+    })
+  })
+
+  describe('with the ENABLE_CAS3V2_API flag off', () => {
+    beforeEach(() => {
+      config.flags.enableCas3v2Api = false
+    })
+
+    describe('search', () => {
+      it('returns search results', async () => {
+        const results = bedspaceSearchResultsFactory.build()
+        const payload = bedspaceSearchApiParametersFactory.build()
+
+        fakeApprovedPremisesApi
+          .post(paths.cas3.bedspaces.search({}))
+          .matchHeader('authorization', `Bearer ${callConfig.token}`)
+          .reply(201, results)
+
+        const result = await bedspaceClient.search(payload)
+
+        expect(result).toEqual(results)
+        expect(nock.isDone()).toBeTruthy()
+      })
     })
   })
 })

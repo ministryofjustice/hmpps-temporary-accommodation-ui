@@ -82,6 +82,9 @@ import cas3VoidBedspaceFactory from './cas3VoidBedspace'
 import cas3VoidBedspaceReasonFactory from './cas3VoidBedspaceReason'
 import cas3VoidBedspaceRequestFactory from './cas3VoidBedspaceRequest'
 import cas3VoidBedspaceCancellationFactory from './cas3VoidBedspaceCancellation'
+import cas3v2BedspaceSearchResultOverlapFactory from './cas3v2BedspaceSearchResultOverlap'
+import cas3v2BedspaceSearchResultFactory from './cas3v2BedspaceSearchResult'
+import cas3v2BedspaceSearchResultsFactory from './cas3v2BedspaceSearchResults'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
@@ -181,6 +184,9 @@ export {
   cas3VoidBedspaceReasonFactory,
   cas3VoidBedspaceRequestFactory,
   cas3VoidBedspaceCancellationFactory,
+  cas3v2BedspaceSearchResultOverlapFactory,
+  cas3v2BedspaceSearchResultFactory,
+  cas3v2BedspaceSearchResultsFactory,
   prisonCaseNotesFactory,
   probationRegionFactory,
   referenceDataFactory,

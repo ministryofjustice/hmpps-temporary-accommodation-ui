@@ -1,9 +1,10 @@
-import { Cas3BedspaceSearchResultOverlap, FullPerson, RestrictedPerson } from '@approved-premises/api'
+import { Cas3v2BedspaceSearchResultOverlap, FullPerson, RestrictedPerson } from '@approved-premises/api'
 import {
   assessmentFactory,
-  bedspaceSearchResultFactory,
   cas3BedspaceFactory,
   cas3PremisesFactory,
+  cas3v2BedspaceSearchResultFactory,
+  cas3v2BedspaceSearchResultOverlapFactory,
   characteristicFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
@@ -15,8 +16,8 @@ import {
 import { fullPersonFactory } from '../testutils/factories/person'
 
 describe('BedspaceSearchResultUtils', () => {
-  describe('bedspaceKeyCharacteristics', () => {
-    it('returns a sorted list of the characteristic names for the bedspace', () => {
+  describe('premisesKeyCharacteristics', () => {
+    it('returns a sorted list of the characteristic names for the premises', () => {
       const premises = cas3PremisesFactory.build({
         characteristics: [
           characteristicFactory.build({
@@ -31,7 +32,7 @@ describe('BedspaceSearchResultUtils', () => {
         ],
       })
 
-      const searchResult = bedspaceSearchResultFactory.forPremises(premises).build()
+      const searchResult = cas3v2BedspaceSearchResultFactory.forPremises(premises).build()
 
       expect(premisesKeyCharacteristics(searchResult)).toEqual(['Shared entrance', 'Shared property', 'Women only'])
     })
@@ -54,7 +55,7 @@ describe('BedspaceSearchResultUtils', () => {
         ],
       })
 
-      const searchResult = bedspaceSearchResultFactory.forBedspace(premises, bedspace).build()
+      const searchResult = cas3v2BedspaceSearchResultFactory.forBedspace(premises, bedspace).build()
 
       expect(bedspaceKeyCharacteristics(searchResult)).toEqual([
         'Shared bathroom',
@@ -65,24 +66,23 @@ describe('BedspaceSearchResultUtils', () => {
   })
 
   describe('bedspaceOverlapResult', () => {
-    let overLapDays: Cas3BedspaceSearchResultOverlap['days']
-    let overlapResult: Cas3BedspaceSearchResultOverlap
-    let overLapAssessmentId: Cas3BedspaceSearchResultOverlap['assessmentId']
+    let overLapDays: Cas3v2BedspaceSearchResultOverlap['days']
+    let overlapResult: Cas3v2BedspaceSearchResultOverlap
+    let overLapAssessmentId: Cas3v2BedspaceSearchResultOverlap['assessmentId']
     let person: FullPerson | RestrictedPerson
 
-    const createOverLapResult = () => {
-      return {
+    const createOverLapResult = () =>
+      cas3v2BedspaceSearchResultOverlapFactory.build({
         crn: person.crn,
         days: overLapDays,
         personType: person.type,
-        roomId: cas3BedspaceFactory.build().id,
+        bedspaceId: cas3BedspaceFactory.build().id,
         bookingId: '123456789',
         assessmentId: overLapAssessmentId,
         name: person.type === 'FullPerson' ? (person as FullPerson).name : 'Limited access offender',
         sex: person.type === 'FullPerson' ? (person as FullPerson).sex : undefined,
         isSexualRisk: false,
-      }
-    }
+      })
 
     beforeEach(() => {
       overLapDays = 8
@@ -96,7 +96,7 @@ describe('BedspaceSearchResultUtils', () => {
         crn: overlapResult.crn,
         overlapDays: '8 days overlap',
         personType: 'FullPerson',
-        roomId: overlapResult.roomId,
+        bedspaceId: overlapResult.bedspaceId,
         assessmentId: overlapResult.assessmentId,
         displayName: overlapResult.name,
         referralNameOrCrn: overlapResult.name,
@@ -129,7 +129,7 @@ describe('BedspaceSearchResultUtils', () => {
           crn: overlapResult.crn,
           overlapDays: '8 days overlap',
           personType: 'RestrictedPerson',
-          roomId: overlapResult.roomId,
+          bedspaceId: overlapResult.bedspaceId,
           referralNameOrCrn: overlapResult.crn,
           assessmentId: overlapResult.assessmentId,
           displayName: 'Limited access offender',
@@ -151,7 +151,7 @@ describe('BedspaceSearchResultUtils', () => {
           crn: overlapResult.crn,
           overlapDays: '8 days overlap',
           personType: 'FullPerson',
-          roomId: overlapResult.roomId,
+          bedspaceId: overlapResult.bedspaceId,
           referralNameOrCrn: overlapResult.name,
           assessmentId: overlapResult.assessmentId,
           displayName: overlapResult.name,

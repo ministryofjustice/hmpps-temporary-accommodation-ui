@@ -4,6 +4,7 @@ import { ReferenceDataClient, RestClientBuilder } from '../data'
 import BedspaceClient from '../data/bedspaceClient'
 import { CallConfig } from '../data/restClient'
 import { filterCharacteristics } from '../utils/characteristicUtils'
+import { cas3BedspaceSearchResultsToCas3v2BedspaceSearchResults } from '../utils/bedspaceSearchUtils'
 
 export type BedspaceSearchReferenceData = {
   pdus: Array<ReferenceData>
@@ -22,7 +23,7 @@ export default class BedspaceSearchService {
   async search(callConfig: CallConfig, searchParameters: Cas3BedspaceSearchParameters) {
     const bedspaceClient = this.bedClientFactory(callConfig)
 
-    return bedspaceClient.search({ ...searchParameters })
+    return cas3BedspaceSearchResultsToCas3v2BedspaceSearchResults(await bedspaceClient.search({ ...searchParameters }))
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<BedspaceSearchReferenceData> {

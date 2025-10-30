@@ -2,22 +2,24 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Application } from './Application';
 import type { ApplicationStatus } from './ApplicationStatus';
+import type { FullPerson } from './FullPerson';
 import type { PersonRisks } from './PersonRisks';
-export type TemporaryAccommodationApplication = (Application & {
+import type { RestrictedPerson } from './RestrictedPerson';
+import type { UnknownPerson } from './UnknownPerson';
+export type TemporaryAccommodationApplication = {
     arrivalDate?: string;
     assessmentId?: string;
-    createdByUserId?: string;
+    createdAt: string;
+    createdByUserId: string;
     data?: any;
     document?: any;
-    offenceId?: string;
-    risks?: PersonRisks;
-    status?: ApplicationStatus;
-    submittedAt?: string;
-} & {
-    createdByUserId: string;
+    id: string;
     offenceId: string;
+    person: (FullPerson | RestrictedPerson | UnknownPerson);
+    risks?: PersonRisks;
     status: ApplicationStatus;
-});
+    submittedAt?: string;
+    type: string;
+};
 

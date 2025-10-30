@@ -106,7 +106,6 @@ export default BookingFactory.define(() => {
     departureDate: DateFormats.dateObjToIsoDate(departureDate),
     turnaroundStartDate: DateFormats.dateObjToIsoDate(turnaroundStartDate),
     effectiveEndDate: DateFormats.dateObjToIsoDate(effectiveEndDate),
-    name: `${faker.person.firstName()} ${faker.person.lastName()}`,
     id: faker.string.uuid(),
     status: faker.helpers.arrayElement([
       'provisional',
@@ -126,7 +125,7 @@ export default BookingFactory.define(() => {
     turnaround: turnarounds[0],
     turnarounds,
     serviceName: 'temporary-accommodation' as const,
-    createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+    createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
     assessmentId: faker.string.uuid(),
     premises: bookingPremisesSummaryFactory.build(),
   }

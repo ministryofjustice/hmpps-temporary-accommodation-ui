@@ -1,12 +1,9 @@
-import type { Response } from 'express'
-
 import type {
   ActiveOffence,
   Adjudication,
   OASysSections,
   Person,
   PersonAcctAlert,
-  PersonRisks,
   PrisonCaseNote,
 } from '@approved-premises/api'
 
@@ -27,12 +24,6 @@ export default class PersonClient {
   async search(crn: string) {
     return this.restClient.get<Person>({
       path: `${paths.people.search({})}?crn=${normalise(crn)}`,
-    })
-  }
-
-  async risks(crn: string) {
-    return this.restClient.get<PersonRisks>({
-      path: paths.people.risks.show({ crn: crn.trim() }),
     })
   }
 
@@ -62,9 +53,5 @@ export default class PersonClient {
     })
 
     return this.restClient.get<OASysSections>({ path })
-  }
-
-  async document(crn: string, documentId: string, response: Response): Promise<void> {
-    await this.restClient.pipe(response, { path: paths.people.documents({ crn: crn.trim(), documentId }) })
   }
 }

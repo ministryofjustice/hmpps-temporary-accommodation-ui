@@ -9,7 +9,7 @@ const userFactory = Factory.define<TemporaryAccommodationUser>(({ params }) => {
   const pdu = referenceData.pdu().build()
   return {
     id: faker.string.uuid(),
-    roles: [],
+    roles: ['referrer'],
     region: referenceData.probationRegion().build(),
     probationDeliveryUnit: {
       id: pdu.id,
@@ -20,16 +20,17 @@ const userFactory = Factory.define<TemporaryAccommodationUser>(({ params }) => {
     email: `${deliusUsername}@example.org`,
     telephoneNumber: faker.phone.number(),
     deliusUsername,
+    isActive: true,
   }
 })
 
 export const userProfileFactory = Factory.define<ProfileResponse>(({ params }) => {
   const user = userFactory.build(params?.user as TemporaryAccommodationUser)
   const { deliusUsername } = user
+
   return {
     deliusUsername,
     user,
-    loadError: null,
   }
 })
 

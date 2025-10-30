@@ -89,9 +89,6 @@ const managePathsCas3 = {
   },
 }
 
-const applicationsPath = path('/applications')
-const singleApplicationPath = applicationsPath.path(':id')
-
 const peoplePath = path('/people')
 const personPath = peoplePath.path(':crn')
 const oasysPath = personPath.path('oasys')
@@ -102,17 +99,6 @@ const applicationsCas3Path = cas3Path.path('applications')
 const deleteApplicationCas3Path = cas3Path.path('/applications/:id')
 const submitApplicationCas3Path = cas3Path.path('/applications/:id/submission')
 const singleApplicationCas3Path = applicationsCas3Path.path(':id')
-
-const applyPaths = {
-  applications: {
-    show: singleApplicationPath,
-    create: applicationsPath,
-    index: applicationsPath,
-    delete: singleApplicationPath.path('delete'),
-    update: singleApplicationCas3Path,
-    submission: submitApplicationCas3Path,
-  },
-}
 
 export default {
   cas3: {
@@ -169,10 +155,10 @@ export default {
   applications: {
     show: singleApplicationCas3Path,
     index: applicationsCas3Path,
-    update: applyPaths.applications.update,
+    update: singleApplicationCas3Path,
     delete: deleteApplicationCas3Path,
     new: applicationsCas3Path,
-    submission: applyPaths.applications.submission,
+    submission: submitApplicationCas3Path,
   },
   assessments: {
     index: assessPaths.assessments,
@@ -190,15 +176,11 @@ export default {
     timeline: timelineCas3Path,
   },
   people: {
-    risks: {
-      show: personPath.path('risks'),
-    },
     search: peoplePath.path('search'),
     prisonCaseNotes: personPath.path('prison-case-notes'),
     adjudications: personPath.path('adjudications'),
     acctAlerts: personPath.path('acct-alerts'),
     offences: personPath.path('offences'),
-    documents: path('/documents/:crn/:documentId'),
     oasys: {
       selection: oasysPath.path('selection'),
       sections: oasysPath.path('sections'),

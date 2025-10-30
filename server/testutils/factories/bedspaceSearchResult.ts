@@ -40,7 +40,6 @@ export default BedSearchResultFactory.define(() => {
   const bed = bedFactory.build()
 
   return {
-    serviceName: 'temporary-accommodation' as const,
     premises: premisesToPremisesSummary(premises),
     room: bedspaceToBedspaceSummary(bedspace),
     bed: {

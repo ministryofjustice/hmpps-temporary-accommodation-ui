@@ -3,7 +3,7 @@ import type { Cas3ReportType, ProbationRegion } from '@approved-premises/api'
 import type { ReferenceDataClient, RestClientBuilder } from '../data'
 import ReportClient from '../data/reportClient'
 import { CallConfig } from '../data/restClient'
-import { reportFilename, reportForProbationRegionFilename } from '../utils/reportUtils'
+import { reportForProbationRegionFilename } from '../utils/reportUtils'
 
 export type ReportReferenceData = {
   probationRegions: Array<ProbationRegion>
@@ -14,14 +14,6 @@ export default class ReportService {
     private readonly reportClientFactory: RestClientBuilder<ReportClient>,
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
-
-  async pipeBookings(callConfig: CallConfig, response: Response, month: string, year: string): Promise<void> {
-    const reportClient = this.reportClientFactory(callConfig)
-
-    const filename = reportFilename()
-
-    await reportClient.bookings(response, filename, month, year)
-  }
 
   async pipeReportForProbationRegion(
     callConfig: CallConfig,

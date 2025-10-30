@@ -236,7 +236,6 @@ export type DataServices = Partial<{
     getAdjudications: (callConfig: CallConfig, crn: string) => Promise<Array<Adjudication>>
     getAcctAlerts: (callConfig: CallConfig, crn: string) => Promise<Array<PersonAcctAlert>>
     getOasysSections: (callConfig: CallConfig, crn: string, selectedSections?: Array<number>) => Promise<OASysSections>
-    getPersonRisks: (callConfig: CallConfig, crn: string) => Promise<PersonRisksUI>
   }
   userService: {
     getUserById: (callConfig: CallConfig, id: string) => Promise<User>

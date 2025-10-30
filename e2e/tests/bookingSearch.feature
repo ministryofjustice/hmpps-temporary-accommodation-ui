@@ -20,7 +20,7 @@ Feature: Manage Temporary Accommodation - Booking search
     And I mark the booking as departed
     And I'm searching bookings
     Then I should see a summary of the booking on the departed bookings page
-#
+
   Scenario: Searching for a booking by CRN
     Given I'm searching bookings
     When I search for a CRN that does not exist in provisional bookings

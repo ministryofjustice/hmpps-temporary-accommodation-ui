@@ -1,7 +1,6 @@
 import type { ReferenceData } from '@approved-premises/ui'
-import type { Cas3Departure, Cas3NewDeparture, Departure } from '@approved-premises/api'
+import type { Cas3Departure, Cas3NewDeparture } from '@approved-premises/api'
 import type { BookingClient, ReferenceDataClient, RestClientBuilder } from '../data'
-import { DateFormats } from '../utils/dateUtils'
 import { CallConfig } from '../data/restClient'
 
 export type DepartureReferenceData = {
@@ -24,19 +23,6 @@ export default class DepartureService {
     const bookingClient = this.bookingClientFactory(callConfig)
 
     return bookingClient.markDeparture(premisesId, bookingId, departure)
-  }
-
-  async getDeparture(
-    callConfig: CallConfig,
-    premisesId: string,
-    bookingId: string,
-    departureId: string,
-  ): Promise<Departure> {
-    const departureClient = this.bookingClientFactory(callConfig)
-
-    const departure = await departureClient.findDeparture(premisesId, bookingId, departureId)
-
-    return { ...departure, dateTime: DateFormats.isoDateToUIDate(departure.dateTime) }
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<DepartureReferenceData> {

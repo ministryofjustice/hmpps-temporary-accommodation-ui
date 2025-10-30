@@ -14,11 +14,11 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ govukBackLink({
-    text: "Back",
-    href: '/',
-    classes: 'govuk-!-display-none-print'
-  }) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: '/',
+        classes: 'govuk-!-display-none-print'
+    }) }}
 {% endblock %}
 
 {% block content %}
@@ -68,8 +68,8 @@
                             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
                                 <span class="govuk-caption-m">PDU: {{ result.premises.probationDeliveryUnitName }}</span>
                                 <a class="govuk-link"
-                                   href="{{ addPlaceContext(paths.premises.bedspaces.show({premisesId: result.premises.id, bedspaceId: result.bed.id})) }}">
-                                    Bedspace reference: {{ result.room.name }}
+                                   href="{{ addPlaceContext(paths.premises.bedspaces.show({premisesId: result.premises.id, bedspaceId: result.bedspace.id})) }}">
+                                    Bedspace reference: {{ result.bedspace.reference }}
                                 </a>
                             </h2>
                         </header>
@@ -83,7 +83,7 @@
                                     },
                                     {
                                         key: { text: 'Bedspaces' },
-                                        value: { text: result.premises.bedCount + ' total: ' + result.premises.bookedBedCount + ' booked, ' +  (result.premises.bedCount - result.premises.bookedBedCount) + ' available' }
+                                        value: { text: result.premises.bedspaceCount + ' total: ' + result.premises.bookedBedspaceCount + ' booked, ' +  (result.premises.bedspaceCount - result.premises.bookedBedspaceCount) + ' available' }
                                     }
                                 ]
                             }) }}
@@ -92,12 +92,12 @@
                                 {% set otherPeopleStayingHtml %}
                                     <ul class="govuk-list govuk-list--spaced" data-cy-overlaps>
                                         {% for overlap in result.overlaps %}
-                                        <li>
-                                            {{ overlapDetails({ 
-                                                overlap: BedspaceSearchResultUtils.bedspaceOverlapResult(overlap),
-                                                premisesId: result.premises.id })
-                                            }}
-                                        </li>
+                                            <li>
+                                                {{ overlapDetails({
+                                                    overlap: BedspaceSearchResultUtils.bedspaceOverlapResult(overlap),
+                                                    premisesId: result.premises.id
+                                                }) }}
+                                            </li>
                                         {% endfor %}
                                     </ul>
                                 {% endset %}

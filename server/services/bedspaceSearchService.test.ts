@@ -3,12 +3,13 @@ import BedspaceClient from '../data/bedspaceClient'
 import { CallConfig } from '../data/restClient'
 import {
   bedspaceSearchApiParametersFactory,
-  bedspaceSearchResultsFactory,
+  cas3v2BedspaceSearchResultsFactory,
   characteristicFactory,
   pduFactory,
   probationRegionFactory,
 } from '../testutils/factories'
 import BedspaceSearchService from './bedspaceSearchService'
+import * as bedspaceSearchUtils from '../utils/bedspaceSearchUtils'
 
 jest.mock('../data/bedspaceClient')
 jest.mock('../data/referenceDataClient')
@@ -28,11 +29,12 @@ describe('BedspaceSearchService', () => {
     jest.restoreAllMocks()
     bedspaceClientFactory.mockReturnValue(bedspaceClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
+    jest.spyOn(bedspaceSearchUtils, 'cas3BedspaceSearchResultsToCas3v2BedspaceSearchResults')
   })
 
   describe('search', () => {
     it('returns search results for the provided search paramters', async () => {
-      const searchResults = bedspaceSearchResultsFactory.build()
+      const searchResults = cas3v2BedspaceSearchResultsFactory.build()
       const searchParameters = bedspaceSearchApiParametersFactory.build()
 
       bedspaceClient.search.mockResolvedValue(searchResults)
@@ -43,6 +45,10 @@ describe('BedspaceSearchService', () => {
 
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.search).toHaveBeenCalledWith({ ...searchParameters })
+
+      expect(bedspaceSearchUtils.cas3BedspaceSearchResultsToCas3v2BedspaceSearchResults).toHaveBeenCalledWith(
+        searchResults,
+      )
     })
   })
 

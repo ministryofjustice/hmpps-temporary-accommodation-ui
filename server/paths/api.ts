@@ -100,7 +100,7 @@ const cas3Api = {
     },
   },
   bedspaces: {
-    search: cas3Path.path('bedspaces/search'),
+    search: cas3v2Path.path('bedspaces/search'),
   },
   bookings: {
     search: cas3v2Path.path('bookings/search'),

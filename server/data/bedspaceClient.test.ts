@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker/.'
 import BedspaceClient from './bedspaceClient'
 import { CallConfig } from './restClient'
+import config from '../config'
 import {
   bedspaceSearchApiParametersFactory,
   bedspaceSearchResultsFactory,
@@ -8,6 +9,7 @@ import {
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
   cas3UpdateBedspaceFactory,
+  cas3v2BedspaceSearchResultsFactory,
 } from '../testutils/factories'
 import paths from '../paths/api'
 import describeClient from '../testutils/describeClient'
@@ -16,13 +18,20 @@ describeClient('BedspaceClient', provider => {
   let bedspaceClient: BedspaceClient
   const callConfig = { token: 'some-token' } as CallConfig
 
+  const flagsConfigOriginal = config.flags
+
   beforeEach(() => {
+    config.flags.enableCas3v2Api = true
     bedspaceClient = new BedspaceClient(callConfig)
+  })
+
+  afterEach(() => {
+    config.flags = flagsConfigOriginal
   })
 
   describe('search', () => {
     it('returns search results', async () => {
-      const results = bedspaceSearchResultsFactory.build()
+      const results = cas3v2BedspaceSearchResultsFactory.build()
       const payload = bedspaceSearchApiParametersFactory.build()
 
       await provider.addInteraction({
@@ -194,6 +203,40 @@ describeClient('BedspaceClient', provider => {
 
       const result = await bedspaceClient.cancelArchive(premisesId, bedspaceId)
       expect(result).toEqual(bedspace)
+    })
+  })
+
+  describe('with the ENABLE_CAS3V2_API flag off', () => {
+    beforeEach(() => {
+      config.flags.enableCas3v2Api = false
+    })
+
+    describe('search', () => {
+      it('returns search results', async () => {
+        const results = bedspaceSearchResultsFactory.build()
+        const payload = bedspaceSearchApiParametersFactory.build()
+
+        await provider.addInteraction({
+          state: 'Bedspace search results exist',
+          uponReceiving: 'a request for bedspace search results',
+          withRequest: {
+            method: 'POST',
+            path: paths.cas3.bedspaces.search({}),
+            headers: {
+              authorization: `Bearer ${callConfig.token}`,
+            },
+            body: payload,
+          },
+          willRespondWith: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: results,
+          },
+        })
+
+        const result = await bedspaceClient.search(payload)
+        expect(result).toEqual(results)
+      })
     })
   })
 })

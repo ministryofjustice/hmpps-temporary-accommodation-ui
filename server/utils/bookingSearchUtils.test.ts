@@ -1,11 +1,14 @@
 import { BookingSearchApiStatus } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import {
+  bookingSearchResultsToCas3BookingSearchResults,
   capitaliseStatus,
   convertApiStatusToUiStatus,
   createSubNavArr,
   createTableHeadings,
+  isCas3BookingSearchResults,
 } from './bookingSearchUtils'
+import { bookingSearchResultFactory, cas3BookingSearchResultFactory } from '../testutils/factories'
 
 describe('bookingSearchUtils', () => {
   describe('createSideNavArr', () => {
@@ -164,5 +167,53 @@ describe('capitaliseStatus', () => {
     expect(capitaliseStatus('confirmed')).toEqual('Confirmed')
     expect(capitaliseStatus('arrived')).toEqual('Active')
     expect(capitaliseStatus('departed')).toEqual('Departed')
+  })
+})
+
+// TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities tests
+describe('Cas3 casting utilities', () => {
+  describe('isCas3BookingSearchResult', () => {
+    it('returns true for an array of Cas3BookingSearchResult', () => {
+      const searchResults = cas3BookingSearchResultFactory.buildList(3)
+
+      expect(isCas3BookingSearchResults(searchResults)).toEqual(true)
+    })
+
+    it('returns true for an empty array', () => {
+      expect(isCas3BookingSearchResults([])).toEqual(true)
+    })
+
+    it('returns false for an array of BookingSearchResult', () => {
+      const searchResults = bookingSearchResultFactory.buildList(3)
+
+      expect(isCas3BookingSearchResults(searchResults)).toEqual(false)
+    })
+  })
+
+  describe('bookingSearchResultsToCas3BookingSearchResults', () => {
+    it('returns an empty array directly', () => {
+      const result = bookingSearchResultsToCas3BookingSearchResults([])
+
+      expect(isCas3BookingSearchResults(result)).toEqual(true)
+      expect(result).toEqual([])
+    })
+
+    it('returns an array of Cas3BookingSearchResult directly', () => {
+      const bookingSearchResults = cas3BookingSearchResultFactory.buildList(3)
+
+      const result = bookingSearchResultsToCas3BookingSearchResults(bookingSearchResults)
+
+      expect(isCas3BookingSearchResults(result)).toEqual(true)
+      expect(result).toEqual(bookingSearchResults)
+    })
+
+    it('transforms an array of BookingSearchResult into an array of Cas3BookingSearchResult', () => {
+      const bookingSearchResults = bookingSearchResultFactory.buildList(3)
+
+      const result = bookingSearchResultsToCas3BookingSearchResults(bookingSearchResults)
+
+      expect(isCas3BookingSearchResults(result)).toEqual(true)
+      expect(result[0].bedspace.reference).toEqual(bookingSearchResults[0].bed.name)
+    })
   })
 })

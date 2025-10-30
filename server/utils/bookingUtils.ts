@@ -1,10 +1,8 @@
 import {
   Booking,
-  BookingSearchResult,
   Cancellation,
   Cas3AssessmentSummary,
   Cas3Booking,
-  Cas3BookingSearchResult,
   Cas3BookingStatus,
   Departure,
   Extension,
@@ -435,26 +433,3 @@ export const bookingToCas3Booking = (booking: Booking | Cas3Booking): Cas3Bookin
     status: status as Cas3BookingStatus,
   }
 }
-
-export const isCas3BookingSearchResults = (
-  results: Array<BookingSearchResult> | Array<Cas3BookingSearchResult>,
-): results is Array<Cas3BookingSearchResult> =>
-  Boolean(results.length === 0 || (results[0] as Cas3BookingSearchResult).bedspace?.reference)
-
-export const bookingSearchResultsToCas3BookingSearchResults = (
-  results: Array<BookingSearchResult> | Array<Cas3BookingSearchResult>,
-): Array<Cas3BookingSearchResult> =>
-  isCas3BookingSearchResults(results)
-    ? results
-    : results.map(result => ({
-        bedspace: {
-          id: result.bed.id,
-          reference: result.bed.name,
-        },
-        booking: {
-          ...result.booking,
-          status: result.booking.status as Cas3BookingStatus,
-        },
-        person: result.person,
-        premises: result.premises,
-      }))

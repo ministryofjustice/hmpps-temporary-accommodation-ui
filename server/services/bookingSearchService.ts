@@ -6,7 +6,7 @@ import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import { PaginatedResponse } from '../@types/ui'
-import { bookingSearchResultsToCas3BookingSearchResults } from '../utils/bookingUtils'
+import { bookingSearchResultsToCas3BookingSearchResults } from '../utils/bookingSearchUtils'
 
 export default class BookingSearchService {
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}

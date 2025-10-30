@@ -3,10 +3,8 @@ import { SanitisedError } from '../sanitisedError'
 import {
   assessmentSummaryFactory,
   bookingFactory,
-  bookingSearchResultFactory,
   cas3ArrivalFactory,
   cas3BookingFactory,
-  cas3BookingSearchResultFactory,
   cas3DepartureFactory,
   cas3ExtensionFactory,
   personFactory,
@@ -15,14 +13,12 @@ import {
 import {
   assessmentRadioItems,
   bookingActions,
-  bookingSearchResultsToCas3BookingSearchResults,
   bookingToCas3Booking,
   deriveBookingHistory,
   generateConflictBespokeError,
   generateTurnaroundConflictBespokeError,
   getLatestExtension,
   isCas3Booking,
-  isCas3BookingSearchResults,
   shortenedOrExtended,
   statusName,
   statusTag,
@@ -674,51 +670,6 @@ describe('bookingUtils', () => {
 
         expect(isCas3Booking(result)).toEqual(true)
         expect(result.bedspace.reference).toEqual(booking.bed.name)
-      })
-    })
-
-    describe('isCas3BookingSearchResult', () => {
-      it('returns true for an array of Cas3BookingSearchResult', () => {
-        const searchResults = cas3BookingSearchResultFactory.buildList(3)
-
-        expect(isCas3BookingSearchResults(searchResults)).toEqual(true)
-      })
-
-      it('returns true for an empty array', () => {
-        expect(isCas3BookingSearchResults([])).toEqual(true)
-      })
-
-      it('returns false for an array of BookingSearchResult', () => {
-        const searchResults = bookingSearchResultFactory.buildList(3)
-
-        expect(isCas3BookingSearchResults(searchResults)).toEqual(false)
-      })
-    })
-
-    describe('bookingSearchResultsToCas3BookingSearchResults', () => {
-      it('returns an empty array directly', () => {
-        const result = bookingSearchResultsToCas3BookingSearchResults([])
-
-        expect(isCas3BookingSearchResults(result)).toEqual(true)
-        expect(result).toEqual([])
-      })
-
-      it('returns an array of Cas3BookingSearchResult directly', () => {
-        const bookingSearchResults = cas3BookingSearchResultFactory.buildList(3)
-
-        const result = bookingSearchResultsToCas3BookingSearchResults(bookingSearchResults)
-
-        expect(isCas3BookingSearchResults(result)).toEqual(true)
-        expect(result).toEqual(bookingSearchResults)
-      })
-
-      it('transforms an array of BookingSearchResult into an array of Cas3BookingSearchResult', () => {
-        const bookingSearchResults = bookingSearchResultFactory.buildList(3)
-
-        const result = bookingSearchResultsToCas3BookingSearchResults(bookingSearchResults)
-
-        expect(isCas3BookingSearchResults(result)).toEqual(true)
-        expect(result[0].bedspace.reference).toEqual(bookingSearchResults[0].bed.name)
       })
     })
   })

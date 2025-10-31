@@ -5,7 +5,7 @@ import PreviousStaysDetails from './previousStaysDetails'
 const body = {
   accommodationTypes: ['cas1' as const, 'cas3' as const],
   cas1Detail: 'Approved Premises detail',
-  cas3Detail: 'Transitional Accommodation (CAS3) detail',
+  cas3Detail: 'CAS3 detail',
 }
 
 describe('PreviousStaysDetails', () => {
@@ -61,7 +61,7 @@ describe('PreviousStaysDetails', () => {
       const page = new PreviousStaysDetails(body, application)
       expect(page.response()).toEqual({
         'Approved Premises (AP or CAS1)': 'Approved Premises detail',
-        'Transitional Accommodation (CAS3)': 'Transitional Accommodation (CAS3) detail',
+        CAS3: 'CAS3 detail',
       })
     })
   })
@@ -75,7 +75,7 @@ describe('PreviousStaysDetails', () => {
           text: 'Approved Premises (AP or CAS1)',
         },
         { value: 'cas2', text: 'CAS2 (formerly Bail Accommodation Support Services)' },
-        { value: 'cas3', text: 'Transitional Accommodation (CAS3)' },
+        { value: 'cas3', text: 'CAS3' },
       ])
     })
   })

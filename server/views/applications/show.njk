@@ -8,7 +8,7 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = "Make a referral for Transitional Accommodation (CAS3) - " + applicationName %}
+{% set pageTitle = "Make a referral for CAS3 - " + applicationName %}
 
 {% block beforeContent %}
     {{ govukBackLink({
@@ -22,7 +22,7 @@
     {{ showErrorSummary(errorSummary) }}
     
     <h1 class="govuk-heading-xl">
-        Make a referral for Transitional Accommodation (CAS3)
+        Make a referral for CAS3
     </h1>
 
     {% if taskList.status === 'complete' %}

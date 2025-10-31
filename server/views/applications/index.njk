@@ -6,7 +6,7 @@
 {% from "./_table.njk" import applicationsTable %}
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = "Transitional Accommodation (CAS3) referrals - " + applicationName %}
+{% set pageTitle = "CAS3 referrals - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -16,7 +16,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
-      <h1 class="govuk-heading-l">Transitional Accommodation (CAS3) referrals</h1>
+      <h1 class="govuk-heading-l">CAS3 referrals</h1>
 
       {{ govukTabs({
         items: [
@@ -48,7 +48,7 @@
 
     <div class="govuk-grid-column-two-thirds">
       <h2 class="govuk-heading-m">Start a new referral</h2>
-      <p class="govuk-body">Start a new referral for Transitional Accommodation (CAS3) below.</p>
+      <p class="govuk-body">Start a new referral for CAS3 below.</p>
 
       {{ govukButton({
         text: "Start now",

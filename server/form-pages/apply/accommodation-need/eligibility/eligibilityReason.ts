@@ -19,14 +19,14 @@ type EligibilityReasonBody = { reason: EligibilityReasonsT }
 export default class EligibilityReason implements TasklistPage {
   title: string
 
-  htmlDocumentTitle = 'How is the person eligible for Transitional Accommodation (CAS3)?'
+  htmlDocumentTitle = 'How is the person eligible for CAS3?'
 
   constructor(
     readonly body: Partial<EligibilityReasonBody>,
     readonly application: Application,
   ) {
     const name = personName(application.person)
-    this.title = `How is ${name} eligible for Transitional Accommodation (CAS3)?`
+    this.title = `How is ${name} eligible for CAS3?`
   }
 
   response() {

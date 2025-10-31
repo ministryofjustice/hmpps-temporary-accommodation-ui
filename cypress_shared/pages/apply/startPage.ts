@@ -4,7 +4,7 @@ import paths from '../../../server/paths/apply'
 
 export default class StartPage extends Page {
   constructor() {
-    super('Make a referral for Transitional Accommodation (CAS3)')
+    super('Make a referral for CAS3')
   }
 
   static visit(): StartPage {

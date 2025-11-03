@@ -30,7 +30,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        url: api.assessments.show({ id: assessment.id }),
+        url: api.cas3.assessments.show({ id: assessment.id }),
       },
       response: {
         status: 200,

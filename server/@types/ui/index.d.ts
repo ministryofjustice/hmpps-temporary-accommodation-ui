@@ -1,7 +1,7 @@
 import {
   Adjudication,
   Cas3ApplicationSummary as ApplicationSummary,
-  TemporaryAccommodationAssessment as Assessment,
+  Cas3Assessment as Assessment,
   AssessmentSortField,
   AssessmentStatus,
   BookingSearchSortField,

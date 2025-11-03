@@ -2,6 +2,7 @@ import { path } from 'static-path'
 
 const cas3Path = path('/cas3')
 const assessmentsCas3Path = cas3Path.path('/assessments')
+const singleAssessmentCas3Path = assessmentsCas3Path.path(':id')
 const premisesPath = path('/premises')
 const cas3PremisesPath = cas3Path.path('premises')
 const singlePremisesPath = premisesPath.path(':premisesId')
@@ -135,6 +136,7 @@ export default {
     },
     assessments: {
       index: assessmentsCas3Path,
+      show: singleAssessmentCas3Path,
     },
   },
   premises: {

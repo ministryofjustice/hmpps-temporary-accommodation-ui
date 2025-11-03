@@ -21,16 +21,19 @@ export class ReportsPage extends BasePage {
   }
 
   private async pickStartDateUsingDatePicker() {
-    const firstDayOfLastMonth = `1/${today.getMonth()}/${today.getFullYear()}`
+    const thisMonth = today.getMonth() === 0 ? 12 : today.getMonth()
+    const firstDayOfLastMonth = `1/${thisMonth}/${today.getMonth() === 0 ? today.getFullYear() - 1 : today.getFullYear()}`
     await this.clickFirstElementByClass('moj-datepicker__toggle moj-js-datepicker-toggle')
     await this.clickFirstElementByClass('moj-datepicker__button moj-js-datepicker-prev-month')
     await this.page.getByTestId(firstDayOfLastMonth).click()
   }
 
   private async pickEndDateUsingDatePicker() {
-    const thisMonth = today.getMonth() + 1
-    const firstDayOfThisMonth = `1/${thisMonth}/${today.getFullYear()}`
+    const thisMonth = today.getMonth() === 0 ? 12 : today.getMonth()
+    const thisYear = today.getMonth() === 0 ? today.getFullYear() - 1 : today.getFullYear()
+    const lastDayOfLastMonth = `${new Date(today.getFullYear(), thisMonth, 0).getDate()}/${thisMonth}/${thisYear}`
     await this.clickElementByClass('moj-datepicker__toggle moj-js-datepicker-toggle', 1)
-    await this.page.locator('#datepicker-endDate').getByTestId(firstDayOfThisMonth).click()
+    await this.clickElementByClass('moj-datepicker__button moj-js-datepicker-prev-month', 1)
+    await this.page.locator('#datepicker-endDate').getByTestId(lastDayOfLastMonth).click()
   }
 }

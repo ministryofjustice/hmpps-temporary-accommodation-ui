@@ -1,10 +1,10 @@
 import type {
-  TemporaryAccommodationAssessment as Assessment,
   AssessmentAcceptance,
   AssessmentRejection,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   Cas3Assessment,
   Cas3AssessmentSummary,
+  Cas3UpdateAssessment,
   Cas3ReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
 } from '@approved-premises/api'
@@ -96,8 +96,8 @@ export default class AssessmentClient {
     return this.restClient.post<Note>({ path: paths.cas3.assessments.notes({ id }), data })
   }
 
-  async update(id: string, data: Partial<Assessment>) {
-    const updateData = { data: {}, ...data }
-    return this.restClient.put<void>({ path: paths.assessments.update({ id }), data: updateData })
+  async update(id: string, data: Cas3UpdateAssessment) {
+    const updateData = data
+    return this.restClient.put<void>({ path: paths.cas3.assessments.update({ id }), data: updateData })
   }
 }

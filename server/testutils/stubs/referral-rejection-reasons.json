@@ -106,11 +106,5 @@
     "name": "Suitable bedspace not available (not related to single occupancy availability)",
     "serviceScope": "temporary-accommodation",
     "isActive": true
-  },
-  {
-    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d481",
-    "name": "Remanded in custody or detained",
-    "serviceScope": "temporary-accommodation",
-    "isActive": true
   }
 ]

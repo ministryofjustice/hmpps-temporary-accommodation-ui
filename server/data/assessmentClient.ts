@@ -3,7 +3,7 @@ import type {
   AssessmentAcceptance,
   AssessmentRejection,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
-  TemporaryAccommodationAssessmentSummary as AssessmentSummary,
+  Cas3AssessmentSummary,
   NewReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
 } from '@approved-premises/api'
@@ -25,13 +25,13 @@ export default class AssessmentClient {
   async all(
     statuses: AssessmentStatus[],
     params?: AssessmentSearchParameters,
-  ): Promise<PaginatedResponse<AssessmentSummary>> {
+  ): Promise<PaginatedResponse<Cas3AssessmentSummary>> {
     const path = appendQueryString(paths.cas3.assessments.index.pattern, {
       statuses,
       ...params,
       perPage: config.assessmentsDefaultPageSize,
     })
-    const response = await this.restClient.get<Array<AssessmentSummary>>({ path }, true)
+    const response = await this.restClient.get<Array<Cas3AssessmentSummary>>({ path }, true)
 
     const { body, header } = response
 
@@ -48,9 +48,9 @@ export default class AssessmentClient {
   }
 
   async readyToPlaceForCrn(crnOrName: string) {
-    const status: AssessmentSummary['status'] = 'ready_to_place'
+    const status: Cas3AssessmentSummary['status'] = 'ready_to_place'
 
-    return this.restClient.get<Array<AssessmentSummary>>({
+    return this.restClient.get<Array<Cas3AssessmentSummary>>({
       path: appendQueryString(paths.cas3.assessments.index.pattern, { crnOrName: crnOrName.trim(), statuses: status }),
     })
   }

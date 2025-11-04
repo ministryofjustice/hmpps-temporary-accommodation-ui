@@ -9,9 +9,6 @@ export type AssessmentAcceptance = {
     agreeWithShortNoticeReason?: boolean;
     agreeWithShortNoticeReasonComments?: string;
     apType?: ApType;
-    /**
-     * Any object
-     */
     document: any;
     notes?: string;
     placementDates?: PlacementDates;

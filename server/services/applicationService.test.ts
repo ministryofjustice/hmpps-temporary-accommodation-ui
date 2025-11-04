@@ -10,7 +10,7 @@ import ApplicationService from './applicationService'
 
 import {
   Cas3SubmitApplication as SubmitApplication,
-  UpdateTemporaryAccommodationApplication as UpdateApplication,
+  Cas3UpdateApplication as UpdateApplication,
 } from '../@types/shared'
 import { CallConfig } from '../data/restClient'
 import Apply from '../form-pages/apply'

@@ -1,5 +1,5 @@
 import type { SuperAgentRequest } from 'superagent'
-import { Assessment, AssessmentSummary, TemporaryAccommodationAssessment } from '@approved-premises/api'
+import { Assessment, Cas3AssessmentSummary, TemporaryAccommodationAssessment } from '@approved-premises/api'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
@@ -8,7 +8,7 @@ import { MockPagination } from './bookingSearch'
 import { referralRejectionReasons } from '../../server/testutils/stubs/referenceDataStubs'
 
 export default {
-  stubAssessments: (args: { data: Array<AssessmentSummary>; pagination?: MockPagination }): SuperAgentRequest =>
+  stubAssessments: (args: { data: Array<Cas3AssessmentSummary>; pagination?: MockPagination }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',

@@ -2,6 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Application } from './Application';
-export type OfflineApplication = Application;
+export type Cas3UpdateAssessment = {
+    accommodationRequiredFromDate?: string;
+    releaseDate?: string;
+};
 

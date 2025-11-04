@@ -2,7 +2,7 @@ import {
   TemporaryAccommodationAssessment as Assessment,
   AssessmentSortField,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
-  TemporaryAccommodationAssessmentSummary as AssessmentSummary,
+  Cas3AssessmentSummary as AssessmentSummary,
   SortDirection,
 } from '@approved-premises/api'
 import QueryString from 'qs'

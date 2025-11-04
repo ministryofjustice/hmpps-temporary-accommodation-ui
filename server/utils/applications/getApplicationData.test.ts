@@ -8,7 +8,6 @@ describe('getApplicationUpdateData', () => {
 
     expect(getApplicationUpdateData(application)).toEqual({
       data: application.data,
-      type: 'CAS3',
     })
   })
 })

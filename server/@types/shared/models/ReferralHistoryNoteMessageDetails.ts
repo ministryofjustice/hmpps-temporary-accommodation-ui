@@ -3,9 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ReferralHistoryNoteMessageDetails = {
-    /**
-     * Any object
-     */
     domainEvent?: any;
     isWithdrawn?: boolean;
     rejectionReason?: string;

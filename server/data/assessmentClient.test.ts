@@ -1,13 +1,13 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import {
-  TemporaryAccommodationAssessment as Assessment,
+  Cas3Assessment as Assessment,
   AssessmentRejection,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
 } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
 import {
-  assessmentFactory,
+  cas3AssessmentFactory,
   cas3AssessmentSummariesFactory,
   cas3AssessmentSummaryFactory,
   cas3ReferralHistoryUserNoteFactory,
@@ -26,7 +26,7 @@ describeClient('AssessmentClient', provider => {
 
   beforeEach(() => {
     assessmentClient = new AssessmentClient(callConfig)
-    assessment = assessmentFactory.build()
+    assessment = cas3AssessmentFactory.build()
     assessments = cas3AssessmentSummariesFactory.build()
     assessmentSummaryList = cas3AssessmentSummaryFactory.buildList(5)
     newNote = cas3ReferralHistoryUserNoteFactory.build()
@@ -202,7 +202,7 @@ describeClient('AssessmentClient', provider => {
         uponReceiving: 'a request for a single assessment',
         withRequest: {
           method: 'GET',
-          path: paths.assessments.show({ id: assessment.id }),
+          path: paths.cas3.assessments.show({ id: assessment.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

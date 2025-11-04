@@ -3,6 +3,7 @@ import type {
   AssessmentAcceptance,
   AssessmentRejection,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
+  Cas3Assessment,
   Cas3AssessmentSummary,
   Cas3ReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
@@ -56,7 +57,7 @@ export default class AssessmentClient {
   }
 
   async find(assessmentId: string) {
-    return this.restClient.get<Assessment>({ path: paths.assessments.show({ id: assessmentId }) })
+    return this.restClient.get<Cas3Assessment>({ path: paths.cas3.assessments.show({ id: assessmentId }) })
   }
 
   async unallocateAssessment(id: string) {

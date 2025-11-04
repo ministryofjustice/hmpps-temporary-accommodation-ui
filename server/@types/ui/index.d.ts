@@ -1,10 +1,10 @@
 import {
   Adjudication,
   Cas3ApplicationSummary as ApplicationSummary,
-  TemporaryAccommodationAssessment as Assessment,
   AssessmentSortField,
   AssessmentStatus,
   BookingSearchSortField,
+  Cas3Assessment,
   LocalAuthorityArea,
   OASysQuestion,
   OASysSections,
@@ -279,7 +279,7 @@ export interface OasysPage extends TasklistPage {
 
 export type PlaceContext =
   | {
-      assessment: Assessment
+      assessment: Cas3Assessment
       arrivalDate?: string
     }
   | undefined

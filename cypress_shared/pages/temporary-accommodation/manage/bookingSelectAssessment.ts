@@ -1,4 +1,4 @@
-import type { AssessmentSummary } from '@approved-premises/api'
+import type { Cas3AssessmentSummary } from '@approved-premises/api'
 import { Assessment, Person } from '../../../../server/@types/shared'
 import { PlaceContext } from '../../../../server/@types/ui'
 import { assessmentSummaryFactory } from '../../../../server/testutils/factories'
@@ -7,7 +7,7 @@ import { isFullPerson } from '../../../../server/utils/personUtils'
 import Page from '../../page'
 
 export default class BookingSelectAssessmentPage extends Page {
-  constructor(private readonly assessmentSummaries: Array<AssessmentSummary>) {
+  constructor(private readonly assessmentSummaries: Array<Cas3AssessmentSummary>) {
     super(assessmentSummaries.length ? 'Confirm which referral this booking is for' : 'Book without linking a referral')
   }
 
@@ -32,7 +32,7 @@ export default class BookingSelectAssessmentPage extends Page {
   }
 
   shouldDisplayAssessments(): void {
-    this.assessmentSummaries.forEach((assessmentSummary: AssessmentSummary) => {
+    this.assessmentSummaries.forEach((assessmentSummary: Cas3AssessmentSummary) => {
       cy.get(`input[name="assessmentId"][value="${assessmentSummary.id}"]`)
         .siblings('label')
         .eq(0)
@@ -47,7 +47,7 @@ export default class BookingSelectAssessmentPage extends Page {
     )
   }
 
-  selectAssessment(assessmentSummary: AssessmentSummary): void {
+  selectAssessment(assessmentSummary: Cas3AssessmentSummary): void {
     this.checkRadioByNameAndLabel('assessmentId', this.assessmentRadioText(assessmentSummary, assessmentSummary.person))
   }
 
@@ -55,7 +55,7 @@ export default class BookingSelectAssessmentPage extends Page {
     this.checkRadioByNameAndLabel('assessmentId', 'Book this bedspace without linking a referral')
   }
 
-  private assessmentRadioText(assessment: Assessment | AssessmentSummary, person: Person): string {
+  private assessmentRadioText(assessment: Assessment | Cas3AssessmentSummary, person: Person): string {
     if (isFullPerson(person)) {
       return `${person.name}, CRN ${person.crn}, referral submitted ${DateFormats.isoDateToUIDate(
         assessment.createdAt,

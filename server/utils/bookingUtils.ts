@@ -1,4 +1,4 @@
-import type { AssessmentSummary, Booking, Cancellation, Departure, Extension } from '@approved-premises/api'
+import type { Booking, Cancellation, Cas3AssessmentSummary, Departure, Extension } from '@approved-premises/api'
 import type { BespokeError, PageHeadingBarItem, RadioItem } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
@@ -244,7 +244,7 @@ export const generateTurnaroundConflictBespokeError = (
   return { errorTitle: title, errorSummary: [{ html: message }] }
 }
 
-export const assessmentRadioItems = (assessmentSummaries: Array<AssessmentSummary>) => {
+export const assessmentRadioItems = (assessmentSummaries: Array<Cas3AssessmentSummary>) => {
   const sortedAssessments = [...assessmentSummaries].sort((a, b) => {
     if (a.createdAt > b.createdAt) {
       return -1
@@ -392,7 +392,7 @@ const compareBookingState = (a: Extension | Departure | Cancellation, b: Extensi
   return dateA.getTime() - dateB.getTime()
 }
 
-const assessmentRadioItemText = (assessmentSummary: AssessmentSummary) => {
+const assessmentRadioItemText = (assessmentSummary: Cas3AssessmentSummary) => {
   if (isFullPerson(assessmentSummary.person)) {
     return `${assessmentSummary.person.name}, CRN ${
       assessmentSummary.person.crn

@@ -21,13 +21,7 @@ export type Cas3SubmitApplication = {
     personReleaseDate?: string;
     prisonReleaseTypes?: Array<string>;
     probationDeliveryUnitId: string;
-    /**
-     * Any object
-     */
     summaryData: any;
-    /**
-     * Any object
-     */
     translatedDocument?: any;
 };
 

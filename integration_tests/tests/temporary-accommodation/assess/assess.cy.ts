@@ -1,4 +1,4 @@
-import { TemporaryAccommodationAssessmentSummary } from '@approved-premises/api'
+import { Cas3AssessmentSummary } from '@approved-premises/api'
 import { AssessmentSearchApiStatus, AssessmentUpdatableDateField } from '@approved-premises/ui'
 import { sentence } from 'case'
 import { addDays } from 'date-fns'
@@ -139,7 +139,7 @@ context('Apply', () => {
 
           it('shows a message if there are no CRN or Name search results', () => {
             const assessments = assessmentSummaryFactory.buildList(9, { status: factoryStatus })
-            const noAssessments: TemporaryAccommodationAssessmentSummary[] = []
+            const noAssessments: Cas3AssessmentSummary[] = []
             const searchCrnOrName = 'N0M4TCH'
 
             cy.task('stubAssessments', { data: assessments })

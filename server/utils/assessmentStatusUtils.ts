@@ -1,4 +1,4 @@
-import { TemporaryAccommodationAssessmentSummary as AssessmentSummary } from '../@types/shared'
+import { Cas3AssessmentSummary as AssessmentSummary } from '../@types/shared'
 
 export const allStatuses: Array<{ name: string; id: AssessmentSummary['status']; tagClass: string }> = [
   {

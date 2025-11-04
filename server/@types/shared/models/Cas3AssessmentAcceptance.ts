@@ -2,4 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas1ApplicationTimelinessCategory = 'standard' | 'emergency' | 'shortNotice';
+export type Cas3AssessmentAcceptance = {
+    document: any;
+};
+

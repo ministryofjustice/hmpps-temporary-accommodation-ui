@@ -1,6 +1,6 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
-import { TemporaryAccommodationAssessmentSummary as AssessmentSummary } from '@approved-premises/api'
+import { Cas3AssessmentSummary as AssessmentSummary } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 import { fullPersonFactory as personFactory } from './person'
 import risksFactory from './risks'
@@ -17,7 +17,6 @@ class AssessmentSummaryFactory extends Factory<AssessmentSummary> {
 }
 
 export default AssessmentSummaryFactory.define(() => ({
-  type: 'CAS3' as const,
   id: faker.string.uuid(),
   applicationId: faker.string.uuid(),
   arrivalDate: DateFormats.dateObjToIsoDateTime(faker.date.future()),

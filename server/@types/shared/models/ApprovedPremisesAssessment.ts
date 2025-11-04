@@ -10,9 +10,6 @@ export type ApprovedPremisesAssessment = (Assessment & {
     allocatedToStaffMember?: ApprovedPremisesUser;
     application?: ApprovedPremisesApplication;
     createdFromAppeal?: boolean;
-    /**
-     * Any object
-     */
     document?: any;
     status?: ApprovedPremisesAssessmentStatus;
 } & {

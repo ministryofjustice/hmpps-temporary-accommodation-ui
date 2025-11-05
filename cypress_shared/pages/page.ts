@@ -382,7 +382,7 @@ export default abstract class Page extends Component {
   }
 
   logAccessibilityViolations(violations: Result[]): void {
-    cy.task('logAccessibilityViolationsSummary', `Accessibility violations detected: ${violations.length}`)
+    cy.log(`Accessibility violations detected: ${violations.length}`)
 
     const violationData = violations.map(({ id, impact, description, nodes }) => ({
       id,
@@ -392,7 +392,7 @@ export default abstract class Page extends Component {
       nodeTargets: nodes.map(node => node.target).join(' - '),
     }))
 
-    cy.task('logAccessibilityViolationsTable', violationData)
+    cy.log(JSON.stringify(violationData, null, 2))
   }
 
   clickPaginationLink(label: number | 'Previous' | 'Next') {

@@ -1,11 +1,12 @@
 import { Cas3v2BedspaceSearchResultOverlap, FullPerson, RestrictedPerson } from '@approved-premises/api'
 import {
   assessmentFactory,
+  cas3BedspaceCharacteristicsFactory,
   cas3BedspaceFactory,
+  cas3PremisesCharacteristicsFactory,
   cas3PremisesFactory,
   cas3v2BedspaceSearchResultFactory,
   cas3v2BedspaceSearchResultOverlapFactory,
-  characteristicFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
 import {
@@ -17,17 +18,17 @@ import { fullPersonFactory } from '../testutils/factories/person'
 
 describe('BedspaceSearchResultUtils', () => {
   describe('premisesKeyCharacteristics', () => {
-    it('returns a sorted list of the characteristic names for the premises', () => {
+    it('returns a sorted list of the characteristic descriptions for the premises', () => {
       const premises = cas3PremisesFactory.build({
-        characteristics: [
-          characteristicFactory.build({
-            name: 'Women only',
+        premisesCharacteristics: [
+          cas3PremisesCharacteristicsFactory.build({
+            description: 'Women only',
           }),
-          characteristicFactory.build({
-            name: 'Shared property',
+          cas3PremisesCharacteristicsFactory.build({
+            description: 'Shared property',
           }),
-          characteristicFactory.build({
-            name: 'Shared entrance',
+          cas3PremisesCharacteristicsFactory.build({
+            description: 'Shared entrance',
           }),
         ],
       })
@@ -39,18 +40,18 @@ describe('BedspaceSearchResultUtils', () => {
   })
 
   describe('bedspaceKeyCharacteristics', () => {
-    it('returns a sorted list of the characteristic names for the bedspace', () => {
+    it('returns a sorted list of the characteristic descriptions for the bedspace', () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({
-        characteristics: [
-          characteristicFactory.build({
-            name: 'Wheelchair accessible',
+        bedspaceCharacteristics: [
+          cas3BedspaceCharacteristicsFactory.build({
+            description: 'Wheelchair accessible',
           }),
-          characteristicFactory.build({
-            name: 'Shared bathroom',
+          cas3BedspaceCharacteristicsFactory.build({
+            description: 'Shared bathroom',
           }),
-          characteristicFactory.build({
-            name: 'Shared kitchen',
+          cas3BedspaceCharacteristicsFactory.build({
+            description: 'Shared kitchen',
           }),
         ],
       })

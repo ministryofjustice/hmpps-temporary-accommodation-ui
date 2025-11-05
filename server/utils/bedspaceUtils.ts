@@ -1,6 +1,7 @@
 import {
   Cas3Bedspace,
   Cas3BedspaceArchiveAction,
+  Cas3BedspaceCharacteristic,
   Cas3BedspaceStatus,
   Cas3Premises,
   Characteristic,
@@ -165,7 +166,7 @@ export const summaryList = (bedspace: Cas3Bedspace): SummaryList => {
   rows.push(
     {
       key: { text: 'Bedspace details' },
-      value: { html: formatBedspaceDetails(bedspace.characteristics) || 'None' },
+      value: { html: formatBedspaceDetails(bedspace.bedspaceCharacteristics) || 'None' },
     },
     {
       key: { text: 'Additional bedspace details' },
@@ -211,9 +212,9 @@ const formatBedspaceDate = (dateString: string | undefined | null): string => {
   return DateFormats.isoDateToUIDate(dateString)
 }
 
-const formatBedspaceDetails = (characteristics: Array<Characteristic>): string => {
+const formatBedspaceDetails = (characteristics: Array<Cas3BedspaceCharacteristic>): string => {
   return (characteristics || [])
-    .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
+    .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.description}</span>`)
     .join(' ')
 }
 
@@ -264,3 +265,19 @@ const htmlValue = (value: string) => {
 }
 
 const formatNotes = (notes: string): string => notes.replace(/\n/g, '<br />')
+
+// TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities and all usages
+export const characteristicToBedspaceCharacteristic = (characteristic: Characteristic): Cas3BedspaceCharacteristic => ({
+  id: characteristic.id,
+  description: characteristic.name,
+  name: characteristic.propertyName,
+})
+
+export const populateBedspaceCharacteristics = (bedspace: Cas3Bedspace): Cas3Bedspace => {
+  if (bedspace.bedspaceCharacteristics) return bedspace
+
+  return {
+    ...bedspace,
+    bedspaceCharacteristics: bedspace.characteristics.map(characteristicToBedspaceCharacteristic),
+  }
+}

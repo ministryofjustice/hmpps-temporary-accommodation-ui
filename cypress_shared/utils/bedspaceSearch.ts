@@ -1,4 +1,4 @@
-import { Cas3Bedspace, Cas3Premises, Characteristic } from '@approved-premises/api'
+import { Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
 import { BedspaceSearchFormParameters } from '@approved-premises/ui'
 
 export const characteristicsToSearchAttributes = (premises: Cas3Premises, bedspace: Cas3Bedspace) => {
@@ -15,20 +15,20 @@ export const characteristicsToSearchAttributes = (premises: Cas3Premises, bedspa
     'Not suitable for those who pose a sexual risk to children': '8fcf6f60-bbca-4425-b0e8-9dfbe88f3aa6',
   }
 
-  const premisesOccupancyAttribute = premises.characteristics
-    .map((characteristic: Characteristic) => occupancyAttributesMap[characteristic.name])
+  const premisesOccupancyAttribute = premises.premisesCharacteristics
+    .map(characteristic => occupancyAttributesMap[characteristic.description])
     .find(attribute => attribute !== undefined)
 
-  const matchedSexualRiskAttributes = premises.characteristics
-    .map((characteristic: Characteristic) => sexualRiskMap[characteristic.name])
+  const matchedSexualRiskAttributes = premises.premisesCharacteristics
+    .map(characteristic => sexualRiskMap[characteristic.description])
     .filter(attribute => attribute !== undefined)
 
   const sexualRiskAttributes = Object.values(sexualRiskMap).filter(
     attr => !matchedSexualRiskAttributes.includes(attr),
   ) as BedspaceSearchFormParameters['sexualRiskAttributes']
 
-  const wheelchairAccessibility = bedspace.characteristics
-    .map((characteristic: Characteristic) => wheelchairAccessibilityMap[characteristic.name])
+  const wheelchairAccessibility = bedspace.bedspaceCharacteristics
+    .map(characteristic => wheelchairAccessibilityMap[characteristic.description])
     .find(attribute => attribute !== undefined)
 
   return { premisesOccupancyAttribute, sexualRiskAttributes, wheelchairAccessibility }

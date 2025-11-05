@@ -45,19 +45,19 @@ export default class BedspaceSearchController {
       } = await this.searchService.getReferenceData(callConfig)
 
       const wheelchairAccessibilityItems = wheelchairAccessibility.map(attr => ({
-        text: attr.name,
+        text: attr.description,
         value: attr.id,
       }))
 
       const sexualRiskItems = sexualRisk.map(attr => ({
-        text: attr.name,
+        text: attr.description,
         value: attr.id,
       }))
 
       const occupancyItems = [
         { text: 'All', value: 'all' },
         ...occupancy.map(attr => ({
-          text: attr.name,
+          text: attr.description,
           value: attr.id,
         })),
       ]
@@ -65,7 +65,7 @@ export default class BedspaceSearchController {
       const genderItems = [
         { text: 'None', value: 'none' },
         ...gender.map(attr => ({
-          text: attr.name,
+          text: attr.description,
           value: attr.id,
         })),
       ]

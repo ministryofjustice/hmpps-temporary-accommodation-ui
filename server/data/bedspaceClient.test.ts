@@ -152,7 +152,7 @@ describeClient('BedspaceClient', provider => {
       const payload = cas3UpdateBedspaceFactory.build({
         reference: bedspace.reference,
         notes: bedspace.notes,
-        characteristicIds: bedspace.characteristics.map(ch => ch.id),
+        characteristicIds: bedspace.bedspaceCharacteristics.map(ch => ch.id),
       })
 
       await provider.addInteraction({

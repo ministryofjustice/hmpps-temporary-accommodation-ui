@@ -25,7 +25,7 @@ Given('I create a bedspace with all necessary details', () => {
       })
       const newBedspace = cas3NewBedspaceFactory.build({
         reference: bedspace.reference,
-        characteristicIds: bedspace.characteristics.map(characteristic => characteristic.id),
+        characteristicIds: bedspace.bedspaceCharacteristics.map(characteristic => characteristic.id),
         notes: bedspace.notes,
         startDate: bedspace.startDate,
       })

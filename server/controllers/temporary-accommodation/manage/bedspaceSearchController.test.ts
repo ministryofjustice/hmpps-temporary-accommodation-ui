@@ -7,6 +7,7 @@ import BedspaceSearchService from '../../../services/bedspaceSearchService'
 import {
   assessmentFactory,
   bedspaceSearchFormParametersFactory,
+  cas3ReferenceDataFactory,
   cas3v2BedspaceSearchResultsFactory,
   placeContextFactory,
   referenceDataFactory,
@@ -27,51 +28,21 @@ describe('BedspaceSearchController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
 
   const occupancy = [
-    referenceDataFactory.characteristic('premises').build({
-      id: 'uuid-1',
-      name: 'Single Occupancy',
-      serviceScope: 'temporary-accommodation',
-      modelScope: 'premises',
-    }),
-    referenceDataFactory.characteristic('premises').build({
-      id: 'uuid-2',
-      name: 'Shared Property',
-      serviceScope: 'temporary-accommodation',
-      modelScope: 'premises',
-    }),
+    cas3ReferenceDataFactory.build({ id: 'uuid-1', description: 'Single Occupancy' }),
+    cas3ReferenceDataFactory.build({ id: 'uuid-2', description: 'Shared Property' }),
   ]
 
   const wheelchairAccessibility = [
-    referenceDataFactory.characteristic('room').build({ id: 'accessibility-1', name: 'Wheelchair Accessible' }),
+    cas3ReferenceDataFactory.build({ id: 'accessibility-1', description: 'Wheelchair Accessible' }),
   ]
   const sexualRisk = [
-    referenceDataFactory.characteristic('premises').build({
-      id: 'uuid-3',
-      name: 'Risk to adults',
-      serviceScope: 'temporary-accommodation',
-      modelScope: 'premises',
-    }),
-    referenceDataFactory.characteristic('premises').build({
-      id: 'uuid-4',
-      name: 'Risk to children',
-      serviceScope: 'temporary-accommodation',
-      modelScope: 'premises',
-    }),
+    cas3ReferenceDataFactory.build({ id: 'uuid-3', description: 'Risk to adults' }),
+    cas3ReferenceDataFactory.build({ id: 'uuid-4', description: 'Risk to children' }),
   ]
 
   const gender = [
-    referenceDataFactory.characteristic('premises').build({
-      id: 'uuid-5',
-      name: 'Men only',
-      serviceScope: 'temporary-accommodation',
-      modelScope: 'premises',
-    }),
-    referenceDataFactory.characteristic('premises').build({
-      id: 'uuid-6',
-      name: 'Women only',
-      serviceScope: 'temporary-accommodation',
-      modelScope: 'premises',
-    }),
+    cas3ReferenceDataFactory.build({ id: 'uuid-5', description: 'Men only' }),
+    cas3ReferenceDataFactory.build({ id: 'uuid-6', description: 'Women only' }),
   ]
 
   const referenceData = {
@@ -115,15 +86,18 @@ describe('BedspaceSearchController', () => {
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/index', {
           allPdus: referenceData.pdus,
           wheelchairAccessibilityItems: wheelchairAccessibility.map(attr => ({
-            text: attr.name,
+            text: attr.description,
             value: attr.id,
           })),
           occupancyItems: [
             { text: 'All', value: 'all' },
-            ...occupancy.map(attr => ({ text: attr.name, value: attr.id })),
+            ...occupancy.map(attr => ({ text: attr.description, value: attr.id })),
           ],
-          genderItems: [{ text: 'None', value: 'none' }, ...gender.map(attr => ({ text: attr.name, value: attr.id }))],
-          sexualRiskItems: sexualRisk.map(attr => ({ text: attr.name, value: attr.id })),
+          genderItems: [
+            { text: 'None', value: 'none' },
+            ...gender.map(attr => ({ text: attr.description, value: attr.id })),
+          ],
+          sexualRiskItems: sexualRisk.map(attr => ({ text: attr.description, value: attr.id })),
           occupancyAttribute: 'all',
           genderAttribute: 'none',
           accessibilityAttributes: [],
@@ -231,15 +205,18 @@ describe('BedspaceSearchController', () => {
           ...request.query,
           allPdus: referenceData.pdus,
           wheelchairAccessibilityItems: wheelchairAccessibility.map(attr => ({
-            text: attr.name,
+            text: attr.description,
             value: attr.id,
           })),
           occupancyItems: [
             { text: 'All', value: 'all' },
-            ...occupancy.map(attr => ({ text: attr.name, value: attr.id })),
+            ...occupancy.map(attr => ({ text: attr.description, value: attr.id })),
           ],
-          genderItems: [{ text: 'None', value: 'none' }, ...gender.map(attr => ({ text: attr.name, value: attr.id }))],
-          sexualRiskItems: sexualRisk.map(attr => ({ text: attr.name, value: attr.id })),
+          genderItems: [
+            { text: 'None', value: 'none' },
+            ...gender.map(attr => ({ text: attr.description, value: attr.id })),
+          ],
+          sexualRiskItems: sexualRisk.map(attr => ({ text: attr.description, value: attr.id })),
           occupancyAttribute: 'all',
           genderAttribute: 'none',
           accessibilityAttributes: [],

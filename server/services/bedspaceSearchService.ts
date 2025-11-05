@@ -1,17 +1,18 @@
-import type { Cas3BedspaceSearchParameters, Characteristic } from '@approved-premises/api'
+import type { Cas3BedspaceSearchParameters, Cas3ReferenceData, Characteristic } from '@approved-premises/api'
 import { ReferenceData } from '../@types/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
 import BedspaceClient from '../data/bedspaceClient'
 import { CallConfig } from '../data/restClient'
-import { filterCharacteristics } from '../utils/characteristicUtils'
+import { characteristicToCas3ReferenceData, filterCharacteristics } from '../utils/characteristicUtils'
 import { cas3BedspaceSearchResultsToCas3v2BedspaceSearchResults } from '../utils/bedspaceSearchUtils'
+import config from '../config'
 
 export type BedspaceSearchReferenceData = {
   pdus: Array<ReferenceData>
-  wheelchairAccessibility: Array<Characteristic>
-  occupancy: Array<Characteristic>
-  gender: Array<Characteristic>
-  sexualRisk: Array<Characteristic>
+  wheelchairAccessibility: Array<Cas3ReferenceData>
+  occupancy: Array<Cas3ReferenceData>
+  gender: Array<Cas3ReferenceData>
+  sexualRisk: Array<Cas3ReferenceData>
 }
 
 export default class BedspaceSearchService {
@@ -35,15 +36,23 @@ export default class BedspaceSearchService {
       })
     ).sort((a, b) => a.name.localeCompare(b.name))
 
-    const bedspaceAttributes = filterCharacteristics(
-      await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
-      'room',
-    ).sort((a, b) => a.name.localeCompare(b.name))
+    const bedspaceAttributes = (
+      config.flags.enableCas3v2Api
+        ? await referenceDataClient.getCas3ReferenceData('BEDSPACE_CHARACTERISTICS')
+        : filterCharacteristics(
+            await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
+            'room',
+          ).map(characteristicToCas3ReferenceData)
+    ).sort((a, b) => a.description.localeCompare(b.description))
 
-    const premisesAttributes = filterCharacteristics(
-      await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
-      'premises',
-    ).sort((a, b) => a.name.localeCompare(b.name))
+    const premisesAttributes = (
+      config.flags.enableCas3v2Api
+        ? await referenceDataClient.getCas3ReferenceData('PREMISES_CHARACTERISTICS')
+        : filterCharacteristics(
+            await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
+            'premises',
+          ).map(characteristicToCas3ReferenceData)
+    ).sort((a, b) => a.description.localeCompare(b.description))
 
     const wheelchairAccessibility = this.filterByPropertyNames(bedspaceAttributes, 'isWheelchairAccessible')
     const occupancy = this.filterByPropertyNames(premisesAttributes, ['isSharedProperty', 'isSingleOccupancy'])
@@ -56,21 +65,24 @@ export default class BedspaceSearchService {
     return { pdus, wheelchairAccessibility, occupancy, gender, sexualRisk }
   }
 
-  private filterByPropertyNames(characteristics: Characteristic[], propertyNames: string | string[]): Characteristic[] {
+  private filterByPropertyNames(
+    characteristics: Array<Cas3ReferenceData>,
+    propertyNames: string | string[],
+  ): Array<Cas3ReferenceData> {
     const propertyNamesArray = Array.isArray(propertyNames) ? propertyNames : [propertyNames]
 
-    return characteristics.filter(item => propertyNamesArray.includes(item.propertyName))
+    return characteristics.filter(item => propertyNamesArray.includes(item.name))
   }
 
   private filterByPropertyNamesAndReplace(
-    characteristics: Characteristic[],
+    characteristics: Array<Cas3ReferenceData>,
     propertyNamesMap: Record<string, string>,
-  ): Characteristic[] {
+  ): Array<Cas3ReferenceData> {
     return characteristics
-      .filter(item => Object.keys(propertyNamesMap).includes(item.propertyName))
+      .filter(item => Object.keys(propertyNamesMap).includes(item.name))
       .map(item => ({
         ...item,
-        name: propertyNamesMap[item.propertyName] || item.propertyName,
+        description: propertyNamesMap[item.name] || item.name,
       }))
   }
 }

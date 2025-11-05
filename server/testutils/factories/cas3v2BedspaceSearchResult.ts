@@ -47,9 +47,9 @@ const premisesToPremisesSummary = (premises: Cas3Premises): Cas3BedspaceSearchRe
   addressLine2: premises.addressLine2,
   town: premises.town,
   postcode: premises.postcode,
-  characteristics: premises.characteristics.map(characteristic => ({
+  characteristics: premises.premisesCharacteristics.map(characteristic => ({
     name: characteristic.name,
-    description: characteristic.name,
+    description: characteristic.description,
   })),
   bedspaceCount: faker.number.int({ min: 1, max: 10 }),
   notes: premises.notes,
@@ -58,8 +58,8 @@ const premisesToPremisesSummary = (premises: Cas3Premises): Cas3BedspaceSearchRe
 const bedspaceToBedspaceSummary = (bedspace: Cas3Bedspace): Cas3BedspaceSearchResultBedspaceSummary => ({
   id: bedspace.id,
   reference: bedspace.reference,
-  characteristics: bedspace.characteristics.map(characteristic => ({
+  characteristics: bedspace.bedspaceCharacteristics.map(characteristic => ({
     name: characteristic.name,
-    description: characteristic.name,
+    description: characteristic.description,
   })),
 })

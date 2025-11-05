@@ -3,6 +3,7 @@ import {
   Cas3Premises,
   Cas3PremisesArchiveAction,
   Cas3PremisesBedspaceTotals,
+  Cas3PremisesCharacteristic,
   Cas3PremisesSearchResult,
   Cas3PremisesSearchResults,
   Cas3PremisesStatus,
@@ -174,7 +175,7 @@ export const summaryList = (premises: Cas3Premises): SummaryList => {
     },
     {
       key: { text: 'Property details' },
-      value: htmlValue(formatDetails(premises.id, premises.characteristics)),
+      value: htmlValue(formatDetails(premises.id, premises.premisesCharacteristics)),
     },
     {
       key: { text: 'Additional property details' },
@@ -305,13 +306,13 @@ const formatTurnaround = (numberOfDays: number | undefined): string => {
   return `${numberOfDays} working days`
 }
 
-const formatDetails = (premisesId: string, characteristics: Array<Characteristic>): string => {
+const formatDetails = (premisesId: string, characteristics: Array<Cas3PremisesCharacteristic>): string => {
   if (!characteristics || characteristics.length === 0) {
     return `<p>None</p><p><a href="${paths.premises.edit({ premisesId })}">Add property details</a></p>`
   }
 
   return characteristics
-    .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
+    .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.description}</span>`)
     .join(' ')
 }
 
@@ -373,3 +374,19 @@ const formatPremisesStatus = (premises: Cas3Premises): string => {
 }
 
 const formatNotes = (notes: string): string => notes.replace(/\n/g, '<br />')
+
+// TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities and all usages
+export const characteristicToPremisesCharacteristic = (characteristic: Characteristic): Cas3PremisesCharacteristic => ({
+  id: characteristic.id,
+  description: characteristic.name,
+  name: characteristic.propertyName,
+})
+
+export const populatePremisesCharacteristics = (premises: Cas3Premises): Cas3Premises => {
+  if (premises.premisesCharacteristics) return premises
+
+  return {
+    ...premises,
+    premisesCharacteristics: premises.characteristics.map(characteristicToPremisesCharacteristic),
+  }
+}

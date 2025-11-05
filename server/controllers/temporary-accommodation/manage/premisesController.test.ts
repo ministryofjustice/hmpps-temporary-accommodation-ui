@@ -14,6 +14,7 @@ import {
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
+  cas3ReferenceDataFactory,
   cas3UpdatePremisesFactory,
   placeContextFactory,
   probationRegionFactory,
@@ -44,9 +45,13 @@ jest.mock('../../../utils/userUtils')
 describe('PremisesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
 
+  const displayedCharacteristics = [
+    cas3ReferenceDataFactory.build({ description: 'Ground floor' }),
+    cas3ReferenceDataFactory.build({ description: 'Shared kitchen' }),
+  ]
   const referenceData = {
     localAuthorities: referenceDataFactory.localAuthority().buildList(5),
-    characteristics: referenceDataFactory.characteristic('premises').buildList(5),
+    characteristics: [...displayedCharacteristics, cas3ReferenceDataFactory.build({ description: 'Other' })],
     probationRegions: referenceDataFactory.probationRegion().buildList(5),
     pdus: referenceDataFactory.pdu().buildList(5),
   }
@@ -843,7 +848,7 @@ describe('PremisesController', () => {
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities: referenceData.localAuthorities,
-        characteristics: referenceData.characteristics,
+        characteristics: displayedCharacteristics,
         pdus: referenceData.pdus,
         probationRegions: filteredRegions,
         errors: {},
@@ -864,7 +869,7 @@ describe('PremisesController', () => {
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities: referenceData.localAuthorities,
-        characteristics: referenceData.characteristics,
+        characteristics: displayedCharacteristics,
         pdus: referenceData.pdus,
         probationRegions: filteredRegions,
         errors: errorsAndUserInput.errors,
@@ -964,7 +969,7 @@ describe('PremisesController', () => {
         errors: {},
         errorSummary: [],
         localAuthorities: referenceData.localAuthorities,
-        characteristics: referenceData.characteristics,
+        characteristics: displayedCharacteristics,
         probationRegions: filteredRegions,
         pdus: referenceData.pdus,
         summary: summaryList,
@@ -976,7 +981,7 @@ describe('PremisesController', () => {
         localAuthorityAreaId: premises.localAuthorityArea.id,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
-        characteristicIds: premises.characteristics.map(ch => ch.id),
+        characteristicIds: premises.premisesCharacteristics.map(ch => ch.id),
         notes: premises.notes,
         turnaroundWorkingDays: premises.turnaroundWorkingDays,
       })
@@ -986,7 +991,7 @@ describe('PremisesController', () => {
       const premisesWithMissingOptionalFields: Cas3Premises = {
         ...premises,
         localAuthorityArea: undefined,
-        characteristics: undefined,
+        premisesCharacteristics: undefined,
       }
       premisesService.getSinglePremises.mockResolvedValue(premisesWithMissingOptionalFields)
 
@@ -1002,7 +1007,7 @@ describe('PremisesController', () => {
         errors: {},
         errorSummary: [],
         localAuthorities: referenceData.localAuthorities,
-        characteristics: referenceData.characteristics,
+        characteristics: displayedCharacteristics,
         probationRegions: filteredRegions,
         pdus: referenceData.pdus,
         summary: summaryList,
@@ -1032,7 +1037,7 @@ describe('PremisesController', () => {
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         localAuthorities: referenceData.localAuthorities,
-        characteristics: referenceData.characteristics,
+        characteristics: displayedCharacteristics,
         pdus: referenceData.pdus,
         probationRegions: filteredRegions,
         errors: errorsAndUserInput.errors,
@@ -1047,7 +1052,7 @@ describe('PremisesController', () => {
         localAuthorityAreaId: premises.localAuthorityArea.id,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
-        characteristicIds: premises.characteristics.map(ch => ch.id),
+        characteristicIds: premises.premisesCharacteristics.map(ch => ch.id),
         notes: premises.notes,
         turnaroundWorkingDays: premises.turnaroundWorkingDays,
       })

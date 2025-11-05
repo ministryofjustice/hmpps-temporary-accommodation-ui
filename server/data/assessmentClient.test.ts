@@ -10,7 +10,7 @@ import {
   assessmentFactory,
   cas3AssessmentSummariesFactory,
   cas3AssessmentSummaryFactory,
-  newReferralHistoryUserNoteFactory,
+  cas3ReferralHistoryUserNoteFactory,
 } from '../testutils/factories'
 import AssessmentClient from './assessmentClient'
 import { CallConfig } from './restClient'
@@ -21,7 +21,7 @@ describeClient('AssessmentClient', provider => {
   let assessment: Assessment
   let assessments: ReturnType<typeof cas3AssessmentSummariesFactory.build>
   let assessmentSummaryList: Array<ReturnType<typeof cas3AssessmentSummaryFactory.build>>
-  let newNote: ReturnType<typeof newReferralHistoryUserNoteFactory.build>
+  let newNote: ReturnType<typeof cas3ReferralHistoryUserNoteFactory.build>
   const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
@@ -29,7 +29,7 @@ describeClient('AssessmentClient', provider => {
     assessment = assessmentFactory.build()
     assessments = cas3AssessmentSummariesFactory.build()
     assessmentSummaryList = cas3AssessmentSummaryFactory.buildList(5)
-    newNote = newReferralHistoryUserNoteFactory.build()
+    newNote = cas3ReferralHistoryUserNoteFactory.build()
   })
 
   describe('all', () => {
@@ -342,7 +342,7 @@ describeClient('AssessmentClient', provider => {
         uponReceiving: 'a request to create assessment note',
         withRequest: {
           method: 'POST',
-          path: paths.assessments.notes({ id: assessment.id }),
+          path: paths.cas3.assessments.notes({ id: assessment.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

@@ -12,7 +12,7 @@ import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   assessmentFactory,
   assessmentSummaryFactory,
-  newReferralHistoryUserNoteFactory,
+  cas3ReferralHistoryUserNoteFactory,
   timelineEventsFactory,
 } from '../../../../server/testutils/factories'
 import { MockPagination } from '../../../mockApis/bookingSearch'
@@ -480,7 +480,7 @@ context('Apply', () => {
         const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment, timeline)
 
         // When I create a new notes
-        const newNote = newReferralHistoryUserNoteFactory.build()
+        const newNote = cas3ReferralHistoryUserNoteFactory.build()
 
         cy.task('stubCreateAssessmentNote', assessment)
         assessmentSummaryPage.createNote(newNote.message)

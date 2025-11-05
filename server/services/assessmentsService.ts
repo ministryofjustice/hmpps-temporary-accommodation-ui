@@ -9,7 +9,7 @@ import type {
 import type {
   TemporaryAccommodationAssessment as Assessment,
   AssessmentRejection,
-  NewReferralHistoryUserNote as NewNote,
+  Cas3ReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
   TemporaryAccommodationAssessmentStatus,
 } from '../@types/shared'

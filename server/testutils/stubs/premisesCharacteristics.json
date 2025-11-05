@@ -20,6 +20,11 @@
     "name": "isMenOnly"
   },
   {
+    "id": "c0fc6e07-4ca3-45ac-88ea-375479e1419f",
+    "description": "Not suitable for those with an arson history",
+    "name": "notSuitableForArsonHistory"
+  },
+  {
     "id": "8221f1ad-3aaf-406a-b918-dbdef956ea17",
     "description": "Women only",
     "name": "isWomenOnly"
@@ -28,16 +33,6 @@
     "id": "99bb0f33-ff92-4606-9d1c-43bcf0c42ef4",
     "description": "Ground floor level access",
     "name": "isGroundFloor"
-  },
-  {
-    "id": "62c4d8cf-b612-4110-9e27-5c29982f9fcf",
-    "description": "Not suitable for arson offenders",
-    "name": "notSuitableForArsonOffenders"
-  },
-  {
-    "id": "c0fc6e07-4ca3-45ac-88ea-375479e1419f",
-    "description": "Not suitable for those with an arson history",
-    "name": "notSuitableForArsonHistory"
   },
   {
     "id": "cb7447cd-d629-4c89-be93-cd48c1060af8",
@@ -80,18 +75,8 @@
     "name": "isRural"
   },
   {
-    "id": "9fb21592-7cca-4ef2-98ca-5fcef22c8ee6",
-    "description": "Other – please state in notes",
-    "name": "other"
-  },
-  {
     "id": "7f805b33-048e-4034-9ded-21947bf5c728",
     "description": "Close proximity to another CAS3 property",
     "name": "isCloseAnotherCas3Property"
-  },
-  {
-    "id": "a2dd4661-c7fe-4294-b3fd-3fc877e62aa5",
-    "description": "Not suitable for registered sex offenders (RSO)",
-    "name": "notSuitableForRegisteredSexOffenders(RSO)"
   }
 ]

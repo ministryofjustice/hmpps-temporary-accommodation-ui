@@ -108,12 +108,6 @@
     "modelScope": "premises"
   },
   {
-    "id": "9fb21592-7cca-4ef2-98ca-5fcef22c8ee6",
-    "name": "Other – please state in notes",
-    "propertyName": "other",
-    "modelScope": "*"
-  },
-  {
     "id": "7f805b33-048e-4034-9ded-21947bf5c728",
     "name": "Close proximity to another CAS3 property",
     "propertyName": "isCloseAnotherCas3Property",

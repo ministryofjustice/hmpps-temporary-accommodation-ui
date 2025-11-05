@@ -1090,7 +1090,7 @@ context('Premises', () => {
       // When I don't enter the required fields
       page.enterAddress('', 'Some address line 2', 'Some town', '')
       page.enterLocalAuthority('Northumberland')
-      page.enterCharacteristics(['Pub nearby', 'Wheelchair accessible'])
+      page.enterCharacteristics(['Pub nearby', 'Shared entrance'])
       page.enterAdditionalDetails('Lorem ipsum dolor sit amet.')
       page.enterWorkingDays(5)
 
@@ -1119,7 +1119,7 @@ context('Premises', () => {
       page.validateEnteredAddressLine2('Some address line 2')
       page.validateEnteredTown('Some town')
       page.validateEnteredLocalAuthority('Northumberland')
-      page.validateEnteredCharacteristics(['Pub nearby', 'Wheelchair accessible'])
+      page.validateEnteredCharacteristics(['Pub nearby', 'Shared entrance'])
       page.validateEnteredAdditionalDetails('Lorem ipsum dolor sit amet.')
       page.validateEnteredWorkingDays(5)
     })
@@ -1227,8 +1227,8 @@ context('Premises', () => {
         name: 'Newcastle Upon Tyne',
       }
       const updatedCharacteristics: Array<Cas3PremisesCharacteristic> = [
-        cas3PremisesCharacteristicsFactory.byDescription('Not suitable for arson offenders'),
-        cas3PremisesCharacteristicsFactory.byDescription('Pub nearby'),
+        cas3PremisesCharacteristicsFactory.byDescription('Not suitable for those with an arson history'),
+        cas3PremisesCharacteristicsFactory.byDescription('Shared entrance'),
       ]
       const updatedPremises = cas3UpdatePremisesFactory.build({
         localAuthorityAreaId: updatedLocalAuthorityArea.id,

@@ -57,18 +57,18 @@ const cas3Api = {
     show: cas3v2SinglePremisesPath,
     create: cas3v2PremisesPath,
     update: cas3v2SinglePremisesPath,
-    canArchive: cas3SinglePremisesPath.path('can-archive'), // Not yet available as /cas3/v2
+    canArchive: cas3v2SinglePremisesPath.path('can-archive'),
     archive: cas3v2SinglePremisesPath.path('archive'),
     unarchive: cas3v2SinglePremisesPath.path('unarchive'),
     cancelArchive: cas3v2SinglePremisesPath.path('cancel-archive'),
-    cancelUnarchive: cas3SinglePremisesPath.path('cancel-unarchive'), // Not yet available as /cas3/v2
+    cancelUnarchive: cas3v2SinglePremisesPath.path('cancel-unarchive'),
     totals: cas3v2SinglePremisesPath.path('bedspace-totals'),
     bedspaces: {
       show: cas3v2SingleBedspacePath,
       create: cas3v2BedspacesPath,
       get: cas3v2BedspacesPath,
       update: cas3v2SingleBedspacePath,
-      canArchive: cas3SingleBedspacePath.path('can-archive'), // Not yet available as /cas3/v2
+      canArchive: cas3v2SingleBedspacePath.path('can-archive'),
       archive: cas3v2SingleBedspacePath.path('archive'),
       unarchive: cas3v2SingleBedspacePath.path('unarchive'),
       cancelArchive: cas3v2SingleBedspacePath.path('cancel-archive'),

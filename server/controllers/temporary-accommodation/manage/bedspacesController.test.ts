@@ -7,16 +7,16 @@ import BedspaceService from '../../../services/bedspaceService'
 import BedspacesController from './bedspacesController'
 import {
   assessmentFactory,
+  cas3BedspaceCharacteristicsFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3BookingFactory,
   cas3PremisesFactory,
+  cas3ReferenceDataFactory,
   cas3UpdateBedspaceFactory,
   cas3VoidBedspaceFactory,
-  characteristicFactory,
   placeContextFactory,
   probationRegionFactory,
-  referenceDataFactory,
 } from '../../../testutils/factories'
 import {
   catchValidationErrorOrPropogate,
@@ -47,8 +47,13 @@ describe('BedspacesController', () => {
   const bookingId = 'some-booking-id'
   const lostBedId = 'some-lost-bed-id'
 
+  const displayedCharacteristics = [
+    cas3ReferenceDataFactory.build({ description: 'Self-catering' }),
+    cas3ReferenceDataFactory.build({ description: 'Suitable for foo' }),
+  ]
+
   const referenceData = {
-    characteristics: referenceDataFactory.characteristic('room').buildList(5),
+    characteristics: [...displayedCharacteristics, cas3ReferenceDataFactory.build({ description: 'Other' })],
   }
   const assessment = assessmentFactory.build({ status: 'ready_to_place' })
   const placeContext = placeContextFactory.build({ assessment })
@@ -109,7 +114,7 @@ describe('BedspacesController', () => {
       expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/new', {
-        allCharacteristics: referenceData.characteristics,
+        allCharacteristics: displayedCharacteristics,
         characteristicIds: [],
         premises,
         hasScheduledArchive: false,
@@ -145,7 +150,7 @@ describe('BedspacesController', () => {
       expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/new', {
-        allCharacteristics: referenceData.characteristics,
+        allCharacteristics: displayedCharacteristics,
         characteristicIds: [],
         premises,
         hasScheduledArchive: true,
@@ -225,8 +230,8 @@ describe('BedspacesController', () => {
   })
 
   describe('show', () => {
-    const characteristic1 = characteristicFactory.build({ serviceScope: 'temporary-accommodation' })
-    const characteristic2 = characteristicFactory.build({ serviceScope: 'temporary-accommodation' })
+    const characteristic1 = cas3BedspaceCharacteristicsFactory.build()
+    const characteristic2 = cas3BedspaceCharacteristicsFactory.build()
 
     const premises = cas3PremisesFactory.build({
       id: premisesId,
@@ -240,7 +245,7 @@ describe('BedspacesController', () => {
       id: bedspaceId,
       status: 'online',
       startDate: '2024-11-23',
-      characteristics: [characteristic1, characteristic2],
+      bedspaceCharacteristics: [characteristic1, characteristic2],
     })
     const onlineBedspaceActions = [
       {
@@ -268,7 +273,7 @@ describe('BedspacesController', () => {
       id: bedspaceId,
       status: 'archived',
       startDate: '2023-10-22',
-      characteristics: [characteristic1],
+      bedspaceCharacteristics: [characteristic1],
     })
     const archivedBedspaceActions = [
       {
@@ -287,7 +292,7 @@ describe('BedspacesController', () => {
       status: 'upcoming',
       scheduleUnarchiveDate: '2125-09-21',
       archiveHistory: [{ status: 'archived', date: '2024-01-01' }],
-      characteristics: [characteristic2],
+      bedspaceCharacteristics: [characteristic2],
     })
     const upcomingBedspaceActions = [
       {
@@ -386,10 +391,10 @@ describe('BedspacesController', () => {
         summary: premisesUtils.shortSummaryList(premises),
         errors: {},
         errorSummary: [],
-        characteristics: referenceData.characteristics.filter(ch => ch.propertyName !== 'other'),
+        characteristics: displayedCharacteristics,
         reference: bedspace.reference,
         notes: bedspace.notes,
-        characteristicIds: bedspace.characteristics.map(ch => ch.id),
+        characteristicIds: bedspace.bedspaceCharacteristics.map(ch => ch.id),
       })
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
@@ -418,11 +423,11 @@ describe('BedspacesController', () => {
         summary: premisesUtils.shortSummaryList(premises),
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
-        characteristics: referenceData.characteristics.filter(ch => ch.propertyName !== 'other'),
+        characteristics: displayedCharacteristics,
         ...errorsAndUserInput.userInput,
         reference: bedspace.reference,
         notes: bedspace.notes,
-        characteristicIds: bedspace.characteristics.map(ch => ch.id),
+        characteristicIds: bedspace.bedspaceCharacteristics.map(ch => ch.id),
       })
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)

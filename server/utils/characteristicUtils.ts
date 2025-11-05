@@ -1,6 +1,4 @@
-import { Characteristic } from '../@types/shared'
-import { SummaryListItem } from '../@types/ui'
-import { escape } from './viewUtils'
+import { Cas3ReferenceData, Characteristic } from '../@types/shared'
 
 export const filterCharacteristics = (
   characteristics: Array<Characteristic>,
@@ -11,13 +9,9 @@ export const filterCharacteristics = (
   )
 }
 
-export const formatCharacteristics = (characteristics: Array<Characteristic>): SummaryListItem['value'] => {
-  const characteristicNames = (characteristics || [])
-    .map(characteristic => characteristic.name)
-    .sort((a, b) => a.localeCompare(b))
-    .map(name => escape(name))
-
-  return characteristicNames.length > 0
-    ? { html: `<ul><li>${characteristicNames.join('</li><li>')}</li></ul>` }
-    : { text: '' }
-}
+// TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utility and all usages
+export const characteristicToCas3ReferenceData = (characteristic: Characteristic): Cas3ReferenceData => ({
+  id: characteristic.id,
+  description: characteristic.name,
+  name: characteristic.propertyName,
+})

@@ -28,8 +28,8 @@ export default class BedspaceShowPage extends Page {
   }
 
   shouldShowDetails(): void {
-    this.bedspace.characteristics.forEach(characteristic => {
-      cy.get('main dl').get('dd').eq(2).contains(characteristic.name)
+    this.bedspace.bedspaceCharacteristics.forEach(characteristic => {
+      cy.get('main dl').get('dd').eq(2).contains(characteristic.description)
     })
   }
 
@@ -55,8 +55,8 @@ export default class BedspaceShowPage extends Page {
       .children('span')
       .as('propertyDetails')
 
-    this.premises.characteristics.forEach(characteristic => {
-      cy.get('@propertyDetails').contains(characteristic.name)
+    this.premises.premisesCharacteristics.forEach(characteristic => {
+      cy.get('@propertyDetails').contains(characteristic.description)
     })
   }
 

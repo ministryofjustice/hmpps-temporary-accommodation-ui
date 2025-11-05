@@ -53,7 +53,7 @@ export default class BedspacesController {
       )
 
       return res.render('temporary-accommodation/bedspaces/new', {
-        allCharacteristics: allCharacteristics.filter(c => c.propertyName !== 'other'),
+        allCharacteristics: allCharacteristics.filter(c => c.name !== 'other'),
         characteristicIds: [],
         premises,
         hasScheduledArchive,
@@ -153,7 +153,7 @@ export default class BedspacesController {
       const userInput = {
         reference: bedspace.reference,
         notes: bedspace.notes ?? '',
-        characteristicIds: bedspace.characteristics?.map(ch => ch.id) ?? [],
+        characteristicIds: bedspace.bedspaceCharacteristics?.map(ch => ch.id) ?? [],
         ...errorsAndUserInput.userInput,
       }
 
@@ -162,7 +162,7 @@ export default class BedspacesController {
         bedspaceId,
         errors,
         errorSummary,
-        characteristics: characteristics.filter(ch => ch.propertyName !== 'other'),
+        characteristics: characteristics.filter(ch => ch.name !== 'other'),
         summary,
         ...userInput,
       })

@@ -2,14 +2,14 @@ import { Cas3v2BedspaceSearchResult, Cas3v2BedspaceSearchResultOverlap } from '@
 
 export function premisesKeyCharacteristics(result: Cas3v2BedspaceSearchResult): Array<string> {
   return result.premises.characteristics
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map(characteristic => characteristic.name)
+    .sort((a, b) => a.description.localeCompare(b.description))
+    .map(characteristic => characteristic.description)
 }
 
 export function bedspaceKeyCharacteristics(result: Cas3v2BedspaceSearchResult): Array<string> {
   return result.bedspace.characteristics
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map(characteristic => characteristic.name)
+    .sort((a, b) => a.description.localeCompare(b.description))
+    .map(characteristic => characteristic.description)
 }
 
 export function bedspaceOverlapResult(overlapResult: Cas3v2BedspaceSearchResultOverlap) {

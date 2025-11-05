@@ -1,15 +1,21 @@
-import { Cas3BedspaceStatus, Cas3Premises, Cas3PremisesBedspaceTotals, Characteristic } from '@approved-premises/api'
 import {
+  Cas3BedspaceCharacteristic,
+  Cas3BedspaceStatus,
+  Cas3Premises,
+  Cas3PremisesBedspaceTotals,
+} from '@approved-premises/api'
+import {
+  cas3BedspaceCharacteristicsFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3BookingFactory,
   cas3NewBedspaceFactory,
+  cas3PremisesCharacteristicsFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3UpdateBedspaceFactory,
   cas3VoidBedspaceFactory,
-  characteristicFactory,
 } from '../../../../server/testutils/factories'
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 
@@ -160,7 +166,7 @@ context('Bedspace', () => {
       const bedspace = cas3BedspaceFactory.build()
       const newBedspace = cas3NewBedspaceFactory.build({
         reference: bedspace.reference,
-        characteristicIds: bedspace.characteristics.map(characteristic => characteristic.id),
+        characteristicIds: bedspace.bedspaceCharacteristics.map(characteristic => characteristic.id),
         notes: bedspace.notes,
         startDate: bedspace.startDate,
       })
@@ -295,7 +301,7 @@ context('Bedspace', () => {
       // And there is an active premises in the database
       const premises = cas3PremisesFactory.build({
         status: 'online',
-        characteristics: characteristicFactory.buildList(5),
+        premisesCharacteristics: cas3PremisesCharacteristicsFactory.buildList(5),
       })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2024-01-02' })
@@ -327,7 +333,7 @@ context('Bedspace', () => {
       // And there is an active premises in the database
       const premises = cas3PremisesFactory.build({
         status: 'online',
-        characteristics: [],
+        premisesCharacteristics: [],
       })
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2024-01-02' })
@@ -486,21 +492,11 @@ context('Bedspace', () => {
 
     it('should show the existing bedspace information on the edit page', () => {
       // And there is an online premises in the database with an online bedspace
-      const characteristics: Array<Characteristic> = [
-        {
-          id: '12e2e689-b3fb-469d-baec-2fb68e15e85b',
-          name: 'Single bed',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'room',
-        },
-        {
-          id: '7dd3bac5-3d1c-4acb-b110-b1614b2c95d8',
-          name: 'Shared kitchen',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'room',
-        },
+      const bedspaceCharacteristics: Array<Cas3BedspaceCharacteristic> = [
+        cas3BedspaceCharacteristicsFactory.byDescription('Single bed'),
+        cas3BedspaceCharacteristicsFactory.byDescription('Shared kitchen'),
       ]
-      const bedspace = cas3BedspaceFactory.build({ status: 'online', characteristics })
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', bedspaceCharacteristics })
       const premises = cas3PremisesFactory.build({ status: 'online' })
       cy.task('stubSinglePremises', premises)
       cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -515,21 +511,11 @@ context('Bedspace', () => {
 
     it('should redirect to the existing bedspace when the bedspace is updated successfully', () => {
       // And there is an online premises in the database with an online bedspace
-      const characteristics: Array<Characteristic> = [
-        {
-          id: '12e2e689-b3fb-469d-baec-2fb68e15e85b',
-          name: 'Single bed',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'room',
-        },
-        {
-          id: '7dd3bac5-3d1c-4acb-b110-b1614b2c95d8',
-          name: 'Shared kitchen',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'room',
-        },
+      const bedspaceCharacteristics: Array<Cas3BedspaceCharacteristic> = [
+        cas3BedspaceCharacteristicsFactory.byDescription('Single bed'),
+        cas3BedspaceCharacteristicsFactory.byDescription('Shared kitchen'),
       ]
-      const bedspace = cas3BedspaceFactory.build({ status: 'online', characteristics })
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', bedspaceCharacteristics })
       const premises = cas3PremisesFactory.build({ status: 'online' })
       const bookings = cas3BookingFactory
         .params({
@@ -552,33 +538,23 @@ context('Bedspace', () => {
       const page = BedspaceEditPage.visit(premises, bedspace)
 
       // And update the bedspace details
-      const updatedCharacteristics: Array<Characteristic> = [
-        {
-          id: 'e730bdea-6157-4910-b1b0-450b29bf0c9f',
-          name: 'Shared bathroom',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'room',
-        },
-        {
-          id: '08b756e2-0b82-4f49-a124-35ea4ebb1634',
-          name: 'Double bed',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'room',
-        },
+      const updatedCharacteristics: Array<Cas3BedspaceCharacteristic> = [
+        cas3BedspaceCharacteristicsFactory.byDescription('Shared bathroom'),
+        cas3BedspaceCharacteristicsFactory.byDescription('Double bed'),
       ]
       const updatedBedspace = cas3UpdateBedspaceFactory.build({
         characteristicIds: updatedCharacteristics.map(ch => ch.id),
       })
       page.clearForm()
       page.enterReference(updatedBedspace.reference)
-      page.enterCharacteristics(updatedCharacteristics.map(ch => ch.name))
+      page.enterCharacteristics(updatedCharacteristics.map(ch => ch.description))
       page.enterAdditionalDetails(updatedBedspace.notes)
 
       // And the backend responds with 200 ok
       const expectedBedspace = cas3BedspaceFactory.build({
         ...bedspace,
         ...updatedBedspace,
-        characteristics: updatedCharacteristics,
+        bedspaceCharacteristics: updatedCharacteristics,
       })
       cy.task('stubBedspaceUpdate', { premisesId: premises.id, bedspace })
       cy.task('stubBedspace', { premisesId: premises.id, bedspace: expectedBedspace })
@@ -610,21 +586,11 @@ context('Bedspace', () => {
 
     it('should show errors when editing a bedspace fails', () => {
       // And there is an online premises in the database with an online bedspace
-      const characteristics: Array<Characteristic> = [
-        {
-          id: '12e2e689-b3fb-469d-baec-2fb68e15e85b',
-          name: 'Single bed',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'room',
-        },
-        {
-          id: '7dd3bac5-3d1c-4acb-b110-b1614b2c95d8',
-          name: 'Shared kitchen',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'room',
-        },
+      const bedspaceCharacteristics: Array<Cas3BedspaceCharacteristic> = [
+        cas3BedspaceCharacteristicsFactory.byDescription('Single bed'),
+        cas3BedspaceCharacteristicsFactory.byDescription('Shared kitchen'),
       ]
-      const bedspace = cas3BedspaceFactory.build({ status: 'online', characteristics })
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', bedspaceCharacteristics })
       const premises = cas3PremisesFactory.build({ status: 'online' })
       cy.task('stubSinglePremises', premises)
       cy.task('stubBedspace', { premisesId: premises.id, bedspace })
@@ -652,7 +618,7 @@ context('Bedspace', () => {
       page.shouldShowErrorMessagesForFields(['reference'], 'empty')
 
       // And I should see the previous bedspace information
-      page.validateEnteredCharacteristics(bedspace.characteristics.map(ch => ch.name))
+      page.validateEnteredCharacteristics(bedspace.bedspaceCharacteristics.map(ch => ch.description))
       page.validateEnteredAdditionalDetails(bedspace.notes)
     })
   })

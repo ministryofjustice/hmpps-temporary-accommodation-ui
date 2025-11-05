@@ -30,11 +30,11 @@ export default class BedspaceSearchResult extends Component {
         }
 
         this.result.premises.characteristics.forEach(characteristic => {
-          cy.get('ul[data-cy-premises-key-characteristics] > li').should('contain', characteristic.name)
+          cy.get('ul[data-cy-premises-key-characteristics] > li').should('contain', characteristic.description)
         })
 
         this.result.bedspace.characteristics.forEach(characteristic => {
-          cy.get('ul[data-cy-bedspace-key-characteristics] > li').should('contain', characteristic.name)
+          cy.get('ul[data-cy-bedspace-key-characteristics] > li').should('contain', characteristic.description)
         })
 
         cy.get('div[data-cy-premises-notes]').within(() => {

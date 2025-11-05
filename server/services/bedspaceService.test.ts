@@ -99,6 +99,19 @@ describe('BedspaceService', () => {
     })
   })
 
+  describe('archiveBedspace', () => {
+    it('calls the client to archive the bedspace', async () => {
+      const bedspaceId = 'some-bedspace-id'
+      const restartDate = '2025-01-15'
+      bedspaceClient.archive.mockResolvedValue()
+
+      await service.archiveBedspace(callConfig, premisesId, bedspaceId, restartDate)
+
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.archive).toHaveBeenCalledWith(premisesId, bedspaceId, { endDate: restartDate })
+    })
+  })
+
   describe('cancelArchiveBedspace', () => {
     it('calls the client to cancel the archive for the bedspace and returns the bedspace', async () => {
       const bedspace = cas3BedspaceFactory.build()
@@ -124,6 +137,39 @@ describe('BedspaceService', () => {
 
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.unarchive).toHaveBeenCalledWith(premisesId, bedspaceId, { restartDate })
+    })
+  })
+
+  describe('cancelUnarchiveBedspace', () => {
+    it('calls the client to cancel the archive for the bedspace and returns the bedspace', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      bedspaceClient.cancelUnarchive.mockResolvedValue(bedspace)
+
+      const result = await service.cancelUnarchiveBedspace(callConfig, premisesId, bedspace.id)
+
+      expect(result).toEqual(bedspace)
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.cancelUnarchive).toHaveBeenCalledWith(premisesId, bedspace.id)
+
+      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
+    })
+  })
+
+  describe('canArchiveBedspace', () => {
+    it('calls the client to cancel the archive for the bedspace and returns the bedspace', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      const response = {
+        date: bedspace.endDate,
+        entityId: bedspace.id,
+        entityReference: 'foo',
+      }
+      bedspaceClient.canArchive.mockResolvedValue(response)
+
+      const result = await service.canArchiveBedspace(callConfig, premisesId, bedspace.id)
+
+      expect(result).toEqual(response)
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.canArchive).toHaveBeenCalledWith(premisesId, bedspace.id)
     })
   })
 

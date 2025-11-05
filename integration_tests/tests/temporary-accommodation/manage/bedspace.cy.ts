@@ -493,7 +493,7 @@ context('Bedspace', () => {
     it('should show the existing bedspace information on the edit page', () => {
       // And there is an online premises in the database with an online bedspace
       const bedspaceCharacteristics: Array<Cas3BedspaceCharacteristic> = [
-        cas3BedspaceCharacteristicsFactory.byDescription('Single bed'),
+        cas3BedspaceCharacteristicsFactory.byDescription('Ground floor level access'),
         cas3BedspaceCharacteristicsFactory.byDescription('Shared kitchen'),
       ]
       const bedspace = cas3BedspaceFactory.build({ status: 'online', bedspaceCharacteristics })
@@ -512,7 +512,7 @@ context('Bedspace', () => {
     it('should redirect to the existing bedspace when the bedspace is updated successfully', () => {
       // And there is an online premises in the database with an online bedspace
       const bedspaceCharacteristics: Array<Cas3BedspaceCharacteristic> = [
-        cas3BedspaceCharacteristicsFactory.byDescription('Single bed'),
+        cas3BedspaceCharacteristicsFactory.byDescription('Ground floor level access'),
         cas3BedspaceCharacteristicsFactory.byDescription('Shared kitchen'),
       ]
       const bedspace = cas3BedspaceFactory.build({ status: 'online', bedspaceCharacteristics })
@@ -540,7 +540,7 @@ context('Bedspace', () => {
       // And update the bedspace details
       const updatedCharacteristics: Array<Cas3BedspaceCharacteristic> = [
         cas3BedspaceCharacteristicsFactory.byDescription('Shared bathroom'),
-        cas3BedspaceCharacteristicsFactory.byDescription('Double bed'),
+        cas3BedspaceCharacteristicsFactory.byDescription('Wheelchair accessible'),
       ]
       const updatedBedspace = cas3UpdateBedspaceFactory.build({
         characteristicIds: updatedCharacteristics.map(ch => ch.id),
@@ -587,7 +587,7 @@ context('Bedspace', () => {
     it('should show errors when editing a bedspace fails', () => {
       // And there is an online premises in the database with an online bedspace
       const bedspaceCharacteristics: Array<Cas3BedspaceCharacteristic> = [
-        cas3BedspaceCharacteristicsFactory.byDescription('Single bed'),
+        cas3BedspaceCharacteristicsFactory.byDescription('Ground floor level access'),
         cas3BedspaceCharacteristicsFactory.byDescription('Shared kitchen'),
       ]
       const bedspace = cas3BedspaceFactory.build({ status: 'online', bedspaceCharacteristics })

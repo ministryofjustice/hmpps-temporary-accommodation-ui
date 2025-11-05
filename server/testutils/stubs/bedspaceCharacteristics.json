@@ -15,38 +15,8 @@
     "name": "isGroundFloor"
   },
   {
-    "id": "62c4d8cf-b612-4110-9e27-5c29982f9fcf",
-    "description": "Not suitable for arson offenders",
-    "name": "notSuitableForArsonOffenders"
-  },
-  {
-    "id": "2183d873-8270-4e93-8518-3a668a053689",
-    "description": "Lift access",
-    "name": "hasLiftAccess"
-  },
-  {
-    "id": "12e2e689-b3fb-469d-baec-2fb68e15e85b",
-    "description": "Single bed",
-    "name": "hassingleBed"
-  },
-  {
-    "id": "08b756e2-0b82-4f49-a124-35ea4ebb1634",
-    "description": "Double bed",
-    "name": "hasDoubleBed"
-  },
-  {
     "id": "d2f7796a-88e5-4e53-ab6d-dabb145b6a60",
     "description": "Wheelchair accessible",
     "name": "isWheelchairAccessible"
-  },
-  {
-    "id": "9fb21592-7cca-4ef2-98ca-5fcef22c8ee6",
-    "description": "Other – please state in notes",
-    "name": "other"
-  },
-  {
-    "id": "a2dd4661-c7fe-4294-b3fd-3fc877e62aa5",
-    "description": "Not suitable for registered sex offenders (RSO)",
-    "name": "notSuitableForRegisteredSexOffenders(RSO)"
   }
 ]

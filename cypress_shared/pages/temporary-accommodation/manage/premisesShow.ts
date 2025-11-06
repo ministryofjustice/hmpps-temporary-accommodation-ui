@@ -12,8 +12,17 @@ export default class PremisesShowPage extends Page {
     super(`${premises.addressLine1}, ${premises.postcode}`)
   }
 
-  static visit(premises: Cas3Premises): PremisesShowPage {
-    cy.visit(paths.premises.show({ premisesId: premises.id }))
+  static visit(premises: Cas3Premises, queryParams?: Record<string, string>): PremisesShowPage {
+    let path = paths.premises.show({ premisesId: premises.id })
+
+    if (queryParams) {
+      const queryString = Object.entries(queryParams)
+        .map<string>(([key, value]) => `${key}=${value}`)
+        .join('&')
+      path = `${path}?${queryString}`
+    }
+
+    cy.visit(path)
     return new PremisesShowPage(premises)
   }
 

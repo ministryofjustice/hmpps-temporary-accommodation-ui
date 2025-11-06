@@ -4,7 +4,7 @@ import type {
   AssessmentRejection,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   Cas3AssessmentSummary,
-  NewReferralHistoryUserNote as NewNote,
+  Cas3ReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
 } from '@approved-premises/api'
 
@@ -92,7 +92,7 @@ export default class AssessmentClient {
   }
 
   async createNote(id: string, data: NewNote) {
-    return this.restClient.post<Note>({ path: paths.assessments.notes({ id }), data })
+    return this.restClient.post<Note>({ path: paths.cas3.assessments.notes({ id }), data })
   }
 
   async update(id: string, data: Partial<Assessment>) {

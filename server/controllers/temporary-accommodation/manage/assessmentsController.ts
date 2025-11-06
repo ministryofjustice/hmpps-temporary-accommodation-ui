@@ -7,7 +7,7 @@ import {
 } from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
-  NewReferralHistoryUserNote as NewNote,
+  Cas3ReferralHistoryUserNote as NewNote,
 } from '../../../@types/shared'
 import paths from '../../../paths/temporary-accommodation/manage'
 import AssessmentsService from '../../../services/assessmentsService'

@@ -153,7 +153,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: api.assessments.notes({ id: assessment.id }),
+        url: api.cas3.assessments.notes({ id: assessment.id }),
       },
       response: {
         status: 200,
@@ -165,11 +165,11 @@ export default {
     (
       await getMatchingRequests({
         method: 'POST',
-        url: api.assessments.notes({ id: assessmentId }),
+        url: api.cas3.assessments.notes({ id: assessmentId }),
       })
     ).body.requests,
   stubCreateAssessmentNoteErrors: (args: { assessmentId: string; params: Array<string> }): SuperAgentRequest =>
-    stubFor(errorStub(args.params, api.assessments.notes({ id: args.assessmentId }), 'POST')),
+    stubFor(errorStub(args.params, api.cas3.assessments.notes({ id: args.assessmentId }), 'POST')),
   stubUpdateAssessment: (assessment: Assessment): SuperAgentRequest =>
     stubFor({
       request: {

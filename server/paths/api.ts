@@ -1,7 +1,7 @@
 import { path } from 'static-path'
 
 const cas3Path = path('/cas3')
-const assessmentsCas3Path = cas3Path.path('/assessments')
+const assessmentsCas3Path = cas3Path.path('assessments')
 const premisesPath = path('/premises')
 const cas3PremisesPath = cas3Path.path('premises')
 const singlePremisesPath = premisesPath.path(':premisesId')
@@ -34,7 +34,6 @@ const assessPaths = {
   rejection: path('/assessments/:id/rejection'),
   acceptance: path('/assessments/:id/acceptance'),
   closure: path('/assessments/:id/closure'),
-  notes: path('/assessments/:id/referral-history-notes'),
 }
 
 const clarificationNotePaths = {
@@ -135,6 +134,7 @@ export default {
     },
     assessments: {
       index: assessmentsCas3Path,
+      notes: assessmentsCas3Path.path(':id/referral-history-notes'),
     },
   },
   premises: {
@@ -168,7 +168,6 @@ export default {
     rejection: assessPaths.rejection,
     acceptance: assessPaths.acceptance,
     closure: assessPaths.closure,
-    notes: assessPaths.notes,
     clarificationNotes: {
       create: clarificationNotePaths.notes,
       update: clarificationNotePaths.notes.path(':clarificationNoteId'),

@@ -39,7 +39,6 @@ import newDepartureFactory from './newDeparture'
 import newExtensionFactory from './newExtension'
 import newLostBedFactory from './newLostBed'
 import newLostBedCancellationFactory from './newLostBedCancellation'
-import newReferralHistoryUserNoteFactory from './newReferralHistoryUserNote'
 import newTurnaroundFactory from './newTurnaround'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
 import overlapFactory from './overlap'
@@ -66,6 +65,7 @@ import cas3UpdateBedspaceFactory from './cas3UpdateBedspace'
 import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
 import cas3BedspaceReferenceFactory from './cas3BedspaceReference'
 import cas3BedspacesReferenceFactory from './cas3BedspacesReference'
+import cas3ReferralHistoryUserNoteFactory from './cas3ReferralHistoryUserNote'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
@@ -122,7 +122,7 @@ export {
   newExtensionFactory,
   newLostBedCancellationFactory,
   newLostBedFactory,
-  newReferralHistoryUserNoteFactory,
+  cas3ReferralHistoryUserNoteFactory,
   newTurnaroundFactory,
   oasysSectionsFactory,
   overlapFactory,

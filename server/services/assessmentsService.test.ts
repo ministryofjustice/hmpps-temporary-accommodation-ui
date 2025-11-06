@@ -9,7 +9,7 @@ import { CallConfig } from '../data/restClient'
 import {
   assessmentFactory,
   assessmentSummaryFactory,
-  newReferralHistoryUserNoteFactory,
+  cas3ReferralHistoryUserNoteFactory,
   referenceDataFactory,
   referralHistoryUserNoteFactory,
 } from '../testutils/factories'
@@ -186,7 +186,7 @@ describe('AssessmentsService', () => {
 
   describe('createNote', () => {
     it('returns a newly created user note', async () => {
-      const newNote = newReferralHistoryUserNoteFactory.build()
+      const newNote = cas3ReferralHistoryUserNoteFactory.build()
       const note = referralHistoryUserNoteFactory.build()
       assessmentClient.createNote.mockResolvedValue(note)
 

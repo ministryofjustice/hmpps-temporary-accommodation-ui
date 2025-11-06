@@ -114,7 +114,7 @@
                 {% else %}
                     <p>No bedspaces.</p>
                     <a class="govuk-link govuk-link--no-visited-state"
-                       href="{{ paths.premises.bedspaces.new({ premisesId: premises.id }) }}">
+                       href="{{ addPlaceContext(paths.premises.bedspaces.new({ premisesId: premises.id })) }}">
                         Add a bedspace
                     </a>
                 {% endif %}

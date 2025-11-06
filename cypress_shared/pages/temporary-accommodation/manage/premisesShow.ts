@@ -9,15 +9,21 @@ import {
 import Page from '../../page'
 import { Cas3Bedspace, Cas3PremisesArchiveAction } from '../../../../server/@types/shared'
 import { DateFormats } from '../../../../server/utils/dateUtils'
-import { convertToTitleCase } from '../../../../server/utils/utils'
+import { convertToTitleCase, createQueryString } from '../../../../server/utils/utils'
 
 export default class PremisesShowPage extends Page {
   constructor(premises: Cas3Premises) {
     super(`${premises.addressLine1}, ${premises.postcode}`)
   }
 
-  static visit(premises: Cas3Premises): PremisesShowPage {
-    cy.visit(paths.premises.show({ premisesId: premises.id }))
+  static visit(premises: Cas3Premises, queryParams?: Record<string, string>): PremisesShowPage {
+    let path = paths.premises.show({ premisesId: premises.id })
+
+    if (queryParams) {
+      path = `${path}?${createQueryString(queryParams)}`
+    }
+
+    cy.visit(path)
     return new PremisesShowPage(premises)
   }
 

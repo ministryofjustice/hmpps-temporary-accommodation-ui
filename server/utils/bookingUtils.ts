@@ -284,7 +284,11 @@ const parseConflictError = (detail: string): ParsedConflictError => {
 
   const detailWords = detail.split(' ')
   const conflictingEntityId = detailWords[detailWords.length - 1]
-  const conflictingEntityType = detail.includes('Lost Bed') ? 'lost-bed' : 'booking'
+  // TODO -- ENABLE_CAS3V2_API cleanup: once moved over to the CAS3v2 API, a Lost Bed conflict will always return
+  //  as 'Void Bedspace' rather than 'Lost Bed'
+  const conflictingEntityType = ['Lost Bed', 'Void Bedspace'].some(match => detail.includes(match))
+    ? 'lost-bed'
+    : 'booking'
 
   return { conflictingEntityId, conflictingEntityType }
 }

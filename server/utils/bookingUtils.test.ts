@@ -443,10 +443,32 @@ describe('bookingUtils', () => {
       })
     })
 
+    // TODO -- ENABLE_CAS3V2_API cleanup: once moved over to the CAS3v2 API this test can be removed.
     it('generates a bespoke error when there is a conflicting lost bed', () => {
       const err = {
         data: {
           detail: `Conflicting Lost Bed: ${lostBedId}`,
+        },
+      }
+
+      expect(generateConflictBespokeError(err as SanitisedError, premisesId, bedspaceId, 'plural')).toEqual({
+        errorTitle: 'This bedspace is not available for the dates entered',
+        errorSummary: [
+          {
+            html: `They conflict with an <a href="${paths.lostBeds.show({
+              premisesId,
+              bedspaceId,
+              lostBedId,
+            })}">existing void</a>`,
+          },
+        ],
+      })
+    })
+
+    it('generates a bespoke error when there is a conflicting void bedspace', () => {
+      const err = {
+        data: {
+          detail: `Conflicting Void Bedspace: ${lostBedId}`,
         },
       }
 

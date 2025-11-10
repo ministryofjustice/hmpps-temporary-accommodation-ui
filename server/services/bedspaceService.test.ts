@@ -12,8 +12,6 @@ import {
 } from '../testutils/factories'
 import * as characteristicUtils from '../utils/characteristicUtils'
 import { CallConfig } from '../data/restClient'
-import * as bedspaceUtils from '../utils/bedspaceUtils'
-import config from '../config'
 
 jest.mock('../data/bedspaceClient')
 jest.mock('../data/referenceDataClient')
@@ -26,7 +24,6 @@ describe('BedspaceService', () => {
 
   const service = new BedspaceService(bedspaceClientFactory, referenceDataClientFactory)
   const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
-  const flagsConfigOriginal = config.flags
 
   const premisesId = 'some-premises-id'
 
@@ -35,15 +32,7 @@ describe('BedspaceService', () => {
     bedspaceClientFactory.mockReturnValue(bedspaceClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
 
-    jest.spyOn(bedspaceUtils, 'populateBedspaceCharacteristics')
     jest.spyOn(characteristicUtils, 'filterCharacteristics')
-    jest.spyOn(characteristicUtils, 'characteristicToCas3ReferenceData')
-
-    config.flags.enableCas3v2Api = true
-  })
-
-  afterEach(() => {
-    config.flags = flagsConfigOriginal
   })
 
   describe('getSingleBedspace', () => {
@@ -56,8 +45,6 @@ describe('BedspaceService', () => {
       expect(result).toBe(bedspace)
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.find).toHaveBeenCalledWith(premisesId, bedspace.id)
-
-      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
     })
   })
 
@@ -74,8 +61,6 @@ describe('BedspaceService', () => {
 
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.create).toHaveBeenCalledWith(premisesId, newBedspace)
-
-      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
     })
   })
 
@@ -94,8 +79,6 @@ describe('BedspaceService', () => {
 
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.update).toHaveBeenCalledWith(premisesId, bedspace.id, updatedBedspace)
-
-      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
     })
   })
 
@@ -122,8 +105,6 @@ describe('BedspaceService', () => {
       expect(result).toEqual(bedspace)
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.cancelArchive).toHaveBeenCalledWith(premisesId, bedspace.id)
-
-      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
     })
   })
 
@@ -150,8 +131,6 @@ describe('BedspaceService', () => {
       expect(result).toEqual(bedspace)
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.cancelUnarchive).toHaveBeenCalledWith(premisesId, bedspace.id)
-
-      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
     })
   })
 
@@ -204,46 +183,6 @@ describe('BedspaceService', () => {
       expect(bedspaces).toEqual(result)
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.get).toHaveBeenCalledWith(premisesId)
-
-      bedspaces.bedspaces.forEach(bedspace => {
-        expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
-      })
-    })
-  })
-
-  describe('with the ENABLE_CAS3V2_API flag off', () => {
-    beforeEach(() => {
-      config.flags.enableCas3v2Api = false
-    })
-
-    describe('getReferenceData', () => {
-      it('returns sorted bedspace characteristics', async () => {
-        const bedspaceCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'room' })
-        const bedspaceCharacteristic2 = characteristicFactory.build({ name: 'EFG', modelScope: 'room' })
-        const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
-        const premisesCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'premises' })
-
-        referenceDataClient.getReferenceData.mockResolvedValue([
-          genericCharacteristic,
-          bedspaceCharacteristic2,
-          bedspaceCharacteristic1,
-          premisesCharacteristic,
-        ])
-
-        const result = await service.getReferenceData(callConfig)
-        expect(result).toEqual({
-          characteristics: [
-            characteristicUtils.characteristicToCas3ReferenceData(bedspaceCharacteristic1),
-            characteristicUtils.characteristicToCas3ReferenceData(bedspaceCharacteristic2),
-            characteristicUtils.characteristicToCas3ReferenceData(genericCharacteristic),
-          ],
-        })
-
-        expect(characteristicUtils.filterCharacteristics).toHaveBeenCalledWith(
-          [genericCharacteristic, bedspaceCharacteristic2, bedspaceCharacteristic1, premisesCharacteristic],
-          'room',
-        )
-      })
     })
   })
 })

@@ -11,9 +11,7 @@ import {
   placeContextFactory,
 } from '../testutils/factories'
 import {
-  characteristicToPremisesCharacteristic,
   isPremiseScheduledToBeArchived,
-  populatePremisesCharacteristics,
   premisesActions,
   shortAddress,
   shortSummaryList,
@@ -598,43 +596,6 @@ describe('premisesUtils', () => {
             },
           },
         ],
-      })
-    })
-  })
-
-  // TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities tests
-  describe('Cas3 casting utilities', () => {
-    describe('characteristicToPremisesCharacteristic', () => {
-      it('converts a characteristic to a premisesCharacteristic', () => {
-        const characteristic = characteristicFactory.build()
-        expect(characteristicToPremisesCharacteristic(characteristic)).toEqual({
-          id: characteristic.id,
-          name: characteristic.propertyName,
-          description: characteristic.name,
-        })
-      })
-    })
-
-    describe('populatePremisesCharacteristics', () => {
-      it('populates the premisesCharacteristics based on the characteristics property', () => {
-        const characteristics = characteristicFactory.buildList(5)
-        const premises = cas3PremisesFactory.build({
-          premisesCharacteristics: undefined,
-          characteristics,
-        })
-
-        expect(populatePremisesCharacteristics(premises).premisesCharacteristics).toEqual(
-          characteristics.map(characteristicToPremisesCharacteristic),
-        )
-      })
-
-      it('returns the premises as is if the premisesCharacteristics is already populated', () => {
-        const premises = cas3PremisesFactory.build({
-          characteristics: undefined,
-          premisesCharacteristics: cas3PremisesCharacteristicsFactory.buildList(5),
-        })
-
-        expect(populatePremisesCharacteristics(premises)).toEqual(premises)
       })
     })
   })

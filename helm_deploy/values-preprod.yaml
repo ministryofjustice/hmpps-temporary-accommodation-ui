@@ -22,6 +22,7 @@ generic-service:
     DOMAIN_EVENTS_EMIT_ENABLED: 'personArrived,personDeparted'
     CANCEL_SCHEDULED_ARCHIVE_ENABLED: true
     SHOW_GAP_REPORT_BUTTON: true
+    ENABLE_CAS3V2_API: false
 
   namespace_secrets:
     sqs-hmpps-audit-secret:

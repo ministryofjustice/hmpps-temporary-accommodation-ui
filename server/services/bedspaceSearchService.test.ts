@@ -10,9 +10,7 @@ import {
   probationRegionFactory,
 } from '../testutils/factories'
 import BedspaceSearchService from './bedspaceSearchService'
-import * as bedspaceSearchUtils from '../utils/bedspaceSearchUtils'
 import * as characteristicUtils from '../utils/characteristicUtils'
-import config from '../config'
 
 jest.mock('../data/bedspaceClient')
 jest.mock('../data/referenceDataClient')
@@ -27,21 +25,12 @@ describe('BedspaceSearchService', () => {
   const service = new BedspaceSearchService(bedspaceClientFactory, referenceDataClientFactory)
 
   const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
-  const flagsConfigOriginal = config.flags
 
   beforeEach(() => {
     jest.restoreAllMocks()
     bedspaceClientFactory.mockReturnValue(bedspaceClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
-    jest.spyOn(bedspaceSearchUtils, 'cas3BedspaceSearchResultsToCas3v2BedspaceSearchResults')
     jest.spyOn(characteristicUtils, 'filterCharacteristics')
-    jest.spyOn(characteristicUtils, 'characteristicToCas3ReferenceData')
-
-    config.flags.enableCas3v2Api = true
-  })
-
-  afterEach(() => {
-    config.flags = flagsConfigOriginal
   })
 
   describe('search', () => {
@@ -57,10 +46,6 @@ describe('BedspaceSearchService', () => {
 
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.search).toHaveBeenCalledWith({ ...searchParameters })
-
-      expect(bedspaceSearchUtils.cas3BedspaceSearchResultsToCas3v2BedspaceSearchResults).toHaveBeenCalledWith(
-        searchResults,
-      )
     })
   })
 
@@ -131,94 +116,6 @@ describe('BedspaceSearchService', () => {
       })
       expect(referenceDataClient.getCas3ReferenceData).toHaveBeenCalledWith('BEDSPACE_CHARACTERISTICS')
       expect(referenceDataClient.getCas3ReferenceData).toHaveBeenCalledWith('PREMISES_CHARACTERISTICS')
-    })
-  })
-
-  describe('with the ENABLE_CAS3V2_API flag off', () => {
-    beforeEach(() => {
-      config.flags.enableCas3v2Api = false
-    })
-
-    describe('getReferenceData', () => {
-      it('returns sorted PDUs, wheelchair accessibility, occupancy, gender and sexual risk characteristics', async () => {
-        const premisesCharacteristic1 = characteristicFactory.build({
-          name: 'ABC',
-          modelScope: 'premises',
-          propertyName: 'isSharedProperty',
-        })
-
-        const premisesCharacteristic2 = characteristicFactory.build({
-          name: 'DEF',
-          modelScope: 'premises',
-          propertyName: 'isSingleOccupancy',
-        })
-
-        const roomCharacteristic = characteristicFactory.build({
-          name: 'GHI',
-          modelScope: 'room',
-          propertyName: 'isWheelchairAccessible',
-        })
-
-        const premisesCharacteristic3 = characteristicFactory.build({
-          name: 'Risk to adults',
-          modelScope: 'premises',
-          propertyName: 'notSuitableForSexualRiskToAdults',
-        })
-
-        const premisesCharacteristic4 = characteristicFactory.build({
-          name: 'Risk to children',
-          modelScope: 'premises',
-          propertyName: 'notSuitableForSexualRiskToChildren',
-        })
-
-        const genderCharacteristic1 = characteristicFactory.build({
-          name: 'Men only',
-          modelScope: 'premises',
-          propertyName: 'isMenOnly',
-        })
-
-        const genderCharacteristic2 = characteristicFactory.build({
-          name: 'Women only',
-          modelScope: 'premises',
-          propertyName: 'isWomenOnly',
-        })
-
-        referenceDataClient.getReferenceData.mockImplementation(async (objectType: string) => {
-          if (objectType === 'characteristics') {
-            return [
-              roomCharacteristic,
-              premisesCharacteristic1,
-              premisesCharacteristic2,
-              premisesCharacteristic3,
-              premisesCharacteristic4,
-              genderCharacteristic1,
-              genderCharacteristic2,
-            ]
-          }
-          return []
-        })
-
-        const result = await service.getReferenceData(callConfig)
-
-        expect(result).toEqual({
-          pdus: [],
-          wheelchairAccessibility: [characteristicUtils.characteristicToCas3ReferenceData(roomCharacteristic)],
-          occupancy: [
-            characteristicUtils.characteristicToCas3ReferenceData(premisesCharacteristic1),
-            characteristicUtils.characteristicToCas3ReferenceData(premisesCharacteristic2),
-          ],
-          gender: [
-            characteristicUtils.characteristicToCas3ReferenceData(genderCharacteristic1),
-            characteristicUtils.characteristicToCas3ReferenceData(genderCharacteristic2),
-          ],
-          sexualRisk: [
-            characteristicUtils.characteristicToCas3ReferenceData(premisesCharacteristic3),
-            characteristicUtils.characteristicToCas3ReferenceData(premisesCharacteristic4),
-          ],
-        })
-
-        expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('characteristics')
-      })
     })
   })
 })

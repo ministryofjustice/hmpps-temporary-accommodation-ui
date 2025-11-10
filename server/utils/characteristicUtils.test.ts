@@ -1,5 +1,5 @@
 import { characteristicFactory } from '../testutils/factories'
-import { characteristicToCas3ReferenceData, filterCharacteristics } from './characteristicUtils'
+import { filterCharacteristics } from './characteristicUtils'
 
 describe('filterCharacteristics', () => {
   it('filters given characteristics', () => {
@@ -25,17 +25,5 @@ describe('filterCharacteristics', () => {
 
     const output = filterCharacteristics([characteristic1, characteristic2, characteristic3, characteristic4], 'room')
     expect(output).toEqual([characteristic1, characteristic2, characteristic4])
-  })
-})
-
-describe('characteristicToCas3ReferenceData', () => {
-  it('converts a characteristic to a CAS3 reference data object', () => {
-    const characteristic = characteristicFactory.build()
-
-    expect(characteristicToCas3ReferenceData(characteristic)).toEqual({
-      id: characteristic.id,
-      name: characteristic.propertyName,
-      description: characteristic.name,
-    })
   })
 })

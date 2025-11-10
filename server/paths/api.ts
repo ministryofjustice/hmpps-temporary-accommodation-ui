@@ -1,5 +1,4 @@
 import { path } from 'static-path'
-import config from '../config'
 
 // CAS3 namespaced
 const cas3Path = path('/cas3')
@@ -12,7 +11,7 @@ const cas3ApplicationsPath = cas3Path.path('applications')
 const cas3SingleApplicationPath = cas3ApplicationsPath.path(':id')
 
 // CAS3v2 namespaced
-const cas3v2Path = config.flags.enableCas3v2Api ? path('/cas3/v2') : path('/cas3')
+const cas3v2Path = cas3Path.path('v2')
 const cas3v2PremisesPath = cas3v2Path.path('premises')
 const cas3v2SinglePremisesPath = cas3v2PremisesPath.path(':premisesId')
 

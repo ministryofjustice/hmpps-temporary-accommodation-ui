@@ -1,11 +1,8 @@
-import type { Cas3BedspaceSearchParameters, Cas3ReferenceData, Characteristic } from '@approved-premises/api'
+import type { Cas3BedspaceSearchParameters, Cas3ReferenceData } from '@approved-premises/api'
 import { ReferenceData } from '../@types/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
 import BedspaceClient from '../data/bedspaceClient'
 import { CallConfig } from '../data/restClient'
-import { characteristicToCas3ReferenceData, filterCharacteristics } from '../utils/characteristicUtils'
-import { cas3BedspaceSearchResultsToCas3v2BedspaceSearchResults } from '../utils/bedspaceSearchUtils'
-import config from '../config'
 
 export type BedspaceSearchReferenceData = {
   pdus: Array<ReferenceData>
@@ -24,7 +21,7 @@ export default class BedspaceSearchService {
   async search(callConfig: CallConfig, searchParameters: Cas3BedspaceSearchParameters) {
     const bedspaceClient = this.bedClientFactory(callConfig)
 
-    return cas3BedspaceSearchResultsToCas3v2BedspaceSearchResults(await bedspaceClient.search({ ...searchParameters }))
+    return bedspaceClient.search({ ...searchParameters })
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<BedspaceSearchReferenceData> {
@@ -36,23 +33,13 @@ export default class BedspaceSearchService {
       })
     ).sort((a, b) => a.name.localeCompare(b.name))
 
-    const bedspaceAttributes = (
-      config.flags.enableCas3v2Api
-        ? await referenceDataClient.getCas3ReferenceData('BEDSPACE_CHARACTERISTICS')
-        : filterCharacteristics(
-            await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
-            'room',
-          ).map(characteristicToCas3ReferenceData)
-    ).sort((a, b) => a.description.localeCompare(b.description))
+    const bedspaceAttributes = (await referenceDataClient.getCas3ReferenceData('BEDSPACE_CHARACTERISTICS')).sort(
+      (a, b) => a.description.localeCompare(b.description),
+    )
 
-    const premisesAttributes = (
-      config.flags.enableCas3v2Api
-        ? await referenceDataClient.getCas3ReferenceData('PREMISES_CHARACTERISTICS')
-        : filterCharacteristics(
-            await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
-            'premises',
-          ).map(characteristicToCas3ReferenceData)
-    ).sort((a, b) => a.description.localeCompare(b.description))
+    const premisesAttributes = (await referenceDataClient.getCas3ReferenceData('PREMISES_CHARACTERISTICS')).sort(
+      (a, b) => a.description.localeCompare(b.description),
+    )
 
     const wheelchairAccessibility = this.filterByPropertyNames(bedspaceAttributes, 'isWheelchairAccessible')
     const occupancy = this.filterByPropertyNames(premisesAttributes, ['isSharedProperty', 'isSingleOccupancy'])

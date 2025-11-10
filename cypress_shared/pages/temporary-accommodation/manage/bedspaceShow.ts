@@ -14,27 +14,52 @@ export default class BedspaceShowPage extends Page {
     super(`Bedspace reference: ${bedspace.reference}`)
   }
 
-  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace): BedspaceShowPage {
-    cy.visit(paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }))
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, queryParams?: Record<string, string>): BedspaceShowPage {
+    let path = paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id })
+
+    if (queryParams) {
+      const queryString = Object.entries(queryParams)
+        .map<string>(([key, value]) => `${key}=${value}`)
+        .join('&')
+      path = `${path}?${queryString}`
+    }
+
+    cy.visit(path)
     return new BedspaceShowPage(premises, bedspace)
   }
 
   shouldShowStatus(status: string): void {
-    cy.get('main dl').get('dd').eq(0).contains(status)
+    cy.get('main dl')
+      .first()
+      .within(() => {
+        cy.get('dd').eq(0).contains(status)
+      })
   }
 
   shouldShowStartDate(startDate: string): void {
-    cy.get('main dl').get('dd').eq(1).contains(startDate)
+    cy.get('main dl')
+      .first()
+      .within(() => {
+        cy.get('dd').eq(1).contains(startDate)
+      })
   }
 
   shouldShowDetails(): void {
     this.bedspace.characteristics.forEach(characteristic => {
-      cy.get('main dl').get('dd').eq(2).contains(characteristic.name)
+      cy.get('main dl')
+        .first()
+        .within(() => {
+          cy.get('dd').eq(2).contains(characteristic.name)
+        })
     })
   }
 
   shouldShowAdditionalDetails(): void {
-    cy.get('main dl').get('dd').eq(3).contains(this.bedspace.notes)
+    cy.get('main dl')
+      .first()
+      .within(() => {
+        cy.get('dd').eq(3).contains(this.bedspace.notes)
+      })
   }
 
   shouldShowPropertyAddress(): void {

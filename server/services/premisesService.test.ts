@@ -188,7 +188,7 @@ describe('PremisesService', () => {
 
         const bedspaces =
           prem.bedspaces.length === 0
-            ? `No bedspaces<br /><a href="/properties/${prem.id}/bedspaces/new">Add a bedspace</a>`
+            ? `No bedspaces<br /><a href="/properties/${prem.id}/bedspaces/new?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}">Add a bedspace</a>`
             : prem.bedspaces
                 .sort((a, b) => {
                   const statusPriority = { online: 1, upcoming: 2, archived: 3 }
@@ -241,7 +241,7 @@ describe('PremisesService', () => {
         .filter(s => s !== undefined && s !== '')
         .join('<br />')
 
-      const bedspaces = `No bedspaces<br /><a href="/properties/${searchResult.id}/bedspaces/new">Add a bedspace</a>`
+      const bedspaces = `No bedspaces<br /><a href="/properties/${searchResult.id}/bedspaces/new?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}">Add a bedspace</a>`
 
       expect(rows).toEqual([
         [

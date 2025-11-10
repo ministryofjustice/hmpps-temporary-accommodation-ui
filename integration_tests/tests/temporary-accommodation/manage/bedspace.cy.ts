@@ -11,6 +11,7 @@ import {
   cas3UpdateBedspaceFactory,
   characteristicFactory,
   lostBedFactory,
+  placeContextFactory,
 } from '../../../../server/testutils/factories'
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 
@@ -199,6 +200,77 @@ context('Bedspace', () => {
       // And I should be redirected to the show bedspace page
       const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, bedspace)
       bedspaceShowPage.shouldShowBanner('Bedspace added')
+    })
+
+    it('should persist the place context when creating a bedspace', () => {
+      // And there is an active premises with no bedspaces in the database
+      premises = cas3PremisesFactory.build({
+        status: 'online',
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        totalArchivedBedspaces: 0,
+      })
+      const bedspaces = cas3BedspacesFactory.build({
+        bedspaces: [],
+        totalOnlineBedspaces: 0,
+        totalArchivedBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces })
+
+      // And there is an active place context
+      const placeContext = placeContextFactory.build()
+      cy.task('stubFindAssessment', placeContext.assessment)
+
+      // When I visit the premises page
+      const premisesPage = PremisesShowPage.visit(premises, {
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
+      })
+
+      // Then I should see the place context banner
+      premisesPage.shouldShowPlaceContextHeader(placeContext)
+
+      // When I click on the "Bedspaces overview" tab
+      premisesPage.clickBedspacesOverviewTab()
+
+      // Then no bedspaces should be shown
+      premisesPage.shouldShowNoBedspaces()
+      premisesPage.shouldShowAddBedspaceLink()
+
+      // When I click on the "Add a bedspace" link
+      premisesPage.clickNewBedspaceLink()
+
+      // Then I should be taken to the new bedspace page
+      const newBedspacePage = Page.verifyOnPage(BedspaceNewPage, premises)
+
+      // Then I should still see the place context banner
+      newBedspacePage.shouldShowPlaceContextHeader(placeContext)
+
+      // When I fill out the form
+      const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+      cy.task('stubBedspaceCreate', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings: [] })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds: [] })
+      const newBedspace = cas3NewBedspaceFactory.build({
+        reference: bedspace.reference,
+        characteristicIds: bedspace.characteristics.map(characteristic => characteristic.id),
+        notes: bedspace.notes,
+        startDate: bedspace.startDate,
+      })
+      newBedspacePage.completeForm(newBedspace)
+
+      // Then I should see the newly created bedspace
+      const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, bedspace)
+      bedspaceShowPage.shouldShowBanner('Bedspace added')
+      bedspaceShowPage.shouldShowStatus('Online')
+      bedspaceShowPage.shouldShowDetails()
+      bedspaceShowPage.shouldShowAdditionalDetails()
+
+      // And the place context banner should still be persisted
+      bedspaceShowPage.shouldShowPlaceContextHeader(placeContext)
     })
 
     it('shows warning message when premises has scheduled archive', () => {
@@ -607,6 +679,83 @@ context('Bedspace', () => {
       showPage.shouldShowStatus('Online')
       showPage.shouldShowDetails()
       showPage.shouldShowAdditionalDetails()
+    })
+
+    it('should persist the place context when editing a bedspace', () => {
+      // And there is online premises in the database with an online bedspace
+      const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings: [] })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds: [] })
+
+      // And there is an active place context
+      const placeContext = placeContextFactory.build()
+      cy.task('stubFindAssessment', placeContext.assessment)
+
+      // When I visit the show bedspace page
+      const showPage = BedspaceShowPage.visit(premises, bedspace, {
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
+      })
+
+      // Then I should see the place context banner
+      showPage.shouldShowPlaceContextHeader(placeContext)
+
+      // When I click on the "Edit bedspace details" action
+      showPage.clickAction('Edit bedspace details')
+
+      // Then I should see the edit bedspace page
+      const editPage = Page.verifyOnPage(BedspaceEditPage)
+
+      // And I should still see the place context banner
+      editPage.shouldShowPlaceContextHeader(placeContext)
+
+      // When I update the bedspace details
+      const updatedCharacteristics: Array<Characteristic> = [
+        {
+          id: 'e730bdea-6157-4910-b1b0-450b29bf0c9f',
+          name: 'Shared bathroom',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'room',
+        },
+        {
+          id: '08b756e2-0b82-4f49-a124-35ea4ebb1634',
+          name: 'Double bed',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'room',
+        },
+      ]
+      const updatedBedspace = cas3UpdateBedspaceFactory.build({
+        characteristicIds: updatedCharacteristics.map(ch => ch.id),
+      })
+      editPage.clearForm()
+      editPage.enterReference(updatedBedspace.reference)
+      editPage.enterCharacteristics(updatedCharacteristics.map(ch => ch.name))
+      editPage.enterAdditionalDetails(updatedBedspace.notes)
+
+      // And the backend responds with 200 ok
+      const expectedBedspace = cas3BedspaceFactory.build({
+        ...bedspace,
+        ...updatedBedspace,
+        characteristics: updatedCharacteristics,
+      })
+      cy.task('stubBedspaceUpdate', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspace', { premisesId: premises.id, bedspace: expectedBedspace })
+
+      // When I submit the form
+      editPage.clickSubmit()
+
+      // And I should be taken to the existing updated bedspace
+      const updatedShowPage = Page.verifyOnPage(BedspaceShowPage, premises, expectedBedspace)
+      updatedShowPage.shouldShowBedspaceUpdatedBanner()
+      updatedShowPage.shouldShowStatus('Online')
+      updatedShowPage.shouldShowDetails()
+      updatedShowPage.shouldShowAdditionalDetails()
+
+      // And I should see the place context banner
+      updatedShowPage.shouldShowPlaceContextHeader(placeContext)
     })
 
     it('should show errors when editing a bedspace fails', () => {

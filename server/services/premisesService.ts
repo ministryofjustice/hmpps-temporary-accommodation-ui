@@ -308,7 +308,8 @@ export default class PremisesService {
     }
 
     if (premises.bedspaces === undefined || premises.bedspaces.length === 0) {
-      return `No bedspaces<br /><a href="${paths.premises.bedspaces.new({ premisesId: premises.id })}">Add a bedspace</a>`
+      const newBedspacePath = paths.premises.bedspaces.new({ premisesId: premises.id })
+      return `No bedspaces<br /><a href="${addPlaceContext(newBedspacePath, placeContext)}">Add a bedspace</a>`
     }
 
     const sortedBedspaces = premises.bedspaces.sort((a, b) => {

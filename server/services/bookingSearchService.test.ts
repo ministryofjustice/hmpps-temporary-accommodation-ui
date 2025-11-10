@@ -5,6 +5,8 @@ import {
   bookingSearchResultFactory,
   bookingSearchResultPersonSummaryFactory,
   bookingSearchResultsFactory,
+  cas3BookingSearchResultFactory,
+  cas3BookingSearchResultsFactory,
 } from '../testutils/factories/index'
 import { DateFormats } from '../utils/dateUtils'
 import paths from '../paths/temporary-accommodation/manage'
@@ -26,12 +28,12 @@ describe('BookingService', () => {
 
   describe('getTableRowsForFindBooking', () => {
     it('returns a table view of all returned bookings', async () => {
-      const booking1 = bookingSearchResultFactory.build()
-      const booking2 = bookingSearchResultFactory.build()
-      const booking3 = bookingSearchResultFactory.build({
+      const booking1 = cas3BookingSearchResultFactory.build()
+      const booking2 = cas3BookingSearchResultFactory.build()
+      const booking3 = cas3BookingSearchResultFactory.build({
         person: bookingSearchResultPersonSummaryFactory.build({ name: '' }),
       })
-      const bookings = bookingSearchResultsFactory.build({
+      const bookings = cas3BookingSearchResultsFactory.build({
         totalResults: 3,
         totalPages: 1,
         pageNumber: 1,
@@ -63,7 +65,7 @@ describe('BookingService', () => {
           {
             html: `<a href="${paths.bookings.show({
               premisesId: booking1.premises.id,
-              bedspaceId: booking1.bed.id,
+              bedspaceId: booking1.bedspace.id,
               bookingId: booking1.booking.id,
             })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
               booking1.person.crn
@@ -89,7 +91,7 @@ describe('BookingService', () => {
           {
             html: `<a href="${paths.bookings.show({
               premisesId: booking2.premises.id,
-              bedspaceId: booking2.bed.id,
+              bedspaceId: booking2.bedspace.id,
               bookingId: booking2.booking.id,
             })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
               booking2.person.crn
@@ -115,7 +117,7 @@ describe('BookingService', () => {
           {
             html: `<a href="${paths.bookings.show({
               premisesId: booking3.premises.id,
-              bedspaceId: booking3.bed.id,
+              bedspaceId: booking3.bedspace.id,
               bookingId: booking3.booking.id,
             })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
               booking3.person.crn
@@ -126,7 +128,7 @@ describe('BookingService', () => {
     })
 
     it('returns an empty array if no bookings exist', async () => {
-      const bookings = bookingSearchResultsFactory.build({ data: [] })
+      const bookings = cas3BookingSearchResultsFactory.build({ data: [] })
       bookingClient.search.mockResolvedValue(bookings)
 
       const response = await service.getTableRowsForFindBooking(callConfig, 'provisional', {})

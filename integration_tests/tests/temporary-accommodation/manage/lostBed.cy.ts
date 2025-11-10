@@ -128,11 +128,7 @@ context('Lost bed', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      if (Cypress.env('ENABLE_CAS3V2_API') === true) {
-        expect(requestBody.reasonId).equal(newLostBed.reasonId)
-      } else {
-        expect(requestBody.reason).equal(newLostBed.reasonId)
-      }
+      expect(requestBody.reasonId).equal(newLostBed.reasonId)
       expect(requestBody.startDate).equal(newLostBed.startDate)
       expect(requestBody.endDate).equal(newLostBed.endDate)
       expect(requestBody.notes).equal(newLostBed.notes)
@@ -407,11 +403,7 @@ context('Lost bed', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      if (Cypress.env('ENABLE_CAS3V2_API') === true) {
-        expect(requestBody.reasonId).equal(updateLostBed.reasonId)
-      } else {
-        expect(requestBody.reason).equal(updateLostBed.reasonId)
-      }
+      expect(requestBody.reasonId).equal(updateLostBed.reasonId)
       expect(requestBody.startDate).equal(updateLostBed.startDate)
       expect(requestBody.endDate).equal(updateLostBed.endDate)
       expect(requestBody.notes).equal(updateLostBed.notes)
@@ -531,11 +523,7 @@ context('Lost bed', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      if (Cypress.env('ENABLE_CAS3V2_API') === true) {
-        expect(requestBody.cancellationNotes).equal(cancelLostBed.cancellationNotes)
-      } else {
-        expect(requestBody.notes).equal(cancelLostBed.cancellationNotes)
-      }
+      expect(requestBody.cancellationNotes).equal(cancelLostBed.cancellationNotes)
     })
   })
 })

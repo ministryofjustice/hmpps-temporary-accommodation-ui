@@ -7,7 +7,6 @@ import {
   Cas3PremisesSearchResult,
   Cas3PremisesSearchResults,
   Cas3PremisesStatus,
-  Characteristic,
 } from '@approved-premises/api'
 import {
   PageHeadingBarItem,
@@ -374,19 +373,3 @@ const formatPremisesStatus = (premises: Cas3Premises): string => {
 }
 
 const formatNotes = (notes: string): string => notes.replace(/\n/g, '<br />')
-
-// TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities and all usages
-export const characteristicToPremisesCharacteristic = (characteristic: Characteristic): Cas3PremisesCharacteristic => ({
-  id: characteristic.id,
-  description: characteristic.name,
-  name: characteristic.propertyName,
-})
-
-export const populatePremisesCharacteristics = (premises: Cas3Premises): Cas3Premises => {
-  if (premises.premisesCharacteristics) return premises
-
-  return {
-    ...premises,
-    premisesCharacteristics: premises.characteristics.map(characteristicToPremisesCharacteristic),
-  }
-}

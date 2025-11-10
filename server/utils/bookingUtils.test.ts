@@ -13,12 +13,10 @@ import {
 import {
   assessmentRadioItems,
   bookingActions,
-  bookingToCas3Booking,
   deriveBookingHistory,
   generateConflictBespokeError,
   generateTurnaroundConflictBespokeError,
   getLatestExtension,
-  isCas3Booking,
   shortenedOrExtended,
   statusName,
   statusTag,
@@ -443,28 +441,6 @@ describe('bookingUtils', () => {
       })
     })
 
-    // TODO -- ENABLE_CAS3V2_API cleanup: once moved over to the CAS3v2 API this test can be removed.
-    it('generates a bespoke error when there is a conflicting lost bed', () => {
-      const err = {
-        data: {
-          detail: `Conflicting Lost Bed: ${lostBedId}`,
-        },
-      }
-
-      expect(generateConflictBespokeError(err as SanitisedError, premisesId, bedspaceId, 'plural')).toEqual({
-        errorTitle: 'This bedspace is not available for the dates entered',
-        errorSummary: [
-          {
-            html: `They conflict with an <a href="${paths.lostBeds.show({
-              premisesId,
-              bedspaceId,
-              lostBedId,
-            })}">existing void</a>`,
-          },
-        ],
-      })
-    })
-
     it('generates a bespoke error when there is a conflicting void bedspace', () => {
       const err = {
         data: {
@@ -550,7 +526,7 @@ describe('bookingUtils', () => {
     it('generates a bespoke error when there is a conflicting lost bed', () => {
       const err = {
         data: {
-          detail: `Conflicting Lost Bed: ${lostBedId}`,
+          detail: `Conflicting Void Bedspace: ${lostBedId}`,
         },
       }
 
@@ -660,39 +636,6 @@ describe('bookingUtils', () => {
           value: 'no-assessment',
         },
       ])
-    })
-  })
-
-  // TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities tests
-  describe('Cas3 casting utilities', () => {
-    describe('isCas3Booking', () => {
-      it('returns true for a Cas3Booking', () => {
-        expect(isCas3Booking(cas3BookingFactory.build())).toEqual(true)
-      })
-
-      it('returns false for a Booking', () => {
-        expect(isCas3Booking(bookingFactory.build())).toEqual(false)
-      })
-    })
-
-    describe('bookingToCas3Booking', () => {
-      it('returns a Cas3Booking directly', () => {
-        const booking = cas3BookingFactory.build()
-
-        const result = bookingToCas3Booking(booking)
-
-        expect(isCas3Booking(result)).toEqual(true)
-        expect(result).toEqual(booking)
-      })
-
-      it('transforms a Booking into a Cas3Booking', () => {
-        const booking = bookingFactory.build()
-
-        const result = bookingToCas3Booking(booking)
-
-        expect(isCas3Booking(result)).toEqual(true)
-        expect(result.bedspace.reference).toEqual(booking.bed.name)
-      })
     })
   })
 })

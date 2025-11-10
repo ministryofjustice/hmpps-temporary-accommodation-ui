@@ -1,7 +1,4 @@
 import type {
-  Arrival,
-  Booking,
-  Cancellation,
   Cas3Arrival,
   Cas3Booking,
   Cas3BookingSearchResult,
@@ -12,26 +9,21 @@ import type {
   Cas3NewBooking,
   Cas3NewDeparture,
   Cas3Turnaround,
-  Confirmation,
-  Extension,
   NewCas3Arrival as NewArrival,
   NewCancellation,
   NewConfirmation,
   NewExtension,
   NewTurnaround,
-  Turnaround,
 } from '@approved-premises/api'
-import type { BookingSearchApiStatus, BookingSearchParameters } from '@approved-premises/ui'
+import type { BookingSearchApiStatus, BookingSearchParameters, PaginatedResponse } from '@approved-premises/ui'
 import { URLSearchParams } from 'url'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import { appendQueryString } from '../utils/utils'
 import RestClient, { CallConfig } from './restClient'
-import { PaginatedResponse } from '../@types/ui'
-import { BookingSearchResult } from '../@types/shared'
 
 type SearchResponse = {
-  results: Array<BookingSearchResult> | Array<Cas3BookingSearchResult>
+  results: Array<Cas3BookingSearchResult>
 }
 
 export default class BookingClient {
@@ -42,14 +34,6 @@ export default class BookingClient {
   }
 
   async create(premisesId: string, data: Cas3NewBooking) {
-    if (!config.flags.enableCas3v2Api) {
-      const { bedspaceId, ...sharedProperties } = data
-      return this.restClient.post<Booking>({
-        path: paths.premises.bookings.create({ premisesId }),
-        data: { ...sharedProperties, crn: data.crn.trim(), bedId: bedspaceId },
-      })
-    }
-
     return this.restClient.post<Cas3Booking>({
       path: paths.cas3.premises.bookings.create({ premisesId }),
       data: { ...data, crn: data.crn.trim() },
@@ -57,29 +41,14 @@ export default class BookingClient {
   }
 
   async find(premisesId: string, bookingId: string) {
-    if (!config.flags.enableCas3v2Api) {
-      return this.restClient.get<Booking>({ path: paths.premises.bookings.show({ premisesId, bookingId }) })
-    }
-
     return this.restClient.get<Cas3Booking>({ path: paths.cas3.premises.bookings.show({ premisesId, bookingId }) })
   }
 
   async allBookingsForPremisesId(premisesId: string) {
-    if (!config.flags.enableCas3v2Api) {
-      return this.restClient.get<Array<Booking>>({ path: paths.premises.bookings.index({ premisesId }) })
-    }
-
     return this.restClient.get<Array<Cas3Booking>>({ path: paths.cas3.premises.bookings.index({ premisesId }) })
   }
 
   async extendBooking(premisesId: string, bookingId: string, bookingExtension: NewExtension) {
-    if (!config.flags.enableCas3v2Api) {
-      return this.restClient.post<Extension>({
-        path: paths.premises.bookings.extensions({ premisesId, bookingId }),
-        data: bookingExtension,
-      })
-    }
-
     return this.restClient.post<Cas3Extension>({
       path: paths.cas3.premises.bookings.extensions({ premisesId, bookingId }),
       data: bookingExtension,
@@ -87,13 +56,6 @@ export default class BookingClient {
   }
 
   async markAsConfirmed(premisesId: string, bookingId: string, confirmation: NewConfirmation) {
-    if (!config.flags.enableCas3v2Api) {
-      return this.restClient.post<Confirmation>({
-        path: paths.premises.bookings.confirmations({ premisesId, bookingId }),
-        data: confirmation,
-      })
-    }
-
     return this.restClient.post<Cas3Confirmation>({
       path: paths.cas3.premises.bookings.confirmations({ premisesId, bookingId }),
       data: confirmation,
@@ -101,13 +63,6 @@ export default class BookingClient {
   }
 
   async markAsArrived(premisesId: string, bookingId: string, arrival: NewArrival) {
-    if (!config.flags.enableCas3v2Api) {
-      return this.restClient.post<Arrival>({
-        path: paths.cas3.premises.bookings.arrivals({ premisesId, bookingId }),
-        data: arrival,
-      })
-    }
-
     return this.restClient.post<Cas3Arrival>({
       path: paths.cas3.premises.bookings.arrivals({ premisesId, bookingId }),
       data: arrival,
@@ -115,13 +70,6 @@ export default class BookingClient {
   }
 
   async cancel(premisesId: string, bookingId: string, cancellation: NewCancellation) {
-    if (!config.flags.enableCas3v2Api) {
-      return this.restClient.post<Cancellation>({
-        path: paths.premises.bookings.cancellations.create({ premisesId, bookingId }),
-        data: cancellation,
-      })
-    }
-
     return this.restClient.post<Cas3Cancellation>({
       path: paths.cas3.premises.bookings.cancellations.create({ premisesId, bookingId }),
       data: cancellation,
@@ -136,13 +84,6 @@ export default class BookingClient {
   }
 
   async createTurnaround(premisesId: string, bookingId: string, turnaround: NewTurnaround) {
-    if (!config.flags.enableCas3v2Api) {
-      return this.restClient.post<Turnaround>({
-        path: paths.premises.bookings.turnarounds.create({ premisesId, bookingId }),
-        data: turnaround,
-      })
-    }
-
     return this.restClient.post<Cas3Turnaround>({
       path: paths.cas3.premises.bookings.turnarounds({ premisesId, bookingId }),
       data: turnaround,
@@ -152,32 +93,7 @@ export default class BookingClient {
   async search(
     status: BookingSearchApiStatus,
     params: BookingSearchParameters,
-  ): Promise<PaginatedResponse<BookingSearchResult | Cas3BookingSearchResult>> {
-    if (!config.flags.enableCas3v2Api) {
-      const path = appendQueryString(paths.bookings.search({ status }), {
-        status,
-        crnOrName: params.crnOrName,
-        page: !params.page ? 1 : params.page, // also handles NaN & <1
-        sortField: params.sortBy || 'endDate',
-        sortOrder: params.sortDirection === 'asc' ? 'ascending' : 'descending',
-      })
-
-      const response = await this.restClient.get<SearchResponse>({ path }, true)
-
-      const { body, header } = response
-
-      return {
-        url: {
-          params: new URLSearchParams(path),
-        },
-        data: body.results,
-        pageNumber: Number(header['x-pagination-currentpage']),
-        pageSize: Number(header['x-pagination-pagesize']),
-        totalPages: Number(header['x-pagination-totalpages']),
-        totalResults: Number(header['x-pagination-totalresults']),
-      }
-    }
-
+  ): Promise<PaginatedResponse<Cas3BookingSearchResult>> {
     const path = appendQueryString(paths.cas3.bookings.search({ status }), {
       status,
       crnOrName: params.crnOrName,

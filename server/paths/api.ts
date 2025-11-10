@@ -33,7 +33,7 @@ const assessPaths = {
   allocation: path('/tasks/assessment/:id/allocations'),
   rejection: path('/assessments/:id/rejection'),
   acceptance: path('/assessments/:id/acceptance'),
-  closure: path('/assessments/:id/closure'),
+  closure: cas3Path.path('/assessments/:id/closure'),
 }
 
 const clarificationNotePaths = {

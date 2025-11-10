@@ -3,6 +3,7 @@ import {
   Cas3Assessment as Assessment,
   AssessmentRejection,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
+  Cas3UpdateAssessment,
 } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
@@ -361,19 +362,17 @@ describeClient('AssessmentClient', provider => {
     it('puts updated data to the assessment', async () => {
       const updatedData = {
         accommodationRequiredFromDate: '2024-08-08',
-        data: assessment.data,
         releaseDate: '2024-08-08',
-      }
+      } as Cas3UpdateAssessment
 
       await provider.addInteraction({
         state: 'Assessment can be updated',
         uponReceiving: 'a request to update assessment',
         withRequest: {
           method: 'PUT',
-          path: paths.assessments.update({ id: assessment.id }),
+          path: paths.cas3.assessments.update({ id: assessment.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
-            'X-Service-Name': 'temporary-accommodation',
           },
           body: updatedData,
         },

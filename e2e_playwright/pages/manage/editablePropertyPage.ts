@@ -13,7 +13,7 @@ export class EditablePropertyPage extends BasePage {
     const localAuthoritiesLocator = this.page.locator('#localAuthorityAreaId-select')
     const localAuthority = await this.getRandomOption(localAuthoritiesLocator)
     await this.page.getByLabel('What is the local authority?').fill(localAuthority)
-    await this.page.getByRole('listbox').locator('li').getByText(localAuthority).first().click()
+    await this.page.getByRole('listbox').locator('li').getByText(localAuthority, { exact: true }).first().click()
     property.localAuthority = localAuthority
 
     property.probationRegion = await this.selectOptionAtRandom('What is the region?', 'Select a probation region')

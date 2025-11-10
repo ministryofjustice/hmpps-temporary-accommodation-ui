@@ -128,6 +128,7 @@ const cas3Api = {
     update: assessmentsCas3Path.path(':id'),
     notes: singleAssessmentCas3Path.path('referral-history-notes'),
     rejection: assessmentsCas3Path.path(':id/rejection'),
+    closure: assessmentsCas3Path.path(':id/closure'),
   },
   referenceData: cas3Path.path('reference-data'),
 }

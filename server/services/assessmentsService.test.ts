@@ -1,7 +1,7 @@
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessment as Assessment,
-  AssessmentRejection,
+  Cas3AssessmentRejection,
   TemporaryAccommodationAssessmentStatus,
 } from '@approved-premises/api'
 import AssessmentClient from '../data/assessmentClient'
@@ -126,7 +126,7 @@ describe('AssessmentsService', () => {
 
   describe('rejectAssessment', () => {
     it('calls the rejectAssessment method on the client with rejection details', async () => {
-      const assessmentRejection: AssessmentRejection = {
+      const assessmentRejection: Cas3AssessmentRejection = {
         document: {},
         rejectionRationale: 'default',
         referralRejectionReasonId: 'rejection-reason-id',

@@ -101,7 +101,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: api.assessments.rejection({ id: assessment.id }),
+        url: api.cas3.assessments.rejection({ id: assessment.id }),
       },
       response: {
         status: 200,
@@ -113,7 +113,7 @@ export default {
     (
       await getMatchingRequests({
         method: 'POST',
-        url: api.assessments.rejection({ id: assessmentId }),
+        url: api.cas3.assessments.rejection({ id: assessmentId }),
       })
     ).body.requests,
   stubAcceptAssessment: (assessment: Assessment): SuperAgentRequest =>

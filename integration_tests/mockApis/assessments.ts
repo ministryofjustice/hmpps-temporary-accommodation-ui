@@ -1,5 +1,10 @@
 import type { SuperAgentRequest } from 'superagent'
-import { Assessment, Cas3AssessmentSummary, TemporaryAccommodationAssessment } from '@approved-premises/api'
+import {
+  Assessment,
+  Cas3Assessment,
+  Cas3AssessmentSummary,
+  TemporaryAccommodationAssessment,
+} from '@approved-premises/api'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
@@ -26,11 +31,11 @@ export default {
         jsonBody: args.data,
       },
     }),
-  stubFindAssessment: (assessment: Assessment): SuperAgentRequest =>
+  stubFindAssessment: (assessment: Cas3Assessment): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
-        url: api.assessments.show({ id: assessment.id }),
+        url: api.cas3.assessments.show({ id: assessment.id }),
       },
       response: {
         status: 200,

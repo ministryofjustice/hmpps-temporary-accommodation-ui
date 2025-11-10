@@ -7,8 +7,8 @@ import {
 import AssessmentClient from '../data/assessmentClient'
 import { CallConfig } from '../data/restClient'
 import {
-  assessmentFactory,
   assessmentSummaryFactory,
+  cas3AssessmentFactory,
   cas3ReferralHistoryUserNoteFactory,
   referenceDataFactory,
   referralHistoryUserNoteFactory,
@@ -97,7 +97,7 @@ describe('AssessmentsService', () => {
 
   describe('findAssessment', () => {
     it('calls the find method on the assessment client and returns the result', async () => {
-      const assessment = assessmentFactory.build()
+      const assessment = cas3AssessmentFactory.build()
 
       assessmentClient.find.mockResolvedValue(assessment)
 

@@ -1,4 +1,4 @@
-import { TemporaryAccommodationAssessment as Assessment } from '../../../server/@types/shared'
+import { Cas3Assessment as Assessment } from '../../../server/@types/shared'
 import paths from '../../../server/paths/temporary-accommodation/manage'
 import { statusName } from '../../../server/utils/assessmentStatusUtils'
 import { personName } from '../../../server/utils/personUtils'

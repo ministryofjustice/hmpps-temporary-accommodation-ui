@@ -50,6 +50,7 @@ import cas3ApplicationSummaryFactory from './cas3ApplicationSummary'
 import cas3AssessmentSummaryFactory from './cas3AssessmentSummary'
 import cas3AssessmentSummariesFactory from './cas3AssessmentSummaries'
 import cas3PremisesFactory from './cas3Premises'
+import cas3AssessmentFactory from './cas3Assessment'
 import cas3NewPremisesFactory from './cas3NewPremises'
 import cas3UpdatePremisesFactory from './cas3UpdatePremises'
 import cas3PremisesBedspaceTotalsFactory from './cas3PremisesBedspaceTotals'
@@ -135,6 +136,7 @@ export {
   cas3AssessmentSummariesFactory,
   cas3PremisesFactory,
   cas3NewPremisesFactory,
+  cas3AssessmentFactory,
   cas3UpdatePremisesFactory,
   cas3PremisesBedspaceTotalsFactory,
   cas3PremisesSearchResultFactory,

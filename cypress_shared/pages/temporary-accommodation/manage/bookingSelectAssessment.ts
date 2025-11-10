@@ -1,5 +1,5 @@
-import type { Cas3AssessmentSummary } from '@approved-premises/api'
-import { Assessment, Person } from '../../../../server/@types/shared'
+import type { Cas3Assessment, Cas3AssessmentSummary } from '@approved-premises/api'
+import { Person } from '../../../../server/@types/shared'
 import { PlaceContext } from '../../../../server/@types/ui'
 import { assessmentSummaryFactory } from '../../../../server/testutils/factories'
 import { DateFormats } from '../../../../server/utils/dateUtils'
@@ -55,7 +55,7 @@ export default class BookingSelectAssessmentPage extends Page {
     this.checkRadioByNameAndLabel('assessmentId', 'Book this bedspace without linking a referral')
   }
 
-  private assessmentRadioText(assessment: Assessment | Cas3AssessmentSummary, person: Person): string {
+  private assessmentRadioText(assessment: Cas3Assessment | Cas3AssessmentSummary, person: Person): string {
     if (isFullPerson(person)) {
       return `${person.name}, CRN ${person.crn}, referral submitted ${DateFormats.isoDateToUIDate(
         assessment.createdAt,

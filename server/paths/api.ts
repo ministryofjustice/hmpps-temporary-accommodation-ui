@@ -134,6 +134,7 @@ export default {
     },
     assessments: {
       index: assessmentsCas3Path,
+      show: assessmentsCas3Path.path(':id'),
       notes: assessmentsCas3Path.path(':id/referral-history-notes'),
     },
   },

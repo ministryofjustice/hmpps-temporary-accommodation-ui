@@ -9,6 +9,7 @@ import type {
 import type {
   TemporaryAccommodationAssessment as Assessment,
   AssessmentRejection,
+  Cas3Assessment,
   Cas3ReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
   TemporaryAccommodationAssessmentStatus,
@@ -44,7 +45,7 @@ export default class AssessmentsService {
     }
   }
 
-  findAssessment(callConfig: CallConfig, assessmentId: string): Promise<Assessment> {
+  findAssessment(callConfig: CallConfig, assessmentId: string): Promise<Cas3Assessment> {
     const assessmentClient = this.assessmentClientFactory(callConfig)
 
     return assessmentClient.find(assessmentId)

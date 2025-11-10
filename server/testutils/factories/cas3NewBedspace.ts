@@ -9,7 +9,7 @@ export default Factory.define<Cas3NewBedspace>(() => {
     count: { min: 1, max: 5 },
   })
   return {
-    reference: `Room ${faker.number.int({ min: 1, max: 9999 })}`,
+    reference: faker.string.alphanumeric(6),
     characteristicIds: characteristics.map(c => c.id),
     startDate: DateFormats.dateObjToIsoDate(faker.date.past({ years: 1 })),
     notes: faker.helpers

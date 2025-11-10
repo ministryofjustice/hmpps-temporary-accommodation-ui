@@ -15,7 +15,7 @@ export default Factory.define<Cas3UpdateBedspace>(() => {
   ).map(ch => ch.id)
 
   return {
-    reference: `Room ${faker.number.int({ min: 1, max: 9999 })}`,
+    reference: faker.string.alphanumeric(6),
     characteristicIds,
     notes: faker.lorem.sentences(3),
   }

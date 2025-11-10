@@ -10,7 +10,7 @@ export default class BedspaceSearchResult extends Component {
 
   shouldShowResult(checkCount = true): void {
     cy.get('h2')
-      .contains(this.result.bedspace.reference)
+      .contains(`Bedspace reference: ${this.result.bedspace.reference}`)
       .parents('article[data-cy-bedspace]')
       .within(() => {
         const fullAddress = [

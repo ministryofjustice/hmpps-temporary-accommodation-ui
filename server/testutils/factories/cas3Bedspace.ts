@@ -25,7 +25,7 @@ class BedspaceFactory extends Factory<Cas3Bedspace> {
 
 export default BedspaceFactory.define(() => ({
   id: faker.string.uuid(),
-  reference: `Room ${faker.number.int({ min: 1, max: 9999 })}`,
+  reference: faker.string.alphanumeric(6),
   status: faker.helpers.arrayElement(['online', 'upcoming', 'archived']),
   bedspaceCharacteristics: unique(cas3BedspaceCharacteristicsFactory.buildList(faker.number.int({ min: 1, max: 5 }))),
   startDate: DateFormats.dateObjToIsoDate(faker.date.past({ years: 1 })),

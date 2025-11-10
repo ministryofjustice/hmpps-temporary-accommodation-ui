@@ -7,6 +7,7 @@ import {
 } from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
+  Cas3AssessmentRejection,
   Cas3ReferralHistoryUserNote as NewNote,
 } from '../../../@types/shared'
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -213,7 +214,7 @@ export default class AssessmentsController {
           referralRejectionReasonId,
           referralRejectionReasonDetail: isOtherReason ? referralRejectionReasonDetail : undefined,
           isWithdrawn: ppRequestedWithdrawal === 'yes',
-        })
+        } as Cas3AssessmentRejection)
 
         req.flash('success', statusChangeMessage(id, 'rejected'))
         res.redirect(paths.assessments.summary({ id }))

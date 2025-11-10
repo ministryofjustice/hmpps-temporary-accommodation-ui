@@ -8,8 +8,8 @@ import type {
 } from '@approved-premises/ui'
 import type {
   TemporaryAccommodationAssessment as Assessment,
-  AssessmentRejection,
   Cas3Assessment,
+  Cas3AssessmentRejection,
   Cas3ReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
   TemporaryAccommodationAssessmentStatus,
@@ -62,7 +62,7 @@ export default class AssessmentsService {
   async rejectAssessment(
     callConfig: CallConfig,
     assessmentId: string,
-    assessmentRejection: AssessmentRejection,
+    assessmentRejection: Cas3AssessmentRejection,
   ): Promise<void> {
     const assessmentClient = this.assessmentClientFactory(callConfig)
 

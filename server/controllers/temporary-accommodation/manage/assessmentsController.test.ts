@@ -8,7 +8,7 @@ import {
   TimelineItem,
 } from '@approved-premises/ui'
 import { ParsedQs } from 'qs'
-import { ReferralHistorySystemNote } from '@approved-premises/api'
+import { Cas3AssessmentRejection, ReferralHistorySystemNote } from '@approved-premises/api'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, TimelineService } from '../../../services'
@@ -407,7 +407,7 @@ describe('AssessmentsController', () => {
         referralRejectionReasonId,
         referralRejectionReasonDetail,
         isWithdrawn: true,
-      })
+      } as Cas3AssessmentRejection)
       expect(assessmentUtils.statusChangeMessage).toHaveBeenCalledWith(assessmentId, 'rejected')
       expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
       expect(request.flash).toHaveBeenCalledWith('success', 'some info message')
@@ -433,7 +433,7 @@ describe('AssessmentsController', () => {
         referralRejectionReasonId,
         referralRejectionReasonDetail: undefined,
         isWithdrawn: false,
-      })
+      } as Cas3AssessmentRejection)
     })
 
     it('redirects to the reject confirmation page with errors if the questions are not answered', async () => {

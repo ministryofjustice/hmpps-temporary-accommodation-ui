@@ -31,7 +31,6 @@ const assessPaths = {
   assessments: path('/assessments'),
   singleAssessment: path('/assessments/:id'),
   allocation: path('/tasks/assessment/:id/allocations'),
-  rejection: path('/assessments/:id/rejection'),
   acceptance: path('/assessments/:id/acceptance'),
   closure: path('/assessments/:id/closure'),
 }
@@ -137,6 +136,7 @@ export default {
       show: assessmentsCas3Path.path(':id'),
       update: assessmentsCas3Path.path(':id'),
       notes: assessmentsCas3Path.path(':id/referral-history-notes'),
+      rejection: assessmentsCas3Path.path(':id/rejection'),
     },
   },
   premises: {
@@ -166,7 +166,6 @@ export default {
     index: assessPaths.assessments,
     show: assessPaths.singleAssessment,
     allocation: assessPaths.allocation,
-    rejection: assessPaths.rejection,
     acceptance: assessPaths.acceptance,
     closure: assessPaths.closure,
     clarificationNotes: {

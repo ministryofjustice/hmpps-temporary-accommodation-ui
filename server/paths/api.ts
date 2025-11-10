@@ -33,7 +33,7 @@ const assessPaths = {
   allocation: path('/tasks/assessment/:id/allocations'),
   rejection: path('/assessments/:id/rejection'),
   acceptance: path('/assessments/:id/acceptance'),
-  closure: cas3Path.path('/assessments/:id/closure'),
+  closure: path('/assessments/:id/closure'),
 }
 
 const clarificationNotePaths = {
@@ -137,6 +137,7 @@ export default {
       show: assessmentsCas3Path.path(':id'),
       update: assessmentsCas3Path.path(':id'),
       notes: assessmentsCas3Path.path(':id/referral-history-notes'),
+      closure: assessmentsCas3Path.path(':id/closure'),
     },
   },
   premises: {

@@ -5,7 +5,6 @@ import { Factory } from 'fishery'
 import type { Cas3Booking } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 import { fullPersonFactory as personFactory } from './person'
-import cas3BedspaceFactory from './cas3Bedspace'
 import cas3ArrivalFactory from './cas3Arrival'
 import cas3CancellationFactory from './cas3Cancellation'
 import cas3ConfirmationFactory from './cas3Confirmation'
@@ -13,6 +12,7 @@ import cas3DepartureFactory from './cas3Departure'
 import cas3ExtensionFactory from './cas3Extension'
 import cas3TurnaroundFactory from './cas3Turnaround'
 import cas3BookingPremisesSummaryFactory from './cas3BookingPremisesSummary'
+import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
 
 const soon = () =>
   DateFormats.dateObjToIsoDate(
@@ -108,7 +108,6 @@ export default Cas3BookingFactory.define(() => {
     departureDate: DateFormats.dateObjToIsoDate(departureDate),
     turnaroundStartDate: DateFormats.dateObjToIsoDate(turnaroundStartDate),
     effectiveEndDate: DateFormats.dateObjToIsoDate(effectiveEndDate),
-    name: `${faker.person.firstName()} ${faker.person.lastName()}`,
     id: faker.string.uuid(),
     status: faker.helpers.arrayElement([
       'provisional',
@@ -118,7 +117,7 @@ export default Cas3BookingFactory.define(() => {
       'closed',
       'cancelled',
     ] as const),
-    bedspace: cas3BedspaceFactory.build(),
+    bedspace: cas3BedspaceSummaryFactory.build(),
     arrival: cas3ArrivalFactory.build(),
     departure: departures[0],
     departures,
@@ -128,8 +127,7 @@ export default Cas3BookingFactory.define(() => {
     extensions: faker.helpers.arrayElements(cas3ExtensionFactory.buildList(5)),
     turnaround: turnarounds[0],
     turnarounds,
-    serviceName: 'temporary-accommodation' as const,
-    createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+    createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
     assessmentId: faker.string.uuid(),
     premises: cas3BookingPremisesSummaryFactory.build(),
   }

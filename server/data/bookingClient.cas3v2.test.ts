@@ -1,26 +1,35 @@
-import { faker } from '@faker-js/faker/.'
-import bookingSearchResultsFactory from '../testutils/factories/bookingSearchResults'
+import { faker } from '@faker-js/faker'
+import describeClient from '../testutils/describeClient'
 import BookingClient from './bookingClient'
 import { CallConfig } from './restClient'
 import {
-  arrivalFactory,
-  bookingFactory,
-  bookingSearchResultFactory,
-  cancellationFactory,
+  cas3ArrivalFactory,
+  cas3BookingFactory,
+  cas3BookingSearchResultFactory,
+  cas3BookingSearchResultsFactory,
+  cas3CancellationFactory,
+  cas3ConfirmationFactory,
+  cas3DepartureFactory,
+  cas3ExtensionFactory,
   cas3NewBookingFactory,
   cas3NewDepartureFactory,
-  confirmationFactory,
-  departureFactory,
+  cas3TurnaroundFactory,
   newArrivalFactory,
   newCancellationFactory,
   newConfirmationFactory,
+  newExtensionFactory,
   newTurnaroundFactory,
-  turnaroundFactory,
 } from '../testutils/factories'
 import paths from '../paths/api'
-import describeClient from '../testutils/describeClient'
 
-describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
+jest.mock('../config', () => ({
+  ...jest.requireActual('../config').default,
+  flags: {
+    enableCas3v2Api: true,
+  },
+}))
+
+describeClient('BookingClient - CAS3v2', provider => {
   let bookingClient: BookingClient
   const callConfig = { token: 'some-token' } as CallConfig
 
@@ -30,25 +39,16 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
 
   describe('create', () => {
     it('should return the booking that has been posted', async () => {
-      const booking = bookingFactory.build()
-      const newBooking = cas3NewBookingFactory.build({
-        arrivalDate: booking.arrivalDate,
-        departureDate: booking.departureDate,
-        crn: booking.person.crn,
-      })
-
-      const payload = {
-        ...newBooking,
-        bedId: newBooking.bedspaceId,
-        bedspaceId: undefined as string,
-      }
+      const premisesId = faker.string.uuid()
+      const booking = cas3BookingFactory.build()
+      const payload = cas3NewBookingFactory.build(booking)
 
       await provider.addInteraction({
         state: 'Booking can be created',
         uponReceiving: 'a request to create a booking',
         withRequest: {
           method: 'POST',
-          path: `/premises/${booking.id}/bookings`,
+          path: paths.cas3.premises.bookings.create({ premisesId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -61,7 +61,7 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
         },
       })
 
-      const result = await bookingClient.create(booking.id, newBooking)
+      const result = await bookingClient.create(premisesId, payload)
       expect(result).toEqual(booking)
     })
   })
@@ -69,14 +69,14 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
   describe('find', () => {
     it('should return the booking that has been requested', async () => {
       const premisesId = faker.string.uuid()
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
 
       await provider.addInteraction({
         state: 'Booking exists',
         uponReceiving: 'a request for a booking',
         withRequest: {
           method: 'GET',
-          path: `/premises/${premisesId}/bookings/${booking.id}`,
+          path: paths.cas3.premises.bookings.show({ premisesId, bookingId: booking.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -96,14 +96,14 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
   describe('allBookingsForPremisesId', () => {
     it('should return all bookings for a given premises ID', async () => {
       const premisesId = faker.string.uuid()
-      const bookings = bookingFactory.buildList(5)
+      const bookings = cas3BookingFactory.buildList(5)
 
       await provider.addInteraction({
         state: 'Bookings exist for premises',
         uponReceiving: 'a request for all bookings for a premises',
         withRequest: {
           method: 'GET',
-          path: `/premises/${premisesId}/bookings`,
+          path: paths.cas3.premises.bookings.index({ premisesId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -123,28 +123,19 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
   describe('extendBooking', () => {
     it('should return the booking that has been extended', async () => {
       const premisesId = faker.string.uuid()
-      const booking = bookingFactory.build()
-      const payload = {
-        newDepartureDate: '2042-12-11',
-        'newDepartureDate-year': '2042',
-        'newDepartureDate-month': '12',
-        'newDepartureDate-day': '11',
-        notes: 'Some notes',
-      }
-      const body = {
+      const booking = cas3BookingFactory.build()
+      const payload = newExtensionFactory.build()
+      const extension = cas3ExtensionFactory.build({
+        ...payload,
         bookingId: booking.id,
-        createdAt: booking.createdAt,
-        id: booking.id,
-        newDepartureDate: payload.newDepartureDate,
-        notes: payload.notes,
-        previousDepartureDate: booking.departureDate,
-      }
+      })
+
       await provider.addInteraction({
         state: 'Booking can be extended',
         uponReceiving: 'a request to extend a booking',
         withRequest: {
           method: 'POST',
-          path: `/premises/${premisesId}/bookings/${booking.id}/extensions`,
+          path: paths.cas3.premises.bookings.extensions({ premisesId, bookingId: booking.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -153,22 +144,23 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
         willRespondWith: {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-          body,
+          body: extension,
         },
       })
 
       const result = await bookingClient.extendBooking(premisesId, booking.id, payload)
-      expect(result).toEqual(body)
+      expect(result).toEqual(extension)
     })
   })
 
   describe('markAsConfirmed', () => {
     it('should create a confirmation', async () => {
       const premisesId = faker.string.uuid()
-      const booking = bookingFactory.build()
-      const confirmation = confirmationFactory.build()
-      const payload = newConfirmationFactory.build({
-        ...confirmation,
+      const booking = cas3BookingFactory.build()
+      const payload = newConfirmationFactory.build()
+      const confirmation = cas3ConfirmationFactory.build({
+        ...payload,
+        bookingId: booking.id,
       })
 
       await provider.addInteraction({
@@ -176,7 +168,7 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
         uponReceiving: 'a request to confirm a booking',
         withRequest: {
           method: 'POST',
-          path: `/premises/${premisesId}/bookings/${booking.id}/confirmations`,
+          path: paths.cas3.premises.bookings.confirmations({ premisesId, bookingId: booking.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -197,12 +189,13 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
   describe('markAsArrived', () => {
     it('should create an arrival', async () => {
       const premisesId = faker.string.uuid()
-      const booking = bookingFactory.build()
-      const arrival = arrivalFactory.build()
+      const booking = cas3BookingFactory.build()
+      const arrival = cas3ArrivalFactory.build({
+        bookingId: booking.id,
+      })
       const payload = newArrivalFactory.build({
-        arrivalDate: arrival.arrivalDate.toString(),
-        expectedDepartureDate: arrival.expectedDepartureDate.toString(),
-        notes: arrival.notes,
+        arrivalDate: arrival.arrivalDate,
+        expectedDepartureDate: arrival.expectedDepartureDate,
       })
 
       await provider.addInteraction({
@@ -210,7 +203,7 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
         uponReceiving: 'a request to mark a booking as arrived',
         withRequest: {
           method: 'POST',
-          path: `/cas3/premises/${premisesId}/bookings/${booking.id}/arrivals`,
+          path: paths.cas3.premises.bookings.arrivals({ premisesId, bookingId: booking.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -225,11 +218,7 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
 
       const result = await bookingClient.markAsArrived(premisesId, booking.id, payload)
 
-      expect(result).toEqual({
-        ...arrival,
-        arrivalDate: arrival.arrivalDate,
-        expectedDepartureDate: arrival.expectedDepartureDate,
-      })
+      expect(result).toEqual(arrival)
     })
   })
 
@@ -238,14 +227,14 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
       const premisesId = faker.string.uuid()
       const bookingId = faker.string.uuid()
       const newCancellation = newCancellationFactory.build()
-      const cancellation = cancellationFactory.build()
+      const cancellation = cas3CancellationFactory.build()
 
       await provider.addInteraction({
         state: 'Booking can be cancelled',
         uponReceiving: 'a request to cancel a booking',
         withRequest: {
           method: 'POST',
-          path: `/premises/${premisesId}/bookings/${bookingId}/cancellations`,
+          path: paths.cas3.premises.bookings.cancellations.create({ premisesId, bookingId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -268,15 +257,14 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
       const premisesId = faker.string.uuid()
       const bookingId = faker.string.uuid()
       const newDeparture = cas3NewDepartureFactory.build()
-      const departure = departureFactory.build({ bookingId })
-      delete departure.destinationProvider
+      const departure = cas3DepartureFactory.build({ bookingId })
 
       await provider.addInteraction({
         state: 'Booking can be marked as departed',
         uponReceiving: 'a request to mark a booking as departed',
         withRequest: {
           method: 'POST',
-          path: `/cas3/premises/${premisesId}/bookings/${bookingId}/departures`,
+          path: paths.cas3.premises.bookings.departures.create({ premisesId, bookingId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -290,6 +278,7 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
       })
 
       const result = await bookingClient.markDeparture(premisesId, bookingId, newDeparture)
+
       expect(result).toEqual(departure)
     })
   })
@@ -298,7 +287,7 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
     it('should create a turnaround', async () => {
       const premisesId = faker.string.uuid()
       const bookingId = faker.string.uuid()
-      const turnaround = turnaroundFactory.build()
+      const turnaround = cas3TurnaroundFactory.build()
       const payload = newTurnaroundFactory.build()
 
       await provider.addInteraction({
@@ -306,7 +295,7 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
         uponReceiving: 'a request to create a turnaround',
         withRequest: {
           method: 'POST',
-          path: `/premises/${premisesId}/bookings/${bookingId}/turnarounds`,
+          path: paths.cas3.premises.bookings.turnarounds({ premisesId, bookingId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -326,20 +315,20 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
 
   describe('search', () => {
     it('should return all provisional bookings with pagination headers', async () => {
-      const bookings = bookingSearchResultsFactory.build()
-      const body = { results: bookings.data }
+      const bookings = cas3BookingSearchResultsFactory.build()
+      const body = { results: bookings.data, resultsCount: bookings.data.length }
 
       await provider.addInteraction({
         state: 'Provisional bookings exist',
         uponReceiving: 'a request for provisional bookings',
         withRequest: {
           method: 'GET',
-          path: `${paths.bookings.search({})}`,
+          path: paths.cas3.bookings.search({}),
           query: {
             status: 'provisional',
             page: '1',
-            sortField: 'endDate',
-            sortOrder: 'descending',
+            sortField: 'BOOKING_END_DATE',
+            sortDirection: 'desc',
           },
           headers: {
             authorization: `Bearer ${callConfig.token}`,
@@ -360,8 +349,8 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
     })
 
     it('should return confirmed bookings for a given CRN or Name', async () => {
-      const booking = bookingSearchResultFactory.build({ person: { crn: 'C555333' } })
-      const { data: bookings } = bookingSearchResultsFactory.build({ data: [booking] })
+      const booking = cas3BookingSearchResultFactory.build({ person: { crn: 'C555333' } })
+      const { data: bookings } = cas3BookingSearchResultsFactory.build({ data: [booking] })
       const body = { results: bookings, resultsCount: bookings.length }
 
       await provider.addInteraction({
@@ -369,13 +358,13 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
         uponReceiving: 'a request for confirmed bookings by CRN',
         withRequest: {
           method: 'GET',
-          path: `${paths.bookings.search({})}`,
+          path: paths.cas3.bookings.search({}),
           query: {
             status: 'confirmed',
             crnOrName: booking.person.crn,
             page: '1',
-            sortField: 'endDate',
-            sortOrder: 'descending',
+            sortField: 'BOOKING_END_DATE',
+            sortDirection: 'asc',
           },
           headers: {
             authorization: `Bearer ${callConfig.token}`,
@@ -388,7 +377,7 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
         },
       })
 
-      const result = await bookingClient.search('confirmed', { crnOrName: 'C555333', page: 1, sortDirection: 'desc' })
+      const result = await bookingClient.search('confirmed', { crnOrName: 'C555333', page: 1, sortDirection: 'asc' })
 
       expect(result.data).toEqual(bookings)
     })

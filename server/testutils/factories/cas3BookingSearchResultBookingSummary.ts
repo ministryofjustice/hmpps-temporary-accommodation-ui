@@ -8,5 +8,5 @@ export default Factory.define<Cas3BookingSearchResultBookingSummary>(() => ({
   status: faker.helpers.arrayElement(['provisional', 'confirmed', 'arrived', 'departed'] as const),
   startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
   endDate: DateFormats.dateObjToIsoDate(faker.date.future()),
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
 }))

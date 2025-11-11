@@ -60,10 +60,11 @@ import cas3PremisesSearchResultsFactory from './cas3PremisesSearchResults'
 import cas3ArchivePremisesFactory from './cas3ArchivePremises'
 import cas3UnarchivePremisesFactory from './cas3UnarchivePremises'
 import cas3BedspaceFactory from './cas3Bedspace'
+import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
 import cas3BedspaceArchiveActionFactory from './cas3BedspaceArchiveAction'
 import cas3NewBedspaceFactory from './cas3NewBedspace'
 import cas3UpdateBedspaceFactory from './cas3UpdateBedspace'
-import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
+import cas3BedspacePremisesSearchResultFactory from './cas3BedspacePremisesSearchResult'
 import cas3BedspaceReferenceFactory from './cas3BedspaceReference'
 import cas3BedspacesReferenceFactory from './cas3BedspacesReference'
 import cas3ReferralHistoryUserNoteFactory from './cas3ReferralHistoryUserNote'
@@ -167,9 +168,10 @@ export {
   cas3BedspaceFactory,
   cas3BedspaceArchiveActionFactory,
   cas3BedspacesFactory,
+  cas3BedspaceSummaryFactory,
   cas3NewBedspaceFactory,
   cas3UpdateBedspaceFactory,
-  cas3BedspaceSummaryFactory,
+  cas3BedspacePremisesSearchResultFactory,
   cas3BedspaceReferenceFactory,
   cas3BedspacesReferenceFactory,
   cas3BookingFactory,

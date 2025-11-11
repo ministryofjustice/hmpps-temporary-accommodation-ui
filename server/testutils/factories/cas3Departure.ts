@@ -12,6 +12,5 @@ export default Factory.define<Cas3Departure>(() => ({
   reason: referenceDataFactory.departureReasons().build(),
   notes: faker.lorem.sentence(),
   moveOnCategory: referenceDataFactory.moveOnCategories().build(),
-  destinationProvider: referenceDataFactory.destinationProviders().build(),
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
 }))

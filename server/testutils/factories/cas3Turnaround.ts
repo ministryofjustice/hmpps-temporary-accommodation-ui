@@ -7,5 +7,5 @@ export default Factory.define<Cas3Turnaround>(() => ({
   id: faker.string.uuid(),
   bookingId: faker.string.uuid(),
   workingDays: faker.number.int({ min: 1, max: 10 }),
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
 }))

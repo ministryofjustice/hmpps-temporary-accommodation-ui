@@ -1,8 +1,8 @@
 import type {
-  AssessmentAcceptance,
   AssessmentRejection,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   Cas3Assessment,
+  Cas3AssessmentAcceptance,
   Cas3AssessmentSummary,
   Cas3UpdateAssessment,
   Cas3ReferralHistoryUserNote as NewNote,
@@ -81,8 +81,8 @@ export default class AssessmentClient {
 
   async acceptAssessment(id: string) {
     return this.restClient.post<void>({
-      path: paths.assessments.acceptance({ id }),
-      data: { document: {} } as AssessmentAcceptance,
+      path: paths.cas3.assessments.acceptance({ id }),
+      data: { document: {} } as Cas3AssessmentAcceptance,
     })
   }
 

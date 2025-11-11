@@ -1,18 +1,25 @@
-import { faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker/.'
 import BedspaceClient from './bedspaceClient'
 import { CallConfig } from './restClient'
 import {
   bedspaceSearchApiParametersFactory,
-  bedspaceSearchResultsFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
   cas3UpdateBedspaceFactory,
+  cas3v2BedspaceSearchResultsFactory,
 } from '../testutils/factories'
 import paths from '../paths/api'
 import describeClient from '../testutils/describeClient'
 
-describeClient('BedspaceClient - ENABLE_CAS3V2_API flag off', provider => {
+jest.mock('../config', () => ({
+  ...jest.requireActual('../config').default,
+  flags: {
+    enableCas3v2Api: true,
+  },
+}))
+
+describeClient('BedspaceClient', provider => {
   let bedspaceClient: BedspaceClient
   const callConfig = { token: 'some-token' } as CallConfig
 
@@ -22,7 +29,7 @@ describeClient('BedspaceClient - ENABLE_CAS3V2_API flag off', provider => {
 
   describe('search', () => {
     it('returns search results', async () => {
-      const results = bedspaceSearchResultsFactory.build()
+      const results = cas3v2BedspaceSearchResultsFactory.build()
       const payload = bedspaceSearchApiParametersFactory.build()
 
       await provider.addInteraction({

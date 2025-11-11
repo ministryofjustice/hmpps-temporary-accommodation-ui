@@ -7,7 +7,7 @@ import { DateFormats } from '../../utils/dateUtils'
 export default Factory.define<Cas3Confirmation>(() => ({
   id: faker.string.uuid(),
   bookingId: faker.string.uuid(),
-  dateTime: DateFormats.dateObjToIsoDate(faker.date.past()),
+  dateTime: DateFormats.dateObjToIsoDateTime(faker.date.past()),
   notes: faker.lorem.sentence(),
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
 }))

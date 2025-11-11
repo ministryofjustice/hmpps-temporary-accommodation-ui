@@ -1,10 +1,12 @@
 import type {
   Arrival,
   Booking,
+  BookingSearchSortField,
   Cancellation,
   Cas3Arrival,
   Cas3Booking,
   Cas3BookingSearchResult,
+  Cas3BookingSearchSortField,
   Cas3Cancellation,
   Cas3Confirmation,
   Cas3Departure,
@@ -32,6 +34,14 @@ import { BookingSearchResult } from '../@types/shared'
 
 type SearchResponse = {
   results: Array<BookingSearchResult> | Array<Cas3BookingSearchResult>
+}
+
+export const searchSortFieldsMap: Record<BookingSearchSortField, Cas3BookingSearchSortField> = {
+  name: 'PERSON_NAME',
+  crn: 'PERSON_CRN',
+  startDate: 'BOOKING_START_DATE',
+  endDate: 'BOOKING_END_DATE',
+  createdAt: 'BOOKING_CREATED_AT',
 }
 
 export default class BookingClient {
@@ -153,17 +163,41 @@ export default class BookingClient {
     status: BookingSearchApiStatus,
     params: BookingSearchParameters,
   ): Promise<PaginatedResponse<BookingSearchResult | Cas3BookingSearchResult>> {
-    const basePath = config.flags.enableCas3v2Api ? paths.cas3.bookings.search : paths.bookings.search
+    if (!config.flags.enableCas3v2Api) {
+      const path = appendQueryString(paths.bookings.search({ status }), {
+        status,
+        crnOrName: params.crnOrName,
+        page: !params.page ? 1 : params.page, // also handles NaN & <1
+        sortField: params.sortBy || 'endDate',
+        sortOrder: params.sortDirection === 'asc' ? 'ascending' : 'descending',
+      })
 
-    const path = appendQueryString(basePath({ status }), {
+      const response = await this.restClient.get<SearchResponse>({ path }, true)
+
+      const { body, header } = response
+
+      return {
+        url: {
+          params: new URLSearchParams(path),
+        },
+        data: body.results,
+        pageNumber: Number(header['x-pagination-currentpage']),
+        pageSize: Number(header['x-pagination-pagesize']),
+        totalPages: Number(header['x-pagination-totalpages']),
+        totalResults: Number(header['x-pagination-totalresults']),
+      }
+    }
+
+    const path = appendQueryString(paths.cas3.bookings.search({ status }), {
       status,
       crnOrName: params.crnOrName,
       page: !params.page ? 1 : params.page, // also handles NaN & <1
-      sortField: params.sortBy || 'endDate',
-      sortOrder: params.sortDirection === 'asc' ? 'ascending' : 'descending',
+      sortField: searchSortFieldsMap[params.sortBy] || 'BOOKING_END_DATE',
+      sortDirection: params.sortDirection || 'desc',
     })
 
     const response = await this.restClient.get<SearchResponse>({ path }, true)
+
     const { body, header } = response
 
     return {

@@ -26,7 +26,7 @@ export default class BedspaceEditPage extends Page {
 
   validateEnteredInformation(bedspace: Cas3Bedspace) {
     this.validateEnteredReference(bedspace.reference)
-    this.validateEnteredCharacteristics(bedspace.characteristics.map(ch => ch.name))
+    this.validateEnteredCharacteristics(bedspace.bedspaceCharacteristics.map(ch => ch.description))
     this.validateEnteredAdditionalDetails(bedspace.notes)
   }
 

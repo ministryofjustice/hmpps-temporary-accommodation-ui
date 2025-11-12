@@ -1,7 +1,7 @@
 import {
   Cas3Premises,
+  Cas3PremisesCharacteristic,
   Cas3ValidationResults,
-  Characteristic,
   LocalAuthorityArea,
   ProbationDeliveryUnit,
 } from '@approved-premises/api'
@@ -11,16 +11,16 @@ import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommo
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
-  bedFactory,
-  bookingFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
+  cas3BookingFactory,
   cas3NewPremisesFactory,
+  cas3PremisesCharacteristicsFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3UpdatePremisesFactory,
-  lostBedFactory,
+  cas3VoidBedspaceFactory,
 } from '../../../../server/testutils/factories'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
@@ -1017,19 +1017,9 @@ context('Premises', () => {
         name: 'North Tyneside and Northumberland',
         id: 'ec5e98a5-bcaf-46a3-a0af-2c5f1decba01',
       }
-      const characteristics: Array<Characteristic> = [
-        {
-          name: 'Pub nearby',
-          id: '684f919a-4c4a-4e80-9b3a-1dcd35873b3f',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'premises',
-        },
-        {
-          name: 'Floor level access',
-          id: '99bb0f33-ff92-4606-9d1c-43bcf0c42ef4',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'premises',
-        },
+      const characteristics: Array<Cas3PremisesCharacteristic> = [
+        cas3PremisesCharacteristicsFactory.byDescription('Pub nearby'),
+        cas3PremisesCharacteristicsFactory.byDescription('Ground floor level access'),
       ]
       const newPremises = cas3NewPremisesFactory.build({
         localAuthorityAreaId: localAuthority.id,
@@ -1041,14 +1031,14 @@ context('Premises', () => {
       page.enterLocalAuthority(localAuthority.name)
       page.enterProbationRegion()
       page.enterPdu(pdu.name)
-      page.enterCharacteristics(characteristics.map(char => char.name))
+      page.enterCharacteristics(characteristics.map(char => char.description))
       page.enterAdditionalDetails(newPremises.notes)
       page.enterWorkingDays(newPremises.turnaroundWorkingDays)
 
       // And the backend responds with 201 created
       const premises = cas3PremisesFactory.build({
         ...newPremises,
-        characteristics,
+        premisesCharacteristics: characteristics,
         probationDeliveryUnit: pdu,
         localAuthorityArea: localAuthority,
         startDate: '2025-02-01',
@@ -1100,7 +1090,7 @@ context('Premises', () => {
       // When I don't enter the required fields
       page.enterAddress('', 'Some address line 2', 'Some town', '')
       page.enterLocalAuthority('Northumberland')
-      page.enterCharacteristics(['Pub nearby', 'Wheelchair accessible'])
+      page.enterCharacteristics(['Pub nearby', 'Shared entrance'])
       page.enterAdditionalDetails('Lorem ipsum dolor sit amet.')
       page.enterWorkingDays(5)
 
@@ -1129,7 +1119,7 @@ context('Premises', () => {
       page.validateEnteredAddressLine2('Some address line 2')
       page.validateEnteredTown('Some town')
       page.validateEnteredLocalAuthority('Northumberland')
-      page.validateEnteredCharacteristics(['Pub nearby', 'Wheelchair accessible'])
+      page.validateEnteredCharacteristics(['Pub nearby', 'Shared entrance'])
       page.validateEnteredAdditionalDetails('Lorem ipsum dolor sit amet.')
       page.validateEnteredWorkingDays(5)
     })
@@ -1174,25 +1164,15 @@ context('Premises', () => {
         name: 'North Tyneside and Northumberland',
         id: 'ec5e98a5-bcaf-46a3-a0af-2c5f1decba01',
       }
-      const characteristics: Array<Characteristic> = [
-        {
-          name: 'Pub nearby',
-          id: '684f919a-4c4a-4e80-9b3a-1dcd35873b3f',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'premises',
-        },
-        {
-          name: 'Floor level access',
-          id: '99bb0f33-ff92-4606-9d1c-43bcf0c42ef4',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'premises',
-        },
+      const characteristics: Array<Cas3PremisesCharacteristic> = [
+        cas3PremisesCharacteristicsFactory.byDescription('Pub nearby'),
+        cas3PremisesCharacteristicsFactory.byDescription('Ground floor level access'),
       ]
       const premises = cas3PremisesFactory.build({
         status: 'online',
         localAuthorityArea,
         probationDeliveryUnit,
-        characteristics,
+        premisesCharacteristics: characteristics,
       })
       cy.task('stubSinglePremises', premises)
       cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
@@ -1219,26 +1199,16 @@ context('Premises', () => {
         name: 'North Tyneside and Northumberland',
         id: 'ec5e98a5-bcaf-46a3-a0af-2c5f1decba01',
       }
-      const characteristics: Array<Characteristic> = [
-        {
-          name: 'Pub nearby',
-          id: '684f919a-4c4a-4e80-9b3a-1dcd35873b3f',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'premises',
-        },
-        {
-          name: 'Floor level access',
-          id: '99bb0f33-ff92-4606-9d1c-43bcf0c42ef4',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'premises',
-        },
+      const characteristics: Array<Cas3PremisesCharacteristic> = [
+        cas3PremisesCharacteristicsFactory.byDescription('Pub nearby'),
+        cas3PremisesCharacteristicsFactory.byDescription('Ground floor level access'),
       ]
       const premises = cas3PremisesFactory.build({
         status: 'online',
         startDate: '2025-06-07',
         localAuthorityArea,
         probationDeliveryUnit,
-        characteristics,
+        premisesCharacteristics: characteristics,
       })
       cy.task('stubSinglePremises', premises)
       cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
@@ -1256,19 +1226,9 @@ context('Premises', () => {
         id: '1b74c3ef-6533-4780-9faf-1dfdfef75cfe',
         name: 'Newcastle Upon Tyne',
       }
-      const updatedCharacteristics: Array<Characteristic> = [
-        {
-          id: '62c4d8cf-b612-4110-9e27-5c29982f9fcf',
-          name: 'Not suitable for arson offenders',
-          serviceScope: 'temporary-accommodation',
-          modelScope: '*',
-        },
-        {
-          id: '684f919a-4c4a-4e80-9b3a-1dcd35873b3f',
-          name: 'Pub nearby',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'premises',
-        },
+      const updatedCharacteristics: Array<Cas3PremisesCharacteristic> = [
+        cas3PremisesCharacteristicsFactory.byDescription('Not suitable for those with an arson history'),
+        cas3PremisesCharacteristicsFactory.byDescription('Shared entrance'),
       ]
       const updatedPremises = cas3UpdatePremisesFactory.build({
         localAuthorityAreaId: updatedLocalAuthorityArea.id,
@@ -1285,14 +1245,14 @@ context('Premises', () => {
       )
       page.enterLocalAuthority(updatedLocalAuthorityArea.name)
       page.enterPdu(updatedPdu.name)
-      page.enterCharacteristics(updatedCharacteristics.map(char => char.name))
+      page.enterCharacteristics(updatedCharacteristics.map(char => char.description))
       page.enterAdditionalDetails(updatedPremises.notes)
       page.enterWorkingDays(updatedPremises.turnaroundWorkingDays)
 
       // And the backend responds with 200 ok
       const expectedPremises = cas3PremisesFactory.build({
         ...updatedPremises,
-        characteristics: updatedCharacteristics,
+        premisesCharacteristics: updatedCharacteristics,
         probationDeliveryUnit: updatedPdu,
         localAuthorityArea: updatedLocalAuthorityArea,
         startDate: premises.startDate,
@@ -1346,25 +1306,15 @@ context('Premises', () => {
         name: 'North Tyneside and Northumberland',
         id: 'ec5e98a5-bcaf-46a3-a0af-2c5f1decba01',
       }
-      const characteristics: Array<Characteristic> = [
-        {
-          name: 'Pub nearby',
-          id: '684f919a-4c4a-4e80-9b3a-1dcd35873b3f',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'premises',
-        },
-        {
-          name: 'Floor level access',
-          id: '99bb0f33-ff92-4606-9d1c-43bcf0c42ef4',
-          serviceScope: 'temporary-accommodation',
-          modelScope: 'premises',
-        },
+      const characteristics: Array<Cas3PremisesCharacteristic> = [
+        cas3PremisesCharacteristicsFactory.byDescription('Pub nearby'),
+        cas3PremisesCharacteristicsFactory.byDescription('Ground floor level access'),
       ]
       const premises = cas3PremisesFactory.build({
         status: 'online',
         localAuthorityArea,
         probationDeliveryUnit,
-        characteristics,
+        premisesCharacteristics: characteristics,
       })
       cy.task('stubSinglePremises', premises)
       cy.task('stubPremisesBedspaces', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
@@ -1395,7 +1345,7 @@ context('Premises', () => {
       page.validateEnteredAddressLine2(premises.addressLine2)
       page.validateEnteredTown(premises.town)
       page.validateEnteredLocalAuthority(premises.localAuthorityArea.name)
-      page.validateEnteredCharacteristics(premises.characteristics.map(ch => ch.name))
+      page.validateEnteredCharacteristics(premises.premisesCharacteristics.map(ch => ch.description))
       page.validateEnteredAdditionalDetails(premises.notes)
       page.validateEnteredWorkingDays(premises.turnaroundWorkingDays)
     })
@@ -1588,15 +1538,15 @@ context('Premises', () => {
       // And there is an online premises in the database with some upcoming bedspace bookings
       const premises = cas3PremisesFactory.build({ status: 'online' })
       const bedspaces = cas3BedspaceFactory.buildList(4)
-      const bookings = bookingFactory
+      const bookings = cas3BookingFactory
         .params({
-          bed: bedFactory.build({ id: bedspaces[0].id }),
+          bedspace: cas3BedspaceFactory.build({ id: bedspaces[0].id }),
         })
         .buildList(5)
-      const lostBeds = lostBedFactory
+      const lostBeds = cas3VoidBedspaceFactory
         .active()
         .params({
-          bedId: bedspaces[0].id,
+          bedspaceId: bedspaces[0].id,
         })
         .buildList(5)
       const bedspacesReference: Cas3ValidationResults = {

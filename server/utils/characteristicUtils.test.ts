@@ -1,8 +1,5 @@
 import { characteristicFactory } from '../testutils/factories'
-import { filterCharacteristics, formatCharacteristics } from './characteristicUtils'
-import { escape } from './viewUtils'
-
-jest.mock('./viewUtils')
+import { characteristicToCas3ReferenceData, filterCharacteristics } from './characteristicUtils'
 
 describe('filterCharacteristics', () => {
   it('filters given characteristics', () => {
@@ -31,42 +28,14 @@ describe('filterCharacteristics', () => {
   })
 })
 
-describe('formatCharacteristics', () => {
-  it('returns an HTML formatted, sorted, list of characteristics', () => {
-    ;(escape as jest.MockedFunction<typeof escape>).mockImplementation(text => text)
+describe('characteristicToCas3ReferenceData', () => {
+  it('converts a characteristic to a CAS3 reference data object', () => {
+    const characteristic = characteristicFactory.build()
 
-    const characteristic1 = characteristicFactory.build({
-      name: 'ABC',
-    })
-
-    const characteristic2 = characteristicFactory.build({
-      name: 'EFG',
-    })
-
-    const characteristic3 = characteristicFactory.build({
-      name: 'LMN',
-    })
-
-    const output = formatCharacteristics([characteristic2, characteristic3, characteristic1])
-
-    expect(output).toEqual({
-      html: '<ul><li>ABC</li><li>EFG</li><li>LMN</li></ul>',
-    })
-
-    expect(escape).toHaveBeenCalledWith('ABC')
-    expect(escape).toHaveBeenCalledWith('EFG')
-    expect(escape).toHaveBeenCalledWith('LMN')
-  })
-
-  it('returns an empty string when given an empty list of characteristics', () => {
-    expect(formatCharacteristics([])).toEqual({
-      text: '',
-    })
-  })
-
-  it('returns an empty string when given null', () => {
-    expect(formatCharacteristics(null)).toEqual({
-      text: '',
+    expect(characteristicToCas3ReferenceData(characteristic)).toEqual({
+      id: characteristic.id,
+      name: characteristic.propertyName,
+      description: characteristic.name,
     })
   })
 })

@@ -3,20 +3,20 @@ import { Cas3Bedspace, type Cas3BedspaceArchiveAction } from '@approved-premises
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { ReferenceData } from '@approved-premises/ui'
 import { DateFormats } from '../../utils/dateUtils'
-import { unique } from '../../utils/utils'
-import referenceDataFactory from './referenceData'
-import characteristicFactory from './characteristic'
+import cas3BedspaceCharacteristicsFactory from './cas3BedspaceCharacteristics'
+import { camelCase, unique } from '../../utils/utils'
 
 class BedspaceFactory extends Factory<Cas3Bedspace> {
   /* istanbul ignore next */
   forEnvironment(characteristics: ReferenceData[]) {
     return this.params({
-      characteristics: faker.helpers
+      bedspaceCharacteristics: faker.helpers
         .arrayElements(characteristics, faker.number.int({ min: 1, max: 5 }))
         .map(characteristic =>
-          characteristicFactory.build({
-            ...characteristic,
-            modelScope: 'room',
+          cas3BedspaceCharacteristicsFactory.build({
+            id: characteristic.id,
+            description: characteristic.name,
+            name: camelCase(characteristic.name),
           }),
         ),
     })
@@ -25,9 +25,9 @@ class BedspaceFactory extends Factory<Cas3Bedspace> {
 
 export default BedspaceFactory.define(() => ({
   id: faker.string.uuid(),
-  reference: `Room ${faker.number.int({ min: 1, max: 9999 })}`,
+  reference: faker.string.alphanumeric(6),
   status: faker.helpers.arrayElement(['online', 'upcoming', 'archived']),
-  characteristics: unique(referenceDataFactory.characteristic('room').buildList(faker.number.int({ min: 1, max: 5 }))),
+  bedspaceCharacteristics: unique(cas3BedspaceCharacteristicsFactory.buildList(faker.number.int({ min: 1, max: 5 }))),
   startDate: DateFormats.dateObjToIsoDate(faker.date.past({ years: 1 })),
   notes: faker.helpers
     .multiple(() => `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`)

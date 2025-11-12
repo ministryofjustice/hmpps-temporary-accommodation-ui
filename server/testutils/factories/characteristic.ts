@@ -8,4 +8,5 @@ export default Factory.define<Characteristic>(() => ({
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   modelScope: faker.helpers.arrayElement(['room', '*']),
   serviceScope: 'temporary-accommodation',
+  propertyName: faker.word.words(3),
 }))

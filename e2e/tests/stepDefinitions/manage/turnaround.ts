@@ -2,7 +2,7 @@ import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import Page from '../../../../cypress_shared/pages/page'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import BookingTurnaroundNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingTurnaroundNew'
-import { bookingFactory, newTurnaroundFactory, turnaroundFactory } from '../../../../server/testutils/factories'
+import { cas3BookingFactory, cas3TurnaroundFactory, newTurnaroundFactory } from '../../../../server/testutils/factories'
 
 Given("I edit the booking's turnaround time", () => {
   cy.then(function _() {
@@ -10,7 +10,7 @@ Given("I edit the booking's turnaround time", () => {
     bookingShowPage.clickChangeTurnaround()
 
     const newTurnaround = newTurnaroundFactory.build()
-    const turnaround = turnaroundFactory.build({
+    const turnaround = cas3TurnaroundFactory.build({
       ...newTurnaround,
     })
 
@@ -23,7 +23,7 @@ Given("I edit the booking's turnaround time", () => {
     bookingTurnaroundNewPage.shouldShowBookingDetails()
     bookingTurnaroundNewPage.completeForm(newTurnaround)
 
-    const updatedBooking = bookingFactory.build({
+    const updatedBooking = cas3BookingFactory.build({
       ...this.booking,
       turnaround,
     })

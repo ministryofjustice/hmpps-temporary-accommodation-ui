@@ -1,16 +1,116 @@
 [
-  { "id": "fffb3004-5f0a-4e88-8350-fb89a0168296", "name": "Park nearby", "serviceScope": "temporary-accommodation", "modelScope": "premises" },
-  { "id": "684f919a-4c4a-4e80-9b3a-1dcd35873b3f", "name": "Pub nearby", "serviceScope": "temporary-accommodation", "modelScope": "premises" },
-  { "id": "78c5d99b-9702-4bf2-a23d-c2a0cf3a017d", "name": "School nearby", "serviceScope": "temporary-accommodation", "modelScope": "premises" },
-  { "id": "2fff6ede-7035-4e8d-81ad-5fcd894b99cf", "name": "Men only", "serviceScope": "temporary-accommodation", "modelScope": "premises" },
-  { "id": "8221f1ad-3aaf-406a-b918-dbdef956ea17", "name": "Women only", "serviceScope": "temporary-accommodation", "modelScope": "premises" },
-  { "id": "12e2e689-b3fb-469d-baec-2fb68e15e85b", "name": "Single bed", "serviceScope": "temporary-accommodation", "modelScope": "room" },
-  { "id": "08b756e2-0b82-4f49-a124-35ea4ebb1634", "name": "Double bed", "serviceScope": "temporary-accommodation", "modelScope": "room" },
-  { "id": "7dd3bac5-3d1c-4acb-b110-b1614b2c95d8", "name": "Shared kitchen", "serviceScope": "temporary-accommodation", "modelScope": "room" },
-  { "id": "e730bdea-6157-4910-b1b0-450b29bf0c9f", "name": "Shared bathroom", "serviceScope": "temporary-accommodation", "modelScope": "room" },
-  { "id": "2183d873-8270-4e93-8518-3a668a053689", "name": "Lift access", "serviceScope": "temporary-accommodation", "modelScope": "room" },
-  { "id": "a2dd4661-c7fe-4294-b3fd-3fc877e62aa5", "name": "Not suitable for registered sex offenders (RSO)", "serviceScope": "temporary-accommodation", "modelScope": "*" },
-  { "id": "62c4d8cf-b612-4110-9e27-5c29982f9fcf", "name": "Not suitable for arson offenders", "serviceScope": "temporary-accommodation", "modelScope": "*" },
-  { "id": "99bb0f33-ff92-4606-9d1c-43bcf0c42ef4", "name": "Floor level access", "serviceScope": "temporary-accommodation", "modelScope": "*" },
-  { "id": "d2f7796a-88e5-4e53-ab6d-dabb145b6a60", "name": "Wheelchair accessible", "serviceScope": "temporary-accommodation", "modelScope": "*" }
+  {
+    "id": "fffb3004-5f0a-4e88-8350-fb89a0168296",
+    "name": "Park nearby",
+    "propertyName": "isParkNearBy",
+    "modelScope": "premises"
+  },
+  {
+    "id": "684f919a-4c4a-4e80-9b3a-1dcd35873b3f",
+    "name": "Pub nearby",
+    "propertyName": "isPubNearBy",
+    "modelScope": "premises"
+  },
+  {
+    "id": "78c5d99b-9702-4bf2-a23d-c2a0cf3a017d",
+    "name": "School nearby",
+    "propertyName": "isSchoolNearBy",
+    "modelScope": "premises"
+  },
+  {
+    "id": "2fff6ede-7035-4e8d-81ad-5fcd894b99cf",
+    "name": "Men only",
+    "propertyName": "isMenOnly",
+    "modelScope": "premises"
+  },
+  {
+    "id": "c0fc6e07-4ca3-45ac-88ea-375479e1419f",
+    "name": "Not suitable for those with an arson history",
+    "propertyName": "notSuitableForArsonHistory",
+    "modelScope": "premises"
+  },
+  {
+    "id": "8221f1ad-3aaf-406a-b918-dbdef956ea17",
+    "name": "Women only",
+    "propertyName": "isWomenOnly",
+    "modelScope": "premises"
+  },
+  {
+    "id": "7dd3bac5-3d1c-4acb-b110-b1614b2c95d8",
+    "name": "Shared kitchen",
+    "propertyName": "hasSharedKitchen",
+    "modelScope": "room"
+  },
+  {
+    "id": "e730bdea-6157-4910-b1b0-450b29bf0c9f",
+    "name": "Shared bathroom",
+    "propertyName": "hasSharedBathroom",
+    "modelScope": "room"
+  },
+  {
+    "id": "99bb0f33-ff92-4606-9d1c-43bcf0c42ef4",
+    "name": "Ground floor level access",
+    "propertyName": "isGroundFloor",
+    "modelScope": "*"
+  },
+  {
+    "id": "d2f7796a-88e5-4e53-ab6d-dabb145b6a60",
+    "name": "Wheelchair accessible",
+    "propertyName": "isWheelchairAccessible",
+    "modelScope": "room"
+  },
+  {
+    "id": "cb7447cd-d629-4c89-be93-cd48c1060af8",
+    "name": "Not suitable for those who pose a sexual risk to adults",
+    "propertyName": "notSuitableForSexualRiskToAdults",
+    "modelScope": "premises"
+  },
+  {
+    "id": "8fcf6f60-bbca-4425-b0e8-9dfbe88f3aa6",
+    "name": "Not suitable for those who pose a sexual risk to children",
+    "propertyName": "notSuitableForSexualRiskToChildren",
+    "modelScope": "premises"
+  },
+  {
+    "id": "454a5ff4-d87a-43f9-8989-135bcc47a635",
+    "name": "Single occupancy",
+    "propertyName": "isSingleOccupancy",
+    "modelScope": "premises"
+  },
+  {
+    "id": "62a38d3a-4797-4b0f-8681-7befea1035a4",
+    "name": "Shared property",
+    "propertyName": "isSharedProperty",
+    "modelScope": "premises"
+  },
+  {
+    "id": "e2868d4f-cb8f-4a4b-ae27-6b887a63d37c",
+    "name": "Shared entrance",
+    "propertyName": "hasSharedEntrance",
+    "modelScope": "premises"
+  },
+  {
+    "id": "da0e86b3-fce8-42b6-af0c-ac6f905611e6",
+    "name": "Lift available",
+    "propertyName": "hasLift",
+    "modelScope": "premises"
+  },
+  {
+    "id": "1fb6000b-7c55-44cc-bb8c-38835c99ab99",
+    "name": "Sensitive let",
+    "propertyName": "isSensitiveLet",
+    "modelScope": "premises"
+  },
+  {
+    "id": "78adf0c6-01cb-4b1a-be3e-1a3f5346a497",
+    "name": "Rural/out of town",
+    "propertyName": "isRural",
+    "modelScope": "premises"
+  },
+  {
+    "id": "7f805b33-048e-4034-9ded-21947bf5c728",
+    "name": "Close proximity to another CAS3 property",
+    "propertyName": "isCloseAnotherCas3Property",
+    "modelScope": "premises"
+  }
 ]

@@ -1,4 +1,4 @@
-import type { Cas3Bedspace, Cas3Premises, LostBed, NewLostBedCancellation } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Premises, Cas3VoidBedspace, Cas3VoidBedspaceCancellation } from '@approved-premises/api'
 
 import Page from '../../page'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -10,14 +10,14 @@ export default class LostBedCancelPage extends Page {
   constructor(
     private readonly premises: Cas3Premises,
     private readonly bedspace: Cas3Bedspace,
-    private readonly lostBed: LostBed,
+    private readonly lostBed: Cas3VoidBedspace,
   ) {
     super('Cancel void booking')
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises })
   }
 
-  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, lostBed: LostBed): LostBedCancelPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, lostBed: Cas3VoidBedspace): LostBedCancelPage {
     cy.visit(
       paths.lostBeds.cancellations.new({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }),
     )
@@ -29,13 +29,13 @@ export default class LostBedCancelPage extends Page {
   }
 
   clearForm(): void {
-    super.getTextInputByIdAndClear('notes')
+    super.getTextInputByIdAndClear('cancellationNotes')
   }
 
-  completeForm(cancelLostBed: NewLostBedCancellation): void {
-    super.getTextInputByIdAndClear('notes')
+  completeForm(cancelLostBed: Cas3VoidBedspaceCancellation): void {
+    super.getTextInputByIdAndClear('cancellationNotes')
     this.getLabel('Notes')
-    this.getTextInputByIdAndEnterDetails('notes', cancelLostBed.notes)
+    this.getTextInputByIdAndEnterDetails('cancellationNotes', cancelLostBed.cancellationNotes)
 
     this.clickSubmit()
   }

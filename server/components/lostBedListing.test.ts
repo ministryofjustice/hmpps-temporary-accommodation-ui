@@ -1,10 +1,10 @@
-import { lostBedFactory } from '../testutils/factories'
+import { cas3VoidBedspaceFactory } from '../testutils/factories'
 import { summaryListRows } from './lostBedListing'
 
 describe('LostBedListing', () => {
   describe('summaryListRows', () => {
     it('returns summary list rows for a lost bed', () => {
-      const lostBed = lostBedFactory.build({
+      const lostBed = cas3VoidBedspaceFactory.build({
         startDate: '2023-01-30',
         endDate: '2023-02-15',
       })

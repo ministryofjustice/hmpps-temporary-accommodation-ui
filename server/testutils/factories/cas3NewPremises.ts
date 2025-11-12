@@ -7,7 +7,7 @@ class Cas3NewPremisesFactory extends Factory<Cas3NewPremises> {
     return this.params({
       ...premises,
       localAuthorityAreaId: premises.localAuthorityArea.id,
-      characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
+      characteristicIds: premises.premisesCharacteristics.map(characteristic => characteristic.id),
       probationRegionId: premises.probationRegion.id,
       probationDeliveryUnitId: premises.probationDeliveryUnit.id,
     })

@@ -1,6 +1,6 @@
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
-import { extensionFactory, newExtensionFactory } from '../testutils/factories'
+import { cas3ExtensionFactory, newExtensionFactory } from '../testutils/factories'
 import ExtensionService from './extensionService'
 
 jest.mock('../data/bookingClient.ts')
@@ -22,7 +22,7 @@ describe('ExtensionService', () => {
 
   describe('createExtension', () => {
     it('on success returns the extension that has been posted', async () => {
-      const extension = extensionFactory.build()
+      const extension = cas3ExtensionFactory.build()
       const payload = newExtensionFactory.build()
 
       bookingClient.extendBooking.mockResolvedValue(extension)

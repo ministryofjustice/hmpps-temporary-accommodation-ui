@@ -6,7 +6,7 @@ import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accom
 import BookingNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingNew'
 import BookingSelectAssessment from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSelectAssessment'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import { bookingFactory, newBookingFactory, turnaroundFactory } from '../../../../server/testutils/factories'
+import { cas3BookingFactory, cas3TurnaroundFactory, newBookingFactory } from '../../../../server/testutils/factories'
 import { person } from '../utils'
 
 Given("I'm creating a booking", () => {
@@ -31,10 +31,10 @@ Given('I create a booking with all necessary details', () => {
         crn: person.crn,
       })
 
-      const booking = bookingFactory.provisional().build({
+      const booking = cas3BookingFactory.provisional().build({
         ...newBooking,
         person,
-        turnaround: turnaroundFactory.build({
+        turnaround: cas3TurnaroundFactory.build({
           workingDays: this.turnaroundDays,
         }),
         effectiveEndDate: 'unknown',

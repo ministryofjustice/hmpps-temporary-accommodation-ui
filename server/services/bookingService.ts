@@ -1,19 +1,21 @@
-import type { Booking, LostBed, NewBooking } from '@approved-premises/api'
+import type { Cas3Booking, Cas3NewBooking, Cas3VoidBedspace } from '@approved-premises/api'
 
 import type { LostBedClient, RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
+import { bookingToCas3Booking } from '../utils/bookingUtils'
+import { lostBedToCas3VoidBedspace } from '../utils/lostBedUtils'
 
 export type BookingListingEntry = {
   path: string
-  body: Booking
+  body: Cas3Booking
   type: 'booking'
 }
 
 export type LostBedListingEntry = {
   path: string
-  body: LostBed
+  body: Cas3VoidBedspace
   type: 'lost-bed'
 }
 
@@ -31,18 +33,18 @@ export default class BookingService {
     callConfig: CallConfig,
     premisesId: string,
     bedspaceId: string,
-    booking: NewBooking,
-  ): Promise<Booking> {
+    booking: Cas3NewBooking,
+  ): Promise<Cas3Booking> {
     const bookingClient = this.bookingClientFactory(callConfig)
 
-    const confirmedBooking = await bookingClient.create(premisesId, {
-      serviceName: 'temporary-accommodation',
-      bedId: bedspaceId,
-      enableTurnarounds: true,
-      ...booking,
-    })
-
-    return confirmedBooking
+    return bookingToCas3Booking(
+      await bookingClient.create(premisesId, {
+        serviceName: 'temporary-accommodation',
+        enableTurnarounds: true,
+        ...booking,
+        bedspaceId,
+      }),
+    )
   }
 
   async getListingEntries(
@@ -59,7 +61,8 @@ export default class BookingService {
     ])
 
     const bookingEntries: Array<BookingListingEntry & { sortingValue: string }> = premisesBookings
-      .filter(booking => booking.bed.id === bedspaceId)
+      .map(bookingToCas3Booking)
+      .filter(booking => booking.bedspace.id === bedspaceId)
       .map(booking => ({
         body: booking,
         type: 'booking' as const,
@@ -68,7 +71,8 @@ export default class BookingService {
       }))
 
     const lostBedEntries: Array<LostBedListingEntry & { sortingValue: string }> = premisesLostBeds
-      .filter(lostBed => lostBed.bedId === bedspaceId && lostBed.status === 'active')
+      .map(lostBedToCas3VoidBedspace)
+      .filter(lostBed => lostBed.bedspaceId === bedspaceId && lostBed.status === 'active')
       .map(lostBed => ({
         body: lostBed,
         type: 'lost-bed' as const,
@@ -79,8 +83,8 @@ export default class BookingService {
     return [...bookingEntries, ...lostBedEntries].sort((a, b) => a.sortingValue.localeCompare(b.sortingValue)).reverse()
   }
 
-  async getBooking(callConfig: CallConfig, premisesId: string, bookingId: string): Promise<Booking> {
+  async getBooking(callConfig: CallConfig, premisesId: string, bookingId: string): Promise<Cas3Booking> {
     const bookingClient = this.bookingClientFactory(callConfig)
-    return bookingClient.find(premisesId, bookingId)
+    return bookingToCas3Booking(await bookingClient.find(premisesId, bookingId))
   }
 }

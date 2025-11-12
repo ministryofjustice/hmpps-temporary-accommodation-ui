@@ -1,5 +1,6 @@
 import {
   CancellationReason,
+  Cas3RefDataType,
   Characteristic,
   DepartureReason,
   DestinationProvider,
@@ -10,10 +11,15 @@ import {
   ProbationDeliveryUnit,
   ProbationRegion,
 } from '@approved-premises/api'
-import { referenceDataFactory } from '../testutils/factories'
+import {
+  cas3BedspaceCharacteristicsFactory,
+  cas3PremisesCharacteristicsFactory,
+  referenceDataFactory,
+} from '../testutils/factories'
 import ReferenceDataClient from './referenceDataClient'
 import { CallConfig } from './restClient'
 import describeClient from '../testutils/describeClient'
+import paths from '../paths/api'
 
 describeClient('ReferenceDataClient', provider => {
   let referenceDataClient: ReferenceDataClient
@@ -59,6 +65,36 @@ describeClient('ReferenceDataClient', provider => {
         const output = await referenceDataClient.getReferenceData(key)
         expect(output).toEqual(data[key])
       })
+    })
+  })
+
+  describe('getCas3ReferenceData', () => {
+    it.each([
+      ['PREMISES_CHARACTERISTICS', cas3PremisesCharacteristicsFactory.buildList(3)],
+      ['BEDSPACE_CHARACTERISTICS', cas3BedspaceCharacteristicsFactory.buildList(3)],
+    ])('returns reference data of type %s', async (type: Cas3RefDataType, records) => {
+      await provider.addInteraction({
+        state: 'Reference data exists',
+        uponReceiving: `a request for Cas3 reference data of type ${type}`,
+        withRequest: {
+          method: 'GET',
+          path: paths.cas3.referenceData({}),
+          query: {
+            type,
+          },
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: records,
+        },
+      })
+
+      const output = await referenceDataClient.getCas3ReferenceData(type)
+      expect(output).toEqual(records)
     })
   })
 })

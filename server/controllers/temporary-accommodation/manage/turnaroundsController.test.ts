@@ -5,11 +5,11 @@ import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PremisesService, TurnaroundService } from '../../../services'
 import {
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
   cas3PremisesFactory,
+  cas3TurnaroundFactory,
   newTurnaroundFactory,
-  turnaroundFactory,
 } from '../../../testutils/factories'
 import { generateTurnaroundConflictBespokeError } from '../../../utils/bookingUtils'
 import extractCallConfig from '../../../utils/restUtils'
@@ -58,7 +58,7 @@ describe('TurnaroundsController', () => {
     it('renders the form prepopulated with the current turnaround days', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build()
+      const booking = cas3BookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
@@ -92,7 +92,7 @@ describe('TurnaroundsController', () => {
     it('creates the turnaround and redirects to the show booking page', async () => {
       const requestHandler = turnaroundsController.create()
 
-      const turnaround = turnaroundFactory.build()
+      const turnaround = cas3TurnaroundFactory.build()
       const newTurnaround = newTurnaroundFactory.build({
         ...turnaround,
       })
@@ -125,7 +125,7 @@ describe('TurnaroundsController', () => {
     it('renders with errors if the API returns an error', async () => {
       const requestHandler = turnaroundsController.create()
 
-      const turnaround = turnaroundFactory.build()
+      const turnaround = cas3TurnaroundFactory.build()
       const newTurnaround = newTurnaroundFactory.build({
         ...turnaround,
       })
@@ -158,7 +158,7 @@ describe('TurnaroundsController', () => {
     it('renders with errors if the API returns a 409 Conflict status', async () => {
       const requestHandler = turnaroundsController.create()
 
-      const turnaround = turnaroundFactory.build()
+      const turnaround = cas3TurnaroundFactory.build()
       const newTurnaround = newTurnaroundFactory.build({
         ...turnaround,
       })

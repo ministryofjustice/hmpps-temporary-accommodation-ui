@@ -1,0 +1,22 @@
+[
+  {
+    "id": "7dd3bac5-3d1c-4acb-b110-b1614b2c95d8",
+    "description": "Shared kitchen",
+    "name": "hasSharedKitchen"
+  },
+  {
+    "id": "e730bdea-6157-4910-b1b0-450b29bf0c9f",
+    "description": "Shared bathroom",
+    "name": "hasSharedBathroom"
+  },
+  {
+    "id": "99bb0f33-ff92-4606-9d1c-43bcf0c42ef4",
+    "description": "Ground floor level access",
+    "name": "isGroundFloor"
+  },
+  {
+    "id": "d2f7796a-88e5-4e53-ab6d-dabb145b6a60",
+    "description": "Wheelchair accessible",
+    "name": "isWheelchairAccessible"
+  }
+]

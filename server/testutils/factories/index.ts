@@ -60,13 +60,35 @@ import cas3PremisesSearchResultsFactory from './cas3PremisesSearchResults'
 import cas3ArchivePremisesFactory from './cas3ArchivePremises'
 import cas3UnarchivePremisesFactory from './cas3UnarchivePremises'
 import cas3BedspaceFactory from './cas3Bedspace'
+import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
 import cas3BedspaceArchiveActionFactory from './cas3BedspaceArchiveAction'
 import cas3NewBedspaceFactory from './cas3NewBedspace'
 import cas3UpdateBedspaceFactory from './cas3UpdateBedspace'
-import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
+import cas3BedspacePremisesSearchResultFactory from './cas3BedspacePremisesSearchResult'
 import cas3BedspaceReferenceFactory from './cas3BedspaceReference'
 import cas3BedspacesReferenceFactory from './cas3BedspacesReference'
 import cas3ReferralHistoryUserNoteFactory from './cas3ReferralHistoryUserNote'
+import cas3BookingFactory from './cas3Booking'
+import cas3NewBookingFactory from './cas3NewBooking'
+import cas3BookingSearchResultFactory from './cas3BookingSearchResult'
+import cas3ExtensionFactory from './cas3Extension'
+import cas3ConfirmationFactory from './cas3Confirmation'
+import cas3ArrivalFactory from './cas3Arrival'
+import cas3CancellationFactory from './cas3Cancellation'
+import cas3DepartureFactory from './cas3Departure'
+import cas3TurnaroundFactory from './cas3Turnaround'
+import cas3BookingPremisesSummaryFactory from './cas3BookingPremisesSummary'
+import cas3BookingSearchResultsFactory from './cas3BookingSearchResults'
+import cas3VoidBedspaceFactory from './cas3VoidBedspace'
+import cas3VoidBedspaceReasonFactory from './cas3VoidBedspaceReason'
+import cas3VoidBedspaceRequestFactory from './cas3VoidBedspaceRequest'
+import cas3VoidBedspaceCancellationFactory from './cas3VoidBedspaceCancellation'
+import cas3v2BedspaceSearchResultOverlapFactory from './cas3v2BedspaceSearchResultOverlap'
+import cas3v2BedspaceSearchResultFactory from './cas3v2BedspaceSearchResult'
+import cas3v2BedspaceSearchResultsFactory from './cas3v2BedspaceSearchResults'
+import cas3PremisesCharacteristicsFactory from './cas3PremisesCharacteristics'
+import cas3BedspaceCharacteristicsFactory from './cas3BedspaceCharacteristics'
+import cas3ReferenceDataFactory from './cas3ReferenceData'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
@@ -146,11 +168,33 @@ export {
   cas3BedspaceFactory,
   cas3BedspaceArchiveActionFactory,
   cas3BedspacesFactory,
+  cas3BedspaceSummaryFactory,
   cas3NewBedspaceFactory,
   cas3UpdateBedspaceFactory,
-  cas3BedspaceSummaryFactory,
+  cas3BedspacePremisesSearchResultFactory,
   cas3BedspaceReferenceFactory,
   cas3BedspacesReferenceFactory,
+  cas3BookingFactory,
+  cas3NewBookingFactory,
+  cas3BookingSearchResultFactory,
+  cas3ExtensionFactory,
+  cas3ConfirmationFactory,
+  cas3ArrivalFactory,
+  cas3CancellationFactory,
+  cas3DepartureFactory,
+  cas3TurnaroundFactory,
+  cas3BookingPremisesSummaryFactory,
+  cas3BookingSearchResultsFactory,
+  cas3VoidBedspaceFactory,
+  cas3VoidBedspaceReasonFactory,
+  cas3VoidBedspaceRequestFactory,
+  cas3VoidBedspaceCancellationFactory,
+  cas3v2BedspaceSearchResultOverlapFactory,
+  cas3v2BedspaceSearchResultFactory,
+  cas3v2BedspaceSearchResultsFactory,
+  cas3PremisesCharacteristicsFactory,
+  cas3BedspaceCharacteristicsFactory,
+  cas3ReferenceDataFactory,
   prisonCaseNotesFactory,
   probationRegionFactory,
   referenceDataFactory,

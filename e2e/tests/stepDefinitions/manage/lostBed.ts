@@ -1,4 +1,5 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
+import { Cas3VoidBedspace } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import LostBedCancelPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedCancel'
@@ -6,10 +7,9 @@ import LostBedEditPage from '../../../../cypress_shared/pages/temporary-accommod
 import LostBedNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedNew'
 import LostBedShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedShow'
 import {
-  lostBedCancellationFactory,
-  lostBedFactory,
-  newLostBedFactory,
-  updateLostBedFactory,
+  cas3VoidBedspaceCancellationFactory,
+  cas3VoidBedspaceFactory,
+  cas3VoidBedspaceRequestFactory,
 } from '../../../../server/testutils/factories'
 
 Given(`I'm marking a bedspace as void`, () => {
@@ -28,13 +28,13 @@ Given('I create a void booking with all necessary details', () => {
     lostBedNewPage.assignReasons('reasons')
 
     cy.then(function __() {
-      const lostBed = lostBedFactory.forEnvironment(this.reasons).active().build({
+      const lostBed = cas3VoidBedspaceFactory.forEnvironment(this.reasons).active().build({
         id: 'unknown',
       })
 
-      const newLostBed = newLostBedFactory.build({
+      const newLostBed = cas3VoidBedspaceRequestFactory.build({
         ...lostBed,
-        reason: lostBed.reason.id,
+        reasonId: lostBed.reason.id,
       })
 
       cy.wrap(lostBed).as('lostBed')
@@ -79,13 +79,13 @@ Given('I edit the void booking', () => {
     lostBedEditPage.assignReasons('reasons')
 
     cy.then(function __() {
-      const updatedLostBed = lostBedFactory.forEnvironment(this.reasons).active().build({
+      const updatedLostBed = cas3VoidBedspaceFactory.forEnvironment(this.reasons).active().build({
         id: this.lostBed.id,
       })
 
-      const updateLostBed = updateLostBedFactory.build({
+      const updateLostBed = cas3VoidBedspaceRequestFactory.build({
         ...updatedLostBed,
-        reason: updatedLostBed.reason.id,
+        reasonId: updatedLostBed.reason.id,
       })
 
       cy.wrap(updatedLostBed).as('lostBed')
@@ -127,7 +127,7 @@ Given('I cancel the void booking', () => {
     lostBedShowPage.clickCancelVoidLink()
 
     const lostBedCancelPage = Page.verifyOnPage(LostBedCancelPage, this.premises, this.bedspace, this.lostBed)
-    const lostBedCancellation = lostBedCancellationFactory.build()
+    const lostBedCancellation = cas3VoidBedspaceCancellationFactory.build()
     cy.wrap(lostBedCancellation).as('lostBedCancellation')
 
     lostBedCancelPage.clearForm()
@@ -137,7 +137,11 @@ Given('I cancel the void booking', () => {
 
 Then('I should see confirmation that the void is cancelled', () => {
   cy.then(function _() {
-    const cancelledLostBed = { ...this.lostBed, status: 'cancelled', cancellation: this.lostBedCancellation }
+    const cancelledLostBed: Cas3VoidBedspace = {
+      ...this.lostBed,
+      status: 'cancelled',
+      cancellationNotes: this.lostBedCancellation.cancellationNotes,
+    }
     const lostBedShowPage = Page.verifyOnPage(LostBedShowPage, this.premises, this.bedspace, cancelledLostBed)
 
     lostBedShowPage.shouldShowBanner('Void booking cancelled')
@@ -148,7 +152,7 @@ Then('I should see confirmation that the void is cancelled', () => {
 Given('I attempt to create a conflicting void booking', () => {
   cy.then(function _() {
     const lostBedNewPage = Page.verifyOnPage(LostBedNewPage, this.premises, this.bedspace)
-    const newLostBed = newLostBedFactory.build({ ...this.lostBed, reason: this.lostBed.reason.id })
+    const newLostBed = cas3VoidBedspaceRequestFactory.build({ ...this.lostBed, reasonId: this.lostBed.reason.id })
     lostBedNewPage.completeForm(newLostBed)
   })
 })

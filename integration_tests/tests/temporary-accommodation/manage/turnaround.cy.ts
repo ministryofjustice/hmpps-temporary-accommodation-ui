@@ -4,10 +4,10 @@ import BookingTurnaroundNewPage from '../../../../cypress_shared/pages/temporary
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
-  bookingFactory,
-  lostBedFactory,
+  cas3BookingFactory,
+  cas3TurnaroundFactory,
+  cas3VoidBedspaceFactory,
   newTurnaroundFactory,
-  turnaroundFactory,
 } from '../../../../server/testutils/factories'
 
 context('Booking turnarounds', () => {
@@ -21,7 +21,7 @@ context('Booking turnarounds', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a booking in the database
-    const booking = bookingFactory.provisional().build()
+    const booking = cas3BookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
@@ -39,7 +39,7 @@ context('Booking turnarounds', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page
@@ -47,7 +47,7 @@ context('Booking turnarounds', () => {
     page.shouldShowBookingDetails()
 
     // And I fill out the form
-    const turnaround = turnaroundFactory.build()
+    const turnaround = cas3TurnaroundFactory.build()
     const newTurnaround = newTurnaroundFactory.build({
       ...turnaround,
     })
@@ -73,7 +73,7 @@ context('Booking turnarounds', () => {
     cy.signIn()
 
     // And there is an arrived booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page
@@ -97,17 +97,17 @@ context('Booking turnarounds', () => {
     cy.signIn()
 
     // And there is a booking and a conflicting lost bed in the database
-    const booking = bookingFactory.departed().build()
-    const conflictingLostBed = lostBedFactory.build()
-
+    const booking = cas3BookingFactory.departed().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
+
+    const conflictingLostBed = cas3VoidBedspaceFactory.build({ bedspaceId: bedspace.id })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
 
     // When I visit the change turnaround page
     const page = BookingTurnaroundNewPage.visit(premises, bedspace, booking)
 
     // And I fill out the form with days that conflict with an existing booking
-    const turnaround = turnaroundFactory.build()
+    const turnaround = cas3TurnaroundFactory.build()
     const newTurnaround = newTurnaroundFactory.build({
       ...turnaround,
     })
@@ -129,7 +129,7 @@ context('Booking turnarounds', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "fffb3004-5f0a-4e88-8350-fb89a0168296",
+    "description": "Park nearby",
+    "name": "isParkNearBy"
+  },
+  {
+    "id": "684f919a-4c4a-4e80-9b3a-1dcd35873b3f",
+    "description": "Pub nearby",
+    "name": "isPubNearBy"
+  },
+  {
+    "id": "78c5d99b-9702-4bf2-a23d-c2a0cf3a017d",
+    "description": "School nearby",
+    "name": "isSchoolNearBy"
+  },
+  {
+    "id": "2fff6ede-7035-4e8d-81ad-5fcd894b99cf",
+    "description": "Men only",
+    "name": "isMenOnly"
+  },
+  {
+    "id": "c0fc6e07-4ca3-45ac-88ea-375479e1419f",
+    "description": "Not suitable for those with an arson history",
+    "name": "notSuitableForArsonHistory"
+  },
+  {
+    "id": "8221f1ad-3aaf-406a-b918-dbdef956ea17",
+    "description": "Women only",
+    "name": "isWomenOnly"
+  },
+  {
+    "id": "99bb0f33-ff92-4606-9d1c-43bcf0c42ef4",
+    "description": "Ground floor level access",
+    "name": "isGroundFloor"
+  },
+  {
+    "id": "cb7447cd-d629-4c89-be93-cd48c1060af8",
+    "description": "Not suitable for those who pose a sexual risk to adults",
+    "name": "notSuitableForSexualRiskToAdults"
+  },
+  {
+    "id": "8fcf6f60-bbca-4425-b0e8-9dfbe88f3aa6",
+    "description": "Not suitable for those who pose a sexual risk to children",
+    "name": "notSuitableForSexualRiskToChildren"
+  },
+  {
+    "id": "454a5ff4-d87a-43f9-8989-135bcc47a635",
+    "description": "Single occupancy",
+    "name": "isSingleOccupancy"
+  },
+  {
+    "id": "62a38d3a-4797-4b0f-8681-7befea1035a4",
+    "description": "Shared property",
+    "name": "isSharedProperty"
+  },
+  {
+    "id": "e2868d4f-cb8f-4a4b-ae27-6b887a63d37c",
+    "description": "Shared entrance",
+    "name": "hasSharedEntrance"
+  },
+  {
+    "id": "da0e86b3-fce8-42b6-af0c-ac6f905611e6",
+    "description": "Lift available",
+    "name": "hasLift"
+  },
+  {
+    "id": "1fb6000b-7c55-44cc-bb8c-38835c99ab99",
+    "description": "Sensitive let",
+    "name": "isSensitiveLet"
+  },
+  {
+    "id": "78adf0c6-01cb-4b1a-be3e-1a3f5346a497",
+    "description": "Rural/out of town",
+    "name": "isRural"
+  },
+  {
+    "id": "7f805b33-048e-4034-9ded-21947bf5c728",
+    "description": "Close proximity to another CAS3 property",
+    "name": "isCloseAnotherCas3Property"
+  }
+]

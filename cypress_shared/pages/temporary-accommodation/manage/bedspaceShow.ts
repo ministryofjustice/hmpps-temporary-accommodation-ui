@@ -1,4 +1,4 @@
-import type { Booking, Cas3Bedspace, Cas3Premises, LostBed } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3Premises, Cas3VoidBedspace } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingListingComponent from '../../../components/bookingListing'
@@ -28,8 +28,8 @@ export default class BedspaceShowPage extends Page {
   }
 
   shouldShowDetails(): void {
-    this.bedspace.characteristics.forEach(characteristic => {
-      cy.get('main dl').get('dd').eq(2).contains(characteristic.name)
+    this.bedspace.bedspaceCharacteristics.forEach(characteristic => {
+      cy.get('main dl').get('dd').eq(2).contains(characteristic.description)
     })
   }
 
@@ -55,8 +55,8 @@ export default class BedspaceShowPage extends Page {
       .children('span')
       .as('propertyDetails')
 
-    this.premises.characteristics.forEach(characteristic => {
-      cy.get('@propertyDetails').contains(characteristic.name)
+    this.premises.premisesCharacteristics.forEach(characteristic => {
+      cy.get('@propertyDetails').contains(characteristic.description)
     })
   }
 
@@ -68,12 +68,12 @@ export default class BedspaceShowPage extends Page {
     cy.get('main').contains('No bookings.')
   }
 
-  shouldShowBookingDetails(booking: Booking): void {
+  shouldShowBookingDetails(booking: Cas3Booking): void {
     const bookingListingComponent = new BookingListingComponent(booking)
     bookingListingComponent.shouldShowBookingDetails()
   }
 
-  shouldShowLostBedDetails(lostBed: LostBed): void {
+  shouldShowLostBedDetails(lostBed: Cas3VoidBedspace): void {
     const lostBedListingComponent = new LostBedListingComponent(lostBed)
     lostBedListingComponent.shouldShowLostBedDetails()
   }
@@ -107,12 +107,12 @@ export default class BedspaceShowPage extends Page {
     })
   }
 
-  clickBookingLink(booking: Booking): void {
+  clickBookingLink(booking: Cas3Booking): void {
     const bookingListingComponent = new BookingListingComponent(booking)
     bookingListingComponent.clickLink()
   }
 
-  clickLostBedLink(lostBed: LostBed): void {
+  clickLostBedLink(lostBed: Cas3VoidBedspace): void {
     const lostBedListingComponent = new LostBedListingComponent(lostBed)
     lostBedListingComponent.clickLink()
   }

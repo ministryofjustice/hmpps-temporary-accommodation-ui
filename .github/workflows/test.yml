@@ -136,3 +136,40 @@ jobs:
             integration_tests/screenshots
           retention-days: 30
           if-no-files-found: ignore
+
+  # TODO -- ENABLE_CAS3V2_API cleanup: remove the following test
+  integration_test_cas3v2:
+    name: "Integration testing 🧪 - CAS3v2 API"
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Installing dependencies
+        run: npm ci
+
+      - name: Building source
+        run: npm run build
+
+      - name: Running Integration tests
+        env:
+          ENABLE_CAS3V2_API: true
+          CYPRESS_ENABLE_CAS3V2_API: true
+        run: npm run test:integration
+
+      - name: Upload Integration test artefacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-artefacts-cas3v2
+          path: |
+            integration_tests/videos
+            integration_tests/screenshots
+          retention-days: 30
+          if-no-files-found: ignore

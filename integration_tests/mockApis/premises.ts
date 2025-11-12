@@ -9,9 +9,11 @@ import type { Response } from 'superagent'
 import { getMatchingRequests, stubFor } from './index'
 import paths from '../../server/paths/api'
 import {
+  bedspaceCharacteristics,
   characteristics,
   localAuthorities,
   pdus,
+  premisesCharacteristics,
   probationRegions,
 } from '../../server/testutils/stubs/referenceDataStubs'
 import { errorStub } from './utils'
@@ -54,8 +56,15 @@ const stubSinglePremises = (premises: Cas3Premises) =>
     },
   })
 
-const stubPremisesReferenceData = (): Promise<[Response, Response, Response, Response]> =>
-  Promise.all([stubFor(localAuthorities), stubFor(characteristics), stubFor(probationRegions), stubFor(pdus)])
+const stubPremisesReferenceData = (): Promise<[Response, Response, Response, Response, Response, Response]> =>
+  Promise.all([
+    stubFor(localAuthorities),
+    stubFor(characteristics),
+    stubFor(probationRegions),
+    stubFor(pdus),
+    stubFor(premisesCharacteristics),
+    stubFor(bedspaceCharacteristics),
+  ])
 
 const stubPremisesCreate = (premises: Cas3Premises) =>
   stubFor({

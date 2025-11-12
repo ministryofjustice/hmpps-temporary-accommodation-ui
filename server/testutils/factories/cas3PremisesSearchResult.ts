@@ -2,10 +2,12 @@ import type { Cas3PremisesSearchResult } from '@approved-premises/api'
 import { Factory } from 'fishery'
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import referenceDataFactory from './referenceData'
-import bedspaceSummaryFactory from './cas3BedspaceSummary'
+import cas3BedspacePremisesSearchResultFactory from './cas3BedspacePremisesSearchResult'
 
 export default Factory.define<Cas3PremisesSearchResult>(() => {
-  const bedspaces = faker.helpers.multiple(() => bedspaceSummaryFactory.build(), { count: { min: 0, max: 10 } })
+  const bedspaces = faker.helpers.multiple(() => cas3BedspacePremisesSearchResultFactory.build(), {
+    count: { min: 0, max: 10 },
+  })
 
   return {
     id: faker.string.uuid(),

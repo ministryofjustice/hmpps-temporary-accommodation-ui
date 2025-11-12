@@ -32,7 +32,7 @@ describeClient('ApplicationClient', provider => {
         uponReceiving: 'a request to create an application',
         withRequest: {
           method: 'POST',
-          path: paths.applications.new.pattern,
+          path: paths.cas3.applications.new.pattern,
           query: { createWithRisks: 'true' },
           headers: {
             authorization: `Bearer ${callConfig.token}`,
@@ -65,7 +65,7 @@ describeClient('ApplicationClient', provider => {
         uponReceiving: 'a request to create an application with risks skipped',
         withRequest: {
           method: 'POST',
-          path: paths.applications.new.pattern,
+          path: paths.cas3.applications.new.pattern,
           query: { createWithRisks: 'false' },
           headers: {
             authorization: `Bearer ${callConfig.token}`,
@@ -98,7 +98,7 @@ describeClient('ApplicationClient', provider => {
         uponReceiving: 'a request to get an application',
         withRequest: {
           method: 'GET',
-          path: paths.applications.show({ id: application.id }),
+          path: paths.cas3.applications.show({ id: application.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -127,7 +127,7 @@ describeClient('ApplicationClient', provider => {
         uponReceiving: 'a request to update an application',
         withRequest: {
           method: 'PUT',
-          path: paths.applications.update({ id: application.id }),
+          path: paths.cas3.applications.update({ id: application.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -154,7 +154,7 @@ describeClient('ApplicationClient', provider => {
         uponReceiving: 'a request for all previous applications',
         withRequest: {
           method: 'GET',
-          path: paths.applications.index.pattern,
+          path: paths.cas3.applications.index.pattern,
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -185,7 +185,7 @@ describeClient('ApplicationClient', provider => {
         uponReceiving: 'a request to submit an application',
         withRequest: {
           method: 'POST',
-          path: paths.applications.submission({ id: application.id }),
+          path: paths.cas3.applications.submission({ id: application.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -209,7 +209,7 @@ describeClient('ApplicationClient', provider => {
         uponReceiving: 'a request to delete an application',
         withRequest: {
           method: 'DELETE',
-          path: paths.applications.delete({ id: application.id }),
+          path: paths.cas3.applications.delete({ id: application.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

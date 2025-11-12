@@ -43,7 +43,7 @@
             <h2 class="govuk-heading-s">Property address</h2>
 
             <p class="govuk-body">
-                {{ premises.fullAddress | safe }}
+                {{ fullAddress | safe }}
             </p>
         </div>
 
@@ -51,8 +51,8 @@
             <h2 class="govuk-heading-s">Property details</h2>
 
             <p class="govuk-body">
-                {% for characteristic in premises.characteristics %}
-                    <span class="hmpps-tag-filters">{{ characteristic.name }}</span>
+                {% for characteristic in premises.premisesCharacteristics %}
+                    <span class="hmpps-tag-filters">{{ characteristic.description }}</span>
                 {% else %}
                     None
                 {% endfor %}

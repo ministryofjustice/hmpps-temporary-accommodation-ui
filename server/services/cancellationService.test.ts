@@ -3,7 +3,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import CancellationService from './cancellationService'
 
 import { CallConfig } from '../data/restClient'
-import { cancellationFactory, newCancellationFactory, referenceDataFactory } from '../testutils/factories'
+import { cas3CancellationFactory, newCancellationFactory, referenceDataFactory } from '../testutils/factories'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -28,7 +28,7 @@ describe('CancellationService', () => {
   describe('createCancellation', () => {
     it('on success returns the cancellation that has been posted', async () => {
       const newCancellation = newCancellationFactory.build()
-      const cancellation = cancellationFactory.build()
+      const cancellation = cas3CancellationFactory.build()
 
       bookingClient.cancel.mockResolvedValue(cancellation)
 

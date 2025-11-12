@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker/.'
+import { faker } from '@faker-js/faker'
 import BedspaceClient from './bedspaceClient'
 import { CallConfig } from './restClient'
 import {
@@ -12,7 +12,7 @@ import {
 import paths from '../paths/api'
 import describeClient from '../testutils/describeClient'
 
-describeClient('BedspaceClient', provider => {
+describeClient('BedspaceClient - ENABLE_CAS3V2_API flag off', provider => {
   let bedspaceClient: BedspaceClient
   const callConfig = { token: 'some-token' } as CallConfig
 
@@ -30,7 +30,7 @@ describeClient('BedspaceClient', provider => {
         uponReceiving: 'a request for bedspace search results',
         withRequest: {
           method: 'POST',
-          path: paths.bedspaces.search({}),
+          path: paths.cas3.bedspaces.search({}),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -143,7 +143,7 @@ describeClient('BedspaceClient', provider => {
       const payload = cas3UpdateBedspaceFactory.build({
         reference: bedspace.reference,
         notes: bedspace.notes,
-        characteristicIds: bedspace.characteristics.map(ch => ch.id),
+        characteristicIds: bedspace.bedspaceCharacteristics.map(ch => ch.id),
       })
 
       await provider.addInteraction({

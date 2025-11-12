@@ -1,21 +1,20 @@
 import {
-  Booking,
   Cas3AssessmentSummary,
   Cas3Bedspace,
-  Cas3BedspaceSearchResults,
+  Cas3Booking,
   Cas3Premises,
-  LostBed,
+  Cas3VoidBedspace,
+  Cas3v2BedspaceSearchResults,
   Person,
 } from '@approved-premises/api'
 import { PlaceContext } from '@approved-premises/ui'
 import {
   assessmentSummaryFactory,
-  bedFactory,
   bedspaceSearchFormParametersFactory,
-  bedspaceSearchResultFactory,
-  bedspaceSearchResultsFactory,
-  bookingFactory,
-  lostBedFactory,
+  cas3BedspaceFactory,
+  cas3BookingFactory,
+  cas3VoidBedspaceFactory,
+  cas3v2BedspaceSearchResultsFactory,
   newBookingFactory,
   timelineEventsFactory,
 } from '../../server/testutils/factories'
@@ -28,39 +27,40 @@ import BookingConfirmPage from '../pages/temporary-accommodation/manage/bookingC
 import BookingNewPage from '../pages/temporary-accommodation/manage/bookingNew'
 import BookingSelectAssessmentPage from '../pages/temporary-accommodation/manage/bookingSelectAssessment'
 import BookingShowPage from '../pages/temporary-accommodation/manage/bookingShow'
+import cas3v2BedspaceSearchResultFactory from '../../server/testutils/factories/cas3v2BedspaceSearchResult'
 
 export default class PlaceHelper {
-  private readonly bedspaceSearchResults: Cas3BedspaceSearchResults
+  private readonly bedspaceSearchResults: Cas3v2BedspaceSearchResults
 
   private readonly person: Person
 
-  private readonly booking: Booking
+  private readonly booking: Cas3Booking
 
   private readonly assessmentSummaries: Array<Cas3AssessmentSummary>
 
   private readonly timeline: TimeLineFactory
 
-  private readonly bookings: Array<Booking>
+  private readonly bookings: Array<Cas3Booking>
 
-  private readonly lostBeds: Array<LostBed>
+  private readonly lostBeds: Array<Cas3VoidBedspace>
 
   constructor(
     private readonly placeContext: NonNullable<PlaceContext>,
     private readonly premises: Cas3Premises,
     private readonly cas3Bedspace: Cas3Bedspace,
   ) {
-    this.bedspaceSearchResults = bedspaceSearchResultsFactory.build({
-      results: [bedspaceSearchResultFactory.forBedspace(this.premises, this.cas3Bedspace).build()],
+    this.bedspaceSearchResults = cas3v2BedspaceSearchResultsFactory.build({
+      results: [cas3v2BedspaceSearchResultFactory.forBedspace(this.premises, this.cas3Bedspace).build()],
     })
     this.person = this.placeContext.assessment.application.person
-    this.booking = bookingFactory.build({
+    this.booking = cas3BookingFactory.build({
       person: this.person,
-      bed: bedFactory.build({ id: cas3Bedspace.id }),
+      bedspace: cas3BedspaceFactory.build({ id: cas3Bedspace.id }),
     })
-    this.lostBeds = lostBedFactory
+    this.lostBeds = cas3VoidBedspaceFactory
       .active()
       .params({
-        bedId: cas3Bedspace.id,
+        bedspaceId: cas3Bedspace.id,
       })
       .buildList(5)
 

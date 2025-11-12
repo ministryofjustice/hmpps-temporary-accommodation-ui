@@ -1,4 +1,4 @@
-import { bookingFactory, cancellationFactory, extensionFactory } from '../testutils/factories'
+import { cas3BookingFactory, cas3CancellationFactory, cas3ExtensionFactory } from '../testutils/factories'
 import { getLatestExtension, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
 import summaryListRows from './bookingInfo'
@@ -11,7 +11,7 @@ describe('BookingInfo', () => {
 
   describe('summaryListRows', () => {
     it('returns summary list rows for a provisional booking', () => {
-      const booking = bookingFactory.provisional().build({
+      const booking = cas3BookingFactory.provisional().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
       })
@@ -53,7 +53,7 @@ describe('BookingInfo', () => {
     })
 
     it('returns summary list rows for a confirmed booking', () => {
-      const booking = bookingFactory.confirmed().build({
+      const booking = cas3BookingFactory.confirmed().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
       })
@@ -105,10 +105,10 @@ describe('BookingInfo', () => {
     })
 
     it('returns summary list rows for a cancelled booking', () => {
-      const booking = bookingFactory.cancelled().build({
+      const booking = cas3BookingFactory.cancelled().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
-        cancellation: cancellationFactory.build({
+        cancellation: cas3CancellationFactory.build({
           date: '2022-05-14',
         }),
       })
@@ -176,7 +176,7 @@ describe('BookingInfo', () => {
     })
 
     it('returns summary list rows for an arrived booking', () => {
-      const booking = bookingFactory.arrived().build({
+      const booking = cas3BookingFactory.arrived().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
       })
@@ -228,10 +228,10 @@ describe('BookingInfo', () => {
     })
 
     it('returns summary list rows for an arrived and extended booking', () => {
-      const booking = bookingFactory.arrived().build({
+      const booking = cas3BookingFactory.arrived().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
-        extensions: extensionFactory.buildList(2),
+        extensions: cas3ExtensionFactory.buildList(2),
       })
 
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
@@ -296,10 +296,10 @@ describe('BookingInfo', () => {
     })
 
     it('returns summary list rows for an arrived and shortended booking', () => {
-      const booking = bookingFactory.arrived().build({
+      const booking = cas3BookingFactory.arrived().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
-        extensions: extensionFactory.buildList(2),
+        extensions: cas3ExtensionFactory.buildList(2),
       })
 
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
@@ -364,7 +364,7 @@ describe('BookingInfo', () => {
     })
 
     it('returns summary list rows for a departed booking', () => {
-      const booking = bookingFactory.departed().build({
+      const booking = cas3BookingFactory.departed().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07T00:00:00.000Z',
       })
@@ -424,7 +424,7 @@ describe('BookingInfo', () => {
     })
 
     it('returns summary list rows for a closed booking', () => {
-      const booking = bookingFactory.closed().build({
+      const booking = cas3BookingFactory.closed().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07T00:00:00.000Z',
       })
@@ -484,7 +484,7 @@ describe('BookingInfo', () => {
     })
 
     it('returns summary list rows containing the turnaround time when it is more than one day', () => {
-      const booking = bookingFactory.build({
+      const booking = cas3BookingFactory.build({
         effectiveEndDate: '2023-02-11',
         turnaround: {
           workingDays: 4,
@@ -519,7 +519,7 @@ describe('BookingInfo', () => {
     })
 
     it('returns summary list rows containing the turnaround time when it is exactly one day', () => {
-      const booking = bookingFactory.build({
+      const booking = cas3BookingFactory.build({
         effectiveEndDate: '2023-02-11',
         turnaround: {
           workingDays: 1,
@@ -554,7 +554,7 @@ describe('BookingInfo', () => {
     })
 
     it('returns summary list rows containing the turnaround time when the turnaround is not present', () => {
-      const booking = bookingFactory.build({
+      const booking = cas3BookingFactory.build({
         effectiveEndDate: '2023-02-11',
         turnaround: undefined,
       })

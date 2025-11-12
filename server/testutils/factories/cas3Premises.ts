@@ -3,12 +3,13 @@ import { Factory } from 'fishery'
 
 import type { Cas3Premises, Cas3PremisesArchiveAction } from '@approved-premises/api'
 import { ReferenceData } from '@approved-premises/ui'
-import characteristicFactory from './characteristic'
 import localAuthorityFactory from './localAuthority'
 import referenceDataFactory from './referenceData'
 import { DateFormats } from '../../utils/dateUtils'
 import pduFactory from './pdu'
 import probationRegionFactory from './probationRegion'
+import cas3PremisesCharacteristicsFactory from './cas3PremisesCharacteristics'
+import { camelCase, unique } from '../../utils/utils'
 
 class Cas3PremisesFactory extends Factory<Cas3Premises> {
   withArchiveHistory(length: number = 5) {
@@ -40,12 +41,13 @@ class Cas3PremisesFactory extends Factory<Cas3Premises> {
         ...faker.helpers.arrayElement(localAuthorities),
       }),
       probationDeliveryUnit: pdu,
-      characteristics: faker.helpers
+      premisesCharacteristics: faker.helpers
         .arrayElements(characteristics, faker.number.int({ min: 1, max: 5 }))
         .map(characteristic =>
-          characteristicFactory.build({
-            ...characteristic,
-            modelScope: 'premises',
+          cas3PremisesCharacteristicsFactory.build({
+            id: characteristic.id,
+            description: characteristic.name,
+            name: camelCase(characteristic.name),
           }),
         ),
     })
@@ -65,7 +67,7 @@ export default Cas3PremisesFactory.define(() => ({
   totalOnlineBedspaces: faker.number.int({ min: 1, max: 10 }),
   totalArchivedBedspaces: faker.number.int({ min: 1, max: 5 }),
   totalUpcomingBedspaces: faker.number.int({ min: 1, max: 5 }),
-  characteristics: characteristicFactory.buildList(5),
+  premisesCharacteristics: unique(cas3PremisesCharacteristicsFactory.buildList(faker.number.int({ min: 1, max: 5 }))),
   localAuthorityArea: localAuthorityFactory.build(),
   turnaroundWorkingDays: faker.number.int({ min: 1, max: 7 }),
   notes: faker.lorem.sentences(5),

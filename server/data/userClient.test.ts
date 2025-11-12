@@ -1,4 +1,4 @@
-import { Matchers } from '@pact-foundation/pact'
+import { MatchersV2 as Matchers } from '@pact-foundation/pact'
 import { userProfileFactory } from '../testutils/factories'
 import { CallConfig } from './restClient'
 import UserClient from './userClient'

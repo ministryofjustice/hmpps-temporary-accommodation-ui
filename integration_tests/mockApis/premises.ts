@@ -10,7 +10,6 @@ import { getMatchingRequests, stubFor } from './index'
 import paths from '../../server/paths/api'
 import {
   bedspaceCharacteristics,
-  characteristics,
   localAuthorities,
   pdus,
   premisesCharacteristics,
@@ -56,10 +55,9 @@ const stubSinglePremises = (premises: Cas3Premises) =>
     },
   })
 
-const stubPremisesReferenceData = (): Promise<[Response, Response, Response, Response, Response, Response]> =>
+const stubPremisesReferenceData = (): Promise<[Response, Response, Response, Response, Response]> =>
   Promise.all([
     stubFor(localAuthorities),
-    stubFor(characteristics),
     stubFor(probationRegions),
     stubFor(pdus),
     stubFor(premisesCharacteristics),

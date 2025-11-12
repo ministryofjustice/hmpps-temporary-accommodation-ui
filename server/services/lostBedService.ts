@@ -6,7 +6,6 @@ import type {
 } from '@approved-premises/api'
 import type { LostBedClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
-import { lostBedToCas3VoidBedspace } from '../utils/lostBedUtils'
 
 export default class LostBedService {
   constructor(
@@ -22,7 +21,7 @@ export default class LostBedService {
   ): Promise<Cas3VoidBedspace> {
     const lostBedClient = this.lostBedClientFactory(callConfig)
 
-    return lostBedToCas3VoidBedspace(await lostBedClient.create(premisesId, bedspaceId, lostBed))
+    return lostBedClient.create(premisesId, bedspaceId, lostBed)
   }
 
   async find(
@@ -33,7 +32,7 @@ export default class LostBedService {
   ): Promise<Cas3VoidBedspace> {
     const lostBedClient = this.lostBedClientFactory(callConfig)
 
-    return lostBedToCas3VoidBedspace(await lostBedClient.find(premisesId, bedspaceId, lostBedId))
+    return lostBedClient.find(premisesId, bedspaceId, lostBedId)
   }
 
   async update(
@@ -45,7 +44,7 @@ export default class LostBedService {
   ): Promise<Cas3VoidBedspace> {
     const lostBedClient = this.lostBedClientFactory(callConfig)
 
-    return lostBedToCas3VoidBedspace(await lostBedClient.update(premisesId, bedspaceId, lostBedId, lostBedUpdate))
+    return lostBedClient.update(premisesId, bedspaceId, lostBedId, lostBedUpdate)
   }
 
   async getUpdateLostBed(
@@ -56,7 +55,7 @@ export default class LostBedService {
   ): Promise<Cas3VoidBedspaceRequest> {
     const lostBedClient = this.lostBedClientFactory(callConfig)
 
-    const lostBed = lostBedToCas3VoidBedspace(await lostBedClient.find(premisesId, bedspaceId, lostBedId))
+    const lostBed = await lostBedClient.find(premisesId, bedspaceId, lostBedId)
 
     return {
       ...lostBed,

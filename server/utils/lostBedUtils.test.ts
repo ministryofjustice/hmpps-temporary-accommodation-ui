@@ -1,4 +1,4 @@
-import { cas3VoidBedspaceFactory, lostBedFactory } from '../testutils/factories'
+import { cas3VoidBedspaceFactory } from '../testutils/factories'
 import { lostBedActions, statusTag } from './lostBedUtils'
 
 describe('lostBedUtils', () => {

@@ -1,5 +1,3 @@
-import config from '../../server/config'
-
 const getCombinations = (arr: Array<string>) => {
   const result: Array<Array<string>> = []
   arr.forEach(item => {

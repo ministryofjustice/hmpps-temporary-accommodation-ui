@@ -1,10 +1,5 @@
 import { ObjectWithDateParts } from '@approved-premises/ui'
 import { validateSearchQuery } from './bedspaceSearchUtils'
-import {
-  bedspaceSearchResultsFactory,
-  cas3v2BedspaceSearchResultsFactory,
-  overlapFactory,
-} from '../testutils/factories'
 import referenceDataFactory from '../testutils/factories/referenceData'
 
 type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & {

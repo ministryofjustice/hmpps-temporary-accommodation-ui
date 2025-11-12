@@ -1,12 +1,4 @@
-import {
-  Booking,
-  Cancellation,
-  Cas3AssessmentSummary,
-  Cas3Booking,
-  Cas3BookingStatus,
-  Departure,
-  Extension,
-} from '@approved-premises/api'
+import { Cancellation, Cas3AssessmentSummary, Cas3Booking, Departure, Extension } from '@approved-premises/api'
 import type { BespokeError, PageHeadingBarItem, RadioItem } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'

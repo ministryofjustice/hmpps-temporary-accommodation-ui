@@ -1,10 +1,8 @@
 import {
   assessmentFactory,
   cas3BedspaceArchiveActionFactory,
-  cas3BedspaceCharacteristicsFactory,
   cas3BedspaceFactory,
   cas3PremisesFactory,
-  characteristicFactory,
   placeContextFactory,
 } from '../testutils/factories'
 import { bedspaceActions, summaryList, summaryListForBedspaceStatus } from './bedspaceUtils'

@@ -7,10 +7,8 @@ import {
   cas3NewBedspaceFactory,
   cas3ReferenceDataFactory,
   cas3UpdateBedspaceFactory,
-  characteristicFactory,
   probationRegionFactory,
 } from '../testutils/factories'
-import * as characteristicUtils from '../utils/characteristicUtils'
 import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/bedspaceClient')
@@ -31,8 +29,6 @@ describe('BedspaceService', () => {
     jest.clearAllMocks()
     bedspaceClientFactory.mockReturnValue(bedspaceClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
-
-    jest.spyOn(characteristicUtils, 'filterCharacteristics')
   })
 
   describe('getSingleBedspace', () => {

@@ -5,12 +5,10 @@ import {
   bedspaceSearchApiParametersFactory,
   cas3ReferenceDataFactory,
   cas3v2BedspaceSearchResultsFactory,
-  characteristicFactory,
   pduFactory,
   probationRegionFactory,
 } from '../testutils/factories'
 import BedspaceSearchService from './bedspaceSearchService'
-import * as characteristicUtils from '../utils/characteristicUtils'
 
 jest.mock('../data/bedspaceClient')
 jest.mock('../data/referenceDataClient')
@@ -30,7 +28,6 @@ describe('BedspaceSearchService', () => {
     jest.restoreAllMocks()
     bedspaceClientFactory.mockReturnValue(bedspaceClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
-    jest.spyOn(characteristicUtils, 'filterCharacteristics')
   })
 
   describe('search', () => {

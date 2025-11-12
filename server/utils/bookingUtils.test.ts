@@ -2,7 +2,6 @@ import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
 import {
   assessmentSummaryFactory,
-  bookingFactory,
   cas3ArrivalFactory,
   cas3BookingFactory,
   cas3DepartureFactory,

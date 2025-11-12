@@ -1,10 +1,5 @@
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
-import {
-  BookingSearchResult,
-  BookingSearchSortField,
-  Cas3BookingSearchResult,
-  Cas3BookingStatus,
-} from '@approved-premises/api'
+import { BookingSearchSortField } from '@approved-premises/api'
 import { SubNavObj, TableCell } from '../@types/ui/index'
 import paths from '../paths/temporary-accommodation/manage'
 import { appendQueryString } from './utils'

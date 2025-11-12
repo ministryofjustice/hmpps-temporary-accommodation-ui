@@ -4,7 +4,6 @@ import type {
   PaginatedResponse,
   TableRow,
 } from '@approved-premises/ui'
-import { BookingSearchResult, Cas3BookingSearchResult } from '@approved-premises/api'
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'

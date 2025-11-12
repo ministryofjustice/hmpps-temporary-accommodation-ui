@@ -12,14 +12,12 @@ import {
   cas3ReferenceDataFactory,
   cas3UnarchivePremisesFactory,
   cas3UpdatePremisesFactory,
-  characteristicFactory,
   localAuthorityFactory,
   pduFactory,
   probationRegionFactory,
 } from '../testutils/factories'
 import PremisesService from './premisesService'
 import { ReferenceDataClient } from '../data'
-import * as characteristicUtils from '../utils/characteristicUtils'
 import { AssessmentsService } from './index'
 
 jest.mock('../data/premisesClient')
@@ -43,8 +41,6 @@ describe('PremisesService', () => {
     premisesClientFactory.mockReturnValue(premisesClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
     assessmentService.findAssessment.mockResolvedValue(assessment)
-
-    jest.spyOn(characteristicUtils, 'filterCharacteristics')
   })
 
   describe('createPremises', () => {

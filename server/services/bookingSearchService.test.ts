@@ -1,15 +1,10 @@
 import BookingClient from '../data/bookingClient'
 import BookingSearchService from './bookingSearchService'
 import { CallConfig } from '../data/restClient'
-import {
-  bookingSearchResultFactory,
-  bookingSearchResultPersonSummaryFactory,
-  bookingSearchResultsFactory,
-  cas3BookingSearchResultFactory,
-  cas3BookingSearchResultsFactory,
-} from '../testutils/factories/index'
+import { cas3BookingSearchResultFactory, cas3BookingSearchResultsFactory } from '../testutils/factories/index'
 import { DateFormats } from '../utils/dateUtils'
 import paths from '../paths/temporary-accommodation/manage'
+import cas3BookingSearchResultPersonSummaryFactory from '../testutils/factories/cas3BookingSearchResultPersonSummary'
 
 jest.mock('../data/bookingClient')
 
@@ -31,7 +26,7 @@ describe('BookingService', () => {
       const booking1 = cas3BookingSearchResultFactory.build()
       const booking2 = cas3BookingSearchResultFactory.build()
       const booking3 = cas3BookingSearchResultFactory.build({
-        person: bookingSearchResultPersonSummaryFactory.build({ name: '' }),
+        person: cas3BookingSearchResultPersonSummaryFactory.build({ name: '' }),
       })
       const bookings = cas3BookingSearchResultsFactory.build({
         totalResults: 3,

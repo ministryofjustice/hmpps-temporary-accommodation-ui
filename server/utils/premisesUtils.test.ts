@@ -3,11 +3,9 @@ import { Cas3PremisesArchiveAction } from '@approved-premises/api'
 import {
   assessmentFactory,
   cas3PremisesBedspaceTotalsFactory,
-  cas3PremisesCharacteristicsFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
-  characteristicFactory,
   placeContextFactory,
 } from '../testutils/factories'
 import {

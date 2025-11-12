@@ -4,7 +4,6 @@ import {
   Cas3BedspaceCharacteristic,
   Cas3BedspaceStatus,
   Cas3Premises,
-  Characteristic,
 } from '@approved-premises/api'
 import { BedspaceStatus, PageHeadingBarItem, PlaceContext, SummaryList } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'

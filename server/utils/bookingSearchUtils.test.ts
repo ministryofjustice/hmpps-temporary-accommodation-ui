@@ -6,7 +6,6 @@ import {
   createSubNavArr,
   createTableHeadings,
 } from './bookingSearchUtils'
-import { bookingSearchResultFactory, cas3BookingSearchResultFactory } from '../testutils/factories'
 
 describe('bookingSearchUtils', () => {
   describe('createSideNavArr', () => {

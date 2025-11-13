@@ -7,9 +7,9 @@ import {
 import AssessmentClient from '../data/assessmentClient'
 import { CallConfig } from '../data/restClient'
 import {
-  assessmentFactory,
   assessmentSummaryFactory,
-  newReferralHistoryUserNoteFactory,
+  cas3AssessmentFactory,
+  cas3ReferralHistoryUserNoteFactory,
   referenceDataFactory,
   referralHistoryUserNoteFactory,
 } from '../testutils/factories'
@@ -97,7 +97,7 @@ describe('AssessmentsService', () => {
 
   describe('findAssessment', () => {
     it('calls the find method on the assessment client and returns the result', async () => {
-      const assessment = assessmentFactory.build()
+      const assessment = cas3AssessmentFactory.build()
 
       assessmentClient.find.mockResolvedValue(assessment)
 
@@ -186,7 +186,7 @@ describe('AssessmentsService', () => {
 
   describe('createNote', () => {
     it('returns a newly created user note', async () => {
-      const newNote = newReferralHistoryUserNoteFactory.build()
+      const newNote = cas3ReferralHistoryUserNoteFactory.build()
       const note = referralHistoryUserNoteFactory.build()
       assessmentClient.createNote.mockResolvedValue(note)
 

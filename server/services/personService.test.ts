@@ -1,5 +1,4 @@
 import { createMock } from '@golevelup/ts-jest'
-import { Response } from 'express'
 import type { Person } from '@approved-premises/api'
 
 import PersonClient from '../data/personClient'
@@ -11,9 +10,7 @@ import {
   oasysSectionsFactory,
   personFactory,
   prisonCaseNotesFactory,
-  risksFactory,
 } from '../testutils/factories'
-import { mapApiPersonRisksForUi } from '../utils/utils'
 import PersonService, { OasysNotFoundError } from './personService'
 import { SanitisedError } from '../sanitisedError'
 
@@ -57,21 +54,6 @@ describe('PersonService', () => {
 
       expect(personClientFactory).toHaveBeenCalledWith(callConfig)
       expect(personClient.offences).toHaveBeenCalledWith('crn')
-    })
-  })
-
-  describe('getPersonRisks', () => {
-    it("on success returns the person's risks given their CRN", async () => {
-      const apiRisks = risksFactory.build()
-      const uiRisks = mapApiPersonRisksForUi(apiRisks)
-      personClient.risks.mockResolvedValue(apiRisks)
-
-      const postedPerson = await service.getPersonRisks(callConfig, 'crn')
-
-      expect(postedPerson).toEqual(uiRisks)
-
-      expect(personClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(personClient.risks).toHaveBeenCalledWith('crn')
     })
   })
 
@@ -166,16 +148,6 @@ describe('PersonService', () => {
       })
 
       await expect(() => service.getOasysSections(callConfig, 'crn')).rejects.toThrowError(Error)
-    })
-  })
-
-  describe('getDocument', () => {
-    it('pipes the document to the response', async () => {
-      const response = createMock<Response>({})
-      await service.getDocument(callConfig, 'crn', 'applicationId', response)
-
-      expect(personClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(personClient.document).toHaveBeenCalledWith('crn', 'applicationId', response)
     })
   })
 })

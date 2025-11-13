@@ -31,6 +31,39 @@ context('Report', () => {
     Page.verifyOnPage(ReportIndexPage)
   })
 
+  it('throws an error when the gap report start and end dates are out of range', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // When I visit the report page
+    cy.task('stubReportReferenceData')
+    const page = ReportIndexPage.visit()
+
+    // And I fill out the form
+    const type: Cas3ReportType = 'bookingGap'
+    cy.then(function _() {
+      const probationRegion = this.actingUserProbationRegion
+      const startDate = '12/01/2024'
+      const endDate = '12/04/2024'
+
+      page.completeForm(startDate, endDate)
+
+      cy.task('stubGapReportError', {
+        data: 'some-data',
+        probationRegionId: probationRegion.id,
+        startDate: DateFormats.datepickerInputToIsoString(startDate),
+        endDate: DateFormats.datepickerInputToIsoString(endDate),
+        type,
+      })
+    })
+
+    page.expectDownload()
+    page.clickDownload(type)
+
+    // Then I should see an error message
+    cy.get('#endDate-error').should('contain', 'The end date cannot be more than 31 days from the start date')
+  })
+
   it('does not download a file when the API returns an error', () => {
     // Given I am signed in
     cy.signIn()

@@ -1,6 +1,6 @@
 import {
   TemporaryAccommodationAssessment as Assessment,
-  TemporaryAccommodationAssessmentSummary as AssessmentSummary,
+  Cas3AssessmentSummary as AssessmentSummary,
 } from '../../../server/@types/shared'
 import paths from '../../../server/paths/temporary-accommodation/manage'
 import { statusName } from '../../../server/utils/assessmentStatusUtils'

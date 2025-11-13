@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { TemporaryAccommodationAssessment as Assessment } from '../@types/shared'
+import { Cas3Assessment as Assessment } from '../@types/shared'
 import { PlaceContext } from '../@types/ui'
 import type { AssessmentsService } from '../services'
 import extractCallConfig from './restUtils'

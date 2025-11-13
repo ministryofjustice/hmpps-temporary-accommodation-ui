@@ -1,4 +1,4 @@
-import { TemporaryAccommodationAssessmentSummary } from '@approved-premises/api'
+import { Cas3AssessmentSummary } from '@approved-premises/api'
 import { AssessmentSearchApiStatus, AssessmentUpdatableDateField } from '@approved-premises/ui'
 import { sentence } from 'case'
 import { addDays } from 'date-fns'
@@ -12,7 +12,7 @@ import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   assessmentFactory,
   assessmentSummaryFactory,
-  newReferralHistoryUserNoteFactory,
+  cas3ReferralHistoryUserNoteFactory,
   timelineEventsFactory,
 } from '../../../../server/testutils/factories'
 import { MockPagination } from '../../../mockApis/bookingSearch'
@@ -139,7 +139,7 @@ context('Apply', () => {
 
           it('shows a message if there are no CRN or Name search results', () => {
             const assessments = assessmentSummaryFactory.buildList(9, { status: factoryStatus })
-            const noAssessments: TemporaryAccommodationAssessmentSummary[] = []
+            const noAssessments: Cas3AssessmentSummary[] = []
             const searchCrnOrName = 'N0M4TCH'
 
             cy.task('stubAssessments', { data: assessments })
@@ -480,7 +480,7 @@ context('Apply', () => {
         const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment, timeline)
 
         // When I create a new notes
-        const newNote = newReferralHistoryUserNoteFactory.build()
+        const newNote = cas3ReferralHistoryUserNoteFactory.build()
 
         cy.task('stubCreateAssessmentNote', assessment)
         assessmentSummaryPage.createNote(newNote.message)

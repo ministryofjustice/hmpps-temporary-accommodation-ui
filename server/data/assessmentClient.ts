@@ -1,10 +1,11 @@
 import type {
-  TemporaryAccommodationAssessment as Assessment,
   AssessmentAcceptance,
   AssessmentRejection,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
-  TemporaryAccommodationAssessmentSummary as AssessmentSummary,
-  NewReferralHistoryUserNote as NewNote,
+  Cas3Assessment,
+  Cas3AssessmentSummary,
+  Cas3UpdateAssessment,
+  Cas3ReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
 } from '@approved-premises/api'
 
@@ -25,13 +26,13 @@ export default class AssessmentClient {
   async all(
     statuses: AssessmentStatus[],
     params?: AssessmentSearchParameters,
-  ): Promise<PaginatedResponse<AssessmentSummary>> {
+  ): Promise<PaginatedResponse<Cas3AssessmentSummary>> {
     const path = appendQueryString(paths.cas3.assessments.index.pattern, {
       statuses,
       ...params,
       perPage: config.assessmentsDefaultPageSize,
     })
-    const response = await this.restClient.get<Array<AssessmentSummary>>({ path }, true)
+    const response = await this.restClient.get<Array<Cas3AssessmentSummary>>({ path }, true)
 
     const { body, header } = response
 
@@ -48,15 +49,15 @@ export default class AssessmentClient {
   }
 
   async readyToPlaceForCrn(crnOrName: string) {
-    const status: AssessmentSummary['status'] = 'ready_to_place'
+    const status: Cas3AssessmentSummary['status'] = 'ready_to_place'
 
-    return this.restClient.get<Array<AssessmentSummary>>({
+    return this.restClient.get<Array<Cas3AssessmentSummary>>({
       path: appendQueryString(paths.cas3.assessments.index.pattern, { crnOrName: crnOrName.trim(), statuses: status }),
     })
   }
 
   async find(assessmentId: string) {
-    return this.restClient.get<Assessment>({ path: paths.assessments.show({ id: assessmentId }) })
+    return this.restClient.get<Cas3Assessment>({ path: paths.cas3.assessments.show({ id: assessmentId }) })
   }
 
   async unallocateAssessment(id: string) {
@@ -92,11 +93,11 @@ export default class AssessmentClient {
   }
 
   async createNote(id: string, data: NewNote) {
-    return this.restClient.post<Note>({ path: paths.assessments.notes({ id }), data })
+    return this.restClient.post<Note>({ path: paths.cas3.assessments.notes({ id }), data })
   }
 
-  async update(id: string, data: Partial<Assessment>) {
-    const updateData = { data: {}, ...data }
-    return this.restClient.put<void>({ path: paths.assessments.update({ id }), data: updateData })
+  async update(id: string, data: Cas3UpdateAssessment) {
+    const updateData = data
+    return this.restClient.put<void>({ path: paths.cas3.assessments.update({ id }), data: updateData })
   }
 }

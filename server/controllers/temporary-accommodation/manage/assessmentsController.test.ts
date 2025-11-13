@@ -16,7 +16,7 @@ import {
   assessmentFactory,
   assessmentSearchParametersFactory,
   assessmentSummaryFactory,
-  newReferralHistoryUserNoteFactory,
+  cas3ReferralHistoryUserNoteFactory,
   probationRegionFactory,
   referenceDataFactory,
   referralHistorySystemNoteFactory,
@@ -531,7 +531,7 @@ describe('AssessmentsController', () => {
     it('creates a new note and redirects to assessment summary page', async () => {
       const requestHandler = assessmentsController.createNote()
       const assessmentId = 'some-id'
-      const newNote = newReferralHistoryUserNoteFactory.build()
+      const newNote = cas3ReferralHistoryUserNoteFactory.build()
 
       request.params = { id: assessmentId }
       request.body = { message: newNote.message }
@@ -550,7 +550,7 @@ describe('AssessmentsController', () => {
     it('redirects to the assessment summary page with errors if the API returns an error', async () => {
       const requestHandler = assessmentsController.createNote()
       const assessmentId = 'some-id'
-      const newNote = newReferralHistoryUserNoteFactory.build()
+      const newNote = cas3ReferralHistoryUserNoteFactory.build()
 
       const err = new Error()
 

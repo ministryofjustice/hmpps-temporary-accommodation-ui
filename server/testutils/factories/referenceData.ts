@@ -73,5 +73,4 @@ export default ReferenceDataFactory.define(() => ({
   id: faker.string.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   isActive: true,
-  serviceScope: 'temporary-accommodation',
 }))

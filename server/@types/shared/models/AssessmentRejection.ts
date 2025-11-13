@@ -5,9 +5,6 @@
 export type AssessmentRejection = {
     agreeWithShortNoticeReason?: boolean;
     agreeWithShortNoticeReasonComments?: string;
-    /**
-     * Any object
-     */
     document: any;
     isWithdrawn?: boolean;
     reasonForLateApplication?: string;

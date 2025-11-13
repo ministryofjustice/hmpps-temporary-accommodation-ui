@@ -50,7 +50,8 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
-  app.locals.applicationName = 'Transitional Accommodation (CAS3)'
+  app.locals.applicationFullName = 'CAS3 - Transitional Accommodation'
+  app.locals.applicationName = 'CAS3'
   app.locals.applicationInsightsConnectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || undefined
 
   // Cachebusting version string

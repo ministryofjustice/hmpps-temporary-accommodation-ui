@@ -9,11 +9,12 @@ import type {
 import type {
   TemporaryAccommodationAssessment as Assessment,
   AssessmentRejection,
-  NewReferralHistoryUserNote as NewNote,
+  Cas3Assessment,
+  Cas3ReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
   TemporaryAccommodationAssessmentStatus,
 } from '../@types/shared'
-import { AssessmentSummary } from '../@types/shared'
+import { Cas3AssessmentSummary } from '../@types/shared'
 import type { AssessmentClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 import { assessmentTableRows } from '../utils/assessmentUtils'
@@ -44,7 +45,7 @@ export default class AssessmentsService {
     }
   }
 
-  findAssessment(callConfig: CallConfig, assessmentId: string): Promise<Assessment> {
+  findAssessment(callConfig: CallConfig, assessmentId: string): Promise<Cas3Assessment> {
     const assessmentClient = this.assessmentClientFactory(callConfig)
 
     return assessmentClient.find(assessmentId)
@@ -94,7 +95,7 @@ export default class AssessmentsService {
     }
   }
 
-  async getReadyToPlaceForCrn(callConfig: CallConfig, crn: string): Promise<Array<AssessmentSummary>> {
+  async getReadyToPlaceForCrn(callConfig: CallConfig, crn: string): Promise<Array<Cas3AssessmentSummary>> {
     const assessmentClient = this.assessmentClientFactory(callConfig)
     return assessmentClient.readyToPlaceForCrn(crn)
   }

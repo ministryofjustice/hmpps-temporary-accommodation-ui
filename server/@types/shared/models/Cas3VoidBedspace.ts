@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Cas3CostCentre } from './Cas3CostCentre';
 import type { Cas3VoidBedspaceReason } from './Cas3VoidBedspaceReason';
 import type { Cas3VoidBedspaceStatus } from './Cas3VoidBedspaceStatus';
 export type Cas3VoidBedspace = {
@@ -9,6 +10,7 @@ export type Cas3VoidBedspace = {
     bedspaceName: string;
     cancellationDate?: string;
     cancellationNotes?: string;
+    costCentre?: Cas3CostCentre;
     endDate: string;
     id: string;
     notes?: string;

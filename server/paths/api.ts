@@ -1,7 +1,7 @@
 import { path } from 'static-path'
 
 const cas3Path = path('/cas3')
-const assessmentsCas3Path = cas3Path.path('/assessments')
+const assessmentsCas3Path = cas3Path.path('assessments')
 const premisesPath = path('/premises')
 const cas3PremisesPath = cas3Path.path('premises')
 const singlePremisesPath = premisesPath.path(':premisesId')
@@ -34,7 +34,6 @@ const assessPaths = {
   rejection: path('/assessments/:id/rejection'),
   acceptance: path('/assessments/:id/acceptance'),
   closure: path('/assessments/:id/closure'),
-  notes: path('/assessments/:id/referral-history-notes'),
 }
 
 const clarificationNotePaths = {
@@ -89,9 +88,6 @@ const managePathsCas3 = {
   },
 }
 
-const applicationsPath = path('/applications')
-const singleApplicationPath = applicationsPath.path(':id')
-
 const peoplePath = path('/people')
 const personPath = peoplePath.path(':crn')
 const oasysPath = personPath.path('oasys')
@@ -102,17 +98,6 @@ const applicationsCas3Path = cas3Path.path('applications')
 const deleteApplicationCas3Path = cas3Path.path('/applications/:id')
 const submitApplicationCas3Path = cas3Path.path('/applications/:id/submission')
 const singleApplicationCas3Path = applicationsCas3Path.path(':id')
-
-const applyPaths = {
-  applications: {
-    show: singleApplicationPath,
-    create: applicationsPath,
-    index: applicationsPath,
-    delete: singleApplicationPath.path('delete'),
-    update: singleApplicationCas3Path,
-    submission: submitApplicationCas3Path,
-  },
-}
 
 export default {
   cas3: {
@@ -149,6 +134,9 @@ export default {
     },
     assessments: {
       index: assessmentsCas3Path,
+      show: assessmentsCas3Path.path(':id'),
+      update: assessmentsCas3Path.path(':id'),
+      notes: assessmentsCas3Path.path(':id/referral-history-notes'),
     },
   },
   premises: {
@@ -169,20 +157,18 @@ export default {
   applications: {
     show: singleApplicationCas3Path,
     index: applicationsCas3Path,
-    update: applyPaths.applications.update,
+    update: singleApplicationCas3Path,
     delete: deleteApplicationCas3Path,
     new: applicationsCas3Path,
-    submission: applyPaths.applications.submission,
+    submission: submitApplicationCas3Path,
   },
   assessments: {
     index: assessPaths.assessments,
     show: assessPaths.singleAssessment,
-    update: assessPaths.singleAssessment,
     allocation: assessPaths.allocation,
     rejection: assessPaths.rejection,
     acceptance: assessPaths.acceptance,
     closure: assessPaths.closure,
-    notes: assessPaths.notes,
     clarificationNotes: {
       create: clarificationNotePaths.notes,
       update: clarificationNotePaths.notes.path(':clarificationNoteId'),
@@ -190,15 +176,11 @@ export default {
     timeline: timelineCas3Path,
   },
   people: {
-    risks: {
-      show: personPath.path('risks'),
-    },
     search: peoplePath.path('search'),
     prisonCaseNotes: personPath.path('prison-case-notes'),
     adjudications: personPath.path('adjudications'),
     acctAlerts: personPath.path('acct-alerts'),
     offences: personPath.path('offences'),
-    documents: path('/documents/:crn/:documentId'),
     oasys: {
       selection: oasysPath.path('selection'),
       sections: oasysPath.path('sections'),

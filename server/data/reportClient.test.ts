@@ -1,82 +1,17 @@
-import nock from 'nock'
-
 import { createMock } from '@golevelup/ts-jest'
 import { Response } from 'express'
-import config from '../config'
 import paths from '../paths/api'
 import { probationRegionFactory } from '../testutils/factories'
 import ReportClient from './reportClient'
 import { CallConfig } from './restClient'
+import describeClient from '../testutils/describeClient'
 
-describe('ReportClient', () => {
-  let fakeApprovedPremisesApi: nock.Scope
+describeClient('ReportClient', provider => {
   let reportClient: ReportClient
-
   const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
-    config.apis.approvedPremises.url = 'http://localhost:8080'
-    fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
     reportClient = new ReportClient(callConfig)
-  })
-
-  afterEach(() => {
-    if (!nock.isDone()) {
-      nock.cleanAll()
-      throw new Error('Not all nock interceptors were used!')
-    }
-    nock.abortPendingRequests()
-    nock.cleanAll()
-  })
-
-  describe('bookings', () => {
-    it('pipes all bookings to an express response', async () => {
-      const data = 'some-data'
-
-      const year = '2023'
-      const month = '3'
-
-      fakeApprovedPremisesApi
-        .get(paths.reports.bookings({}))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .query({ year, month })
-        .reply(200, data, { 'content-type': 'some-content-type' })
-
-      const response = createMock<Response>()
-
-      await reportClient.bookings(response, 'some-filename', month, year)
-
-      expect(response.set).toHaveBeenCalledWith({
-        'Content-Type': 'some-content-type',
-        'Content-Disposition': `attachment; filename="some-filename"`,
-      })
-      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
-    })
-  })
-
-  describe('bookings', () => {
-    it('pipes all bookings to an express response', async () => {
-      const data = 'some-data'
-
-      const year = '2024'
-      const month = '0'
-
-      fakeApprovedPremisesApi
-        .get(paths.reports.bookings({}))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .query({ year, month })
-        .reply(200, data, { 'content-type': 'some-content-type' })
-
-      const response = createMock<Response>()
-
-      await reportClient.bookings(response, 'some-filename', month, year)
-
-      expect(response.set).toHaveBeenCalledWith({
-        'Content-Type': 'some-content-type',
-        'Content-Disposition': `attachment; filename="some-filename"`,
-      })
-      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
-    })
   })
 
   describe('reportForProbationRegion', () => {
@@ -88,11 +23,23 @@ describe('ReportClient', () => {
       const endDate = '2024-04-01'
       const type = 'bedOccupancy'
 
-      fakeApprovedPremisesApi
-        .get(paths.reports.bedspaceUtilisation({}))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .query({ probationRegionId: probationRegion.id, startDate, endDate })
-        .reply(200, data, { 'content-type': 'some-content-type' })
+      await provider.addInteraction({
+        state: 'Bookings exist',
+        uponReceiving: 'a request for bedspace utilisation report',
+        withRequest: {
+          method: 'GET',
+          path: paths.reports.bedspaceUtilisation({}),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          query: { probationRegionId: probationRegion.id, startDate, endDate },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
+          body: data,
+        },
+      })
 
       const response = createMock<Response>()
 
@@ -106,7 +53,7 @@ describe('ReportClient', () => {
       )
 
       expect(response.set).toHaveBeenCalledWith({
-        'Content-Type': 'some-content-type',
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-Disposition': `attachment; filename="some-filename"`,
       })
       expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))

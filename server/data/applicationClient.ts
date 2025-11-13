@@ -3,8 +3,8 @@ import type {
   TemporaryAccommodationApplication as Application,
   Cas3ApplicationSummary as ApplicationSummary,
   Cas3Application,
+  Cas3SubmitApplication,
   Cas3UpdateApplication,
-  Cas3SubmitApplication as SubmitApplication,
 } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
@@ -49,7 +49,7 @@ export default class ApplicationClient {
     return this.restClient.get<Array<ApplicationSummary>>({ path: paths.applications.index.pattern })
   }
 
-  async submit(applicationId: string, submissionData: SubmitApplication) {
+  async submit(applicationId: string, submissionData: Cas3SubmitApplication) {
     return this.restClient.post<void>({
       path: paths.applications.submission({ id: applicationId }),
       data: submissionData,

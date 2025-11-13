@@ -118,10 +118,6 @@ export default class ApplyHelper {
 
   acctAlerts: Array<PersonAcctAlert> = []
 
-  documents: Array<Document> = []
-
-  selectedDocuments: Array<Document> = []
-
   constructor(
     private readonly application: TemporaryAccommodationApplication,
     private readonly person: Person,

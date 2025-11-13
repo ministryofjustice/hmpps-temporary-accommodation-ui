@@ -1,6 +1,6 @@
 import {
-  AssessmentSummary,
   Booking,
+  Cas3AssessmentSummary,
   Cas3Bedspace,
   Cas3BedspaceSearchResults,
   Cas3Premises,
@@ -36,7 +36,7 @@ export default class PlaceHelper {
 
   private readonly booking: Booking
 
-  private readonly assessmentSummaries: Array<AssessmentSummary>
+  private readonly assessmentSummaries: Array<Cas3AssessmentSummary>
 
   private readonly timeline: TimeLineFactory
 

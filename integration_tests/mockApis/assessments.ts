@@ -1,5 +1,10 @@
 import type { SuperAgentRequest } from 'superagent'
-import { Assessment, AssessmentSummary, TemporaryAccommodationAssessment } from '@approved-premises/api'
+import {
+  Assessment,
+  Cas3Assessment,
+  Cas3AssessmentSummary,
+  TemporaryAccommodationAssessment,
+} from '@approved-premises/api'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
@@ -8,7 +13,7 @@ import { MockPagination } from './bookingSearch'
 import { referralRejectionReasons } from '../../server/testutils/stubs/referenceDataStubs'
 
 export default {
-  stubAssessments: (args: { data: Array<AssessmentSummary>; pagination?: MockPagination }): SuperAgentRequest =>
+  stubAssessments: (args: { data: Array<Cas3AssessmentSummary>; pagination?: MockPagination }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -26,11 +31,11 @@ export default {
         jsonBody: args.data,
       },
     }),
-  stubFindAssessment: (assessment: Assessment): SuperAgentRequest =>
+  stubFindAssessment: (assessment: Cas3Assessment): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
-        url: api.assessments.show({ id: assessment.id }),
+        url: api.cas3.assessments.show({ id: assessment.id }),
       },
       response: {
         status: 200,
@@ -153,7 +158,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: api.assessments.notes({ id: assessment.id }),
+        url: api.cas3.assessments.notes({ id: assessment.id }),
       },
       response: {
         status: 200,
@@ -165,16 +170,16 @@ export default {
     (
       await getMatchingRequests({
         method: 'POST',
-        url: api.assessments.notes({ id: assessmentId }),
+        url: api.cas3.assessments.notes({ id: assessmentId }),
       })
     ).body.requests,
   stubCreateAssessmentNoteErrors: (args: { assessmentId: string; params: Array<string> }): SuperAgentRequest =>
-    stubFor(errorStub(args.params, api.assessments.notes({ id: args.assessmentId }), 'POST')),
-  stubUpdateAssessment: (assessment: Assessment): SuperAgentRequest =>
+    stubFor(errorStub(args.params, api.cas3.assessments.notes({ id: args.assessmentId }), 'POST')),
+  stubUpdateAssessment: (assessment: Cas3Assessment): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'PUT',
-        url: api.assessments.update({ id: assessment.id }),
+        url: api.cas3.assessments.update({ id: assessment.id }),
       },
       response: {
         status: 200,
@@ -183,13 +188,13 @@ export default {
       },
     }),
   stubUpdateAssessmentError: (args: {
-    assessment: Assessment
+    assessment: Cas3Assessment
     errorBody: Record<string, unknown>
   }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'PUT',
-        url: api.assessments.update({ id: args.assessment.id }),
+        url: api.cas3.assessments.update({ id: args.assessment.id }),
       },
       response: {
         status: 400,

@@ -54,18 +54,4 @@ describe('CancellationService', () => {
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('cancellation-reasons')
     })
   })
-
-  describe('getCancellation', () => {
-    it('on success returns the cancellation that has been requested', async () => {
-      const cancellation = cancellationFactory.build()
-      bookingClient.findCancellation.mockResolvedValue(cancellation)
-
-      const requestedDeparture = await service.getCancellation(callConfig, 'premisesId', 'bookingId', cancellation.id)
-
-      expect(requestedDeparture).toEqual(cancellation)
-
-      expect(BookingClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(bookingClient.findCancellation).toHaveBeenCalledWith('premisesId', 'bookingId', cancellation.id)
-    })
-  })
 })

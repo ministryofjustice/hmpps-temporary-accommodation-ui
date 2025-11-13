@@ -8,7 +8,8 @@ export default class AssessmentRejectionConfirmPage extends Page {
   }
 
   completeForm() {
-    this.checkRadioByNameAndLabel('referralRejectionReasonId', 'Remanded in custody or detained')
+    this.getSelectInputByIdAndSelectAnEntry('referralRejectionReasonId', 'Remanded in custody or detained')
+    cy.get('#referralRejectionReasonDetail-conditional').should('not.have.attr', 'hidden')
     this.completeTextArea('referralRejectionReasonDetail', 'Details about the rejection reason')
     this.checkRadioByNameAndLabel('ppRequestedWithdrawal', 'Yes')
   }

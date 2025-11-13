@@ -1,95 +1,117 @@
-import nock from 'nock'
-
+import { faker } from '@faker-js/faker/.'
 import { Cas3SubmitApplication, Cas3UpdateApplication } from '../@types/shared'
-import config from '../config'
 import paths from '../paths/api'
-import { activeOffenceFactory, applicationFactory, cas3ApplicationFactory } from '../testutils/factories'
+import { activeOffenceFactory, cas3ApplicationFactory, cas3ApplicationSummaryFactory } from '../testutils/factories'
 import ApplicationClient from './applicationClient'
 import { CallConfig } from './restClient'
+import describeClient from '../testutils/describeClient'
+import config from '../config'
 
-describe('ApplicationClient', () => {
-  let fakeApprovedPremisesApi: nock.Scope
+describeClient('ApplicationClient', provider => {
   let applicationClient: ApplicationClient
-
+  let originalFlagOasysDisabled: boolean
   const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
-    config.apis.approvedPremises.url = 'http://localhost:8080'
-    config.flags.oasysDisabled = false
-    fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
     applicationClient = new ApplicationClient(callConfig)
+    originalFlagOasysDisabled = config.flags.oasysDisabled as boolean
   })
 
   afterEach(() => {
-    if (!nock.isDone()) {
-      nock.cleanAll()
-      throw new Error('Not all nock interceptors were used!')
-    }
-    nock.abortPendingRequests()
-    nock.cleanAll()
+    config.flags.oasysDisabled = originalFlagOasysDisabled
   })
 
   describe('create', () => {
     it('should return an application when a crn is posted', async () => {
       const application = cas3ApplicationFactory.build()
       const offence = activeOffenceFactory.build()
+      config.flags.oasysDisabled = false
 
-      fakeApprovedPremisesApi
-        .post(`${paths.applications.new.pattern}?createWithRisks=true`, {
-          crn: application.person.crn,
-          convictionId: offence.convictionId,
-          deliusEventNumber: offence.deliusEventNumber,
-          offenceId: offence.offenceId,
-        })
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(201, application)
-
-      const result = await applicationClient.create(application.person.crn, offence)
-
-      expect(result).toEqual(application)
-      expect(nock.isDone()).toBeTruthy()
-    })
-
-    describe('when oasys integration is disabled', () => {
-      beforeEach(() => {
-        config.flags.oasysDisabled = true
-      })
-
-      it('should request that the risks are skipped', async () => {
-        const application = cas3ApplicationFactory.build()
-        const offence = activeOffenceFactory.build()
-
-        fakeApprovedPremisesApi
-          .post(`${paths.applications.new.pattern}?createWithRisks=false`, {
+      await provider.addInteraction({
+        state: 'Application can be created',
+        uponReceiving: 'a request to create an application',
+        withRequest: {
+          method: 'POST',
+          path: paths.applications.new.pattern,
+          query: { createWithRisks: 'true' },
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: {
             crn: application.person.crn,
             convictionId: offence.convictionId,
             deliusEventNumber: offence.deliusEventNumber,
             offenceId: offence.offenceId,
-          })
-          .matchHeader('authorization', `Bearer ${callConfig.token}`)
-          .reply(201, application)
-
-        const result = await applicationClient.create(application.person.crn, offence)
-
-        expect(result).toEqual(application)
-        expect(nock.isDone()).toBeTruthy()
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: application,
+        },
       })
+
+      const result = await applicationClient.create(application.person.crn, offence)
+      expect(result).toEqual(application)
+    })
+
+    it('should request that the risks are skipped when oasys integration is disabled', async () => {
+      const application = cas3ApplicationFactory.build()
+      const offence = activeOffenceFactory.build()
+      config.flags.oasysDisabled = true
+
+      await provider.addInteraction({
+        state: 'Application can be created with risks skipped',
+        uponReceiving: 'a request to create an application with risks skipped',
+        withRequest: {
+          method: 'POST',
+          path: paths.applications.new.pattern,
+          query: { createWithRisks: 'false' },
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: {
+            crn: application.person.crn,
+            convictionId: offence.convictionId,
+            deliusEventNumber: offence.deliusEventNumber,
+            offenceId: offence.offenceId,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: application,
+        },
+      })
+
+      const result = await applicationClient.create(application.person.crn, offence)
+      expect(result).toEqual(application)
     })
   })
 
   describe('find', () => {
     it('should return an application', async () => {
-      const application = applicationFactory.build()
+      const application = cas3ApplicationFactory.build()
 
-      fakeApprovedPremisesApi
-        .get(paths.applications.show({ id: application.id }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, application)
+      await provider.addInteraction({
+        state: 'Application exists',
+        uponReceiving: 'a request to get an application',
+        withRequest: {
+          method: 'GET',
+          path: paths.applications.show({ id: application.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: application,
+        },
+      })
 
       const result = await applicationClient.find(application.id)
-
       expect(result).toEqual(application)
-      expect(nock.isDone()).toBeTruthy()
     })
   })
 
@@ -100,68 +122,105 @@ describe('ApplicationClient', () => {
         data: application.data,
       }
 
-      fakeApprovedPremisesApi
-        .put(paths.applications.update({ id: application.id }), JSON.stringify({ ...data }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, application)
+      await provider.addInteraction({
+        state: 'Application can be updated',
+        uponReceiving: 'a request to update an application',
+        withRequest: {
+          method: 'PUT',
+          path: paths.applications.update({ id: application.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: data,
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: application,
+        },
+      })
 
       const result = await applicationClient.update(application.id, data)
-
       expect(result).toEqual(application)
-      expect(nock.isDone()).toBeTruthy()
     })
   })
 
   describe('all', () => {
     it('should get all previous applications', async () => {
-      const previousApplications = applicationFactory.build()
+      const previousApplicationSummaries = cas3ApplicationSummaryFactory.buildList(3)
 
-      fakeApprovedPremisesApi
-        .get(paths.applications.index.pattern)
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, previousApplications)
+      await provider.addInteraction({
+        state: 'Previous applications exist',
+        uponReceiving: 'a request for all previous applications',
+        withRequest: {
+          method: 'GET',
+          path: paths.applications.index.pattern,
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: previousApplicationSummaries,
+        },
+      })
 
       const result = await applicationClient.all()
-
-      expect(result).toEqual(previousApplications)
-      expect(nock.isDone()).toBeTruthy()
+      expect(result).toEqual(previousApplicationSummaries)
     })
   })
 
   describe('submit', () => {
     it('should submit the application', async () => {
-      const application = applicationFactory.build()
+      const application = cas3ApplicationFactory.build()
       const data: Cas3SubmitApplication = {
-        arrivalDate: application.data?.eligibility?.['accommodation-required-from-date']?.accommodationRequiredFromDate,
+        arrivalDate: '2020-01-01',
         summaryData: {},
-        probationDeliveryUnitId: application.data?.['contact-details']?.['probation-practitioner']?.pdu?.id,
-        translatedDocument: application.document,
+        probationDeliveryUnitId: faker.string.uuid(),
       }
 
-      fakeApprovedPremisesApi
-        .post(paths.applications.submission({ id: application.id }), JSON.stringify({ ...data }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(201)
+      await provider.addInteraction({
+        state: 'Application can be submitted',
+        uponReceiving: 'a request to submit an application',
+        withRequest: {
+          method: 'POST',
+          path: paths.applications.submission({ id: application.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: data,
+        },
+        willRespondWith: {
+          status: 200,
+        },
+      })
 
       await applicationClient.submit(application.id, data)
-
-      expect(nock.isDone()).toBeTruthy()
     })
   })
 
   describe('delete', () => {
     it('should delete an application when a DELETE request is made', async () => {
-      const application = applicationFactory.build()
+      const application = cas3ApplicationFactory.build()
 
-      fakeApprovedPremisesApi
-        .delete(paths.applications.delete({ id: application.id }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200)
+      await provider.addInteraction({
+        state: 'Application can be deleted',
+        uponReceiving: 'a request to delete an application',
+        withRequest: {
+          method: 'DELETE',
+          path: paths.applications.delete({ id: application.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+        },
+        willRespondWith: {
+          status: 200,
+        },
+      })
 
       const result = await applicationClient.delete(application.id)
-
       expect(result).toEqual({})
-      expect(nock.isDone()).toBeTruthy()
     })
   })
 })

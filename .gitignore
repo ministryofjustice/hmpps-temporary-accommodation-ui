@@ -131,6 +131,7 @@ integration_tests/screenshots/
 /e2e/screenshots
 /e2e/videos
 cypress/downloads/
+/tmp
 
 # Playwright
 /e2e_playwright/test-results

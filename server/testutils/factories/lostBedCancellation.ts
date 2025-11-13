@@ -7,5 +7,5 @@ import { DateFormats } from '../../utils/dateUtils'
 export default Factory.define<LostBedCancellation>(() => ({
   id: faker.string.uuid(),
   notes: faker.lorem.sentence(),
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
 }))

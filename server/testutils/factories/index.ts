@@ -39,14 +39,18 @@ import newDepartureFactory from './newDeparture'
 import newExtensionFactory from './newExtension'
 import newLostBedFactory from './newLostBed'
 import newLostBedCancellationFactory from './newLostBedCancellation'
-import newReferralHistoryUserNoteFactory from './newReferralHistoryUserNote'
 import newTurnaroundFactory from './newTurnaround'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
 import overlapFactory from './overlap'
 import pduFactory from './pdu'
 import { fullPersonFactory as personFactory, restrictedPersonFactory } from './person'
 import placeContextFactory from './placeContext'
+import cas3ApplicationFactory from './cas3Application'
+import cas3ApplicationSummaryFactory from './cas3ApplicationSummary'
+import cas3AssessmentSummaryFactory from './cas3AssessmentSummary'
+import cas3AssessmentSummariesFactory from './cas3AssessmentSummaries'
 import cas3PremisesFactory from './cas3Premises'
+import cas3AssessmentFactory from './cas3Assessment'
 import cas3NewPremisesFactory from './cas3NewPremises'
 import cas3UpdatePremisesFactory from './cas3UpdatePremises'
 import cas3PremisesBedspaceTotalsFactory from './cas3PremisesBedspaceTotals'
@@ -62,7 +66,7 @@ import cas3UpdateBedspaceFactory from './cas3UpdateBedspace'
 import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
 import cas3BedspaceReferenceFactory from './cas3BedspaceReference'
 import cas3BedspacesReferenceFactory from './cas3BedspacesReference'
-import cas3ApplicationFactory from './cas3Application'
+import cas3ReferralHistoryUserNoteFactory from './cas3ReferralHistoryUserNote'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
@@ -119,15 +123,20 @@ export {
   newExtensionFactory,
   newLostBedCancellationFactory,
   newLostBedFactory,
-  newReferralHistoryUserNoteFactory,
+  cas3ReferralHistoryUserNoteFactory,
   newTurnaroundFactory,
   oasysSectionsFactory,
   overlapFactory,
   pduFactory,
   personFactory,
   placeContextFactory,
+  cas3ApplicationFactory,
+  cas3ApplicationSummaryFactory,
+  cas3AssessmentSummaryFactory,
+  cas3AssessmentSummariesFactory,
   cas3PremisesFactory,
   cas3NewPremisesFactory,
+  cas3AssessmentFactory,
   cas3UpdatePremisesFactory,
   cas3PremisesBedspaceTotalsFactory,
   cas3PremisesSearchResultFactory,
@@ -142,7 +151,6 @@ export {
   cas3BedspaceSummaryFactory,
   cas3BedspaceReferenceFactory,
   cas3BedspacesReferenceFactory,
-  cas3ApplicationFactory,
   prisonCaseNotesFactory,
   probationRegionFactory,
   referenceDataFactory,

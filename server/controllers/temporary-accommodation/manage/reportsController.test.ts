@@ -84,7 +84,7 @@ describe('ReportsController', () => {
         probationRegionId: request.session.probationRegion.id,
         maxStartDate: '21/04/2024',
         maxEndDate: '22/04/2024',
-        showGapReportButton: 'false',
+        showGapReportButton: false,
       })
     })
 
@@ -132,7 +132,7 @@ describe('ReportsController', () => {
           probationRegionId: request.session.probationRegion.id,
           maxStartDate: '21/04/2024',
           maxEndDate: '22/04/2024',
-          showGapReportButton: 'false',
+          showGapReportButton: false,
         })
       })
     })

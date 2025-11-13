@@ -116,7 +116,7 @@ describe('BedspaceService', () => {
         },
         {
           key: { text: 'Additional bedspace details' },
-          value: { text: bedspace.notes },
+          value: { html: bedspace.notes.replace(/\n/g, '<br />') },
         },
       )
       const expectedSummary = {
@@ -258,7 +258,7 @@ describe('BedspaceService', () => {
           },
           {
             key: { text: 'Additional bedspace details' },
-            value: { text: bedspace.notes },
+            value: { html: bedspace.notes.replace(/\n/g, '<br />') },
           },
         ],
       }
@@ -291,7 +291,7 @@ describe('BedspaceService', () => {
           },
           {
             key: { text: 'Additional bedspace details' },
-            value: { text: bedspace.notes },
+            value: { html: bedspace.notes.replace(/\n/g, '<br />') },
           },
         ],
       }
@@ -324,7 +324,7 @@ describe('BedspaceService', () => {
           },
           {
             key: { text: 'Additional bedspace details' },
-            value: { text: bedspace.notes },
+            value: { html: bedspace.notes.replace(/\n/g, '<br />') },
           },
         ],
       }

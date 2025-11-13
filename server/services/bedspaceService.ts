@@ -66,7 +66,7 @@ export default class BedspaceService {
       },
       {
         key: { text: 'Additional bedspace details' },
-        value: { text: bedspace.notes ?? 'None' },
+        value: { html: this.formatNotes(bedspace.notes ?? 'None') },
       },
     )
     return {
@@ -227,5 +227,9 @@ export default class BedspaceService {
 
   private htmlValue(value: string) {
     return { html: value }
+  }
+
+  private formatNotes(notes: string): string {
+    return notes.replace(/\n/g, '<br />')
   }
 }

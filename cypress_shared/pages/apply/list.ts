@@ -10,7 +10,7 @@ export default class ListPage extends Page {
     private readonly submittedApplications: Array<Cas3Application>,
     private readonly rejectedApplications: Array<Cas3Application>,
   ) {
-    super('Transitional Accommodation (CAS3) referrals')
+    super('CAS3 referrals')
   }
 
   static visit(

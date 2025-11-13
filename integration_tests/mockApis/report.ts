@@ -32,6 +32,41 @@ export default {
         body: args.data,
       },
     }),
+  stubGapReportError: (args: {
+    data: string
+    probationRegionId: string
+    startDate: string
+    endDate: string
+    type: Cas3ReportType
+  }) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPath: getApiReportPath(args.type),
+        queryParameters: {
+          probationRegionId: { equalTo: args.probationRegionId },
+          startDate: { equalTo: args.startDate },
+          endDate: { equalTo: args.endDate },
+        },
+      },
+      response: {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/problem+json;charset=UTF-8',
+        },
+        jsonBody: {
+          title: 'Bad Request',
+          status: 400,
+          detail: 'There is a problem with your request',
+          'invalid-params': [
+            {
+              propertyName: '$.endDate',
+              errorType: 'rangeTooLargeGapReport',
+            },
+          ],
+        },
+      },
+    }),
   stubReportForRegion: (args: {
     data: string
     probationRegionId: string

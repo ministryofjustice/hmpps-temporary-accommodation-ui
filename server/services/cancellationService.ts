@@ -26,19 +26,6 @@ export default class CancellationService {
     return confirmedCancellation
   }
 
-  async getCancellation(
-    callConfig: CallConfig,
-    premisesId: string,
-    bookingId: string,
-    cancellationId: string,
-  ): Promise<Cancellation> {
-    const bookingClient = this.bookingClientFactory(callConfig)
-
-    const booking = await bookingClient.findCancellation(premisesId, bookingId, cancellationId)
-
-    return booking
-  }
-
   async getReferenceData(callConfig: CallConfig): Promise<CancellationReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
 

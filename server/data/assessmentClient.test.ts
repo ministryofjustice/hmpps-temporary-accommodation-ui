@@ -322,7 +322,7 @@ describeClient('AssessmentClient', provider => {
         uponReceiving: 'a request to close assessment',
         withRequest: {
           method: 'POST',
-          path: paths.assessments.closure({ id: assessment.id }),
+          path: paths.cas3.assessments.closure({ id: assessment.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

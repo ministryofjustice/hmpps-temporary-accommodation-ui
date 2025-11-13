@@ -88,7 +88,7 @@ export default class AssessmentClient {
 
   async closeAssessment(id: string) {
     return this.restClient.post<void>({
-      path: paths.assessments.closure({ id }),
+      path: paths.cas3.assessments.closure({ id }),
     })
   }
 

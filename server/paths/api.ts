@@ -137,6 +137,7 @@ export default {
       show: assessmentsCas3Path.path(':id'),
       update: assessmentsCas3Path.path(':id'),
       notes: assessmentsCas3Path.path(':id/referral-history-notes'),
+      closure: assessmentsCas3Path.path(':id/closure'),
     },
   },
   premises: {

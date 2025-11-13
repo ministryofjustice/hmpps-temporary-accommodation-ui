@@ -208,7 +208,7 @@ export default class PremisesService {
       },
       {
         key: { text: 'Additional property details' },
-        value: this.textValue(premises.notes || 'None'),
+        value: this.htmlValue(this.formatNotes(premises.notes || 'None')),
       },
     )
     return {
@@ -405,5 +405,9 @@ export default class PremisesService {
     }
 
     return html
+  }
+
+  private formatNotes(notes: string): string {
+    return notes.replace(/\n/g, '<br />')
   }
 }

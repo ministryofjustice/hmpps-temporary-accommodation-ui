@@ -433,7 +433,7 @@ describe('PremisesService', () => {
           },
           {
             key: { text: 'Additional property details' },
-            value: { text: onlinePremises.notes },
+            value: { html: onlinePremises.notes.replace(/\n/g, '<br />') },
           },
         ],
       }
@@ -486,7 +486,7 @@ describe('PremisesService', () => {
           },
           {
             key: { text: 'Additional property details' },
-            value: { text: archivedPremises.notes },
+            value: { html: archivedPremises.notes.replace(/\n/g, '<br />') },
           },
         ],
       }
@@ -502,7 +502,7 @@ describe('PremisesService', () => {
         row => (row.key as TextItem)?.text === 'Additional property details',
       )
 
-      expect(additionalPropertyDetailsRow.value).toEqual({ text: 'None' })
+      expect(additionalPropertyDetailsRow.value).toEqual({ html: 'None' })
     })
 
     it('should show "None" and "Add property details" link for property details when there are none', () => {

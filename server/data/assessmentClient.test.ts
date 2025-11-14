@@ -1,8 +1,8 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import {
   Cas3Assessment as Assessment,
-  AssessmentRejection,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
+  Cas3AssessmentRejection,
   Cas3UpdateAssessment,
 } from '../@types/shared'
 import config from '../config'
@@ -266,7 +266,7 @@ describeClient('AssessmentClient', provider => {
 
   describe('rejectAssessment', () => {
     it('posts a new rejection for the assessment', async () => {
-      const assessmentRejection: AssessmentRejection = {
+      const assessmentRejection: Cas3AssessmentRejection = {
         document: {},
         rejectionRationale: 'default',
         referralRejectionReasonId: faker.string.uuid(),
@@ -278,7 +278,7 @@ describeClient('AssessmentClient', provider => {
         uponReceiving: 'a request to reject assessment',
         withRequest: {
           method: 'POST',
-          path: paths.assessments.rejection({ id: assessment.id }),
+          path: paths.cas3.assessments.rejection({ id: assessment.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

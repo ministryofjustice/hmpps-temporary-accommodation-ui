@@ -30,6 +30,7 @@ export type ApprovedPremisesApplication = {
     caseManagerUserDetails?: Cas1ApplicationUserDetails;
     createdAt: string;
     createdByUserId: string;
+    createdByUserName?: string;
     cruManagementArea?: Cas1CruManagementArea;
     data?: any;
     document?: any;

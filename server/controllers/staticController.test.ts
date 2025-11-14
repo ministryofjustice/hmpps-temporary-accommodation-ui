@@ -49,4 +49,13 @@ describe('StaticController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/notAuthorised')
     })
   })
+
+  describe('maintenance', () => {
+    it('should render the maintenance page', () => {
+      const requestHandler = staticController.maintenance()
+      requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/maintenance')
+    })
+  })
 })

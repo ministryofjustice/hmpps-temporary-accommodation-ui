@@ -1,4 +1,4 @@
-import type { Booking, Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3Premises } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
@@ -13,7 +13,12 @@ export default class BookingHistoryPage extends Page {
 
   private readonly bookingInfoComponents: BookingInfoComponent[]
 
-  constructor(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking, historicBookings: Booking[]) {
+  constructor(
+    premises: Cas3Premises,
+    bedspace: Cas3Bedspace,
+    booking: Cas3Booking,
+    historicBookings: Array<Cas3Booking>,
+  ) {
     super('Booking history')
 
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
@@ -24,8 +29,8 @@ export default class BookingHistoryPage extends Page {
   static visit(
     premises: Cas3Premises,
     bedspace: Cas3Bedspace,
-    booking: Booking,
-    bookings: Booking[],
+    booking: Cas3Booking,
+    bookings: Array<Cas3Booking>,
   ): BookingHistoryPage {
     cy.visit(paths.bookings.history({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))
     return new BookingHistoryPage(premises, bedspace, booking, bookings)

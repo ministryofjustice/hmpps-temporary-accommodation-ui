@@ -1,17 +1,16 @@
 import { faker } from '@faker-js/faker/.'
 import paths from '../paths/api'
 import {
+  cas3VoidBedspaceCancellationFactory,
+  cas3VoidBedspaceRequestFactory,
   lostBedCancellationFactory,
   lostBedFactory,
-  newLostBedCancellationFactory,
-  newLostBedFactory,
-  updateLostBedFactory,
 } from '../testutils/factories'
 import LostBedClient from './lostBedClient'
 import { CallConfig } from './restClient'
 import describeClient from '../testutils/describeClient'
 
-describeClient('LostBedClient', provider => {
+describeClient('LostBedClient - ENABLE_CAS3V2_API flag off', provider => {
   let lostBedClient: LostBedClient
   const callConfig = { token: 'some-token' } as CallConfig
 
@@ -23,7 +22,14 @@ describeClient('LostBedClient', provider => {
     it('should create a lostBed', async () => {
       const premisesId = faker.string.uuid()
       const lostBed = lostBedFactory.build()
-      const newLostBed = newLostBedFactory.build()
+      const newLostBed = cas3VoidBedspaceRequestFactory.build()
+
+      const { reasonId, ...sharedProperties } = newLostBed
+      const payload = {
+        ...sharedProperties,
+        reason: reasonId,
+        bedId: lostBed.bedId,
+      }
 
       await provider.addInteraction({
         state: 'Lost bed can be created',
@@ -34,7 +40,7 @@ describeClient('LostBedClient', provider => {
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
-          body: newLostBed,
+          body: payload,
         },
         willRespondWith: {
           status: 200,
@@ -43,7 +49,7 @@ describeClient('LostBedClient', provider => {
         },
       })
 
-      const result = await lostBedClient.create(premisesId, newLostBed)
+      const result = await lostBedClient.create(premisesId, lostBed.bedId, newLostBed)
       expect(result).toEqual(lostBed)
     })
   })
@@ -70,7 +76,7 @@ describeClient('LostBedClient', provider => {
         },
       })
 
-      const result = await lostBedClient.find(premisesId, lostBed.id)
+      const result = await lostBedClient.find(premisesId, lostBed.bedId, lostBed.id)
       expect(result).toEqual(lostBed)
     })
   })
@@ -106,10 +112,17 @@ describeClient('LostBedClient', provider => {
     it('updates and returns the given lost bed', async () => {
       const premisesId = faker.string.uuid()
       const lostBed = lostBedFactory.build()
-      const payload = updateLostBedFactory.build({
+      const updateLostBed = cas3VoidBedspaceRequestFactory.build({
         ...lostBed,
-        reason: lostBed.reason.id,
+        reasonId: lostBed.reason.id,
       })
+
+      const { reasonId, ...sharedProperties } = updateLostBed
+      const payload = {
+        ...sharedProperties,
+        reason: reasonId,
+        bedId: lostBed.bedId,
+      }
 
       await provider.addInteraction({
         state: 'Lost bed can be updated',
@@ -129,7 +142,7 @@ describeClient('LostBedClient', provider => {
         },
       })
 
-      const result = await lostBedClient.update(premisesId, lostBed.id, payload)
+      const result = await lostBedClient.update(premisesId, lostBed.bedId, lostBed.id, updateLostBed)
       expect(result).toEqual(lostBed)
     })
   })
@@ -138,8 +151,11 @@ describeClient('LostBedClient', provider => {
     it('should create a cancellation', async () => {
       const premisesId = faker.string.uuid()
       const lostBed = lostBedFactory.build()
-      const newLostBedCancellation = newLostBedCancellationFactory.build()
-      const cancellation = lostBedCancellationFactory.build({ id: lostBed.id })
+      const newLostBedCancellation = cas3VoidBedspaceCancellationFactory.build()
+      const cancellation = lostBedCancellationFactory.build({
+        id: lostBed.id,
+        notes: newLostBedCancellation.cancellationNotes,
+      })
 
       await provider.addInteraction({
         state: 'Lost bed can be cancelled',
@@ -150,7 +166,9 @@ describeClient('LostBedClient', provider => {
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
-          body: newLostBedCancellation,
+          body: {
+            notes: newLostBedCancellation.cancellationNotes,
+          },
         },
         willRespondWith: {
           status: 200,
@@ -159,7 +177,7 @@ describeClient('LostBedClient', provider => {
         },
       })
 
-      const result = await lostBedClient.cancel(premisesId, lostBed.id, newLostBedCancellation)
+      const result = await lostBedClient.cancel(premisesId, lostBed.bedId, lostBed.id, newLostBedCancellation)
       expect(result).toEqual(cancellation)
     })
   })

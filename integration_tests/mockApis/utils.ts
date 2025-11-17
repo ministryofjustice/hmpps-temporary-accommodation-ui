@@ -1,4 +1,4 @@
-import { LostBed } from '../../server/@types/shared'
+import config from '../../server/config'
 
 const getCombinations = (arr: Array<string>) => {
   const result: Array<Array<string>> = []
@@ -51,16 +51,14 @@ const errorStub = (fields: Array<string>, pattern: string, method: string) => {
   }
 }
 
-const bedspaceConflictResponseBody = (
-  entityId: string | LostBed,
-  entityType: 'booking' | 'lost-bed' | 'bedspace-end-date',
-) => {
+const bedspaceConflictResponseBody = (entityId: string, entityType: 'booking' | 'lost-bed' | 'bedspace-end-date') => {
   let detail: string
 
   if (entityType === 'bedspace-end-date') {
     detail = 'BedSpace is archived from 2024-06-06 which overlaps with the desired dates'
   } else {
-    detail = `${entityType === 'booking' ? 'Booking' : 'Lost Bed'}: ${entityId}`
+    const lostBedLabel = config.flags.enableCas3v2Api ? 'Void Bedspace' : 'Lost Bed'
+    detail = `${entityType === 'booking' ? 'Booking' : lostBedLabel}: ${entityId}`
   }
 
   return {

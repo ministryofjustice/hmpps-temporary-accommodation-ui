@@ -1,5 +1,7 @@
 import cancellationReasonsJson from './cancellation-reasons.json'
 import characteristicsJson from './characteristics.json'
+import premisesCharacteristicsJson from './premisesCharacteristics.json'
+import bedspaceCharacteristicsJson from './bedspaceCharacteristics.json'
 import departureReasonsJson from './departure-reasons.json'
 import destinationProvidersJson from './destination-providers.json'
 import keyWorkersJson from './keyworkers.json'
@@ -9,6 +11,7 @@ import moveOnCategoriesJson from './move-on-categories.json'
 import pdusJson from './pdus.json'
 import probationRegionsJson from './probation-regions.json'
 import rejectionReasonsJson from './referral-rejection-reasons.json'
+import paths from '../../paths/api'
 
 const departureReasons = {
   request: {
@@ -94,6 +97,7 @@ const keyWorkers = {
   },
 }
 
+// TODO -- ENABLE_CAS3V2_API cleanup: this stub will no longer be needed once CAS3V2 is enabled.
 const characteristics = {
   request: {
     method: 'GET',
@@ -105,6 +109,40 @@ const characteristics = {
       'Content-Type': 'application/json;charset=UTF-8',
     },
     jsonBody: characteristicsJson,
+  },
+}
+
+const premisesCharacteristics = {
+  request: {
+    method: 'GET',
+    url: paths.cas3.referenceData,
+    queryParameters: {
+      type: { equalTo: 'PREMISES_CHARACTERISTICS' },
+    },
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: premisesCharacteristicsJson,
+  },
+}
+
+const bedspaceCharacteristics = {
+  request: {
+    method: 'GET',
+    url: paths.cas3.referenceData,
+    queryParameters: {
+      type: { equalTo: 'BEDSPACE_CHARACTERISTICS' },
+    },
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: bedspaceCharacteristicsJson,
   },
 }
 
@@ -172,6 +210,8 @@ export {
   lostBedReasons,
   keyWorkers,
   characteristics,
+  premisesCharacteristics,
+  bedspaceCharacteristics,
   localAuthorities,
   probationRegions,
   pdus,

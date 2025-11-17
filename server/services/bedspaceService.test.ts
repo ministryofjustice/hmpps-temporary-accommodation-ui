@@ -2,21 +2,21 @@ import BedspaceClient from '../data/bedspaceClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 import BedspaceService from './bedspaceService'
 import {
-  cas3BedspaceArchiveActionFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
+  cas3ReferenceDataFactory,
   cas3UpdateBedspaceFactory,
   characteristicFactory,
   probationRegionFactory,
 } from '../testutils/factories'
-import { filterCharacteristics } from '../utils/characteristicUtils'
+import * as characteristicUtils from '../utils/characteristicUtils'
 import { CallConfig } from '../data/restClient'
-import { convertToTitleCase } from '../utils/utils'
+import * as bedspaceUtils from '../utils/bedspaceUtils'
+import config from '../config'
 
 jest.mock('../data/bedspaceClient')
 jest.mock('../data/referenceDataClient')
-jest.mock('../utils/characteristicUtils')
 
 describe('BedspaceService', () => {
   const bedspaceClient = new BedspaceClient(null) as jest.Mocked<BedspaceClient>
@@ -26,13 +26,24 @@ describe('BedspaceService', () => {
 
   const service = new BedspaceService(bedspaceClientFactory, referenceDataClientFactory)
   const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
+  const flagsConfigOriginal = config.flags
 
   const premisesId = 'some-premises-id'
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    jest.clearAllMocks()
     bedspaceClientFactory.mockReturnValue(bedspaceClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
+
+    jest.spyOn(bedspaceUtils, 'populateBedspaceCharacteristics')
+    jest.spyOn(characteristicUtils, 'filterCharacteristics')
+    jest.spyOn(characteristicUtils, 'characteristicToCas3ReferenceData')
+
+    config.flags.enableCas3v2Api = true
+  })
+
+  afterEach(() => {
+    config.flags = flagsConfigOriginal
   })
 
   describe('getSingleBedspace', () => {
@@ -45,87 +56,8 @@ describe('BedspaceService', () => {
       expect(result).toBe(bedspace)
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.find).toHaveBeenCalledWith(premisesId, bedspace.id)
-    })
-  })
 
-  describe('summaryList', () => {
-    it.each([
-      [
-        cas3BedspaceFactory.build({
-          status: 'online',
-          startDate: '2025-01-02T03:04:05.678912Z',
-          archiveHistory: [cas3BedspaceArchiveActionFactory.build({ date: '2025-01-02T03:04:05.678912Z' })],
-        }),
-        'Online',
-        'green',
-        '2 January 2025',
-      ],
-      [
-        cas3BedspaceFactory.build({ status: 'archived', startDate: '2025-02-03T04:05:06.789123Z' }),
-        'Archived',
-        'grey',
-        '3 February 2025',
-      ],
-      [
-        cas3BedspaceFactory.build({ status: 'upcoming', startDate: '2125-03-04T05:06:07.891234Z' }),
-        'Upcoming',
-        'blue',
-        '4 March 2125',
-      ],
-      [cas3BedspaceFactory.build({ status: 'online', startDate: '' }), 'Online', 'green', ''],
-      [
-        cas3BedspaceFactory.build({ status: null, startDate: '2025-04-05T06:07:08.912345Z' }),
-        '',
-        'grey',
-        '5 April 2025',
-      ],
-    ])('returns the summaryList for a bedspace', async (bedspace, status, tagColour, formattedDate) => {
-      const rows = [
-        {
-          key: { text: 'Bedspace status' },
-          value: { html: `<strong class="govuk-tag govuk-tag--${tagColour}">${status}</strong>` },
-        },
-        {
-          key: { text: 'Start date' },
-          value: { text: formattedDate },
-        },
-      ]
-
-      if (bedspace.archiveHistory && bedspace.archiveHistory.length > 0) {
-        rows.push({
-          key: { text: 'Archive history' },
-          value: {
-            html: bedspace.archiveHistory
-              .map(archive => {
-                const verb = archive.status === 'archived' ? 'Archive' : convertToTitleCase(archive.status)
-                return `<div>${verb} date ${formattedDate}</div>`
-              })
-              .join(''),
-          },
-        })
-      }
-
-      rows.push(
-        {
-          key: { text: 'Bedspace details' },
-          value: {
-            html: bedspace.characteristics
-              .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
-              .join(' '),
-          },
-        },
-        {
-          key: { text: 'Additional bedspace details' },
-          value: { html: bedspace.notes.replace(/\n/g, '<br />') },
-        },
-      )
-      const expectedSummary = {
-        rows,
-      }
-
-      const result = service.summaryList(bedspace)
-
-      expect(result).toEqual(expectedSummary)
+      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
     })
   })
 
@@ -142,6 +74,8 @@ describe('BedspaceService', () => {
 
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.create).toHaveBeenCalledWith(premisesId, newBedspace)
+
+      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
     })
   })
 
@@ -151,7 +85,7 @@ describe('BedspaceService', () => {
       const updatedBedspace = cas3UpdateBedspaceFactory.build({
         reference: bedspace.reference,
         notes: bedspace.notes,
-        characteristicIds: bedspace.characteristics.map(ch => ch.id),
+        characteristicIds: bedspace.bedspaceCharacteristics.map(ch => ch.id),
       })
       bedspaceClient.update.mockResolvedValue(bedspace)
 
@@ -160,6 +94,21 @@ describe('BedspaceService', () => {
 
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.update).toHaveBeenCalledWith(premisesId, bedspace.id, updatedBedspace)
+
+      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
+    })
+  })
+
+  describe('archiveBedspace', () => {
+    it('calls the client to archive the bedspace', async () => {
+      const bedspaceId = 'some-bedspace-id'
+      const restartDate = '2025-01-15'
+      bedspaceClient.archive.mockResolvedValue()
+
+      await service.archiveBedspace(callConfig, premisesId, bedspaceId, restartDate)
+
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.archive).toHaveBeenCalledWith(premisesId, bedspaceId, { endDate: restartDate })
     })
   })
 
@@ -173,6 +122,8 @@ describe('BedspaceService', () => {
       expect(result).toEqual(bedspace)
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.cancelArchive).toHaveBeenCalledWith(premisesId, bedspace.id)
+
+      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
     })
   })
 
@@ -189,34 +140,56 @@ describe('BedspaceService', () => {
     })
   })
 
+  describe('cancelUnarchiveBedspace', () => {
+    it('calls the client to cancel the archive for the bedspace and returns the bedspace', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      bedspaceClient.cancelUnarchive.mockResolvedValue(bedspace)
+
+      const result = await service.cancelUnarchiveBedspace(callConfig, premisesId, bedspace.id)
+
+      expect(result).toEqual(bedspace)
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.cancelUnarchive).toHaveBeenCalledWith(premisesId, bedspace.id)
+
+      expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
+    })
+  })
+
+  describe('canArchiveBedspace', () => {
+    it('calls the client to cancel the archive for the bedspace and returns the bedspace', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      const response = {
+        date: bedspace.endDate,
+        entityId: bedspace.id,
+        entityReference: 'foo',
+      }
+      bedspaceClient.canArchive.mockResolvedValue(response)
+
+      const result = await service.canArchiveBedspace(callConfig, premisesId, bedspace.id)
+
+      expect(result).toEqual(response)
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.canArchive).toHaveBeenCalledWith(premisesId, bedspace.id)
+    })
+  })
+
   describe('getReferenceData', () => {
     it('returns sorted bedspace characteristics', async () => {
-      const bedspaceCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'room' })
-      const bedspaceCharacteristic2 = characteristicFactory.build({ name: 'EFG', modelScope: 'room' })
-      const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
-      const premisesCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'premises' })
+      const bedspaceCharacteristic1 = cas3ReferenceDataFactory.build({ description: 'ABC' })
+      const bedspaceCharacteristic2 = cas3ReferenceDataFactory.build({ description: 'EFG' })
+      const bedspaceCharacteristic3 = cas3ReferenceDataFactory.build({ description: 'HIJ' })
 
-      referenceDataClient.getReferenceData.mockResolvedValue([
-        genericCharacteristic,
-        bedspaceCharacteristic2,
+      referenceDataClient.getCas3ReferenceData.mockResolvedValue([
+        bedspaceCharacteristic3,
         bedspaceCharacteristic1,
-        premisesCharacteristic,
-      ])
-      ;(filterCharacteristics as jest.MockedFunction<typeof filterCharacteristics>).mockReturnValue([
         bedspaceCharacteristic2,
-        genericCharacteristic,
-        bedspaceCharacteristic1,
       ])
 
       const result = await service.getReferenceData(callConfig)
       expect(result).toEqual({
-        characteristics: [bedspaceCharacteristic1, bedspaceCharacteristic2, genericCharacteristic],
+        characteristics: [bedspaceCharacteristic1, bedspaceCharacteristic2, bedspaceCharacteristic3],
       })
-
-      expect(filterCharacteristics).toHaveBeenCalledWith(
-        [genericCharacteristic, bedspaceCharacteristic2, bedspaceCharacteristic1, premisesCharacteristic],
-        'room',
-      )
+      expect(referenceDataClient.getCas3ReferenceData).toHaveBeenCalledWith('BEDSPACE_CHARACTERISTICS')
     })
   })
 
@@ -231,133 +204,46 @@ describe('BedspaceService', () => {
       expect(bedspaces).toEqual(result)
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.get).toHaveBeenCalledWith(premisesId)
+
+      bedspaces.bedspaces.forEach(bedspace => {
+        expect(bedspaceUtils.populateBedspaceCharacteristics).toHaveBeenCalledWith(bedspace)
+      })
     })
   })
 
-  describe('get summaryList from bedspace', () => {
-    it('returns a summaryList for an online bedspace', () => {
-      const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2025-05-17' })
-
-      const expectedSummary = {
-        rows: [
-          {
-            key: { text: 'Bedspace status' },
-            value: { html: '<strong class="govuk-tag govuk-tag--green">Online</strong>' },
-          },
-          {
-            key: { text: 'Start date' },
-            value: { text: '17 May 2025' },
-          },
-          {
-            key: { text: 'Bedspace details' },
-            value: {
-              html: bedspace.characteristics
-                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
-                .join(' '),
-            },
-          },
-          {
-            key: { text: 'Additional bedspace details' },
-            value: { html: bedspace.notes.replace(/\n/g, '<br />') },
-          },
-        ],
-      }
-
-      const summary = service.summaryList(bedspace)
-
-      expect(summary).toEqual(expectedSummary)
+  describe('with the ENABLE_CAS3V2_API flag off', () => {
+    beforeEach(() => {
+      config.flags.enableCas3v2Api = false
     })
 
-    it('returns a summaryList for an archived bedspace', () => {
-      const bedspace = cas3BedspaceFactory.build({ status: 'archived', startDate: '2025-06-18' })
+    describe('getReferenceData', () => {
+      it('returns sorted bedspace characteristics', async () => {
+        const bedspaceCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'room' })
+        const bedspaceCharacteristic2 = characteristicFactory.build({ name: 'EFG', modelScope: 'room' })
+        const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
+        const premisesCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'premises' })
 
-      const expectedSummary = {
-        rows: [
-          {
-            key: { text: 'Bedspace status' },
-            value: { html: '<strong class="govuk-tag govuk-tag--grey">Archived</strong>' },
-          },
-          {
-            key: { text: 'Start date' },
-            value: { text: '18 June 2025' },
-          },
-          {
-            key: { text: 'Bedspace details' },
-            value: {
-              html: bedspace.characteristics
-                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
-                .join(' '),
-            },
-          },
-          {
-            key: { text: 'Additional bedspace details' },
-            value: { html: bedspace.notes.replace(/\n/g, '<br />') },
-          },
-        ],
-      }
+        referenceDataClient.getReferenceData.mockResolvedValue([
+          genericCharacteristic,
+          bedspaceCharacteristic2,
+          bedspaceCharacteristic1,
+          premisesCharacteristic,
+        ])
 
-      const summary = service.summaryList(bedspace)
+        const result = await service.getReferenceData(callConfig)
+        expect(result).toEqual({
+          characteristics: [
+            characteristicUtils.characteristicToCas3ReferenceData(bedspaceCharacteristic1),
+            characteristicUtils.characteristicToCas3ReferenceData(bedspaceCharacteristic2),
+            characteristicUtils.characteristicToCas3ReferenceData(genericCharacteristic),
+          ],
+        })
 
-      expect(summary).toEqual(expectedSummary)
-    })
-
-    it('returns a summaryList for an upcoming bedspace', () => {
-      const bedspace = cas3BedspaceFactory.build({ status: 'upcoming', startDate: '2125-07-19' })
-
-      const expectedSummary = {
-        rows: [
-          {
-            key: { text: 'Bedspace status' },
-            value: { html: '<strong class="govuk-tag govuk-tag--blue">Upcoming</strong>' },
-          },
-          {
-            key: { text: 'Start date' },
-            value: { text: '19 July 2125' },
-          },
-          {
-            key: { text: 'Bedspace details' },
-            value: {
-              html: bedspace.characteristics
-                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
-                .join(' '),
-            },
-          },
-          {
-            key: { text: 'Additional bedspace details' },
-            value: { html: bedspace.notes.replace(/\n/g, '<br />') },
-          },
-        ],
-      }
-
-      const summary = service.summaryList(bedspace)
-
-      expect(summary).toEqual(expectedSummary)
-    })
-
-    it('includes scheduled archive date in the status row for online bedspaces with endDate (scheduled archive)', () => {
-      const bedspace = cas3BedspaceFactory.build({
-        status: 'online',
-        endDate: '2125-08-20',
+        expect(characteristicUtils.filterCharacteristics).toHaveBeenCalledWith(
+          [genericCharacteristic, bedspaceCharacteristic2, bedspaceCharacteristic1, premisesCharacteristic],
+          'room',
+        )
       })
-
-      const summary = service.summaryList(bedspace)
-      const statusRowValue = (summary.rows[0].value as { html: string }).html
-
-      expect(statusRowValue).toContain('<strong class="govuk-tag govuk-tag--green">Online</strong>')
-      expect(statusRowValue).toContain('Scheduled archive date 20 August 2125')
-    })
-
-    it('includes scheduled online date in the status row for archived bedspaces with future startDate (scheduled online)', () => {
-      const bedspace = cas3BedspaceFactory.build({
-        status: 'archived',
-        scheduleUnarchiveDate: '2125-08-20',
-      })
-
-      const summary = service.summaryList(bedspace)
-      const statusRowValue = (summary.rows[0].value as { html: string }).html
-
-      expect(statusRowValue).toContain('<strong class="govuk-tag govuk-tag--grey">Archived</strong>')
-      expect(statusRowValue).toContain('Scheduled online date 20 August 2125')
     })
   })
 })

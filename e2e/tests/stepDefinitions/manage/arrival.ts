@@ -4,7 +4,7 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import BookingArrivalNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalNew'
 import BookingArrivalEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalEdit'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import { arrivalFactory, bookingFactory, newArrivalFactory } from '../../../../server/testutils/factories'
+import { cas3ArrivalFactory, cas3BookingFactory, newArrivalFactory } from '../../../../server/testutils/factories'
 
 Given('I mark the booking as arrived', () => {
   cy.then(function _() {
@@ -12,7 +12,7 @@ Given('I mark the booking as arrived', () => {
     bookingShowPage.clickMarkArrivedBookingButton()
 
     const newArrival = newArrivalFactory.build({ expectedDepartureDate: this.booking.departureDate })
-    const arrival = arrivalFactory.build({
+    const arrival = cas3ArrivalFactory.build({
       ...newArrival,
     })
 
@@ -20,7 +20,7 @@ Given('I mark the booking as arrived', () => {
     bookingArrivalPage.shouldShowBookingDetails()
     bookingArrivalPage.completeForm(newArrival)
 
-    const arrivedBooking = bookingFactory.build({
+    const arrivedBooking = cas3BookingFactory.build({
       ...this.booking,
       status: 'arrived',
       arrivalDate: newArrival.arrivalDate,

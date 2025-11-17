@@ -1,11 +1,10 @@
-/* istanbul ignore file */
-
-import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
-import { Cas3BedspacePremisesSearchResult } from '@approved-premises/api'
+import { Cas3BedspaceSummary } from '@approved-premises/api'
+import { faker } from '@faker-js/faker'
+import { DateFormats } from '../../utils/dateUtils'
 
-export default Factory.define<Cas3BedspacePremisesSearchResult>(() => ({
+export default Factory.define<Cas3BedspaceSummary>(() => ({
   id: faker.string.uuid(),
-  reference: `Room ${faker.number.int({ min: 1, max: 9999 })}`,
-  status: faker.helpers.arrayElement(['online', 'archived'] as const),
+  reference: faker.string.alphanumeric(6),
+  endDate: DateFormats.dateObjToIsoDate(faker.date.future()),
 }))

@@ -1,24 +1,21 @@
 import {
   Cas3Bedspace,
-  Cas3BedspaceArchiveAction,
-  type Cas3BedspaceStatus,
   Cas3Bedspaces,
   Cas3NewBedspace,
+  Cas3ReferenceData,
   Cas3UpdateBedspace,
   Characteristic,
 } from '@approved-premises/api'
-import { SummaryList } from '@approved-premises/ui'
 import { CallConfig } from '../data/restClient'
 import { RestClientBuilder } from '../data'
 import BedspaceClient from '../data/bedspaceClient'
 import ReferenceDataClient from '../data/referenceDataClient'
-import { DateFormats } from '../utils/dateUtils'
-import { convertToTitleCase } from '../utils/utils'
-import { filterCharacteristics } from '../utils/characteristicUtils'
-import { bedspaceStatus } from '../utils/bedspaceUtils'
+import { characteristicToCas3ReferenceData, filterCharacteristics } from '../utils/characteristicUtils'
+import { populateBedspaceCharacteristics } from '../utils/bedspaceUtils'
+import config from '../config'
 
 export type BedspaceReferenceData = {
-  characteristics: Array<Characteristic>
+  characteristics: Array<Cas3ReferenceData>
 }
 
 export default class BedspaceService {
@@ -29,109 +26,39 @@ export default class BedspaceService {
 
   async getSingleBedspace(callConfig: CallConfig, premisesId: string, bedspaceId: string): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return bedspaceClient.find(premisesId, bedspaceId)
+    return populateBedspaceCharacteristics(await bedspaceClient.find(premisesId, bedspaceId))
   }
 
   async getBedspacesForPremises(callConfig: CallConfig, premisesId: string): Promise<Cas3Bedspaces> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
 
-    return bedspaceClient.get(premisesId)
-  }
+    const response = await bedspaceClient.get(premisesId)
 
-  summaryList(bedspace: Cas3Bedspace): SummaryList {
-    const rows = [
-      {
-        key: { text: 'Bedspace status' },
-        value: { html: this.formatBedspaceStatus(bedspace) },
-      },
-      {
-        key: { text: 'Start date' },
-        value: { text: this.formatBedspaceDate(bedspace.startDate) },
-      },
-    ]
-
-    if (bedspace.archiveHistory && bedspace.archiveHistory.length > 0) {
-      rows.push({
-        key: { text: 'Archive history' },
-        value: {
-          html: this.formatArchiveHistory(bedspace.archiveHistory),
-        },
-      })
-    }
-
-    rows.push(
-      {
-        key: { text: 'Bedspace details' },
-        value: { html: this.formatBedspaceDetails(bedspace.characteristics) || 'None' },
-      },
-      {
-        key: { text: 'Additional bedspace details' },
-        value: { html: this.formatNotes(bedspace.notes ?? 'None') },
-      },
-    )
     return {
-      rows,
+      ...response,
+      bedspaces: response.bedspaces.map(bedspace => populateBedspaceCharacteristics(bedspace)),
     }
-  }
-
-  private getBedspaceStatusTagColour(status: Cas3BedspaceStatus): string {
-    switch (status) {
-      case 'online':
-        return 'govuk-tag--green'
-      case 'archived':
-        return 'govuk-tag--grey'
-      case 'upcoming':
-        return 'govuk-tag--blue'
-      default:
-        return 'govuk-tag--grey'
-    }
-  }
-
-  private formatBedspaceStatus(bedspace: Cas3Bedspace): string {
-    const tagClass = this.getBedspaceStatusTagColour(bedspace.status)
-    let html = `<strong class="govuk-tag ${tagClass}">${convertToTitleCase(bedspace.status)}</strong>`
-
-    if (bedspace.status === 'online' && bedspace.endDate) {
-      html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled archive date ${this.formatBedspaceDate(bedspace.endDate)}</span>`
-    } else if (bedspace.status === 'archived' && new Date(bedspace.scheduleUnarchiveDate) > new Date()) {
-      html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled online date ${this.formatBedspaceDate(bedspace.scheduleUnarchiveDate)}</span>`
-    }
-
-    return html
-  }
-
-  private formatBedspaceDate(dateString: string | undefined | null): string {
-    if (dateString === undefined || dateString === null || dateString === '') {
-      return ''
-    }
-
-    return DateFormats.isoDateToUIDate(dateString)
-  }
-
-  private formatBedspaceDetails(characteristics: Array<Characteristic>): string {
-    return characteristics
-      .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
-      .join(' ')
-  }
-
-  private formatArchiveHistory(archiveHistory: Array<Cas3BedspaceArchiveAction>): string {
-    return archiveHistory
-      .map(action => {
-        const verb = action.status === 'archived' ? 'Archive' : convertToTitleCase(action.status)
-        return `<div>${verb} date ${this.formatBedspaceDate(action.date)}</div>`
-      })
-      .join('')
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<BedspaceReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
-    const characteristics = filterCharacteristics(
-      await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
-      'room',
-    ).sort((a, b) => a.name.localeCompare(b.name))
+    if (!config.flags.enableCas3v2Api) {
+      return {
+        characteristics: filterCharacteristics(
+          await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
+          'room',
+        )
+          .map(characteristicToCas3ReferenceData)
+          .sort((a, b) => a.description.localeCompare(b.description)),
+      }
+    }
 
-    return { characteristics }
+    return {
+      characteristics: (await referenceDataClient.getCas3ReferenceData('BEDSPACE_CHARACTERISTICS')).sort((a, b) =>
+        a.description.localeCompare(b.description),
+      ),
+    }
   }
 
   async createBedspace(
@@ -140,7 +67,7 @@ export default class BedspaceService {
     newBedspace: Cas3NewBedspace,
   ): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return bedspaceClient.create(premisesId, newBedspace)
+    return populateBedspaceCharacteristics(await bedspaceClient.create(premisesId, newBedspace))
   }
 
   async updateBedspace(
@@ -150,7 +77,7 @@ export default class BedspaceService {
     updatedBedspace: Cas3UpdateBedspace,
   ): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return bedspaceClient.update(premisesId, bedspaceId, updatedBedspace)
+    return populateBedspaceCharacteristics(await bedspaceClient.update(premisesId, bedspaceId, updatedBedspace))
   }
 
   async archiveBedspace(
@@ -175,12 +102,12 @@ export default class BedspaceService {
 
   async cancelArchiveBedspace(callConfig: CallConfig, premisesId: string, bedspaceId: string): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return bedspaceClient.cancelArchive(premisesId, bedspaceId)
+    return populateBedspaceCharacteristics(await bedspaceClient.cancelArchive(premisesId, bedspaceId))
   }
 
   async cancelUnarchiveBedspace(callConfig: CallConfig, premisesId: string, bedspaceId: string): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return bedspaceClient.cancelUnarchive(premisesId, bedspaceId)
+    return populateBedspaceCharacteristics(await bedspaceClient.cancelUnarchive(premisesId, bedspaceId))
   }
 
   async canArchiveBedspace(
@@ -190,46 +117,5 @@ export default class BedspaceService {
   ): Promise<{ date?: string; entityId?: string; entityReference?: string }> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
     return bedspaceClient.canArchive(premisesId, bedspaceId)
-  }
-
-  summaryListForBedspaceStatus(bedspace: Cas3Bedspace): SummaryList {
-    let endDate = 'No end date added'
-
-    if (bedspace.endDate) {
-      endDate = DateFormats.isoDateToUIDate(bedspace.endDate)
-
-      if (bedspaceStatus(bedspace) === 'online') {
-        endDate += ` (${DateFormats.isoDateToDaysFromNow(bedspace.endDate)})`
-      }
-    }
-
-    return {
-      rows: [
-        {
-          key: this.textValue('Bedspace status'),
-          value: this.htmlValue(
-            bedspaceStatus(bedspace) === 'online'
-              ? `<span class="govuk-tag govuk-tag--green">Online</span>`
-              : `<span class="govuk-tag govuk-tag--grey">Archived</span>`,
-          ),
-        },
-        {
-          key: this.textValue('Bedspace end date'),
-          value: this.textValue(endDate),
-        },
-      ],
-    }
-  }
-
-  private textValue(value: string) {
-    return { text: value }
-  }
-
-  private htmlValue(value: string) {
-    return { html: value }
-  }
-
-  private formatNotes(notes: string): string {
-    return notes.replace(/\n/g, '<br />')
   }
 }

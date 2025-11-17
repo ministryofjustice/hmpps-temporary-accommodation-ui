@@ -4,9 +4,9 @@ import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommod
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
-  bookingFactory,
-  extensionFactory,
-  lostBedFactory,
+  cas3BookingFactory,
+  cas3ExtensionFactory,
+  cas3VoidBedspaceFactory,
   newExtensionFactory,
 } from '../../../../server/testutils/factories'
 
@@ -21,7 +21,7 @@ context('Booking extension', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and an arrived booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
@@ -39,7 +39,7 @@ context('Booking extension', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and an arrived booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking extension page
@@ -47,7 +47,7 @@ context('Booking extension', () => {
     page.shouldShowBookingDetails()
 
     // And I fill out the form
-    const extension = extensionFactory.build()
+    const extension = cas3ExtensionFactory.build()
     const newExtension = newExtensionFactory.build({
       ...extension,
     })
@@ -74,7 +74,7 @@ context('Booking extension', () => {
     cy.signIn()
 
     // And there is an arrived booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking extension page
@@ -98,17 +98,17 @@ context('Booking extension', () => {
     cy.signIn()
 
     // And there is an arrived booking and a conflicting lost bed in the database
-    const booking = bookingFactory.arrived().build()
-    const conflictingLostBed = lostBedFactory.build()
-
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
+
+    const conflictingLostBed = cas3VoidBedspaceFactory.build({ bedspaceId: bedspace.id })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
 
     // When I visit the booking extension page
     const page = BookingExtensionNewPage.visit(premises, bedspace, booking)
 
     // And I fill out the form with dates that conflict with an existing booking
-    const extension = extensionFactory.build()
+    const extension = cas3ExtensionFactory.build()
     const newExtension = newExtensionFactory.build({
       ...extension,
     })
@@ -130,7 +130,7 @@ context('Booking extension', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and an arrived booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking extension page

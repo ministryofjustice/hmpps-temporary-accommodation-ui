@@ -1,5 +1,5 @@
-import { Cas3Bedspace, Cas3BedspaceSearchResult, Cas3BedspaceSearchResults } from '../../../../server/@types/shared'
-import { BedspaceSearchFormParameters, PlaceContext } from '../../../../server/@types/ui'
+import { Cas3Bedspace, Cas3v2BedspaceSearchResults } from '@approved-premises/api'
+import { BedspaceSearchFormParameters, PlaceContext } from '@approved-premises/ui'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceSearchResult from '../../../components/bedspaceSearchResult'
@@ -9,13 +9,13 @@ import { addPlaceContext } from '../../../../server/utils/placeUtils'
 export default class BedspaceSearchPage extends Page {
   private readonly bedspaceSearchResults: Map<string, BedspaceSearchResult>
 
-  constructor(results?: Cas3BedspaceSearchResults) {
+  constructor(results?: Cas3v2BedspaceSearchResults) {
     super('Search for available bedspaces')
 
     this.bedspaceSearchResults = new Map<string, BedspaceSearchResult>()
 
     results?.results.forEach(result => {
-      this.bedspaceSearchResults.set(`${result.room.id}`, new BedspaceSearchResult(result as Cas3BedspaceSearchResult))
+      this.bedspaceSearchResults.set(`${result.bedspace.id}`, new BedspaceSearchResult(result))
     })
   }
 

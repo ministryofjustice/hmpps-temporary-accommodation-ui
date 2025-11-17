@@ -20,7 +20,6 @@ import turnaround from './integration_tests/mockApis/turnaround'
 import user from './integration_tests/mockApis/user'
 import referenceData from './integration_tests/mockApis/referenceData'
 import schemaValidator from './integration_tests/tasks/schemaValidator'
-import accessibilityViolations from './integration_tests/tasks/accessibilityViolations'
 import bedspace from './integration_tests/mockApis/bedspace'
 import { resetStubs } from './integration_tests/mockApis'
 
@@ -65,7 +64,6 @@ export default defineConfig({
         ...schemaValidator,
         ...bookingSearch,
         ...bedspaceSearch,
-        ...accessibilityViolations,
         ...referenceData,
         ...bedspace,
       })

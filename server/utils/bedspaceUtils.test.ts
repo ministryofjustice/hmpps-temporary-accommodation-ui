@@ -1,12 +1,22 @@
 import {
   assessmentFactory,
+  cas3BedspaceArchiveActionFactory,
+  cas3BedspaceCharacteristicsFactory,
   cas3BedspaceFactory,
   cas3PremisesFactory,
+  characteristicFactory,
   placeContextFactory,
 } from '../testutils/factories'
-import { bedspaceActions } from './bedspaceUtils'
+import {
+  bedspaceActions,
+  characteristicToBedspaceCharacteristic,
+  populateBedspaceCharacteristics,
+  summaryList,
+  summaryListForBedspaceStatus,
+} from './bedspaceUtils'
 import paths from '../paths/temporary-accommodation/manage'
 import config from '../config'
+import { convertToTitleCase } from './utils'
 
 jest.mock('../config')
 
@@ -139,6 +149,310 @@ describe('bedspaceV2Utils', () => {
         text: 'Edit bedspace details',
         href: `${paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id })}?${placeContextQueryString}`,
         classes: 'govuk-button--secondary',
+      })
+    })
+  })
+
+  describe('summaryList', () => {
+    it.each([
+      [
+        cas3BedspaceFactory.build({
+          status: 'online',
+          startDate: '2025-01-02T03:04:05.678912Z',
+          archiveHistory: [cas3BedspaceArchiveActionFactory.build({ date: '2025-01-02T03:04:05.678912Z' })],
+        }),
+        'Online',
+        'green',
+        '2 January 2025',
+      ],
+      [
+        cas3BedspaceFactory.build({ status: 'archived', startDate: '2025-02-03T04:05:06.789123Z' }),
+        'Archived',
+        'grey',
+        '3 February 2025',
+      ],
+      [
+        cas3BedspaceFactory.build({ status: 'upcoming', startDate: '2125-03-04T05:06:07.891234Z' }),
+        'Upcoming',
+        'blue',
+        '4 March 2125',
+      ],
+      [cas3BedspaceFactory.build({ status: 'online', startDate: '' }), 'Online', 'green', ''],
+      [
+        cas3BedspaceFactory.build({ status: null, startDate: '2025-04-05T06:07:08.912345Z' }),
+        '',
+        'grey',
+        '5 April 2025',
+      ],
+    ])('returns the summaryList for a bedspace', async (bedspace, status, tagColour, formattedDate) => {
+      const rows = [
+        {
+          key: { text: 'Bedspace status' },
+          value: { html: `<strong class="govuk-tag govuk-tag--${tagColour}">${status}</strong>` },
+        },
+        {
+          key: { text: 'Start date' },
+          value: { text: formattedDate },
+        },
+      ]
+
+      if (bedspace.archiveHistory && bedspace.archiveHistory.length > 0) {
+        rows.push({
+          key: { text: 'Archive history' },
+          value: {
+            html: bedspace.archiveHistory
+              .map(archive => {
+                const verb = archive.status === 'archived' ? 'Archive' : convertToTitleCase(archive.status)
+                return `<div>${verb} date ${formattedDate}</div>`
+              })
+              .join(''),
+          },
+        })
+      }
+
+      rows.push(
+        {
+          key: { text: 'Bedspace details' },
+          value: {
+            html: bedspace.bedspaceCharacteristics
+              .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.description}</span>`)
+              .join(' '),
+          },
+        },
+        {
+          key: { text: 'Additional bedspace details' },
+          value: { html: bedspace.notes.replace(/\n/g, '<br />') },
+        },
+      )
+      const expectedSummary = {
+        rows,
+      }
+
+      const result = summaryList(bedspace)
+
+      expect(result).toEqual(expectedSummary)
+    })
+  })
+
+  describe('get summaryList from bedspace', () => {
+    it('returns a summaryList for an online bedspace', () => {
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2025-05-17' })
+
+      const expectedSummary = {
+        rows: [
+          {
+            key: { text: 'Bedspace status' },
+            value: { html: '<strong class="govuk-tag govuk-tag--green">Online</strong>' },
+          },
+          {
+            key: { text: 'Start date' },
+            value: { text: '17 May 2025' },
+          },
+          {
+            key: { text: 'Bedspace details' },
+            value: {
+              html: bedspace.bedspaceCharacteristics
+                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.description}</span>`)
+                .join(' '),
+            },
+          },
+          {
+            key: { text: 'Additional bedspace details' },
+            value: { html: bedspace.notes.replace(/\n/g, '<br />') },
+          },
+        ],
+      }
+
+      const summary = summaryList(bedspace)
+
+      expect(summary).toEqual(expectedSummary)
+    })
+
+    it('returns a summaryList for an archived bedspace', () => {
+      const bedspace = cas3BedspaceFactory.build({ status: 'archived', startDate: '2025-06-18' })
+
+      const expectedSummary = {
+        rows: [
+          {
+            key: { text: 'Bedspace status' },
+            value: { html: '<strong class="govuk-tag govuk-tag--grey">Archived</strong>' },
+          },
+          {
+            key: { text: 'Start date' },
+            value: { text: '18 June 2025' },
+          },
+          {
+            key: { text: 'Bedspace details' },
+            value: {
+              html: bedspace.bedspaceCharacteristics
+                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.description}</span>`)
+                .join(' '),
+            },
+          },
+          {
+            key: { text: 'Additional bedspace details' },
+            value: { html: bedspace.notes.replace(/\n/g, '<br />') },
+          },
+        ],
+      }
+
+      const summary = summaryList(bedspace)
+
+      expect(summary).toEqual(expectedSummary)
+    })
+
+    it('returns a summaryList for an upcoming bedspace', () => {
+      const bedspace = cas3BedspaceFactory.build({ status: 'upcoming', startDate: '2125-07-19' })
+
+      const expectedSummary = {
+        rows: [
+          {
+            key: { text: 'Bedspace status' },
+            value: { html: '<strong class="govuk-tag govuk-tag--blue">Upcoming</strong>' },
+          },
+          {
+            key: { text: 'Start date' },
+            value: { text: '19 July 2125' },
+          },
+          {
+            key: { text: 'Bedspace details' },
+            value: {
+              html: bedspace.bedspaceCharacteristics
+                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.description}</span>`)
+                .join(' '),
+            },
+          },
+          {
+            key: { text: 'Additional bedspace details' },
+            value: { html: bedspace.notes.replace(/\n/g, '<br />') },
+          },
+        ],
+      }
+
+      const summary = summaryList(bedspace)
+
+      expect(summary).toEqual(expectedSummary)
+    })
+
+    it('includes scheduled archive date in the status row for online bedspaces with endDate (scheduled archive)', () => {
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'online',
+        endDate: '2125-08-20',
+      })
+
+      const summary = summaryList(bedspace)
+      const statusRowValue = (summary.rows[0].value as { html: string }).html
+
+      expect(statusRowValue).toContain('<strong class="govuk-tag govuk-tag--green">Online</strong>')
+      expect(statusRowValue).toContain('Scheduled archive date 20 August 2125')
+    })
+
+    it('includes scheduled online date in the status row for archived bedspaces with future startDate (scheduled online)', () => {
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'archived',
+        scheduleUnarchiveDate: '2125-08-20',
+      })
+
+      const summary = summaryList(bedspace)
+      const statusRowValue = (summary.rows[0].value as { html: string }).html
+
+      expect(statusRowValue).toContain('<strong class="govuk-tag govuk-tag--grey">Archived</strong>')
+      expect(statusRowValue).toContain('Scheduled online date 20 August 2125')
+    })
+  })
+
+  describe('summaryListForBedspaceStatus', () => {
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2025-10-22'))
+    })
+    it('returns a summaryList of the status for an online bedspace', () => {
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', endDate: '2026-01-01' })
+      const expectedSummary = {
+        rows: [
+          {
+            key: { text: 'Bedspace status' },
+            value: { html: '<span class="govuk-tag govuk-tag--green">Online</span>' },
+          },
+          {
+            key: { text: 'Bedspace end date' },
+            value: { text: '1 January 2026 (in 71 days)' },
+          },
+        ],
+      }
+
+      expect(summaryListForBedspaceStatus(bedspace)).toEqual(expectedSummary)
+    })
+
+    it('returns a summaryList of the status for an archived bedspace', () => {
+      const bedspace = cas3BedspaceFactory.build({ status: 'archived', endDate: '2025-06-18' })
+      const expectedSummary = {
+        rows: [
+          {
+            key: { text: 'Bedspace status' },
+            value: { html: '<span class="govuk-tag govuk-tag--grey">Archived</span>' },
+          },
+          {
+            key: { text: 'Bedspace end date' },
+            value: { text: '18 June 2025' },
+          },
+        ],
+      }
+
+      expect(summaryListForBedspaceStatus(bedspace)).toEqual(expectedSummary)
+    })
+
+    it('returns a summaryList of the status for a bedspace with no end date', () => {
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', endDate: null })
+      const expectedSummary = {
+        rows: [
+          {
+            key: { text: 'Bedspace status' },
+            value: { html: '<span class="govuk-tag govuk-tag--green">Online</span>' },
+          },
+          {
+            key: { text: 'Bedspace end date' },
+            value: { text: 'No end date added' },
+          },
+        ],
+      }
+
+      expect(summaryListForBedspaceStatus(bedspace)).toEqual(expectedSummary)
+    })
+  })
+
+  // TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities tests
+  describe('Cas3 casting utilities', () => {
+    describe('characteristicToBedspaceCharacteristic', () => {
+      it('converts a characteristic to a bedspaceCharacteristic', () => {
+        const characteristic = characteristicFactory.build()
+        expect(characteristicToBedspaceCharacteristic(characteristic)).toEqual({
+          id: characteristic.id,
+          name: characteristic.propertyName,
+          description: characteristic.name,
+        })
+      })
+    })
+
+    describe('populateBedspaceCharacteristics', () => {
+      it('populates the bedspaceCharacteristics based on the characteristics property', () => {
+        const characteristics = characteristicFactory.buildList(5)
+        const bedspace = cas3BedspaceFactory.build({
+          bedspaceCharacteristics: undefined,
+          characteristics,
+        })
+
+        expect(populateBedspaceCharacteristics(bedspace).bedspaceCharacteristics).toEqual(
+          characteristics.map(characteristicToBedspaceCharacteristic),
+        )
+      })
+
+      it('returns the premises as is if the premisesCharacteristics is already populated', () => {
+        const bedspace = cas3BedspaceFactory.build({
+          characteristics: undefined,
+          bedspaceCharacteristics: cas3BedspaceCharacteristicsFactory.buildList(5),
+        })
+
+        expect(populateBedspaceCharacteristics(bedspace)).toEqual(bedspace)
       })
     })
   })

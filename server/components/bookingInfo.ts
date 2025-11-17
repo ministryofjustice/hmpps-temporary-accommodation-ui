@@ -1,10 +1,10 @@
-import type { Booking } from '@approved-premises/api'
+import type { Cas3Booking } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
 import { getLatestExtension, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { formatLines } from '../utils/viewUtils'
 
-export default (booking: Booking): SummaryList['rows'] => {
+export default (booking: Cas3Booking): SummaryList['rows'] => {
   const { status, arrivalDate, departureDate } = booking
 
   const rows = [

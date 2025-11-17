@@ -90,7 +90,7 @@ export default class RestClient {
   async get<T = unknown>(options: GetRequest, raw: true): Promise<RestClientResponseGet<T>>
 
   async get<T = unknown>(options: GetRequest, raw: boolean = false): Promise<T | RestClientResponseGet<T>> {
-    logger.info(`Get using user credentials: calling ${this.name}: ${options.path} ${options.query}`)
+    logger.info(`Get using user credentials: calling ${this.name}: ${options.path} ${JSON.stringify(options.query)}`)
     try {
       const result = await superagent
         .get(`${this.apiUrl()}${options.path}`)

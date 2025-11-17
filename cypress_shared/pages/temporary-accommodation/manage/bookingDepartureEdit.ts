@@ -1,4 +1,4 @@
-import type { Booking, Cas3Bedspace, Cas3Premises, NewDeparture } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3Premises, NewDeparture } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -15,7 +15,7 @@ export default class BookingDepartureEditPage extends BookingDepartureEditablePa
   constructor(
     premises: Cas3Premises,
     bedspace: Cas3Bedspace,
-    private readonly booking: Booking,
+    private readonly booking: Cas3Booking,
   ) {
     super('Update departure details')
 
@@ -24,7 +24,7 @@ export default class BookingDepartureEditPage extends BookingDepartureEditablePa
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking): BookingDepartureEditPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Cas3Booking): BookingDepartureEditPage {
     cy.visit(
       paths.bookings.departures.edit({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
     )

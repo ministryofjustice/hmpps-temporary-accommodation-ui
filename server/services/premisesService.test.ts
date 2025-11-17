@@ -1,5 +1,3 @@
-import { TextItem } from '@approved-premises/ui'
-import { Cas3PremisesArchiveAction } from '@approved-premises/api'
 import { createMock } from '@golevelup/ts-jest'
 import PremisesClient from '../data/premisesClient'
 import { CallConfig } from '../data/restClient'
@@ -11,24 +9,24 @@ import {
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
+  cas3ReferenceDataFactory,
   cas3UnarchivePremisesFactory,
   cas3UpdatePremisesFactory,
   characteristicFactory,
   localAuthorityFactory,
   pduFactory,
-  placeContextFactory,
   probationRegionFactory,
 } from '../testutils/factories'
 import PremisesService from './premisesService'
 import { ReferenceDataClient } from '../data'
-import { filterCharacteristics } from '../utils/characteristicUtils'
+import * as characteristicUtils from '../utils/characteristicUtils'
 import { AssessmentsService } from './index'
+import * as premisesUtils from '../utils/premisesUtils'
+import config from '../config'
 
 jest.mock('../data/premisesClient')
 jest.mock('../data/referenceDataClient')
-jest.mock('../utils/premisesUtils')
 jest.mock('../utils/viewUtils')
-jest.mock('../utils/characteristicUtils')
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>
@@ -39,15 +37,25 @@ describe('PremisesService', () => {
   const assessmentService = createMock<AssessmentsService>({})
 
   const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
+  const originalFlags = config.flags
   const premisesId = 'premises-id'
   const assessment = assessmentFactory.build({ status: 'ready_to_place' })
-  const placeContext = placeContextFactory.build({ assessment })
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    jest.clearAllMocks()
     premisesClientFactory.mockReturnValue(premisesClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
     assessmentService.findAssessment.mockResolvedValue(assessment)
+
+    jest.spyOn(premisesUtils, 'populatePremisesCharacteristics')
+    jest.spyOn(characteristicUtils, 'filterCharacteristics')
+    jest.spyOn(characteristicUtils, 'characteristicToCas3ReferenceData')
+
+    config.flags.enableCas3v2Api = true
+  })
+
+  afterEach(() => {
+    config.flags = originalFlags
   })
 
   describe('createPremises', () => {
@@ -61,6 +69,8 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
+
+      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -75,6 +85,8 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.update).toHaveBeenCalledWith(premises.id, updatedPremises)
+
+      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -102,6 +114,8 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.archive).toHaveBeenCalledWith(premises.id, archivePayload)
+
+      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -116,6 +130,8 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.unarchive).toHaveBeenCalledWith(premises.id, unarchivePayload)
+
+      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -129,6 +145,8 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.cancelArchive).toHaveBeenCalledWith(premises.id)
+
+      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -142,121 +160,12 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.cancelUnarchive).toHaveBeenCalledWith(premises.id)
+
+      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
-  describe('tableRows', () => {
-    const searchResult1 = cas3PremisesSearchResultFactory.build({
-      addressLine1: '32 Windsor Gardens',
-      town: 'London',
-      postcode: 'W9 3RQ',
-      pdu: 'Hammersmith, Fulham, Kensington, Chelsea and Westminster',
-      bedspaces: [],
-    })
-    const searchResult2 = cas3PremisesSearchResultFactory.build({
-      addressLine1: '221c Baker Street',
-      town: 'London',
-      postcode: 'NW1 6XE',
-      pdu: 'Hammersmith, Fulham, Kensington, Chelsea and Westminster',
-    })
-    const searchResult3 = cas3PremisesSearchResultFactory.build({
-      addressLine1: '62 West Wallaby Street',
-      town: 'Wigan',
-      postcode: 'WG7 7FU',
-      pdu: 'Wigan',
-    })
-
-    it.each([
-      [
-        [searchResult2, searchResult1, searchResult3],
-        [searchResult2, searchResult1, searchResult3],
-      ],
-      [
-        [searchResult2, searchResult1],
-        [searchResult2, searchResult1],
-      ],
-      [[], []],
-      [undefined, []],
-    ])('returns table view of the premises for Temporary Accommodation', (searchResults, expectedResults) => {
-      const premises = cas3PremisesSearchResultsFactory.build({ results: searchResults })
-      const rows = service.tableRows(premises, placeContext, 'online')
-
-      const expectedRows = expectedResults.map(prem => {
-        const address = [prem.addressLine1, prem.addressLine2, prem.town, prem.postcode]
-          .filter(s => s !== undefined && s !== '')
-          .join('<br />')
-
-        const bedspaces =
-          prem.bedspaces.length === 0
-            ? `No bedspaces<br /><a href="/properties/${prem.id}/bedspaces/new">Add a bedspace</a>`
-            : prem.bedspaces
-                .sort((a, b) => {
-                  const statusPriority = { online: 1, upcoming: 2, archived: 3 }
-                  const aPriority = statusPriority[a.status]
-                  const bPriority = statusPriority[b.status]
-                  if (aPriority !== bPriority) {
-                    return aPriority - bPriority
-                  }
-                  return a.reference.localeCompare(b.reference)
-                })
-                .map(bed => {
-                  let bedspaceStatusTag = ''
-                  if (bed.status === 'archived') {
-                    bedspaceStatusTag = ` <strong class="govuk-tag govuk-tag--grey govuk-!-margin-left-2">Archived</strong>`
-                  } else if (bed.status === 'upcoming') {
-                    bedspaceStatusTag = ` <strong class="govuk-tag govuk-tag--blue govuk-!-margin-left-2">Upcoming</strong>`
-                  }
-                  return `<div class="govuk-!-margin-bottom-3"><a href="/properties/${prem.id}/bedspaces/${bed.id}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}">${bed.reference}</a>${bedspaceStatusTag}</div>`
-                })
-                .join('')
-
-        return [
-          { html: address },
-          { html: bedspaces },
-          { text: prem.pdu },
-          {
-            html: `<a href="/properties/${prem.id}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}">Manage<span class="govuk-visually-hidden"> property at ${prem.addressLine1}, ${prem.postcode}</span></a>`,
-          },
-        ]
-      })
-
-      expect(rows).toEqual(expectedRows)
-    })
-
-    it('returns table rows with local authority area name when premisesSortBy is "la"', () => {
-      const searchResult = cas3PremisesSearchResultFactory.build({
-        addressLine1: '32 Windsor Gardens',
-        town: 'London',
-        postcode: 'W9 3RQ',
-        pdu: 'Hammersmith, Fulham, Kensington, Chelsea and Westminster',
-        localAuthorityAreaName: 'Westminster',
-        bedspaces: [],
-      })
-
-      const premises = cas3PremisesSearchResultsFactory.build({ results: [searchResult] })
-
-      const rows = service.tableRows(premises, placeContext, 'online', 'la')
-
-      const address = [searchResult.addressLine1, searchResult.addressLine2, searchResult.town, searchResult.postcode]
-        .filter(s => s !== undefined && s !== '')
-        .join('<br />')
-
-      const bedspaces = `No bedspaces<br /><a href="/properties/${searchResult.id}/bedspaces/new">Add a bedspace</a>`
-
-      expect(rows).toEqual([
-        [
-          { html: address },
-          { html: bedspaces },
-          { text: searchResult.localAuthorityAreaName },
-          {
-            html: `<a href="/properties/${searchResult.id}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}">Manage<span class="govuk-visually-hidden"> property at ${searchResult.addressLine1}, ${searchResult.postcode}</span></a>`,
-          },
-        ],
-      ])
-    })
-  })
-
-  describe('searchDataAndGenerateTableRows', () => {
+  describe('search', () => {
     const searchResult1 = cas3PremisesSearchResultFactory.build({
       addressLine1: '32 Windsor Gardens',
       town: 'London',
@@ -271,7 +180,7 @@ describe('PremisesService', () => {
       pdu: 'Hammersmith, Fulham, Kensington, Chelsea and Westminster',
     })
 
-    it('returns search results with table rows for online status by default', async () => {
+    it('returns search results for online status by default', async () => {
       const postcodeOrAddress = 'London'
       const searchResults = cas3PremisesSearchResultsFactory.build({
         results: [searchResult1, searchResult2],
@@ -282,18 +191,14 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchDataAndGenerateTableRows(callConfig, postcodeOrAddress, placeContext)
+      const result = await service.search(callConfig, postcodeOrAddress)
 
-      expect(result).toEqual({
-        ...searchResults,
-        tableRows: expect.any(Array),
-      })
-      expect(result.tableRows).toHaveLength(2)
+      expect(result).toEqual(searchResults)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.search).toHaveBeenCalledWith('London', 'online')
     })
 
-    it('returns search results with table rows for specified status', async () => {
+    it('returns search results for specified status', async () => {
       const postcodeOrAddress = 'London'
       const searchResults = cas3PremisesSearchResultsFactory.build({
         results: [searchResult1],
@@ -304,18 +209,9 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchDataAndGenerateTableRows(
-        callConfig,
-        postcodeOrAddress,
-        placeContext,
-        'archived',
-      )
+      const result = await service.search(callConfig, postcodeOrAddress, 'archived')
 
-      expect(result).toEqual({
-        ...searchResults,
-        tableRows: expect.any(Array),
-      })
-      expect(result.tableRows).toHaveLength(1)
+      expect(result).toEqual(searchResults)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.search).toHaveBeenCalledWith('London', 'archived')
     })
@@ -331,13 +227,9 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchDataAndGenerateTableRows(callConfig, postcodeOrAddress, placeContext)
+      const result = await service.search(callConfig, postcodeOrAddress)
 
-      expect(result).toEqual({
-        ...searchResults,
-        tableRows: [],
-      })
-      expect(result.tableRows).toHaveLength(0)
+      expect(result).toEqual(searchResults)
       expect(result.totalPremises).toBe(0)
       expect(result.totalOnlineBedspaces).toBe(0)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
@@ -355,284 +247,8 @@ describe('PremisesService', () => {
       expect(result).toBe(premises)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.find).toHaveBeenCalledWith(premisesId)
-    })
-  })
 
-  describe('getSinglePremisesDetails', () => {
-    it('should return the premises with full address', async () => {
-      const premises = cas3PremisesFactory.build({
-        id: premisesId,
-        addressLine1: '32 Windsor Gardens',
-        addressLine2: undefined,
-        town: 'London',
-        postcode: 'W9 3RQ',
-      })
-      premisesClient.find.mockResolvedValue(premises)
-
-      const result = await service.getSinglePremisesDetails(callConfig, premisesId)
-
-      expect(result).toEqual({
-        ...premises,
-        fullAddress: '32 Windsor Gardens<br />London<br />W9 3RQ',
-      })
-      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.find).toHaveBeenCalledWith(premisesId)
-    })
-  })
-
-  describe('summaryList', () => {
-    const onlinePremises = cas3PremisesFactory.build({ status: 'online', startDate: '2025-02-01' })
-    const archivedPremises = cas3PremisesFactory.build({
-      status: 'archived',
-      startDate: '2025-03-02',
-      scheduleUnarchiveDate: null,
-    })
-
-    it('should return a summary list for an online premises', async () => {
-      const summaryList = service.summaryList(onlinePremises)
-
-      const expectedSummaryList = {
-        rows: [
-          {
-            key: { text: 'Property status' },
-            value: { html: `<strong class="govuk-tag govuk-tag--green">Online</strong>` },
-          },
-          {
-            key: { text: 'Start date' },
-            value: { text: '1 February 2025' },
-          },
-          {
-            key: { text: 'Address' },
-            value: {
-              html: `${onlinePremises.addressLine1}<br />${onlinePremises.addressLine2}<br />${onlinePremises.town}<br />${onlinePremises.postcode}`,
-            },
-          },
-          {
-            key: { text: 'Local authority' },
-            value: { text: onlinePremises.localAuthorityArea.name },
-          },
-          {
-            key: { text: 'Probation region' },
-            value: { text: onlinePremises.probationRegion.name },
-          },
-          {
-            key: { text: 'Probation delivery unit' },
-            value: { text: onlinePremises.probationDeliveryUnit.name },
-          },
-          {
-            key: { text: 'Expected turn around time' },
-            value: { text: `${onlinePremises.turnaroundWorkingDays} working days` },
-          },
-          {
-            key: { text: 'Property details' },
-            value: {
-              html: onlinePremises.characteristics
-                .map(char => `<span class="hmpps-tag-filters">${char.name}</span>`)
-                .join(' '),
-            },
-          },
-          {
-            key: { text: 'Additional property details' },
-            value: { html: onlinePremises.notes.replace(/\n/g, '<br />') },
-          },
-        ],
-      }
-
-      expect(summaryList).toEqual(expectedSummaryList)
-    })
-
-    it('should return a summary list for an archived premises', async () => {
-      const summaryList = service.summaryList(archivedPremises)
-
-      const expectedSummaryList = {
-        rows: [
-          {
-            key: { text: 'Property status' },
-            value: { html: `<strong class="govuk-tag govuk-tag--grey">Archived</strong>` },
-          },
-          {
-            key: { text: 'Start date' },
-            value: { text: '2 March 2025' },
-          },
-          {
-            key: { text: 'Address' },
-            value: {
-              html: `${archivedPremises.addressLine1}<br />${archivedPremises.addressLine2}<br />${archivedPremises.town}<br />${archivedPremises.postcode}`,
-            },
-          },
-          {
-            key: { text: 'Local authority' },
-            value: { text: archivedPremises.localAuthorityArea.name },
-          },
-          {
-            key: { text: 'Probation region' },
-            value: { text: archivedPremises.probationRegion.name },
-          },
-          {
-            key: { text: 'Probation delivery unit' },
-            value: { text: archivedPremises.probationDeliveryUnit.name },
-          },
-          {
-            key: { text: 'Expected turn around time' },
-            value: { text: `${archivedPremises.turnaroundWorkingDays} working days` },
-          },
-          {
-            key: { text: 'Property details' },
-            value: {
-              html: archivedPremises.characteristics
-                .map(char => `<span class="hmpps-tag-filters">${char.name}</span>`)
-                .join(' '),
-            },
-          },
-          {
-            key: { text: 'Additional property details' },
-            value: { html: archivedPremises.notes.replace(/\n/g, '<br />') },
-          },
-        ],
-      }
-
-      expect(summaryList).toEqual(expectedSummaryList)
-    })
-
-    it('should show "None" for additional property details when there are no notes', () => {
-      const premises = cas3PremisesFactory.build({ notes: '' })
-      const summaryList = service.summaryList(premises)
-
-      const additionalPropertyDetailsRow = summaryList.rows.find(
-        row => (row.key as TextItem)?.text === 'Additional property details',
-      )
-
-      expect(additionalPropertyDetailsRow.value).toEqual({ html: 'None' })
-    })
-
-    it('should show "None" and "Add property details" link for property details when there are none', () => {
-      const premises = cas3PremisesFactory.build({ characteristics: [] })
-      const summaryList = service.summaryList(premises)
-
-      const propertyDetailsRow = summaryList.rows.find(row => (row.key as TextItem)?.text === 'Property details')
-
-      const expectedHtml = `<p>None</p><p><a href="/properties/${premises.id}/edit">Add property details</a></p>`
-      expect(propertyDetailsRow.value).toEqual({ html: expectedHtml })
-    })
-
-    it('includes scheduled archive date in the status row for online premises with endDate (scheduled archive)', () => {
-      const premises = cas3PremisesFactory.build({
-        status: 'online',
-        endDate: '2125-08-20',
-      })
-
-      const summary = service.summaryList(premises)
-      const statusRowValue = (summary.rows[0].value as { html: string }).html
-
-      expect(statusRowValue).toContain('<strong class="govuk-tag govuk-tag--green">Online</strong>')
-      expect(statusRowValue).toContain('Scheduled archive date 20 August 2125')
-    })
-
-    it('includes scheduled online date in the status row for archived premises with future startDate (scheduled online)', () => {
-      const premises = cas3PremisesFactory.build({
-        status: 'archived',
-        scheduleUnarchiveDate: '2125-08-20',
-      })
-
-      const summary = service.summaryList(premises)
-      const statusRowValue = (summary.rows[0].value as { html: string }).html
-
-      expect(statusRowValue).toContain('<strong class="govuk-tag govuk-tag--grey">Archived</strong>')
-      expect(statusRowValue).toContain('Scheduled online date 20 August 2125')
-    })
-
-    it('should show archive history as a details section when there are 14 or more actions', () => {
-      const archiveHistory = Array.from(
-        { length: 14 },
-        (_, i) =>
-          ({
-            date: `2025-01-01`,
-            status: i % 2 === 0 ? 'online' : 'archived',
-          }) as Cas3PremisesArchiveAction,
-      )
-      const premises = cas3PremisesFactory.build({ archiveHistory })
-
-      const summary = service.summaryList(premises)
-      const archiveRow = summary.rows.find(row => (row.key as { text: string }).text === 'Archive history')
-
-      if ('html' in archiveRow.value) {
-        expect(archiveRow.value.html).toContain('<details class="govuk-details">')
-        expect(archiveRow.value.html).toContain('Full history')
-        expect(archiveRow.value.html).toContain('Online date')
-        expect(archiveRow.value.html).toContain('Archive date')
-      } else {
-        throw new Error('No html property found in archiveRow.value')
-      }
-    })
-
-    it('should show archiveHistory as a list when there are fewer than 14 actions', () => {
-      const archiveHistory = Array.from(
-        { length: 3 },
-        (_, i) =>
-          ({
-            date: `2025-01-01`,
-            status: i % 2 === 0 ? 'online' : 'archived',
-          }) as Cas3PremisesArchiveAction,
-      )
-      const premises = cas3PremisesFactory.build({ archiveHistory })
-
-      const summary = service.summaryList(premises)
-      const archiveRow = summary.rows.find(row => (row.key as { text: string }).text === 'Archive history')
-      if ('html' in archiveRow.value) {
-        expect(archiveRow.value.html).not.toContain('<details class="govuk-details">')
-        expect(archiveRow.value.html).not.toContain('Full history')
-        expect(archiveRow.value.html).toContain('Online date')
-        expect(archiveRow.value.html).toContain('Archive date')
-      } else {
-        throw new Error('No html property found in archiveRow.value')
-      }
-    })
-  })
-
-  describe('shortSummaryList', () => {
-    const onlinePremises = cas3PremisesFactory.build({ status: 'online', startDate: '2025-04-05' })
-    const archivedPremises = cas3PremisesFactory.build({
-      status: 'archived',
-      startDate: '2025-05-06',
-      scheduleUnarchiveDate: null,
-    })
-
-    it('should return a short summary list for an online premises', () => {
-      const summaryList = service.shortSummaryList(onlinePremises)
-
-      expect(summaryList).toEqual({
-        rows: [
-          {
-            key: { text: 'Status' },
-            value: { html: '<strong class="govuk-tag govuk-tag--green">Online</strong>' },
-          },
-          {
-            key: { text: 'Address' },
-            value: {
-              html: `${onlinePremises.addressLine1}<br />${onlinePremises.addressLine2}<br />${onlinePremises.town}<br />${onlinePremises.postcode}`,
-            },
-          },
-        ],
-      })
-    })
-
-    it('should return a short summary list for an archived premises', () => {
-      const summaryList = service.shortSummaryList(archivedPremises)
-
-      expect(summaryList).toEqual({
-        rows: [
-          {
-            key: { text: 'Status' },
-            value: { html: '<strong class="govuk-tag govuk-tag--grey">Archived</strong>' },
-          },
-          {
-            key: { text: 'Address' },
-            value: {
-              html: `${archivedPremises.addressLine1}<br />${archivedPremises.addressLine2}<br />${archivedPremises.town}<br />${archivedPremises.postcode}`,
-            },
-          },
-        ],
-      })
+      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -642,11 +258,10 @@ describe('PremisesService', () => {
     const localAuthority3 = localAuthorityFactory.build({ name: 'Sunderland' })
     const unsortedLocalAuthorities = [localAuthority1, localAuthority2, localAuthority3]
 
-    const characteristic1 = characteristicFactory.build({ name: 'Rural property', modelScope: 'premises' })
-    const characteristic2 = characteristicFactory.build({ name: 'Ground floor accessible', modelScope: 'premises' })
-    const characteristic3 = characteristicFactory.build({ name: 'Pub nearby', modelScope: 'premises' })
-    const characteristic4 = characteristicFactory.build({ name: 'Sea view', modelScope: 'room' })
-    const unsortedCharacteristics = [characteristic1, characteristic2, characteristic3, characteristic4]
+    const characteristic1 = cas3ReferenceDataFactory.build({ description: 'Rural property' })
+    const characteristic2 = cas3ReferenceDataFactory.build({ description: 'Ground floor accessible' })
+    const characteristic3 = cas3ReferenceDataFactory.build({ description: 'Pub nearby' })
+    const unsortedCharacteristics = [characteristic1, characteristic2, characteristic3]
 
     const unsortedProbationRegions = [callConfig.probationRegion]
 
@@ -660,19 +275,12 @@ describe('PremisesService', () => {
         if (objectType === 'local-authority-areas') {
           return unsortedLocalAuthorities
         }
-        if (objectType === 'characteristics') {
-          return unsortedCharacteristics
-        }
         if (objectType === 'probation-regions') {
           return unsortedProbationRegions
         }
         return unsortedPdus
       })
-      ;(filterCharacteristics as jest.MockedFunction<typeof filterCharacteristics>).mockReturnValue([
-        characteristic2,
-        characteristic3,
-        characteristic1,
-      ])
+      referenceDataClient.getCas3ReferenceData.mockResolvedValue(unsortedCharacteristics)
 
       const result = await service.getReferenceData(callConfig)
 
@@ -685,16 +293,54 @@ describe('PremisesService', () => {
 
       expect(referenceDataClientFactory).toHaveBeenCalledWith(callConfig)
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('local-authority-areas')
-      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('characteristics')
+      expect(referenceDataClient.getCas3ReferenceData).toHaveBeenCalledWith('PREMISES_CHARACTERISTICS')
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-regions')
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {
         probationRegionId: callConfig.probationRegion.id,
       })
+    })
+  })
 
-      expect(filterCharacteristics).toHaveBeenCalledWith(
-        [characteristic1, characteristic2, characteristic3, characteristic4],
-        'premises',
-      )
+  describe('with the ENABLE_CAS3V2_API flag off', () => {
+    beforeEach(() => {
+      config.flags.enableCas3v2Api = false
+    })
+
+    describe('getReferenceData', () => {
+      const characteristic1 = characteristicFactory.build({ name: 'Rural property', modelScope: 'premises' })
+      const characteristic2 = characteristicFactory.build({ name: 'Ground floor accessible', modelScope: 'premises' })
+      const characteristic3 = characteristicFactory.build({ name: 'Pub nearby', modelScope: 'premises' })
+      const characteristic4 = characteristicFactory.build({ name: 'Sea view', modelScope: 'room' })
+      const unsortedCharacteristics = [characteristic1, characteristic2, characteristic3, characteristic4]
+
+      it('returns characteristics as sorted Cas3ReferenceData', async () => {
+        referenceDataClient.getReferenceData.mockImplementation(async (objectType: string) => {
+          if (objectType === 'characteristics') {
+            return unsortedCharacteristics
+          }
+          return []
+        })
+
+        const result = await service.getReferenceData(callConfig)
+
+        expect(result).toEqual({
+          localAuthorities: [],
+          characteristics: [
+            characteristicUtils.characteristicToCas3ReferenceData(characteristic2),
+            characteristicUtils.characteristicToCas3ReferenceData(characteristic3),
+            characteristicUtils.characteristicToCas3ReferenceData(characteristic1),
+          ],
+          probationRegions: [],
+          pdus: [],
+        })
+
+        expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('characteristics')
+
+        expect(characteristicUtils.filterCharacteristics).toHaveBeenCalledWith(
+          [characteristic1, characteristic2, characteristic3, characteristic4],
+          'premises',
+        )
+      })
     })
   })
 })

@@ -12,40 +12,40 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ breadCrumb('Cancel a void booking', [
-    {title: 'List of bedspaces', href: paths.premises.show({ premisesId: premises.id })},
-    {title: 'View bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id })}
-  ]) }}
+    {{ breadCrumb('Cancel a void booking', [
+        {title: 'List of bedspaces', href: paths.premises.show({ premisesId: premises.id })},
+        {title: 'View bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id })}
+    ]) }}
 {% endblock %}
 
 {% block content %}
-  {% include "../../_messages.njk" %}
+    {% include "../../_messages.njk" %}
 
-  {{ mojPageHeaderActions({
-    heading: {
-      text: 'Cancel void booking',
-      classes: 'govuk-heading-l'
-    }
-  }) }}
-
-  {{ locationHeader({ premises: premises, bedspace: bedspace }) }}
-  {{ lostBedInfo(lostBed) }}
-
-  <form action="{{ paths.lostBeds.cancellations.create({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }) }}" method="post">
-    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> 
-    
-    {{ formPageTextarea({
-      fieldName: "notes",
-      label: {
-        text: "Notes",
-        classes: "govuk-!-font-weight-bold"
-      }
-    },
-      fetchContext()
-    ) }}
-    {{ govukButton({
-      text: "Submit"
+    {{ mojPageHeaderActions({
+        heading: {
+            text: 'Cancel void booking',
+            classes: 'govuk-heading-l'
+        }
     }) }}
-  </form>
-  
+
+    {{ locationHeader({ premises: premises, bedspace: bedspace }) }}
+    {{ lostBedInfo(lostBed) }}
+
+    <form action="{{ paths.lostBeds.cancellations.create({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }) }}"
+          method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{ formPageTextarea({
+            fieldName: "cancellationNotes",
+            label: {
+                text: "Notes",
+                classes: "govuk-!-font-weight-bold"
+            }
+        }, fetchContext()) }}
+
+        {{ govukButton({
+            text: "Submit"
+        }) }}
+    </form>
+
 {% endblock %}

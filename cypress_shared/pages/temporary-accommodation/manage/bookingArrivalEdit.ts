@@ -1,4 +1,10 @@
-import type { Booking, Cas3Bedspace, Cas3Premises, LostBed, NewCas3Arrival as NewArrival } from '@approved-premises/api'
+import type {
+  Cas3Bedspace,
+  Cas3Booking,
+  Cas3Premises,
+  Cas3VoidBedspace,
+  NewCas3Arrival as NewArrival,
+} from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import BookingInfoComponent from '../../../components/bookingInfo'
@@ -15,7 +21,7 @@ export default class BookingArrivalEditPage extends Page {
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking) {
+  constructor(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Cas3Booking) {
     super('Change arrival')
 
     this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, bedspace, 'booking')
@@ -24,7 +30,7 @@ export default class BookingArrivalEditPage extends Page {
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, bedspace })
   }
 
-  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Booking): BookingArrivalEditPage {
+  static visit(premises: Cas3Premises, bedspace: Cas3Bedspace, booking: Cas3Booking): BookingArrivalEditPage {
     cy.visit(paths.bookings.arrivals.edit({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))
     return new BookingArrivalEditPage(premises, bedspace, booking)
   }
@@ -37,7 +43,7 @@ export default class BookingArrivalEditPage extends Page {
   }
 
   shouldShowDateConflictErrorMessages(
-    conflictingEntity: Booking | LostBed,
+    conflictingEntity: Cas3Booking | Cas3VoidBedspace,
     conflictingEntityType: 'booking' | 'lost-bed',
   ): void {
     this.bedspaceConflictErrorComponent.shouldShowDateConflictErrorMessages(

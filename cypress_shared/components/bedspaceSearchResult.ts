@@ -1,16 +1,16 @@
-import { Cas3BedspaceSearchResult } from '../../server/@types/shared'
+import { Cas3v2BedspaceSearchResult } from '../../server/@types/shared'
 import paths from '../../server/paths/temporary-accommodation/manage'
 import Component from './component'
 import { formatNotes } from '../../server/utils/viewUtils'
 
 export default class BedspaceSearchResult extends Component {
-  constructor(private readonly result: Cas3BedspaceSearchResult) {
+  constructor(private readonly result: Cas3v2BedspaceSearchResult) {
     super()
   }
 
   shouldShowResult(checkCount = true): void {
     cy.get('h2')
-      .contains(this.result.room.name)
+      .contains(`Bedspace reference: ${this.result.bedspace.reference}`)
       .parents('article[data-cy-bedspace]')
       .within(() => {
         const fullAddress = [
@@ -25,16 +25,16 @@ export default class BedspaceSearchResult extends Component {
         if (checkCount) {
           this.shouldShowKeyAndValue(
             'Bedspaces',
-            `${this.result.premises.bedCount} total: ${this.result.premises.bookedBedCount} booked, ${this.result.premises.bedCount - this.result.premises.bookedBedCount} available`,
+            `${this.result.premises.bedspaceCount} total: ${this.result.premises.bookedBedspaceCount} booked, ${this.result.premises.bedspaceCount - this.result.premises.bookedBedspaceCount} available`,
           )
         }
 
         this.result.premises.characteristics.forEach(characteristic => {
-          cy.get('ul[data-cy-premises-key-characteristics] > li').should('contain', characteristic.name)
+          cy.get('ul[data-cy-premises-key-characteristics] > li').should('contain', characteristic.description)
         })
 
-        this.result.room.characteristics.forEach(characteristic => {
-          cy.get('ul[data-cy-bedspace-key-characteristics] > li').should('contain', characteristic.name)
+        this.result.bedspace.characteristics.forEach(characteristic => {
+          cy.get('ul[data-cy-bedspace-key-characteristics] > li').should('contain', characteristic.description)
         })
 
         cy.get('div[data-cy-premises-notes]').within(() => {

@@ -6,11 +6,11 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, ExtensionService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import {
-  bookingFactory,
   cas3BedspaceFactory,
+  cas3BookingFactory,
+  cas3DepartureFactory,
+  cas3ExtensionFactory,
   cas3PremisesFactory,
-  departureFactory,
-  extensionFactory,
   newDepartureFactory,
   newExtensionFactory,
 } from '../../../testutils/factories'
@@ -61,7 +61,7 @@ describe('ExtensionsController', () => {
     it('renders the form prepopulated with the current departure dates', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build()
+      const booking = cas3BookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
@@ -93,8 +93,8 @@ describe('ExtensionsController', () => {
     it('renders the form prepopulated with the current departure dates and latest extension notes', async () => {
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build()
-      const booking = bookingFactory.arrived().build({
-        extensions: extensionFactory.buildList(2),
+      const booking = cas3BookingFactory.arrived().build({
+        extensions: cas3ExtensionFactory.buildList(2),
       })
 
       request.params = {
@@ -135,9 +135,9 @@ describe('ExtensionsController', () => {
     it('creates an extension and redirects to the show booking page', async () => {
       const requestHandler = extensionsController.create()
 
-      const extension = extensionFactory.build()
+      const extension = cas3ExtensionFactory.build()
       const newExtension = newExtensionFactory.build({
-        ...extensionFactory,
+        ...extension,
       })
 
       request.params = {
@@ -168,7 +168,7 @@ describe('ExtensionsController', () => {
     it('renders with errors if the API returns an error', async () => {
       const requestHandler = extensionsController.create()
 
-      const departure = departureFactory.build()
+      const departure = cas3DepartureFactory.build()
       const newDeparture = newDepartureFactory.build({
         ...departure,
       })
@@ -201,7 +201,7 @@ describe('ExtensionsController', () => {
     it('renders with errors if the API returns a 409 Conflict status', async () => {
       const requestHandler = extensionsController.create()
 
-      const departure = departureFactory.build()
+      const departure = cas3DepartureFactory.build()
       const newDeparture = newDepartureFactory.build({
         ...departure,
       })

@@ -11,7 +11,7 @@ export default class PremisesEditablePage extends Page {
     this.validateEnteredAddress(premises)
     this.validateEnteredLocalAuthority(premises.localAuthorityArea.name)
     this.validateEnteredPdu(premises.probationDeliveryUnit.name)
-    this.validateEnteredCharacteristics(premises.characteristics.map(ch => ch.name))
+    this.validateEnteredCharacteristics(premises.premisesCharacteristics.map(ch => ch.description))
     this.validateEnteredAdditionalDetails(premises.notes)
   }
 

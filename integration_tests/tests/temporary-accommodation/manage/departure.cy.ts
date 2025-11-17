@@ -4,7 +4,7 @@ import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { bookingFactory, departureFactory, newDepartureFactory } from '../../../../server/testutils/factories'
+import { cas3BookingFactory, cas3DepartureFactory, newDepartureFactory } from '../../../../server/testutils/factories'
 
 context('Booking departure', () => {
   beforeEach(() => {
@@ -17,7 +17,7 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and an arrived booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
@@ -36,7 +36,7 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a departed booking in the database
-    const booking = bookingFactory.departed().build()
+    const booking = cas3BookingFactory.departed().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
@@ -55,7 +55,7 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and an arrived booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking departure page
@@ -64,7 +64,7 @@ context('Booking departure', () => {
     page.shouldShowBookingDetails()
 
     // And I fill out the form
-    const departure = departureFactory.build()
+    const departure = cas3DepartureFactory.build()
     const newDeparture = newDepartureFactory.build({
       ...departure,
       reasonId: departure.reason.id,
@@ -95,7 +95,7 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is an arrived booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking departure page
@@ -119,7 +119,7 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is a premises, a robedspaceom, and an arrived booking in the database
-    const booking = bookingFactory.arrived().build()
+    const booking = cas3BookingFactory.arrived().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking departure page
@@ -138,7 +138,7 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a departed booking in the database
-    const booking = bookingFactory.departed().build()
+    const booking = cas3BookingFactory.departed().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit departed booking page
@@ -147,7 +147,7 @@ context('Booking departure', () => {
     page.shouldShowBookingDetails()
 
     // And I fill out the form
-    const departure = departureFactory.build()
+    const departure = cas3DepartureFactory.build()
     const newDeparture = newDepartureFactory.build({
       ...departure,
       reasonId: departure.reason.id,
@@ -178,7 +178,7 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is a departed booking in the database
-    const booking = bookingFactory.departed().build()
+    const booking = cas3BookingFactory.departed().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit departed booking page
@@ -203,7 +203,7 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is a premises, a bedspace, and a departed booking in the database
-    const booking = bookingFactory.departed().build()
+    const booking = cas3BookingFactory.departed().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit departed booking page

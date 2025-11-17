@@ -1,5 +1,4 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { BookingSearchSortField } from '@approved-premises/api'
 import type { BookingSearchApiStatus, BookingSearchParameters } from '@approved-premises/ui'
 import { BookingSearchService } from '../../../services'
 import extractCallConfig from '../../../utils/restUtils'
@@ -21,9 +20,8 @@ export default class BookingSearchController {
       try {
         const response = await this.bookingSearchService.getTableRowsForFindBooking(callConfig, status, params)
 
-        // the params are defaulted downstream, inspect to find out what they are
-        const sortBy = response.url.params.get('sortField') as BookingSearchSortField
-        const ascending = response.url.params.get('sortOrder') === 'ascending'
+        const sortBy = params.sortBy || 'endDate'
+        const ascending = params.sortDirection === 'asc'
 
         return res.render(`temporary-accommodation/booking-search/results`, {
           uiStatus: convertApiStatusToUiStatus(status),

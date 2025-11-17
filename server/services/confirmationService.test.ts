@@ -1,6 +1,6 @@
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
-import { confirmationFactory, newConfirmationFactory } from '../testutils/factories'
+import { cas3ConfirmationFactory, newConfirmationFactory } from '../testutils/factories'
 import ConfirmationService from './confirmationService'
 
 jest.mock('../data/bookingClient.ts')
@@ -24,7 +24,7 @@ describe('ConfirmationService', () => {
   describe('createConfirmation', () => {
     it('on success returns the confirmation that has been posted', async () => {
       const newConfirmation = newConfirmationFactory.build()
-      const confirmation = confirmationFactory.build()
+      const confirmation = cas3ConfirmationFactory.build()
 
       bookingClient.markAsConfirmed.mockResolvedValue(confirmation)
 

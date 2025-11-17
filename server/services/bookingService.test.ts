@@ -3,24 +3,20 @@ import LostBedClient from '../data/lostBedClient'
 import BookingService from './bookingService'
 
 import {
-  bedFactory,
-  bookingFactory,
   cas3BedspaceFactory,
-  lostBedFactory,
-  newBookingFactory,
+  cas3BookingFactory,
+  cas3NewBookingFactory,
+  cas3VoidBedspaceFactory,
 } from '../testutils/factories'
 
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
+import * as bookingUtils from '../utils/bookingUtils'
+import * as lostBedUtils from '../utils/lostBedUtils'
 
 jest.mock('../data/bookingClient')
 jest.mock('../data/referenceDataClient')
-jest.mock('../utils/bookingUtils', () => ({
-  ...jest.requireActual('../utils/bookingUtils'),
-  statusTag: jest.fn(),
-}))
 jest.mock('../data/lostBedClient')
-jest.mock('../utils/lostBedUtils')
 
 describe('BookingService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
@@ -36,65 +32,60 @@ describe('BookingService', () => {
   const bedspaceId = '5febd719-69cb-4697-975f-868afdf40336'
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    jest.clearAllMocks()
     bookingClientFactory.mockReturnValue(bookingClient)
     lostBedClientFactory.mockReturnValue(lostBedClient)
+
+    jest.spyOn(bookingUtils, 'bookingToCas3Booking')
+    jest.spyOn(lostBedUtils, 'lostBedToCas3VoidBedspace')
   })
 
   describe('createForBedspace', () => {
     it('posts a new booking with a bed ID, and on success returns the created booking', async () => {
-      const booking = bookingFactory.build()
-      const newBooking = newBookingFactory.build()
+      const booking = cas3BookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
       bookingClient.create.mockResolvedValue(booking)
 
-      const bedspace = cas3BedspaceFactory.build({
-        id: bedspaceId,
-      })
-
-      const postedBooking = await service.createForBedspace(callConfig, premisesId, bedspace.id, newBooking)
+      const postedBooking = await service.createForBedspace(callConfig, premisesId, bedspaceId, newBooking)
       expect(postedBooking).toEqual(booking)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, {
         serviceName: 'temporary-accommodation',
-        bedId: bedspaceId,
         enableTurnarounds: true,
         ...newBooking,
+        bedspaceId,
       })
+
+      expect(bookingUtils.bookingToCas3Booking).toHaveBeenCalledWith(booking)
     })
   })
 
-  // TODO: finish adding tests
-  // describe('getListingEntriesForBedspace', () => {
-  //   const bedspaceId = '1cdac6c0-473b-481d-a405-52364b8bdd19'
-  //
-  // })
-
   describe('getListingEntries', () => {
     it('returns a sorted list of booking entries and active lost bed entries', async () => {
-      const bed = bedFactory.build({ id: bedspaceId })
+      const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
 
-      const booking1 = bookingFactory.build({
+      const booking1 = cas3BookingFactory.build({
         arrivalDate: '2021-02-17',
-        bed,
+        bedspace,
       })
 
-      const booking2 = bookingFactory.build({
+      const booking2 = cas3BookingFactory.build({
         arrivalDate: '2023-12-13',
-        bed,
+        bedspace,
       })
 
-      const lostBed1 = lostBedFactory.active().build({
+      const lostBed1 = cas3VoidBedspaceFactory.active().build({
         startDate: '2022-05-09',
-        bedId: bedspaceId,
+        bedspaceId,
       })
 
-      const lostBed2 = lostBedFactory.active().build({
+      const lostBed2 = cas3VoidBedspaceFactory.active().build({
         startDate: '2024-01-01',
-        bedId: bedspaceId,
+        bedspaceId,
       })
 
-      const lostBedInactive = lostBedFactory.cancelled().build()
+      const lostBedInactive = cas3VoidBedspaceFactory.cancelled().build()
 
       bookingClient.allBookingsForPremisesId.mockResolvedValue([booking2, booking1])
       lostBedClient.allLostBedsForPremisesId.mockResolvedValue([lostBed2, lostBedInactive, lostBed1])
@@ -126,19 +117,32 @@ describe('BookingService', () => {
 
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
       expect(lostBedClient.allLostBedsForPremisesId).toHaveBeenCalledWith(premisesId)
+
+      expect(bookingUtils.bookingToCas3Booking).toHaveBeenCalledWith(booking2, 0, [booking2, booking1])
+      expect(bookingUtils.bookingToCas3Booking).toHaveBeenCalledWith(booking1, 1, [booking2, booking1])
+      expect(lostBedUtils.lostBedToCas3VoidBedspace).toHaveBeenCalledWith(lostBed2, 0, [
+        lostBed2,
+        lostBedInactive,
+        lostBed1,
+      ])
+      expect(lostBedUtils.lostBedToCas3VoidBedspace).toHaveBeenCalledWith(lostBed1, 2, [
+        lostBed2,
+        lostBedInactive,
+        lostBed1,
+      ])
     })
 
     it('ignores bookings and lost beds for other rooms', async () => {
-      const otherBed = bedFactory.build({
+      const otherBed = cas3BedspaceFactory.build({
         id: 'other-bedspace-id',
       })
 
-      const booking = bookingFactory.build({
-        bed: otherBed,
+      const booking = cas3BookingFactory.build({
+        bedspace: otherBed,
       })
 
-      const lostBed = lostBedFactory.active().build({
-        bedId: 'other-bed-id',
+      const lostBed = cas3VoidBedspaceFactory.active().build({
+        bedspaceId: 'other-bed-id',
       })
 
       bookingClient.allBookingsForPremisesId.mockResolvedValue([booking])
@@ -155,7 +159,8 @@ describe('BookingService', () => {
 
   describe('getBooking', () => {
     it('returns a booking', async () => {
-      const booking = bookingFactory.build()
+      const booking = cas3BookingFactory.build()
+
       bookingClient.find.mockResolvedValue(booking)
 
       const result = await service.getBooking(callConfig, premisesId, booking.id)
@@ -164,6 +169,8 @@ describe('BookingService', () => {
 
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
+
+      expect(bookingUtils.bookingToCas3Booking).toHaveBeenCalledWith(booking)
     })
   })
 })

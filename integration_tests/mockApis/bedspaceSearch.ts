@@ -1,17 +1,22 @@
 import type { Response, SuperAgentRequest } from 'superagent'
-import { Cas3BedspaceSearchResults } from '@approved-premises/api'
+import { Cas3v2BedspaceSearchResults } from '@approved-premises/api'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
-import { characteristics, pdus } from '../../server/testutils/stubs/referenceDataStubs'
+import {
+  bedspaceCharacteristics,
+  characteristics,
+  pdus,
+  premisesCharacteristics,
+} from '../../server/testutils/stubs/referenceDataStubs'
 import { errorStub } from './utils'
 
 export default {
-  stubBedspaceSearch: (searchResults: Cas3BedspaceSearchResults): SuperAgentRequest =>
+  stubBedspaceSearch: (searchResults: Cas3v2BedspaceSearchResults): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
-        url: api.bedspaces.search({}),
+        url: api.cas3.bedspaces.search({}),
       },
       response: {
         status: 201,
@@ -20,14 +25,19 @@ export default {
       },
     }),
   stubBedspaceSearchErrors: (params: Array<string>): SuperAgentRequest =>
-    stubFor(errorStub(params, api.bedspaces.search({}), 'POST')),
+    stubFor(errorStub(params, api.cas3.bedspaces.search({}), 'POST')),
   verifyBedSearch: async () =>
     (
       await getMatchingRequests({
         method: 'POST',
-        url: api.bedspaces.search({}),
+        url: api.cas3.bedspaces.search({}),
       })
     ).body.requests,
-  stubBedspaceSearchReferenceData: (): Promise<[Response, Response]> =>
-    Promise.all([stubFor(pdus), stubFor(characteristics)]),
+  stubBedspaceSearchReferenceData: (): Promise<[Response, Response, Response, Response]> =>
+    Promise.all([
+      stubFor(pdus),
+      stubFor(characteristics),
+      stubFor(premisesCharacteristics),
+      stubFor(bedspaceCharacteristics),
+    ]),
 }

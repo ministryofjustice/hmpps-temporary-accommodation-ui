@@ -5,6 +5,7 @@ import {
   Cas3Bedspaces,
   Cas3NewBedspace,
   Cas3UpdateBedspace,
+  Cas3v2BedspaceSearchResults,
 } from '@approved-premises/api'
 import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
@@ -18,8 +19,15 @@ export default class BedspaceClient {
   }
 
   async search(searchParameters: Cas3BedspaceSearchParameters) {
-    return this.restClient.post<Cas3BedspaceSearchResults>({
-      path: paths.bedspaces.search({}),
+    if (!config.flags.enableCas3v2Api) {
+      return this.restClient.post<Cas3BedspaceSearchResults>({
+        path: paths.cas3.bedspaces.search({}),
+        data: searchParameters,
+      })
+    }
+
+    return this.restClient.post<Cas3v2BedspaceSearchResults>({
+      path: paths.cas3.bedspaces.search({}),
       data: searchParameters,
     })
   }

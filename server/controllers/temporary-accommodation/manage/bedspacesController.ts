@@ -17,8 +17,8 @@ import {
   generateErrorSummary,
   generateMergeParameters,
 } from '../../../utils/validation'
-import { bedspaceActions, setDefaultStartDate } from '../../../utils/bedspaceUtils'
-import { isPremiseScheduledToBeArchived } from '../../../utils/premisesUtils'
+import { bedspaceActions, setDefaultStartDate, summaryList } from '../../../utils/bedspaceUtils'
+import { formatAddress, isPremiseScheduledToBeArchived, shortSummaryList } from '../../../utils/premisesUtils'
 import { DateFormats, dateIsInFuture } from '../../../utils/dateUtils'
 import { BookingService } from '../../../services'
 
@@ -53,7 +53,7 @@ export default class BedspacesController {
       )
 
       return res.render('temporary-accommodation/bedspaces/new', {
-        allCharacteristics: allCharacteristics.filter(c => c.propertyName !== 'other'),
+        allCharacteristics: allCharacteristics.filter(c => c.name !== 'other'),
         characteristicIds: [],
         premises,
         hasScheduledArchive,
@@ -70,17 +70,18 @@ export default class BedspacesController {
       const { premisesId, bedspaceId } = req.params
 
       const [premises, bedspace, listingEntries, placeContext] = await Promise.all([
-        this.premisesService.getSinglePremisesDetails(callConfig, premisesId),
+        this.premisesService.getSinglePremises(callConfig, premisesId),
         this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
         this.bookingService.getListingEntries(callConfig, premisesId, bedspaceId),
         preservePlaceContext(req, res, this.assessmentService),
       ])
 
-      const summary = this.bedspaceService.summaryList(bedspace)
+      const summary = summaryList(bedspace)
       const actions: Array<PageHeadingBarItem> = bedspaceActions(premises, bedspace, placeContext)
 
       return res.render('temporary-accommodation/bedspaces/show', {
         premises,
+        fullAddress: formatAddress(premises),
         bedspace,
         summary,
         actions,
@@ -143,7 +144,7 @@ export default class BedspacesController {
         preservePlaceContext(req, res, this.assessmentService),
       ])
 
-      const summary = this.premisesService.shortSummaryList(premises)
+      const summary = shortSummaryList(premises)
 
       const { characteristics } = referenceData
 
@@ -152,7 +153,7 @@ export default class BedspacesController {
       const userInput = {
         reference: bedspace.reference,
         notes: bedspace.notes ?? '',
-        characteristicIds: bedspace.characteristics?.map(ch => ch.id) ?? [],
+        characteristicIds: bedspace.bedspaceCharacteristics?.map(ch => ch.id) ?? [],
         ...errorsAndUserInput.userInput,
       }
 
@@ -161,7 +162,7 @@ export default class BedspacesController {
         bedspaceId,
         errors,
         errorSummary,
-        characteristics: characteristics.filter(ch => ch.propertyName !== 'other'),
+        characteristics: characteristics.filter(ch => ch.name !== 'other'),
         summary,
         ...userInput,
       })

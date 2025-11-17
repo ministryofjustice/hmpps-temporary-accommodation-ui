@@ -8,7 +8,14 @@ import BedspaceService from '../../../services/bedspaceService'
 import AssessmentsService from '../../../services/assessmentsService'
 import extractCallConfig from '../../../utils/restUtils'
 import { createSubNavArr } from '../../../utils/premisesSearchUtils'
-import { premisesActions, showPropertySubNavArray } from '../../../utils/premisesUtils'
+import {
+  premisesActions,
+  shortSummaryList,
+  showPropertySubNavArray,
+  summaryList,
+  tableRows,
+} from '../../../utils/premisesUtils'
+import { summaryList as bedspaceSummaryList } from '../../../utils/bedspaceUtils'
 import {
   InvalidParams,
   catchValidationErrorOrPropogate,
@@ -36,16 +43,11 @@ export default class PremisesController {
 
       const premisesSortBy = req.session.premisesSortBy || 'pdu'
       const placeContext = await preservePlaceContext(req, res, this.assessmentService)
-      const searchData = await this.premisesService.searchDataAndGenerateTableRows(
-        callConfig,
-        params.postcodeOrAddress,
-        placeContext,
-        status,
-        premisesSortBy,
-      )
+      const searchData = await this.premisesService.search(callConfig, params.postcodeOrAddress, status)
 
       return res.render('temporary-accommodation/premises/index', {
         ...searchData,
+        tableRows: tableRows(searchData, placeContext, status, premisesSortBy),
         params,
         status,
         subNavArr: createSubNavArr(status, placeContext, params.postcodeOrAddress),
@@ -63,7 +65,7 @@ export default class PremisesController {
         await this.premisesService.getSinglePremises(callConfig, premisesId),
         await preservePlaceContext(req, res, this.assessmentService),
       ])
-      const summary = this.premisesService.summaryList(premises)
+      const summary = summaryList(premises)
 
       const bodyData = {
         premises,
@@ -88,7 +90,7 @@ export default class PremisesController {
         await preservePlaceContext(req, res, this.assessmentService),
       ])
       const bedspaceSummaries = bedspaces.bedspaces.map(bedspace => {
-        const bedspaceSummary = this.bedspaceService.summaryList(bedspace)
+        const bedspaceSummary = bedspaceSummaryList(bedspace)
         return {
           id: bedspace.id,
           reference: bedspace.reference,
@@ -139,7 +141,7 @@ export default class PremisesController {
         errors,
         errorSummary,
         localAuthorities,
-        characteristics: characteristics.filter(ch => ch.propertyName !== 'other'),
+        characteristics: characteristics.filter(ch => ch.name !== 'other'),
         probationRegions: filterProbationRegions(probationRegions, req),
         pdus,
         ...userInput,
@@ -203,20 +205,20 @@ export default class PremisesController {
         localAuthorityAreaId: premises.localAuthorityArea?.id,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
-        characteristicIds: premises.characteristics?.map(ch => ch.id),
+        characteristicIds: premises.premisesCharacteristics?.map(ch => ch.id),
         notes: premises.notes,
         turnaroundWorkingDays: premises.turnaroundWorkingDays,
         ...errorsAndUserInput.userInput,
       }
 
-      const summary = this.premisesService.shortSummaryList(premises)
+      const summary = shortSummaryList(premises)
 
       return res.render('temporary-accommodation/premises/edit', {
         premisesId,
         errors,
         errorSummary,
         localAuthorities,
-        characteristics: characteristics.filter(ch => ch.propertyName !== 'other'),
+        characteristics: characteristics.filter(ch => ch.name !== 'other'),
         probationRegions: filterProbationRegions(probationRegions, req),
         pdus,
         summary,

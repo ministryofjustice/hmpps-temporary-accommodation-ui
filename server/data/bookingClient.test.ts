@@ -7,11 +7,11 @@ import {
   bookingFactory,
   bookingSearchResultFactory,
   cancellationFactory,
+  cas3NewBookingFactory,
   cas3NewDepartureFactory,
   confirmationFactory,
   departureFactory,
   newArrivalFactory,
-  newBookingFactory,
   newCancellationFactory,
   newConfirmationFactory,
   newTurnaroundFactory,
@@ -20,7 +20,7 @@ import {
 import paths from '../paths/api'
 import describeClient from '../testutils/describeClient'
 
-describeClient('BookingClient', provider => {
+describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
   let bookingClient: BookingClient
   const callConfig = { token: 'some-token' } as CallConfig
 
@@ -31,11 +31,17 @@ describeClient('BookingClient', provider => {
   describe('create', () => {
     it('should return the booking that has been posted', async () => {
       const booking = bookingFactory.build()
-      const payload = newBookingFactory.build({
+      const newBooking = cas3NewBookingFactory.build({
         arrivalDate: booking.arrivalDate,
         departureDate: booking.departureDate,
         crn: booking.person.crn,
       })
+
+      const payload = {
+        ...newBooking,
+        bedId: newBooking.bedspaceId,
+        bedspaceId: undefined as string,
+      }
 
       await provider.addInteraction({
         state: 'Booking can be created',
@@ -55,7 +61,7 @@ describeClient('BookingClient', provider => {
         },
       })
 
-      const result = await bookingClient.create(booking.id, payload)
+      const result = await bookingClient.create(booking.id, newBooking)
       expect(result).toEqual(booking)
     })
   })

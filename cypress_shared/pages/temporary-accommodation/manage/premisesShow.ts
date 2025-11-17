@@ -1,7 +1,11 @@
 import type { Cas3Premises } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { cas3PremisesFactory, characteristicFactory, pduFactory } from '../../../../server/testutils/factories'
+import {
+  cas3PremisesCharacteristicsFactory,
+  cas3PremisesFactory,
+  pduFactory,
+} from '../../../../server/testutils/factories'
 import Page from '../../page'
 import { Cas3Bedspace, Cas3PremisesArchiveAction } from '../../../../server/@types/shared'
 import { DateFormats } from '../../../../server/utils/dateUtils'
@@ -83,8 +87,8 @@ export default class PremisesShowPage extends Page {
         .contains('Property details')
         .parent('.govuk-summary-list__row')
         .within(() => {
-          premises.characteristics.forEach(characteristic => {
-            cy.get('span').contains(characteristic.name)
+          premises.premisesCharacteristics.forEach(characteristic => {
+            cy.get('span').contains(characteristic.description)
           })
         })
 
@@ -127,8 +131,8 @@ export default class PremisesShowPage extends Page {
         .within(() => {
           cy.get('dl').contains('Bedspace status').siblings('dd').contains(convertToTitleCase(bedspace.status))
           cy.get('dl').contains('Start date').siblings('dd').contains(DateFormats.isoDateToUIDate(bedspace.startDate))
-          bedspace.characteristics.forEach(characteristic => {
-            cy.get('dl').contains('Bedspace details').siblings('dd').contains(characteristic.name)
+          bedspace.bedspaceCharacteristics.forEach(characteristic => {
+            cy.get('dl').contains('Bedspace details').siblings('dd').contains(characteristic.description)
           })
           cy.get('dl').contains('Additional bedspace details').siblings('dd').contains(bedspace.notes)
         })
@@ -298,7 +302,7 @@ export default class PremisesShowPage extends Page {
       .children('ul')
       .children('li')
       .toArray()
-      .map(element => characteristicFactory.build({ name: element.innerText }))
+      .map(element => cas3PremisesCharacteristicsFactory.build({ description: element.innerText }))
 
     const turnaroundWorkingDays = Number.parseInt(turnaroundTimeElement.text().trim().split(' ')[0], 10)
 
@@ -309,7 +313,7 @@ export default class PremisesShowPage extends Page {
       postcode: addressLines[addressLines.length - 1],
       status,
       probationDeliveryUnit: pdu,
-      characteristics,
+      premisesCharacteristics: characteristics,
       turnaroundWorkingDays,
     })
 

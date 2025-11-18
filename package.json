@@ -144,7 +144,7 @@
     "agentkeepalive": "^4.2.1",
     "applicationinsights": "^2.9.6",
     "axe-core": "^4.9.1",
-    "body-parser": "^1.20.0",
+    "body-parser": "^2.2.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
     "case": "^1.6.3",

@@ -300,7 +300,7 @@ describeClient('AssessmentClient', provider => {
         uponReceiving: 'a request to accept assessment',
         withRequest: {
           method: 'POST',
-          path: paths.assessments.acceptance({ id: assessment.id }),
+          path: paths.cas3.assessments.acceptance({ id: assessment.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

@@ -126,6 +126,7 @@ const cas3Api = {
     index: assessmentsCas3Path,
     show: assessmentsCas3Path.path(':id'),
     update: assessmentsCas3Path.path(':id'),
+    acceptance: assessmentsCas3Path.path(':id/acceptance'),
     notes: singleAssessmentCas3Path.path('referral-history-notes'),
     rejection: assessmentsCas3Path.path(':id/rejection'),
     closure: assessmentsCas3Path.path(':id/closure'),

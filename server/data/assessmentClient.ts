@@ -1,8 +1,8 @@
 import type {
   AssessmentAcceptance,
-  AssessmentRejection,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   Cas3Assessment,
+  Cas3AssessmentRejection,
   Cas3AssessmentSummary,
   Cas3UpdateAssessment,
   Cas3ReferralHistoryUserNote as NewNote,
@@ -72,9 +72,9 @@ export default class AssessmentClient {
     })
   }
 
-  async rejectAssessment(id: string, assessmentRejection: AssessmentRejection) {
+  async rejectAssessment(id: string, assessmentRejection: Cas3AssessmentRejection) {
     return this.restClient.post<void>({
-      path: paths.assessments.rejection({ id }),
+      path: paths.cas3.assessments.rejection({ id }),
       data: assessmentRejection,
     })
   }

@@ -1,12 +1,11 @@
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
-import { BookingSearchResult } from '@approved-premises/api'
+import { Cas3BookingSearchResult } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSearch'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
-  bookingSearchResultFactory,
-  bookingSearchResultsFactory,
+  cas3BookingSearchResultFactory,
   cas3BookingSearchResultsFactory,
 } from '../../../../server/testutils/factories/index'
 import { MockPagination } from '../../../mockApis/bookingSearch'
@@ -42,7 +41,7 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are bookings of all relevant status types in the database
-    const { data: bookings } = bookingSearchResultsFactory.build()
+    const { data: bookings } = cas3BookingSearchResultsFactory.build()
 
     const statuses: Array<BookingSearchApiStatus> = ['provisional', 'arrived', 'departed', 'confirmed', 'closed']
 
@@ -77,7 +76,7 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are bookings in the database
-    const { data: bookings } = bookingSearchResultsFactory.build()
+    const { data: bookings } = cas3BookingSearchResultsFactory.build()
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
     cy.task('stubFindBookings', { bookings, status: 'provisional', params: { sortBy: 'startDate' } })
     cy.task('stubFindBookings', {
@@ -112,7 +111,7 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are bookings in the database
-    const { data: bookings } = bookingSearchResultsFactory.build()
+    const { data: bookings } = cas3BookingSearchResultsFactory.build()
     const searchedForBooking = bookings[2]
     const searchCrnOrName = searchedForBooking.person.crn
 
@@ -159,8 +158,8 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are no bookings matching a CRN or Name search in the database
-    const { data: bookings } = bookingSearchResultsFactory.build()
-    const noBookings: BookingSearchResult[] = []
+    const { data: bookings } = cas3BookingSearchResultsFactory.build()
+    const noBookings: Cas3BookingSearchResult[] = []
 
     cy.task('stubFindBookings', { bookings, status: 'confirmed' })
     cy.task('stubFindBookings', { bookings: noBookings, status: 'confirmed', params: { crnOrName: 'N0M4TCH' } })
@@ -193,7 +192,7 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are bookings in the database
-    const bookings = bookingSearchResultFactory.buildList(23)
+    const bookings = cas3BookingSearchResultFactory.buildList(23)
     const pagination: MockPagination = {
       totalResults: 76,
       totalPages: 8,
@@ -289,7 +288,7 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are bookings in the database
-    const { data: bookings } = bookingSearchResultsFactory.build()
+    const { data: bookings } = cas3BookingSearchResultsFactory.build()
 
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
 

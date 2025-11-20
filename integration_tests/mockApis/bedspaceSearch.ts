@@ -3,12 +3,7 @@ import { Cas3v2BedspaceSearchResults } from '@approved-premises/api'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
-import {
-  bedspaceCharacteristics,
-  characteristics,
-  pdus,
-  premisesCharacteristics,
-} from '../../server/testutils/stubs/referenceDataStubs'
+import { bedspaceCharacteristics, pdus, premisesCharacteristics } from '../../server/testutils/stubs/referenceDataStubs'
 import { errorStub } from './utils'
 
 export default {
@@ -33,11 +28,6 @@ export default {
         url: api.cas3.bedspaces.search({}),
       })
     ).body.requests,
-  stubBedspaceSearchReferenceData: (): Promise<[Response, Response, Response, Response]> =>
-    Promise.all([
-      stubFor(pdus),
-      stubFor(characteristics),
-      stubFor(premisesCharacteristics),
-      stubFor(bedspaceCharacteristics),
-    ]),
+  stubBedspaceSearchReferenceData: (): Promise<[Response, Response, Response]> =>
+    Promise.all([stubFor(pdus), stubFor(premisesCharacteristics), stubFor(bedspaceCharacteristics)]),
 }

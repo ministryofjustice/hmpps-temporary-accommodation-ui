@@ -1,19 +1,11 @@
 import {
   assessmentFactory,
   cas3BedspaceArchiveActionFactory,
-  cas3BedspaceCharacteristicsFactory,
   cas3BedspaceFactory,
   cas3PremisesFactory,
-  characteristicFactory,
   placeContextFactory,
 } from '../testutils/factories'
-import {
-  bedspaceActions,
-  characteristicToBedspaceCharacteristic,
-  populateBedspaceCharacteristics,
-  summaryList,
-  summaryListForBedspaceStatus,
-} from './bedspaceUtils'
+import { bedspaceActions, summaryList, summaryListForBedspaceStatus } from './bedspaceUtils'
 import paths from '../paths/temporary-accommodation/manage'
 import config from '../config'
 import { convertToTitleCase } from './utils'
@@ -417,43 +409,6 @@ describe('bedspaceV2Utils', () => {
       }
 
       expect(summaryListForBedspaceStatus(bedspace)).toEqual(expectedSummary)
-    })
-  })
-
-  // TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities tests
-  describe('Cas3 casting utilities', () => {
-    describe('characteristicToBedspaceCharacteristic', () => {
-      it('converts a characteristic to a bedspaceCharacteristic', () => {
-        const characteristic = characteristicFactory.build()
-        expect(characteristicToBedspaceCharacteristic(characteristic)).toEqual({
-          id: characteristic.id,
-          name: characteristic.propertyName,
-          description: characteristic.name,
-        })
-      })
-    })
-
-    describe('populateBedspaceCharacteristics', () => {
-      it('populates the bedspaceCharacteristics based on the characteristics property', () => {
-        const characteristics = characteristicFactory.buildList(5)
-        const bedspace = cas3BedspaceFactory.build({
-          bedspaceCharacteristics: undefined,
-          characteristics,
-        })
-
-        expect(populateBedspaceCharacteristics(bedspace).bedspaceCharacteristics).toEqual(
-          characteristics.map(characteristicToBedspaceCharacteristic),
-        )
-      })
-
-      it('returns the premises as is if the premisesCharacteristics is already populated', () => {
-        const bedspace = cas3BedspaceFactory.build({
-          characteristics: undefined,
-          bedspaceCharacteristics: cas3BedspaceCharacteristicsFactory.buildList(5),
-        })
-
-        expect(populateBedspaceCharacteristics(bedspace)).toEqual(bedspace)
-      })
     })
   })
 })

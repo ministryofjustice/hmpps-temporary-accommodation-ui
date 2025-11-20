@@ -1,4 +1,4 @@
-import type { Booking, BookingSearchResult, Premises } from '@approved-premises/api'
+import type { Booking, Cas3BookingSearchResult, Premises } from '@approved-premises/api'
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -67,7 +67,7 @@ export default class BookingSearchPage extends Page {
     this.shouldShowTextInputByLabel(`Search ${status} bookings with the person’s name or CRN`, value)
   }
 
-  checkResults(bookings: BookingSearchResult[]) {
+  checkResults(bookings: Cas3BookingSearchResult[]) {
     cy.get('main table tbody tr').should('have.length', bookings.length)
     bookings.forEach(result => {
       cy.get('main table tbody').should('contain', result.person.crn)

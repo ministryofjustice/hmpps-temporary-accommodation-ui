@@ -238,8 +238,8 @@
     "restartDate": {
       "empty": "You must enter a date",
       "invalid": "You must enter a real date",
-      "invalidRestartDateInThePast": "The date cannot be more than 7 days in the past",
-      "invalidRestartDateInTheFuture": "The date cannot be more than 7 days in the future",
+      "invalidRestartDateInThePast": "The date cannot be more than 14 days in the past",
+      "invalidRestartDateInTheFuture": "The date cannot be more than 14 days in the future",
       "beforeLastBedspaceArchivedDate": "The restart date must be after the last archive date"
     }
   },
@@ -364,8 +364,8 @@
     "restartDate": {
       "empty": "You must enter a date",
       "invalid": "You must enter a real date",
-      "invalidRestartDateInThePast": "The date cannot be more than 7 days in the past",
-      "invalidRestartDateInTheFuture": "The date cannot be more than 7 days in the future",
+      "invalidRestartDateInThePast": "The date cannot be more than 14 days in the past",
+      "invalidRestartDateInTheFuture": "The date cannot be more than 14 days in the future",
       "beforeLastPremisesArchivedDate": "The restart date must be after the last archive end date"
     }
   },

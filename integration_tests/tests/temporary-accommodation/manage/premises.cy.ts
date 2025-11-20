@@ -1762,7 +1762,7 @@ context('Premises', () => {
       // And I should see error messages with dynamic date content
       unarchivePage.shouldShowGivenErrorMessageForField(
         'restartDate',
-        'The date cannot be more than 7 days in the future',
+        'The date cannot be more than 14 days in the future',
       )
     })
   })

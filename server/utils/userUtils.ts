@@ -12,15 +12,19 @@ export function isApplyEnabledForUser(user: User): boolean {
 }
 
 export function userHasReferrerRole(user: User): boolean {
-  return user.roles.includes('referrer')
+  return user.roles.includes('referrer') || userHasAdminRole(user)
 }
 
 export function userHasAssessorRole(user: User): boolean {
-  return user.roles.includes('assessor')
+  return user.roles.includes('assessor') || userHasAdminRole(user)
 }
 
 export function userHasReporterRole(user: User): boolean {
-  return user.roles.includes('reporter')
+  return user.roles.includes('reporter') || userHasAdminRole(user)
+}
+
+export function userHasAdminRole(user: User): boolean {
+  return user.roles.includes('admin')
 }
 
 export function userHasReferrerRoleAndIsApplyEnabled(user: User): boolean {

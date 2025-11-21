@@ -12,7 +12,7 @@ export default class PremisesUnarchivePage extends Page {
 
   enterDate(date: string): void {
     cy.get('label').contains('Another date').click()
-    this.completeDateInputsByLegend('Enter a date within the last 7 days or the next 7 days', date)
+    this.completeDateInputsByLegend('Enter a date within the last 14 days or the next 14 days', date)
   }
 
   shouldShowGivenErrorMessageForField(field: string, error: string): void {

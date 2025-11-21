@@ -19,7 +19,7 @@ export class UnarchivePropertyPage extends BasePage {
 
     await this.page.getByLabel('Another date').click()
 
-    const dateGroupName = 'Enter a date within the last 7 days or the next 7 days'
+    const dateGroupName = 'Enter a date within the last 14 days or the next 14 days'
     const dateGroup = this.page.getByRole('group', { name: dateGroupName })
     await expect(dateGroup).toBeVisible()
 

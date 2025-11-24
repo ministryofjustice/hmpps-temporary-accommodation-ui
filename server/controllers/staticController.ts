@@ -24,4 +24,10 @@ export default class StaticController {
       res.render('temporary-accommodation/static/notAuthorised')
     }
   }
+
+  maintenance(): RequestHandler {
+    return (_req: Request, res: Response) => {
+      res.render('temporary-accommodation/static/maintenance')
+    }
+  }
 }

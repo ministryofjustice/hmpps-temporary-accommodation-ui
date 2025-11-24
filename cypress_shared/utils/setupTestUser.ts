@@ -1,8 +1,8 @@
 import { TemporaryAccommodationUserRole as UserRole } from '../../server/@types/shared'
 import { referenceDataFactory, userFactory, userProfileFactory } from '../../server/testutils/factories'
 
-export function setupTestUser(role: UserRole) {
-  setupTestWithRoles([role])
+export function setupTestUser(...roles: Array<UserRole>) {
+  setupTestWithRoles(roles)
 }
 
 export function setupTestUserWithoutRole() {

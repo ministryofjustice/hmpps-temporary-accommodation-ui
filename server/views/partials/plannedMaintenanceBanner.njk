@@ -1,0 +1,10 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
+{% set html %}
+    <h3 class="govuk-notification-banner__heading">Planned maintenance</h3>
+    <p class="govuk-body">CAS3 will be unavailable on Monday 8 December 2025 from 7am to 8am.</p>
+{% endset %}
+
+{{ govukNotificationBanner({
+    html: html
+}) }}

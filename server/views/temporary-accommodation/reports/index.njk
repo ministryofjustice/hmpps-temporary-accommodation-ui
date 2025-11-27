@@ -4,7 +4,6 @@
 {% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 {%- from "moj/components/date-picker/macro.njk" import mojDatePicker -%}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-
 {% set pageTitle = "Reports - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
@@ -21,23 +20,27 @@
 {% endblock %}
 
 {% block content %}
-    {% include "../../_messages.njk" %}
-    {% set context = fetchContext() %}
-
-    {{ showErrorSummary(errorSummary) }}
-
-    <h1 class="govuk-heading-l">Reports</h1>
-
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <p class="govuk-body govuk-!-margin-bottom-8">CAS3 reporting data must not be shared externally or with
-                other MoJ teams without permission. Contact
+
+            {% include 'partials/plannedMaintenanceBanner.njk' %}
+
+            {% include "../../_messages.njk" %}
+            {% set context = fetchContext() %}
+
+            {{ showErrorSummary(errorSummary) }}
+
+            <h1 class="govuk-heading-l">Reports</h1>
+
+            <p class="govuk-body govuk-!-margin-bottom-8">
+                CAS3 reporting data must not be shared externally or with other MoJ teams without permission. Contact
                 <a href="mailto:centralhpt@justice.gov.uk" class="govuk-link">centralhpt@justice.gov.uk</a>
-                to request this.</p>
+                to request this.
+            </p>
 
             <form action="{{ paths.reports.create() }}" method="post" data-reset-errors-on-submit="true">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-    
+
                 {{ formPageSelect(
                     {
                         label: {
@@ -52,7 +55,6 @@
 
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-half">
-
                         {{ mojDatePicker({
                             id: "startDate",
                             name: "startDate",
@@ -67,10 +69,9 @@
                             value: context.startDate,
                             maxDate: maxStartDate
                         }) }}
-
                     </div>
-                    <div class="govuk-grid-column-one-half">
 
+                    <div class="govuk-grid-column-one-half">
                         {{ mojDatePicker({
                             id: "endDate",
                             name: "endDate",
@@ -85,10 +86,8 @@
                             value: context.endDate,
                             maxDate: maxEndDate
                         }) }}
-
                     </div>
                 </div>
-
 
                 {{ govukButton({
                     text: "Download booking data",
@@ -149,9 +148,7 @@
                         preventDoubleClick: true
                     }) }}
                 {% endif %}
-
             </form>
         </div>
     </div>
-
 {% endblock %}

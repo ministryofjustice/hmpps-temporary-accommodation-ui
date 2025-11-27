@@ -4,7 +4,7 @@ import UserService, { DeliusAccountMissingStaffDetailsError } from '../services/
 import extractCallConfig from '../utils/restUtils'
 import staticPaths from '../paths/temporary-accommodation/static'
 
-const USED_DETAILS_REQUIRED_PATH = staticPaths.static.userDetailsRequired.pattern
+const USER_DETAILS_REQUIRED_PATH = staticPaths.static.userDetailsRequired.pattern
 
 export default function populateCurrentUser(userService: UserService): RequestHandler {
   return async (req, res, next) => {
@@ -29,8 +29,8 @@ export default function populateCurrentUser(userService: UserService): RequestHa
     } catch (error) {
       if (error instanceof DeliusAccountMissingStaffDetailsError) {
         res.status(403)
-        if (req.path !== USED_DETAILS_REQUIRED_PATH) {
-          return res.redirect(USED_DETAILS_REQUIRED_PATH)
+        if (req.path !== USER_DETAILS_REQUIRED_PATH) {
+          return res.redirect(USER_DETAILS_REQUIRED_PATH)
         }
       }
       logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.username}`)

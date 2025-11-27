@@ -2,6 +2,9 @@ import { RequestHandler } from 'express'
 import logger from '../../logger'
 import UserService, { DeliusAccountMissingStaffDetailsError } from '../services/userService'
 import extractCallConfig from '../utils/restUtils'
+import staticPaths from '../paths/temporary-accommodation/static'
+
+const USER_DETAILS_REQUIRED_PATH = staticPaths.static.userDetailsRequired.pattern
 
 export default function populateCurrentUser(userService: UserService): RequestHandler {
   return async (req, res, next) => {
@@ -26,7 +29,9 @@ export default function populateCurrentUser(userService: UserService): RequestHa
     } catch (error) {
       if (error instanceof DeliusAccountMissingStaffDetailsError) {
         res.status(403)
-        return res.redirect('/not-authorised')
+        if (req.path !== USER_DETAILS_REQUIRED_PATH) {
+          return res.redirect(USER_DETAILS_REQUIRED_PATH)
+        }
       }
       logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.username}`)
       return next(error)

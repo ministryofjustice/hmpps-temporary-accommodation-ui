@@ -19,6 +19,12 @@ export default class StaticController {
     }
   }
 
+  userDetailsRequired(): RequestHandler {
+    return (_req: Request, res: Response) => {
+      res.render('temporary-accommodation/static/userDetailsRequired')
+    }
+  }
+
   notAuthorised(): RequestHandler {
     return (_req: Request, res: Response) => {
       res.render('temporary-accommodation/static/notAuthorised')

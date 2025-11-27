@@ -49,4 +49,13 @@ describe('StaticController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/notAuthorised')
     })
   })
+
+  describe('userDetailsRequired', () => {
+    it('should render the user details required page', () => {
+      const requestHandler = staticController.userDetailsRequired()
+      requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/userDetailsRequired')
+    })
+  })
 })

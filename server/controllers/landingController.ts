@@ -10,19 +10,10 @@ import {
   userHasReporterRole,
 } from '../utils/userUtils'
 
-// UNCOMMENT FOR DEBUG ONLY TO SIMULATE NO USER
-// const FORCE_DEBUG_USER_DETAILS_REQUIRED = true
-
 export default class LandingController {
   index(): RequestHandler {
     return (_req: Request, res: Response) => {
       const user = res.locals.user as User
-
-      // UNCOMMENT FOR DEBUG ONLY TO SIMULATE NO USER
-      // if (FORCE_DEBUG_USER_DETAILS_REQUIRED) {
-      //   res.status(403)
-      //   return res.render('temporary-accommodation/static/userDetailsRequired')
-      // }
 
       if (userHasAssessorRole(user)) {
         return res.redirect(managePaths.dashboard.index({}))

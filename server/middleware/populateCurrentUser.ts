@@ -4,16 +4,10 @@ import UserService, { DeliusAccountMissingStaffDetailsError } from '../services/
 import extractCallConfig from '../utils/restUtils'
 import staticPaths from '../paths/temporary-accommodation/static'
 
-// const FORCE_DEBUG_NOT_AUTHORISED = true
 const USED_DETAILS_REQUIRED_PATH = staticPaths.static.userDetailsRequired.pattern
 
 export default function populateCurrentUser(userService: UserService): RequestHandler {
   return async (req, res, next) => {
-    // if (FORCE_DEBUG_NOT_AUTHORISED && req.path !== USED_DETAILS_REQUIRED_PATH) {
-    //   res.status(403)
-    //   return res.redirect(USED_DETAILS_REQUIRED_PATH)
-    // }
-
     try {
       if (req.user) {
         const callConfig = extractCallConfig(req)

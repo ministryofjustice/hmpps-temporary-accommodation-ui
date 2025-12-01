@@ -2,6 +2,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import { NextFunction, Request, Response } from 'express'
 import { Cas3Bedspace, Cas3PremisesBedspaceTotals } from '@approved-premises/api'
 import { ErrorsAndUserInput } from '@approved-premises/ui'
+import { addDays } from 'date-fns'
 import { CallConfig } from '../../../data/restClient'
 import BedspaceService from '../../../services/bedspaceService'
 import BedspacesController from './bedspacesController'
@@ -984,7 +985,8 @@ describe('BedspacesController', () => {
 
     it('successfully unarchives the last archived bedspace with future date and shows property updated message', async () => {
       const params = { premisesId, bedspaceId }
-      const futureDate = '2025-12-01'
+      const futureDate = DateFormats.dateObjToIsoDate(addDays(new Date(), 12))
+      const [year, month, day] = futureDate.split('-')
 
       request = createMock<Request>({
         session: {
@@ -993,9 +995,9 @@ describe('BedspacesController', () => {
         params,
         body: {
           unarchiveOption: 'other',
-          'restartDate-day': '1',
-          'restartDate-month': '12',
-          'restartDate-year': '2025',
+          'restartDate-day': day,
+          'restartDate-month': month,
+          'restartDate-year': year,
         },
       })
 

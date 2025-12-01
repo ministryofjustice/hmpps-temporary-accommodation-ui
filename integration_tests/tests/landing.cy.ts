@@ -1,8 +1,8 @@
 import { ListPage } from '../../cypress_shared/pages/apply'
-import UserDetailsRequiredPage from '../../cypress_shared/pages/userDetailsRequired'
 import Page from '../../cypress_shared/pages/page'
 import DashboardPage from '../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import { setupTestUser, setupTestUserWithoutRole } from '../../cypress_shared/utils/setupTestUser'
+import DeliusMissingStaffDetails from '../../cypress_shared/pages/deliusMissingStaffDetails'
 
 context('Landing', () => {
   beforeEach(() => {
@@ -30,12 +30,12 @@ context('Landing', () => {
     Page.verifyOnPage(ListPage, [], [], [])
   })
 
-  it('redirects to the `User Details Required` page a user who is not an assessor or a referrer', () => {
+  it('redirects to the `Delius Missing Staff Details` page a user who is not an assessor or a referrer', () => {
     // Given I am signed in as a user without a role
     setupTestUserWithoutRole()
     cy.signIn({ failOnStatusCode: false })
 
-    // I am redirected to the not authorised page
-    Page.verifyOnPage(UserDetailsRequiredPage)
+    // I am redirected to the Delius Missing Staff Details page
+    Page.verifyOnPage(DeliusMissingStaffDetails)
   })
 })

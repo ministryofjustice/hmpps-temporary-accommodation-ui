@@ -5,6 +5,7 @@ import paths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { userFactory } from '../testutils/factories'
+import { UnauthorizedError } from '../utils/errors'
 import { isApplyEnabledForUser } from '../utils/userUtils'
 import LandingController from './landingController'
 
@@ -77,7 +78,7 @@ describe('LandingController', () => {
       expect(response.redirect).toHaveBeenCalledWith(staticPaths.static.useNDelius.pattern)
     })
 
-    it('redirects to the `User Details Required` page if the user is neither a assessor or a referrer', () => {
+    it('throws an error if the user is neither a assessor or a referrer', () => {
       const response: DeepMocked<Response> = createMock<Response>({
         locals: {
           user: userFactory.build({
@@ -88,9 +89,7 @@ describe('LandingController', () => {
 
       const requestHandler = landingController.index()
 
-      requestHandler(request, response, next)
-      expect(response.status).toHaveBeenCalledWith(403)
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/userDetailsRequired')
+      expect(() => requestHandler(request, response, next)).toThrowError(UnauthorizedError)
     })
 
     it('redirects to the reports page when the user is a reporter', () => {

@@ -3,6 +3,7 @@ import { TemporaryAccommodationUser as User } from '../@types/shared'
 import applyPaths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
+import { UnauthorizedError } from '../utils/errors'
 import {
   isApplyEnabledForUser,
   userHasAssessorRole,
@@ -30,8 +31,7 @@ export default class LandingController {
         return res.redirect(managePaths.reports.index({}))
       }
 
-      res.status(403)
-      return res.render('temporary-accommodation/static/userDetailsRequired')
+      throw new UnauthorizedError()
     }
   }
 }

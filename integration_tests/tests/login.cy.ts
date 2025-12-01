@@ -4,6 +4,7 @@ import Page from '../../cypress_shared/pages/page'
 import DashboardPage from '../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import { setupTestUser } from '../../cypress_shared/utils/setupTestUser'
 import { referenceDataFactory, userFactory, userProfileFactory } from '../../server/testutils/factories'
+import DeliusMissingStaffDetails from '../../cypress_shared/pages/deliusMissingStaffDetails'
 
 context('SignIn', () => {
   beforeEach(() => {
@@ -19,6 +20,14 @@ context('SignIn', () => {
   it('Unauthenticated user navigating to sign in page directed to auth', () => {
     cy.visit('/sign-in')
     Page.verifyOnPage(AuthSignInPage)
+  })
+
+  it('Shows the user a specific error page if their account is missing a staff record', () => {
+    const profile = userProfileFactory.build({ user: userFactory.build(), loadError: 'staff_record_not_found' })
+    cy.task('stubUserProfile', profile)
+    cy.signIn()
+
+    Page.verifyOnPage(DeliusMissingStaffDetails)
   })
 
   it('User name visible in header', () => {

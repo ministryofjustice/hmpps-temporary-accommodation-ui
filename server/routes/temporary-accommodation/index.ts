@@ -24,9 +24,6 @@ export default function routes(controllers: Controllers, services: Services): Ro
   get(paths.static.useNDelius.pattern, staticController.useNDelius(), { auditEvent: 'VIEW_USE_NDELIUS' })
   get(paths.static.notAuthorised.pattern, staticController.notAuthorised(), { auditEvent: 'VIEW_NOT_AUTHORISED' })
   get(paths.static.maintenance.pattern, staticController.maintenance(), { auditEvent: 'VIEW_MAINTENANCE' })
-  get(paths.static.userDetailsRequired.pattern, staticController.userDetailsRequired(), {
-    auditEvent: 'VIEW_USER_DETAILS_REQUIRED',
-  })
 
   manageRoutes(controllers, services, router)
   applyRoutes(controllers, services, router)

@@ -19,6 +19,10 @@ export default function setUpAuth(): Router {
     return res.render('autherror')
   })
 
+  router.get('/deliusMissingStaffDetails', (req, res) => {
+    return res.render('deliusMissingStaffDetails', { hideNav: true })
+  })
+
   router.get('/sign-in', passport.authenticate('oauth2'))
 
   router.get('/sign-in/callback', (req, res, next) =>

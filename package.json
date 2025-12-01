@@ -41,7 +41,8 @@
     "generate-types": "script/generate-types",
     "form-page:generate": "npx ts-node --transpile-only ./server/form-pages/utils/generator.ts",
     "generate:schema:apply": "npx ts-node --transpile-only ./server/form-pages/apply/generateSchema.ts",
-    "start-test-wiremock": "docker compose -f docker-compose-test.yml up -d"
+    "start-test-wiremock": "docker compose -f docker-compose-test.yml up -d",
+    "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "engines": {
     "node": "^22.0.0",
@@ -137,6 +138,7 @@
     "@faker-js/faker": "^9.0.3",
     "@microsoft/applicationinsights-web": "^3.3.5",
     "@ministryofjustice/frontend": "^5.1.2",
+    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@playwright/test": "^1.56.1",
     "@sentry/node": "^7.14.1",
     "@types/path-to-regexp": "^1.7.0",

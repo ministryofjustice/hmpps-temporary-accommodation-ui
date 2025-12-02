@@ -1,8 +1,8 @@
 import { ListPage } from '../../cypress_shared/pages/apply'
-import UserDetailsRequiredPage from '../../cypress_shared/pages/userDetailsRequired'
 import Page from '../../cypress_shared/pages/page'
 import DashboardPage from '../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import { setupTestUser, setupTestUserWithoutRole } from '../../cypress_shared/utils/setupTestUser'
+import NotAuthorisedPage from '../../cypress_shared/pages/notAuthorised'
 
 context('Landing', () => {
   beforeEach(() => {
@@ -30,12 +30,12 @@ context('Landing', () => {
     Page.verifyOnPage(ListPage, [], [], [])
   })
 
-  it('redirects to the `User Details Required` page a user who is not an assessor or a referrer', () => {
+  it('redirects a user who is not an assessor or a referrer', () => {
     // Given I am signed in as a user without a role
     setupTestUserWithoutRole()
-    cy.signIn({ failOnStatusCode: false })
+    cy.signIn()
 
     // I am redirected to the not authorised page
-    Page.verifyOnPage(UserDetailsRequiredPage)
+    Page.verifyOnPage(NotAuthorisedPage)
   })
 })

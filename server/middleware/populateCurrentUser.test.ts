@@ -59,7 +59,7 @@ describe('populateCurrentUser', () => {
     expect(next).toHaveBeenCalledWith()
   })
 
-  it('redirects to used details required page when staff record is missing', async () => {
+  it('redirects to user details required page when staff record is missing', async () => {
     const request = createMock<Request>()
     const response = createMock<Response>()
     const next = jest.fn()
@@ -70,8 +70,7 @@ describe('populateCurrentUser', () => {
 
     await populateCurrentUser(userService)(request, response, next)
 
-    expect(response.status).toHaveBeenCalledWith(403)
-    expect(response.redirect).toHaveBeenCalledWith('/user-details-required')
+    expect(response.redirect).toHaveBeenCalledWith('/deliusMissingStaffDetails')
     expect(next).not.toHaveBeenCalledWith(expect.any(Error))
   })
 

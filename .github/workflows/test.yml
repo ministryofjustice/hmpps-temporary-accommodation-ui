@@ -118,7 +118,7 @@ jobs:
           cache: 'npm'
 
       - name: Installing dependencies
-        run: npm ci
+        run: npm run setup
 
       - name: Building source
         run: npm run build
@@ -152,7 +152,7 @@ jobs:
           cache: 'npm'
 
       - name: Installing dependencies
-        run: npm ci
+        run: npm run setup
 
       - name: Building source
         run: npm run build

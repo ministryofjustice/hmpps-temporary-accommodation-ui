@@ -136,7 +136,7 @@
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.600.0",
     "@faker-js/faker": "^9.0.3",
-    "@microsoft/applicationinsights-web": "^3.3.5",
+    "@microsoft/applicationinsights-web": "^3.3.9",
     "@ministryofjustice/frontend": "^5.1.2",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@playwright/test": "^1.56.1",

@@ -2,6 +2,7 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { Cas3NewBooking } from '@approved-premises/api'
 import { ObjectWithDateParts } from '@approved-premises/ui'
+import { addDays } from 'date-fns'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
@@ -319,18 +320,18 @@ export default class BookingsController {
       return error
     }
 
-    try {
-      const parsedDepartureDate = DateFormats.isoToDateObj(departureDate)
+    if (departureDate < DateFormats.dateObjToIsoDate(new Date())) {
+      insertGenericError(error, 'departureDate', 'inPast')
+      return error
+    }
 
-      if (departureDate < DateFormats.dateObjToIsoDate(new Date())) {
-        insertGenericError(error, 'departureDate', 'inPast')
-        return error
-      }
+    try {
+      DateFormats.isoToDateObj(departureDate)
 
       if (parsedArrivalDate) {
-        const maxAllowedDate = new Date(parsedArrivalDate)
-        maxAllowedDate.setDate(maxAllowedDate.getDate() + 84)
-        if (parsedDepartureDate > maxAllowedDate) {
+        const maxAllowedDate = DateFormats.dateObjToIsoDate(addDays(parsedArrivalDate, 84))
+
+        if (departureDate > maxAllowedDate) {
           insertGenericError(error, 'departureDate', 'exceedsMaxNights')
           return error
         }

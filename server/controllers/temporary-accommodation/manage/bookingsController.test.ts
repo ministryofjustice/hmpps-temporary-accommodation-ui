@@ -79,6 +79,7 @@ describe('BookingsController', () => {
     request = createMock<Request>()
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
     ;(isApplyEnabledForUser as jest.MockedFn<typeof isApplyEnabledForUser>).mockReturnValue(true)
+    ;(insertGenericError as jest.Mock).mockClear()
   })
 
   describe('new', () => {
@@ -366,7 +367,7 @@ describe('BookingsController', () => {
         'empty',
       ],
       [
-        'departure date is empty',
+        'departure date is invalid',
         {
           crn: 'some-crn',
           ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().arrivalDate, 'arrivalDate'),
@@ -375,6 +376,16 @@ describe('BookingsController', () => {
         },
         'departureDate',
         'invalid',
+      ],
+      [
+        'maximum stay exceeded 84 days',
+        {
+          crn: 'some-crn',
+          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs('2125-12-30', 'departureDate'),
+        },
+        'departureDate',
+        'exceedsMaxNights',
       ],
     ])(
       'renders with an error if the %s',
@@ -490,6 +501,31 @@ describe('BookingsController', () => {
       await requestHandler(request, response, next)
 
       expect(clearPlaceContext).toHaveBeenCalledWith(request, response)
+    })
+
+    it('accepts exactly 84 nights from arrival when crossing BST', async () => {
+      const person = personFactory.build()
+
+      request.params = { premisesId, bedspaceId }
+      request.query = {
+        crn: 'some-crn',
+        ...DateFormats.isoToDateAndTimeInputs('2126-01-08', 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs('2126-04-02', 'departureDate'),
+      }
+
+      personService.findByCrn.mockResolvedValue(person)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
+
+      const handler = bookingsController.selectAssessment()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+
+      await handler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith(
+        'temporary-accommodation/bookings/selectAssessment',
+        expect.any(Object),
+      )
+      expect(insertGenericError).not.toHaveBeenCalledWith(expect.any(Error), 'departureDate', 'exceedsMaxNights')
     })
   })
 

@@ -23,7 +23,7 @@ generic-service:
     CANCEL_SCHEDULED_ARCHIVE_ENABLED: true
     SHOW_GAP_REPORT_BUTTON: true
     ENABLE_CAS3V2_API: true
-    IN_MAINTENANCE_MODE: true
+    IN_MAINTENANCE_MODE: false
 
   namespace_secrets:
     sqs-hmpps-audit-secret:

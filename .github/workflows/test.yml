@@ -128,7 +128,7 @@ jobs:
 
       - name: Upload Integration test artefacts
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: integration-test-artefacts
           path: |
@@ -165,7 +165,7 @@ jobs:
 
       - name: Upload Integration test artefacts
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: integration-test-artefacts-cas3v2
           path: |

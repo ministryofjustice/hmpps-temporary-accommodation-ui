@@ -327,7 +327,7 @@ describeClient('BookingClient - CAS3v2', provider => {
           query: {
             status: 'provisional',
             page: '1',
-            sortField: 'BOOKING_END_DATE',
+            sortField: 'endDate',
             sortDirection: 'desc',
           },
           headers: {
@@ -363,7 +363,7 @@ describeClient('BookingClient - CAS3v2', provider => {
             status: 'confirmed',
             crnOrName: booking.person.crn,
             page: '1',
-            sortField: 'BOOKING_END_DATE',
+            sortField: 'endDate',
             sortDirection: 'asc',
           },
           headers: {

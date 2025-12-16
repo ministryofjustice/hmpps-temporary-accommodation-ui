@@ -5,7 +5,6 @@ import paths from '../../server/paths/api'
 import { stubFor } from '.'
 import { appendQueryString } from '../../server/utils/utils'
 import config from '../../server/config'
-import { searchSortFieldsMap } from '../../server/data/bookingClient'
 
 export type MockPagination = Pick<
   PaginatedResponse<BookingSearchResult>,
@@ -23,7 +22,7 @@ const cas3v2ApiEnabledStubs = {
       status: args.status,
       crnOrName: args.params?.crnOrName,
       page: args.params?.page || 1,
-      sortField: searchSortFieldsMap[args.params?.sortBy] || 'BOOKING_END_DATE',
+      sortField: args.params?.sortBy || 'endDate',
       sortDirection: args.params?.sortDirection || 'desc',
     })
 

@@ -1,12 +1,10 @@
 import type {
   Arrival,
   Booking,
-  BookingSearchSortField,
   Cancellation,
   Cas3Arrival,
   Cas3Booking,
   Cas3BookingSearchResult,
-  Cas3BookingSearchSortField,
   Cas3Cancellation,
   Cas3Confirmation,
   Cas3Departure,
@@ -34,14 +32,6 @@ import { BookingSearchResult } from '../@types/shared'
 
 type SearchResponse = {
   results: Array<BookingSearchResult> | Array<Cas3BookingSearchResult>
-}
-
-export const searchSortFieldsMap: Record<BookingSearchSortField, Cas3BookingSearchSortField> = {
-  name: 'PERSON_NAME',
-  crn: 'PERSON_CRN',
-  startDate: 'BOOKING_START_DATE',
-  endDate: 'BOOKING_END_DATE',
-  createdAt: 'BOOKING_CREATED_AT',
 }
 
 export default class BookingClient {
@@ -192,7 +182,7 @@ export default class BookingClient {
       status,
       crnOrName: params.crnOrName,
       page: !params.page ? 1 : params.page, // also handles NaN & <1
-      sortField: searchSortFieldsMap[params.sortBy] || 'BOOKING_END_DATE',
+      sortField: params.sortBy || 'endDate',
       sortDirection: params.sortDirection || 'desc',
     })
 

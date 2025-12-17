@@ -18,11 +18,14 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: slackapi/slack-github-action@37ebaef184d7626c5f204ab8d3baff4262dd30f0 # v1.27.0
+    - uses: slackapi/slack-github-action@v2.1.1
       with:
-        channel-id: ${{ inputs.channel_id }}
+        method: chat.postMessage
+        token: ${{ inputs.slack_bot_token }}
+        payload-templated: true
         payload: |
           {
+            "channel": "${{ inputs.channel_id }}",
             "text": "Failed: ${{ inputs.title }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
             "blocks": [
               {
@@ -58,5 +61,3 @@ runs:
             "unfurl_links": false,
             "unfurl_media": false
           }
-      env:
-        SLACK_BOT_TOKEN: ${{ inputs.slack_bot_token }}

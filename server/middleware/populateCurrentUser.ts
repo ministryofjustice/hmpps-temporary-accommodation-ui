@@ -28,7 +28,7 @@ export default function populateCurrentUser(userService: UserService): RequestHa
         res.status(403)
         return res.redirect('/not-authorised')
       }
-      logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.username}`)
+      logger.error(error, `Failed to retrieve user for: ${res.locals.user && res.locals.user.id}`)
       return next(error)
     }
   }

@@ -2,6 +2,7 @@ import { path } from 'static-path'
 
 // CAS3 namespaced
 const cas3Path = path('/cas3')
+const cas3v2Path = cas3Path.path('v2')
 
 const cas3ReportsPath = cas3Path.path('reports')
 
@@ -10,23 +11,21 @@ const cas3TimelinePath = cas3Path.path('timeline').path(':assessmentId')
 const cas3ApplicationsPath = cas3Path.path('applications')
 const cas3SingleApplicationPath = cas3ApplicationsPath.path(':id')
 
-// CAS3v2 namespaced
-const cas3v2Path = cas3Path.path('v2')
-const cas3v2PremisesPath = cas3v2Path.path('premises')
-const cas3v2SinglePremisesPath = cas3v2PremisesPath.path(':premisesId')
+const cas3PremisesPath = cas3v2Path.path('premises')
+const cas3SinglePremisesPath = cas3PremisesPath.path(':premisesId')
 
-const cas3v2BedspacesPath = cas3v2SinglePremisesPath.path('bedspaces')
-const cas3v2SingleBedspacePath = cas3v2BedspacesPath.path(':bedspaceId')
+const cas3BedspacesPath = cas3SinglePremisesPath.path('bedspaces')
+const cas3SingleBedspacePath = cas3BedspacesPath.path(':bedspaceId')
 
-const cas3v2AllVoidBedspacesPath = cas3v2BedspacesPath.path('void-bedspaces')
-const cas3v2VoidBedspacesPath = cas3v2SingleBedspacePath.path('void-bedspaces')
-const cas3v2SingleVoidBedspacePath = cas3v2VoidBedspacesPath.path(':voidBedspaceId')
+const cas3AllVoidBedspacesPath = cas3BedspacesPath.path('void-bedspaces')
+const cas3VoidBedspacesPath = cas3SingleBedspacePath.path('void-bedspaces')
+const cas3SingleVoidBedspacePath = cas3VoidBedspacesPath.path(':voidBedspaceId')
 
-const cas3v2BookingsPath = cas3v2SinglePremisesPath.path('bookings')
-const cas3v2SingleBookingPath = cas3v2BookingsPath.path(':bookingId')
+const cas3BookingsPath = cas3SinglePremisesPath.path('bookings')
+const cas3SingleBookingPath = cas3BookingsPath.path(':bookingId')
 
-const assessmentsCas3Path = cas3Path.path('assessments')
-const singleAssessmentCas3Path = assessmentsCas3Path.path(':id')
+const cas3AssessmentsPath = cas3Path.path('assessments')
+const cas3SingleAssessmentPath = cas3AssessmentsPath.path(':id')
 
 // Non-namespaced
 const premisesPath = path('/premises')
@@ -52,50 +51,50 @@ const clarificationNotesPath = singleAssessmentPath.path('notes')
 
 const cas3Api = {
   premises: {
-    search: cas3v2PremisesPath.path('search'),
-    show: cas3v2SinglePremisesPath,
-    create: cas3v2PremisesPath,
-    update: cas3v2SinglePremisesPath,
-    canArchive: cas3v2SinglePremisesPath.path('can-archive'),
-    archive: cas3v2SinglePremisesPath.path('archive'),
-    unarchive: cas3v2SinglePremisesPath.path('unarchive'),
-    cancelArchive: cas3v2SinglePremisesPath.path('cancel-archive'),
-    cancelUnarchive: cas3v2SinglePremisesPath.path('cancel-unarchive'),
-    totals: cas3v2SinglePremisesPath.path('bedspace-totals'),
+    search: cas3PremisesPath.path('search'),
+    show: cas3SinglePremisesPath,
+    create: cas3PremisesPath,
+    update: cas3SinglePremisesPath,
+    canArchive: cas3SinglePremisesPath.path('can-archive'),
+    archive: cas3SinglePremisesPath.path('archive'),
+    unarchive: cas3SinglePremisesPath.path('unarchive'),
+    cancelArchive: cas3SinglePremisesPath.path('cancel-archive'),
+    cancelUnarchive: cas3SinglePremisesPath.path('cancel-unarchive'),
+    totals: cas3SinglePremisesPath.path('bedspace-totals'),
     bedspaces: {
-      show: cas3v2SingleBedspacePath,
-      create: cas3v2BedspacesPath,
-      get: cas3v2BedspacesPath,
-      update: cas3v2SingleBedspacePath,
-      canArchive: cas3v2SingleBedspacePath.path('can-archive'),
-      archive: cas3v2SingleBedspacePath.path('archive'),
-      unarchive: cas3v2SingleBedspacePath.path('unarchive'),
-      cancelArchive: cas3v2SingleBedspacePath.path('cancel-archive'),
-      cancelUnarchive: cas3v2SingleBedspacePath.path('cancel-unarchive'),
+      show: cas3SingleBedspacePath,
+      create: cas3BedspacesPath,
+      get: cas3BedspacesPath,
+      update: cas3SingleBedspacePath,
+      canArchive: cas3SingleBedspacePath.path('can-archive'),
+      archive: cas3SingleBedspacePath.path('archive'),
+      unarchive: cas3SingleBedspacePath.path('unarchive'),
+      cancelArchive: cas3SingleBedspacePath.path('cancel-archive'),
+      cancelUnarchive: cas3SingleBedspacePath.path('cancel-unarchive'),
     },
     voidBedspaces: {
-      index: cas3v2AllVoidBedspacesPath,
-      create: cas3v2VoidBedspacesPath,
-      show: cas3v2SingleVoidBedspacePath,
-      update: cas3v2SingleVoidBedspacePath,
-      cancel: cas3v2SingleVoidBedspacePath.path('cancellations'),
+      index: cas3AllVoidBedspacesPath,
+      create: cas3VoidBedspacesPath,
+      show: cas3SingleVoidBedspacePath,
+      update: cas3SingleVoidBedspacePath,
+      cancel: cas3SingleVoidBedspacePath.path('cancellations'),
     },
     bookings: {
-      create: cas3v2BookingsPath,
-      show: cas3v2SingleBookingPath,
-      index: cas3v2BookingsPath,
-      arrivals: cas3v2SingleBookingPath.path('arrivals'),
+      create: cas3BookingsPath,
+      show: cas3SingleBookingPath,
+      index: cas3BookingsPath,
+      arrivals: cas3SingleBookingPath.path('arrivals'),
       departures: {
-        create: cas3v2SingleBookingPath.path('departures'),
-        show: cas3v2SingleBookingPath.path('departures/:departureId'),
+        create: cas3SingleBookingPath.path('departures'),
+        show: cas3SingleBookingPath.path('departures/:departureId'),
       },
-      confirmations: cas3v2SingleBookingPath.path('confirmations'),
-      extensions: cas3v2SingleBookingPath.path('extensions'),
+      confirmations: cas3SingleBookingPath.path('confirmations'),
+      extensions: cas3SingleBookingPath.path('extensions'),
       cancellations: {
-        create: cas3v2SingleBookingPath.path('cancellations'),
-        show: cas3v2SingleBookingPath.path('cancellations/:cancellationId'),
+        create: cas3SingleBookingPath.path('cancellations'),
+        show: cas3SingleBookingPath.path('cancellations/:cancellationId'),
       },
-      turnarounds: cas3v2SingleBookingPath.path('turnarounds'),
+      turnarounds: cas3SingleBookingPath.path('turnarounds'),
     },
   },
   bedspaces: {
@@ -122,13 +121,13 @@ const cas3Api = {
     referrals: cas3ReportsPath.path('referral'),
   },
   assessments: {
-    index: assessmentsCas3Path,
-    show: assessmentsCas3Path.path(':id'),
-    update: assessmentsCas3Path.path(':id'),
-    acceptance: assessmentsCas3Path.path(':id/acceptance'),
-    notes: singleAssessmentCas3Path.path('referral-history-notes'),
-    rejection: assessmentsCas3Path.path(':id/rejection'),
-    closure: assessmentsCas3Path.path(':id/closure'),
+    index: cas3AssessmentsPath,
+    show: cas3AssessmentsPath.path(':id'),
+    update: cas3AssessmentsPath.path(':id'),
+    acceptance: cas3AssessmentsPath.path(':id/acceptance'),
+    notes: cas3SingleAssessmentPath.path('referral-history-notes'),
+    rejection: cas3AssessmentsPath.path(':id/rejection'),
+    closure: cas3AssessmentsPath.path(':id/closure'),
   },
   referenceData: cas3Path.path('reference-data'),
 }

@@ -23,7 +23,7 @@ describeClient('TimelineClient', provider => {
         uponReceiving: 'a request for timeline results',
         withRequest: {
           method: 'GET',
-          path: paths.assessments.timeline({ assessmentId }),
+          path: paths.cas3.assessments.timeline({ assessmentId }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

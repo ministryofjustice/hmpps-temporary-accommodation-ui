@@ -63,9 +63,9 @@ import cas3VoidBedspaceFactory from './cas3VoidBedspace'
 import cas3VoidBedspaceReasonFactory from './cas3VoidBedspaceReason'
 import cas3VoidBedspaceRequestFactory from './cas3VoidBedspaceRequest'
 import cas3VoidBedspaceCancellationFactory from './cas3VoidBedspaceCancellation'
-import cas3v2BedspaceSearchResultOverlapFactory from './cas3v2BedspaceSearchResultOverlap'
-import cas3v2BedspaceSearchResultFactory from './cas3v2BedspaceSearchResult'
-import cas3v2BedspaceSearchResultsFactory from './cas3v2BedspaceSearchResults'
+import cas3BedspaceSearchResultOverlapFactory from './cas3BedspaceSearchResultOverlap'
+import cas3BedspaceSearchResultFactory from './cas3BedspaceSearchResult'
+import cas3BedspaceSearchResultsFactory from './cas3BedspaceSearchResults'
 import cas3PremisesCharacteristicsFactory from './cas3PremisesCharacteristics'
 import cas3BedspaceCharacteristicsFactory from './cas3BedspaceCharacteristics'
 import cas3ReferenceDataFactory from './cas3ReferenceData'
@@ -147,9 +147,9 @@ export {
   cas3VoidBedspaceReasonFactory,
   cas3VoidBedspaceRequestFactory,
   cas3VoidBedspaceCancellationFactory,
-  cas3v2BedspaceSearchResultOverlapFactory,
-  cas3v2BedspaceSearchResultFactory,
-  cas3v2BedspaceSearchResultsFactory,
+  cas3BedspaceSearchResultOverlapFactory,
+  cas3BedspaceSearchResultFactory,
+  cas3BedspaceSearchResultsFactory,
   cas3PremisesCharacteristicsFactory,
   cas3BedspaceCharacteristicsFactory,
   cas3ReferenceDataFactory,

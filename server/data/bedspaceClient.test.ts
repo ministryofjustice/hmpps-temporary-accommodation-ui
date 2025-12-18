@@ -4,10 +4,10 @@ import { CallConfig } from './restClient'
 import {
   bedspaceSearchApiParametersFactory,
   cas3BedspaceFactory,
+  cas3BedspaceSearchResultsFactory,
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
   cas3UpdateBedspaceFactory,
-  cas3v2BedspaceSearchResultsFactory,
 } from '../testutils/factories'
 import paths from '../paths/api'
 import describeClient from '../testutils/describeClient'
@@ -22,7 +22,7 @@ describeClient('BedspaceClient', provider => {
 
   describe('search', () => {
     it('returns search results', async () => {
-      const results = cas3v2BedspaceSearchResultsFactory.build()
+      const results = cas3BedspaceSearchResultsFactory.build()
       const payload = bedspaceSearchApiParametersFactory.build()
 
       await provider.addInteraction({

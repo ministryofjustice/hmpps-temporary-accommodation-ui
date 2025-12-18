@@ -3,8 +3,8 @@ import BedspaceClient from '../data/bedspaceClient'
 import { CallConfig } from '../data/restClient'
 import {
   bedspaceSearchApiParametersFactory,
+  cas3BedspaceSearchResultsFactory,
   cas3ReferenceDataFactory,
-  cas3v2BedspaceSearchResultsFactory,
   pduFactory,
   probationRegionFactory,
 } from '../testutils/factories'
@@ -32,7 +32,7 @@ describe('BedspaceSearchService', () => {
 
   describe('search', () => {
     it('returns search results for the provided search paramters', async () => {
-      const searchResults = cas3v2BedspaceSearchResultsFactory.build()
+      const searchResults = cas3BedspaceSearchResultsFactory.build()
       const searchParameters = bedspaceSearchApiParametersFactory.build()
 
       bedspaceClient.search.mockResolvedValue(searchResults)

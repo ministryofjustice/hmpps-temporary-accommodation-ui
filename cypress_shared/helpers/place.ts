@@ -12,9 +12,9 @@ import {
   assessmentSummaryFactory,
   bedspaceSearchFormParametersFactory,
   cas3BedspaceFactory,
+  cas3BedspaceSearchResultsFactory,
   cas3BookingFactory,
   cas3VoidBedspaceFactory,
-  cas3v2BedspaceSearchResultsFactory,
   newBookingFactory,
   timelineEventsFactory,
 } from '../../server/testutils/factories'
@@ -27,7 +27,7 @@ import BookingConfirmPage from '../pages/temporary-accommodation/manage/bookingC
 import BookingNewPage from '../pages/temporary-accommodation/manage/bookingNew'
 import BookingSelectAssessmentPage from '../pages/temporary-accommodation/manage/bookingSelectAssessment'
 import BookingShowPage from '../pages/temporary-accommodation/manage/bookingShow'
-import cas3v2BedspaceSearchResultFactory from '../../server/testutils/factories/cas3v2BedspaceSearchResult'
+import cas3BedspaceSearchResultFactory from '../../server/testutils/factories/cas3BedspaceSearchResult'
 
 export default class PlaceHelper {
   private readonly bedspaceSearchResults: Cas3v2BedspaceSearchResults
@@ -49,8 +49,8 @@ export default class PlaceHelper {
     private readonly premises: Cas3Premises,
     private readonly cas3Bedspace: Cas3Bedspace,
   ) {
-    this.bedspaceSearchResults = cas3v2BedspaceSearchResultsFactory.build({
-      results: [cas3v2BedspaceSearchResultFactory.forBedspace(this.premises, this.cas3Bedspace).build()],
+    this.bedspaceSearchResults = cas3BedspaceSearchResultsFactory.build({
+      results: [cas3BedspaceSearchResultFactory.forBedspace(this.premises, this.cas3Bedspace).build()],
     })
     this.person = this.placeContext.assessment.application.person
     this.booking = cas3BookingFactory.build({

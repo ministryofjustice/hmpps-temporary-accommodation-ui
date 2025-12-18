@@ -9,12 +9,12 @@ import {
   assessmentFactory,
   bedspaceSearchFormParametersFactory,
   cas3BedspaceFactory,
+  cas3BedspaceSearchResultFactory,
+  cas3BedspaceSearchResultOverlapFactory,
+  cas3BedspaceSearchResultsFactory,
   cas3BookingFactory,
   cas3PremisesFactory,
   cas3VoidBedspaceFactory,
-  cas3v2BedspaceSearchResultFactory,
-  cas3v2BedspaceSearchResultOverlapFactory,
-  cas3v2BedspaceSearchResultsFactory,
   personFactory,
   placeContextFactory,
   timelineEventsFactory,
@@ -56,7 +56,7 @@ context('Bedspace Search', () => {
     const preSearchPage = BedspaceSearchPage.visit()
 
     // And when I fill out the form
-    const results = cas3v2BedspaceSearchResultsFactory.build()
+    const results = cas3BedspaceSearchResultsFactory.build()
     cy.task('stubBedspaceSearch', results)
 
     const searchParameters = bedspaceSearchFormParametersFactory.build()
@@ -106,7 +106,7 @@ context('Bedspace Search', () => {
     const preSearchPage = BedspaceSearchPage.visit()
 
     // And when I fill out the form
-    const results = cas3v2BedspaceSearchResultsFactory.build({
+    const results = cas3BedspaceSearchResultsFactory.build({
       results: [],
       resultsPremisesCount: 0,
       resultsBedspaceCount: 0,
@@ -177,8 +177,8 @@ context('Bedspace Search', () => {
       })
       .buildList(5)
 
-    const results = cas3v2BedspaceSearchResultsFactory.build({
-      results: [cas3v2BedspaceSearchResultFactory.forBedspace(premises, cas3Bedspace).build()],
+    const results = cas3BedspaceSearchResultsFactory.build({
+      results: [cas3BedspaceSearchResultFactory.forBedspace(premises, cas3Bedspace).build()],
     })
 
     cy.task('stubBedspaceSearch', results)
@@ -214,11 +214,11 @@ context('Bedspace Search', () => {
     const assessment = assessmentFactory.build({ status: 'closed' })
     const timeline = timelineEventsFactory.build()
 
-    const results = cas3v2BedspaceSearchResultsFactory.build({
+    const results = cas3BedspaceSearchResultsFactory.build({
       results: [
-        cas3v2BedspaceSearchResultFactory.forBedspace(premises, bedspace).build({
+        cas3BedspaceSearchResultFactory.forBedspace(premises, bedspace).build({
           overlaps: [
-            cas3v2BedspaceSearchResultOverlapFactory.build({
+            cas3BedspaceSearchResultOverlapFactory.build({
               name: person.name,
               crn: person.crn,
               personType: person.type,
@@ -285,7 +285,7 @@ context('Bedspace Search', () => {
     const preSearchPage = BedspaceSearchPage.visit()
 
     // And when I fill out the form
-    const results = cas3v2BedspaceSearchResultsFactory.build()
+    const results = cas3BedspaceSearchResultsFactory.build()
     cy.task('stubBedspaceSearch', results)
 
     const searchParameters = bedspaceSearchFormParametersFactory.build()
@@ -318,7 +318,7 @@ context('Bedspace Search', () => {
     const preSearchPage = BedspaceSearchPage.visit(placeContext)
 
     // And when I fill out the form
-    const results = cas3v2BedspaceSearchResultsFactory.build()
+    const results = cas3BedspaceSearchResultsFactory.build()
     cy.task('stubBedspaceSearch', results)
 
     const searchParameters = bedspaceSearchFormParametersFactory.build()

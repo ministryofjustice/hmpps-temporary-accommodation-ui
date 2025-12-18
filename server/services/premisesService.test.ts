@@ -12,17 +12,13 @@ import {
   cas3ReferenceDataFactory,
   cas3UnarchivePremisesFactory,
   cas3UpdatePremisesFactory,
-  characteristicFactory,
   localAuthorityFactory,
   pduFactory,
   probationRegionFactory,
 } from '../testutils/factories'
 import PremisesService from './premisesService'
 import { ReferenceDataClient } from '../data'
-import * as characteristicUtils from '../utils/characteristicUtils'
 import { AssessmentsService } from './index'
-import * as premisesUtils from '../utils/premisesUtils'
-import config from '../config'
 
 jest.mock('../data/premisesClient')
 jest.mock('../data/referenceDataClient')
@@ -37,7 +33,6 @@ describe('PremisesService', () => {
   const assessmentService = createMock<AssessmentsService>({})
 
   const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
-  const originalFlags = config.flags
   const premisesId = 'premises-id'
   const assessment = assessmentFactory.build({ status: 'ready_to_place' })
 
@@ -46,16 +41,6 @@ describe('PremisesService', () => {
     premisesClientFactory.mockReturnValue(premisesClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
     assessmentService.findAssessment.mockResolvedValue(assessment)
-
-    jest.spyOn(premisesUtils, 'populatePremisesCharacteristics')
-    jest.spyOn(characteristicUtils, 'filterCharacteristics')
-    jest.spyOn(characteristicUtils, 'characteristicToCas3ReferenceData')
-
-    config.flags.enableCas3v2Api = true
-  })
-
-  afterEach(() => {
-    config.flags = originalFlags
   })
 
   describe('createPremises', () => {
@@ -69,8 +54,6 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
-
-      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -85,8 +68,6 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.update).toHaveBeenCalledWith(premises.id, updatedPremises)
-
-      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -114,8 +95,6 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.archive).toHaveBeenCalledWith(premises.id, archivePayload)
-
-      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -130,8 +109,6 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.unarchive).toHaveBeenCalledWith(premises.id, unarchivePayload)
-
-      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -145,8 +122,6 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.cancelArchive).toHaveBeenCalledWith(premises.id)
-
-      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -160,8 +135,6 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.cancelUnarchive).toHaveBeenCalledWith(premises.id)
-
-      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -247,8 +220,6 @@ describe('PremisesService', () => {
       expect(result).toBe(premises)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.find).toHaveBeenCalledWith(premisesId)
-
-      expect(premisesUtils.populatePremisesCharacteristics).toHaveBeenCalledWith(premises)
     })
   })
 
@@ -297,49 +268,6 @@ describe('PremisesService', () => {
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-regions')
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {
         probationRegionId: callConfig.probationRegion.id,
-      })
-    })
-  })
-
-  describe('with the ENABLE_CAS3V2_API flag off', () => {
-    beforeEach(() => {
-      config.flags.enableCas3v2Api = false
-    })
-
-    describe('getReferenceData', () => {
-      const characteristic1 = characteristicFactory.build({ name: 'Rural property', modelScope: 'premises' })
-      const characteristic2 = characteristicFactory.build({ name: 'Ground floor accessible', modelScope: 'premises' })
-      const characteristic3 = characteristicFactory.build({ name: 'Pub nearby', modelScope: 'premises' })
-      const characteristic4 = characteristicFactory.build({ name: 'Sea view', modelScope: 'room' })
-      const unsortedCharacteristics = [characteristic1, characteristic2, characteristic3, characteristic4]
-
-      it('returns characteristics as sorted Cas3ReferenceData', async () => {
-        referenceDataClient.getReferenceData.mockImplementation(async (objectType: string) => {
-          if (objectType === 'characteristics') {
-            return unsortedCharacteristics
-          }
-          return []
-        })
-
-        const result = await service.getReferenceData(callConfig)
-
-        expect(result).toEqual({
-          localAuthorities: [],
-          characteristics: [
-            characteristicUtils.characteristicToCas3ReferenceData(characteristic2),
-            characteristicUtils.characteristicToCas3ReferenceData(characteristic3),
-            characteristicUtils.characteristicToCas3ReferenceData(characteristic1),
-          ],
-          probationRegions: [],
-          pdus: [],
-        })
-
-        expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('characteristics')
-
-        expect(characteristicUtils.filterCharacteristics).toHaveBeenCalledWith(
-          [characteristic1, characteristic2, characteristic3, characteristic4],
-          'premises',
-        )
       })
     })
   })

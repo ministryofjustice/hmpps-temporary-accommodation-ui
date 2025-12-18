@@ -9,7 +9,6 @@ import {
   cas3VoidBedspaceReasonFactory,
   cas3VoidBedspaceRequestFactory,
 } from '../testutils/factories'
-import * as lostBedUtils from '../utils/lostBedUtils'
 
 jest.mock('../data/lostBedClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -28,8 +27,6 @@ describe('LostBedService', () => {
     jest.clearAllMocks()
     LostBedClientFactory.mockReturnValue(lostBedClient)
     ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
-
-    jest.spyOn(lostBedUtils, 'lostBedToCas3VoidBedspace')
   })
 
   describe('create', () => {
@@ -44,8 +41,6 @@ describe('LostBedService', () => {
       expect(postedLostBed).toEqual(lostBed)
       expect(LostBedClientFactory).toHaveBeenCalledWith(callConfig)
       expect(lostBedClient.create).toHaveBeenCalledWith('premisesId', lostBed.bedspaceId, newLostBed)
-
-      expect(lostBedUtils.lostBedToCas3VoidBedspace).toHaveBeenCalledWith(lostBed)
     })
   })
 
@@ -80,8 +75,6 @@ describe('LostBedService', () => {
 
       expect(LostBedClientFactory).toHaveBeenCalledWith(callConfig)
       expect(lostBedClient.find).toHaveBeenCalledWith('premisesId', lostBed.bedspaceId, lostBed.id)
-
-      expect(lostBedUtils.lostBedToCas3VoidBedspace).toHaveBeenCalledWith(lostBed)
     })
   })
 
@@ -103,8 +96,6 @@ describe('LostBedService', () => {
 
       expect(LostBedClientFactory).toHaveBeenCalledWith(callConfig)
       expect(lostBedClient.update).toHaveBeenCalledWith('premisesId', lostBed.bedspaceId, lostBed.id, lostBedUpdate)
-
-      expect(lostBedUtils.lostBedToCas3VoidBedspace).toHaveBeenCalledWith(lostBed)
     })
   })
 

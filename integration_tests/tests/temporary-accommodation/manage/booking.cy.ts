@@ -142,11 +142,7 @@ context('Booking', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      if (Cypress.env('ENABLE_CAS3V2_API') === true) {
-        expect(requestBody.bedspaceId).equal(bedspace.id)
-      } else {
-        expect(requestBody.bedId).equal(bedspace.id)
-      }
+      expect(requestBody.bedspaceId).equal(bedspace.id)
       expect(requestBody.serviceName).equal('temporary-accommodation')
       expect(requestBody.crn).equal(newBooking.crn)
       expect(requestBody.arrivalDate).equal(newBooking.arrivalDate)
@@ -209,12 +205,7 @@ context('Booking', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      if (Cypress.env('ENABLE_CAS3V2_API') === true) {
-        expect(requestBody.bedspaceId).equal(bedspace.id)
-      } else {
-        expect(requestBody.bedId).equal(bedspace.id)
-      }
-
+      expect(requestBody.bedspaceId).equal(bedspace.id)
       expect(requestBody.serviceName).equal('temporary-accommodation')
       expect(requestBody.crn).equal(newBooking.crn)
       expect(requestBody.arrivalDate).equal(newBooking.arrivalDate)

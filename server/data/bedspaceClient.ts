@@ -1,7 +1,6 @@
 import {
   Cas3Bedspace,
   Cas3BedspaceSearchParameters,
-  Cas3BedspaceSearchResults,
   Cas3Bedspaces,
   Cas3NewBedspace,
   Cas3UpdateBedspace,
@@ -19,13 +18,6 @@ export default class BedspaceClient {
   }
 
   async search(searchParameters: Cas3BedspaceSearchParameters) {
-    if (!config.flags.enableCas3v2Api) {
-      return this.restClient.post<Cas3BedspaceSearchResults>({
-        path: paths.cas3.bedspaces.search({}),
-        data: searchParameters,
-      })
-    }
-
     return this.restClient.post<Cas3v2BedspaceSearchResults>({
       path: paths.cas3.bedspaces.search({}),
       data: searchParameters,

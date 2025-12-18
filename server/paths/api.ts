@@ -28,26 +28,12 @@ const cas3AssessmentsPath = cas3Path.path('assessments')
 const cas3SingleAssessmentPath = cas3AssessmentsPath.path(':id')
 
 // Non-namespaced
-const premisesPath = path('/premises')
-const singlePremisesPath = premisesPath.path(':premisesId')
-
-const bookingsPath = singlePremisesPath.path('bookings')
-const singleBookingPath = bookingsPath.path(':bookingId')
-
-const lostBedsPath = singlePremisesPath.path('lost-beds')
-const singleLostBedPath = lostBedsPath.path(':lostBedId')
-
 const peoplePath = path('/people')
 const personPath = peoplePath.path(':crn')
 const oasysPath = personPath.path('oasys')
 
 const tasksPath = path('/tasks')
 const allocationPath = tasksPath.path('assessment/:id/allocations')
-
-const assessmentsPath = path('/assessments')
-const singleAssessmentPath = assessmentsPath.path(':id')
-
-const clarificationNotesPath = singleAssessmentPath.path('notes')
 
 const cas3Api = {
   premises: {
@@ -128,53 +114,15 @@ const cas3Api = {
     notes: cas3SingleAssessmentPath.path('referral-history-notes'),
     rejection: cas3AssessmentsPath.path(':id/rejection'),
     closure: cas3AssessmentsPath.path(':id/closure'),
+    timeline: cas3TimelinePath,
   },
   referenceData: cas3Path.path('reference-data'),
 }
 
 export default {
   cas3: cas3Api,
-  premises: {
-    lostBeds: {
-      show: singleLostBedPath,
-      create: lostBedsPath,
-      index: lostBedsPath,
-      cancel: singleLostBedPath.path('cancellations'),
-      update: singleLostBedPath,
-    },
-    bookings: {
-      index: bookingsPath,
-      create: bookingsPath,
-      show: singleBookingPath,
-      extensions: singleBookingPath.path('extensions'),
-      confirmations: singleBookingPath.path('confirmations'),
-      cancellations: {
-        create: singleBookingPath.path('cancellations'),
-        show: singleBookingPath.path('cancellations/:cancellationId'),
-      },
-      departures: {
-        show: singleBookingPath.path('departures/:departureId'),
-      },
-      turnarounds: {
-        create: singleBookingPath.path('turnarounds'),
-      },
-    },
-  },
-  bookings: {
-    search: path('/bookings/search'),
-  },
   assessments: {
-    index: assessmentsPath,
-    show: singleAssessmentPath,
     allocation: allocationPath,
-    rejection: singleAssessmentPath.path('rejection'),
-    acceptance: singleAssessmentPath.path('acceptance'),
-    closure: singleAssessmentPath.path('closure'),
-    clarificationNotes: {
-      create: clarificationNotesPath,
-      update: clarificationNotesPath.path(':clarificationNoteId'),
-    },
-    timeline: cas3TimelinePath,
   },
   people: {
     search: peoplePath.path('search'),

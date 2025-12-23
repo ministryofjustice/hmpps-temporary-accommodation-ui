@@ -1,11 +1,11 @@
 import type { Request, RequestHandler, Response } from 'express'
-
 import type { NewExtension } from '@approved-premises/api'
+import { format as urlFormat } from 'url'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, ExtensionService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import { generateConflictBespokeError, getLatestExtension } from '../../../utils/bookingUtils'
-import { DateFormats } from '../../../utils/dateUtils'
+import { DateFormats, nightsBetween } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import {
   catchValidationErrorOrPropogate,
@@ -55,6 +55,21 @@ export default class ExtensionsController {
       const newExtension: NewExtension = {
         ...req.body,
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'newDepartureDate'),
+      }
+
+      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+
+      const lengthOfStay = nightsBetween(booking.arrivalDate, newExtension.newDepartureDate)
+
+      if (lengthOfStay >= 84) {
+        const address = urlFormat({
+          pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
+          query: {
+            newDepartureDate: newExtension.newDepartureDate,
+          },
+        })
+        res.redirect(address)
+        return
       }
 
       try {

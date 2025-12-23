@@ -1,5 +1,5 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
-import { addDays } from 'date-fns'
+import { addDays, subDays } from 'date-fns'
 import { Factory } from 'fishery'
 
 import type { Cas3Booking, Cas3Overstay } from '@approved-premises/api'
@@ -18,8 +18,10 @@ const soon = () =>
   DateFormats.dateObjToIsoDate(
     faker.date.soon({ days: 5, refDate: addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1) }),
   )
-const past = () => DateFormats.dateObjToIsoDate(faker.date.past())
-const future = () => DateFormats.dateObjToIsoDate(faker.date.future())
+const past = (options?: { refDate: Date | string; days: number }) =>
+  DateFormats.dateObjToIsoDate(faker.date.recent(options))
+const future = (options?: { refDate: Date | string; days: number }) =>
+  DateFormats.dateObjToIsoDate(faker.date.soon(options))
 
 class Cas3BookingFactory extends Factory<Cas3Booking> {
   provisional() {
@@ -45,9 +47,12 @@ class Cas3BookingFactory extends Factory<Cas3Booking> {
   }
 
   arrived() {
+    const arrivalDate = past()
+    const dayAfterArrival = addDays(arrivalDate, 1)
+
     return this.confirmed().params({
-      arrivalDate: past(),
-      departureDate: future(),
+      arrivalDate,
+      departureDate: future({ refDate: dayAfterArrival, days: 83 }),
       status: 'arrived',
       arrival: cas3ArrivalFactory.build(),
     })
@@ -56,9 +61,15 @@ class Cas3BookingFactory extends Factory<Cas3Booking> {
   departed() {
     const departure = cas3DepartureFactory.build()
 
+    const today = new Date()
+    const yesterday = subDays(today, 1)
+    const arrivalDate = faker.date.recent({ refDate: yesterday, days: 83 })
+    const dayAfterArrival = addDays(arrivalDate, 1)
+    const departureDate = faker.date.between({ from: dayAfterArrival, to: today })
+
     return this.arrived().params({
-      arrivalDate: past(),
-      departureDate: past(),
+      arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),
+      departureDate: DateFormats.dateObjToIsoDate(departureDate),
       status: 'departed',
       departure,
       departures: [departure],

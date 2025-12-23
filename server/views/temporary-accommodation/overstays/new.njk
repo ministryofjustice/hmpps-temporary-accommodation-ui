@@ -1,0 +1,75 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../../components/pop-details-header/macro.njk" import popDetailsHeader%}
+{% from "../../components/location-header/macro.njk" import locationHeader %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = "Extend booking - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.bookings.extensions.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id})
+    }) }}
+{% endblock %}
+
+{% block content %}
+    {% include "../../_messages.njk" %}
+
+    {{ showErrorSummary(errorSummary, errorTitle) }}
+
+    <div class="govuk-!-width-two-thirds">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-2">The new departure date means the booking is {{ nightsOverLimit }} nights over the limit</h1>
+        <p class="govuk-hint govuk-!-margin-bottom-8">CAS3 bookings are for up to 84 nights</p>
+
+        {{ popDetailsHeader(booking.person) }}
+        {{ locationHeader({ premises: premises, bedspace: bedspace }) }}
+
+        <form action="{{ addPlaceContext(paths.bookings.overstays.create({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id })) }}" method="post">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            <input type="hidden" name="newDepartureDate" value="{{ newDepartureDate }}">
+
+            {{ govukRadios({
+                name: "isAuthorised",
+                fieldset: {
+                    legend: {
+                        text: "Is this an authorised overstay?",
+                        isPageHeading: false,
+                        classes: "govuk-fieldset__legend--m"
+                    }
+                },
+                items: [
+                    {
+                        value: "yes",
+                        text: "Yes, authorised"
+                    },
+                    {
+                        value: "no",
+                        text: "No, unauthorised"
+                    }
+                ]
+            }, fetchContext()) }}
+
+            {{ govukTextarea({
+                name: "reason",
+                id: "reason",
+                label: {
+                    text: "Can you provide a reason for the overstay?",
+                    isPageHeading: false,
+                    classes: "govuk-label--m"
+                }
+            }, fetchContext()) }}
+
+            {{ govukButton({
+                text: "Save and continue",
+                preventDoubleClick: true
+            }) }}
+        </form>
+
+    </div>
+{% endblock %}

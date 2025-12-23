@@ -11,6 +11,7 @@ import ConfirmationsController from './confirmationsController'
 import DashboardController from './dashboardController'
 import DeparturesController from './departuresController'
 import ExtensionsController from './extensionsController'
+import OverstaysController from './overstaysController'
 import LostBedsController from './lostBedsController'
 import ReportsController from './reportsController'
 import TurnaroundsController from './turnaroundsController'
@@ -62,6 +63,12 @@ export const controllers = (services: Services) => {
     services.bookingService,
     services.extensionService,
   )
+  const overstaysController = new OverstaysController(
+    services.premisesService,
+    services.bedspaceService,
+    services.bookingService,
+    services.overstaysService,
+  )
   const cancellationsController = new CancellationsController(
     services.premisesService,
     services.bedspaceService,
@@ -99,6 +106,7 @@ export const controllers = (services: Services) => {
     arrivalsController,
     departuresController,
     extensionsController,
+    overstaysController,
     cancellationsController,
     turnaroundsController,
     reportsController,

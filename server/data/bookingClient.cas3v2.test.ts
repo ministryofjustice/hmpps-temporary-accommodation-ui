@@ -368,6 +368,7 @@ describeClient('BookingClient - CAS3v2', provider => {
           },
           headers: {
             authorization: `Bearer ${callConfig.token}`,
+            'X-Service-Name': 'temporary-accommodation',
           },
         },
         willRespondWith: {

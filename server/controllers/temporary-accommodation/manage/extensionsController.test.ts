@@ -1,3 +1,4 @@
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 import { BespokeError } from '../../../@types/ui'
@@ -24,6 +25,8 @@ import {
   insertGenericError,
 } from '../../../utils/validation'
 import ExtensionsController from './extensionsController'
+import { addDays } from 'date-fns'
+import { format as urlFormat } from 'url'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')
@@ -132,10 +135,13 @@ describe('ExtensionsController', () => {
   })
 
   describe('create', () => {
+    const booking = cas3BookingFactory.arrived().build({ extensions: [] })
+    bookingService.getBooking.mockResolvedValue(booking)
+
     it('creates an extension and redirects to the show booking page', async () => {
       const requestHandler = extensionsController.create()
 
-      const extension = cas3ExtensionFactory.build()
+      const extension = cas3ExtensionFactory.afterArrival(booking.arrivalDate).build()
       const newExtension = newExtensionFactory.build({
         ...extension,
       })
@@ -163,6 +169,33 @@ describe('ExtensionsController', () => {
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking departure date changed')
       expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
+    })
+
+    it('redirects to the overstay page when the extension puts the stay over 84 nights', async () => {
+      const requestHandler = extensionsController.create()
+
+      const extension = newExtensionFactory.build({
+        newDepartureDate: DateFormats.dateObjToIsoDate(addDays(booking.arrivalDate, 85)),
+      })
+
+      request.params = {
+        premisesId,
+        bedspaceId,
+        bookingId,
+      }
+      request.body = {
+        ...extension,
+        ...DateFormats.isoToDateAndTimeInputs(extension.newDepartureDate, 'newDepartureDate'),
+      }
+
+      await requestHandler(request, response, next)
+
+      const address = urlFormat({
+        pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
+        query: { newDepartureDate: extension.newDepartureDate },
+      })
+
+      expect(response.redirect).toHaveBeenCalledWith(address)
     })
 
     it('renders with errors if the API returns an error', async () => {

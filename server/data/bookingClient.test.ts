@@ -9,6 +9,7 @@ import {
   cancellationFactory,
   cas3NewBookingFactory,
   cas3NewDepartureFactory,
+  cas3NewOverstayFactory,
   confirmationFactory,
   departureFactory,
   newArrivalFactory,
@@ -159,6 +160,28 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
 
       const result = await bookingClient.extendBooking(premisesId, booking.id, payload)
       expect(result).toEqual(body)
+    })
+  })
+
+  describe('overstayBooking', () => {
+    it('should return the mocked data', async () => {
+      const premisesId = faker.string.uuid()
+      const bookingId = faker.string.uuid()
+      const overstay = cas3NewOverstayFactory.build()
+
+      const expected = {
+        bookingId,
+        createdAt: expect.any(String),
+        id: '6fced6ba-e775-479b-a5df-967e38672c2e',
+        previousDepartureDate: expect.any(String),
+        newDepartureDate: overstay.newDepartureDate,
+        reason: overstay.reason,
+        isAuthorised: overstay.isAuthorised,
+      }
+
+      const result = await bookingClient.overstayBooking(premisesId, bookingId, overstay)
+      console.log(result)
+      expect(result).toEqual(expected)
     })
   })
 

@@ -1,6 +1,7 @@
-import { fakerEN_GB as faker } from '@faker-js/faker'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
+import { addDays } from 'date-fns'
+import { format as urlFormat } from 'url'
 import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -25,8 +26,6 @@ import {
   insertGenericError,
 } from '../../../utils/validation'
 import ExtensionsController from './extensionsController'
-import { addDays } from 'date-fns'
-import { format as urlFormat } from 'url'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')

@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker/.'
+import { DateFormats } from '../utils/dateUtils'
 import bookingSearchResultsFactory from '../testutils/factories/bookingSearchResults'
 import BookingClient from './bookingClient'
 import { CallConfig } from './restClient'
@@ -166,21 +167,39 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
   describe('overstayBooking', () => {
     it('should return the mocked data', async () => {
       const premisesId = faker.string.uuid()
-      const bookingId = faker.string.uuid()
+      const booking = bookingFactory.build()
       const overstay = cas3NewOverstayFactory.build()
 
       const expected = {
-        bookingId,
-        createdAt: expect.any(String),
+        bookingId: booking.id,
+        createdAt: DateFormats.dateObjToIsoDate(new Date()),
         id: '6fced6ba-e775-479b-a5df-967e38672c2e',
-        previousDepartureDate: expect.any(String),
+        previousDepartureDate: DateFormats.dateObjToIsoDate(new Date()),
         newDepartureDate: overstay.newDepartureDate,
         reason: overstay.reason,
         isAuthorised: overstay.isAuthorised,
       }
 
-      const result = await bookingClient.overstayBooking(premisesId, bookingId, overstay)
-      console.log(result)
+      await provider.addInteraction({
+        state: 'Booking can be overstayed',
+        uponReceiving: 'a request to overstay a booking',
+        withRequest: {
+          method: 'POST',
+          path: `/premises/${premisesId}/bookings/${booking.id}/overstays`,
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: overstay,
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: expected,
+        },
+      })
+
+      const result = await bookingClient.overstayBooking(premisesId, booking.id, overstay)
+
       expect(result).toEqual(expected)
     })
   })

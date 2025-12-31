@@ -106,7 +106,7 @@ jobs:
 
   integration_test:
     name: "Integration testing 🧪"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out code
         uses: actions/checkout@v6.0.1
@@ -140,7 +140,7 @@ jobs:
   # TODO -- ENABLE_CAS3V2_API cleanup: remove the following test
   integration_test_cas3v2:
     name: "Integration testing 🧪 - CAS3v2 API"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out code
         uses: actions/checkout@v6.0.1

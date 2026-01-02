@@ -19,6 +19,7 @@ const confirmationsPath = singleBookingPath.path('confirm')
 const arrivalsPath = singleBookingPath.path('mark-as-active')
 const departuresPath = singleBookingPath.path('mark-as-departed')
 const extensionsPath = singleBookingPath.path('extend')
+const overstaysPath = singleBookingPath.path('overstay')
 const cancellationsPath = singleBookingPath.path('cancellations')
 const turnaroundsPath = singleBookingPath.path('turnarounds')
 
@@ -92,6 +93,10 @@ const paths: Record<string, any> = {
     extensions: {
       new: extensionsPath.path('new'),
       create: extensionsPath,
+    },
+    overstays: {
+      new: overstaysPath.path('new'),
+      create: overstaysPath,
     },
     cancellations: {
       new: cancellationsPath.path('new'),

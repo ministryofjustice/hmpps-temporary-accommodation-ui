@@ -96,6 +96,7 @@ const cas3Api = {
         create: cas3v2SingleBookingPath.path('cancellations'),
         show: cas3v2SingleBookingPath.path('cancellations/:cancellationId'),
       },
+      overstays: cas3v2SingleBookingPath.path('overstays'),
       turnarounds: cas3v2SingleBookingPath.path('turnarounds'),
     },
   },
@@ -149,6 +150,7 @@ export default {
       create: bookingsPath,
       show: singleBookingPath,
       extensions: singleBookingPath.path('extensions'),
+      overstays: singleBookingPath.path('overstays'),
       confirmations: singleBookingPath.path('confirmations'),
       cancellations: {
         create: singleBookingPath.path('cancellations'),

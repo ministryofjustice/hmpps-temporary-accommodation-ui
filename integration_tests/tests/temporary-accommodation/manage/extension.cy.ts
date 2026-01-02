@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker'
+import { addDays } from 'date-fns'
 import Page from '../../../../cypress_shared/pages/page'
 import BookingExtensionNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingExtensionNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
@@ -9,6 +11,7 @@ import {
   cas3VoidBedspaceFactory,
   newExtensionFactory,
 } from '../../../../server/testutils/factories'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 context('Booking extension', () => {
   beforeEach(() => {
@@ -34,12 +37,14 @@ context('Booking extension', () => {
     Page.verifyOnPage(BookingExtensionNewPage, premises, bedspace, booking)
   })
 
-  it('allows me to extend a booking', () => {
+  it('allows me to extend a booking within 84 days', () => {
     // Given I am signed in
     cy.signIn()
 
     // And there is a premises, a bedspace, and an arrived booking in the database
-    const booking = cas3BookingFactory.arrived().build()
+    const arrivalDate = DateFormats.dateObjToIsoDate(faker.date.soon())
+    const departureDate = DateFormats.dateObjToIsoDate(faker.date.soon({ days: 40, refDate: arrivalDate }))
+    const booking = cas3BookingFactory.arrived().build({ arrivalDate, departureDate })
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking extension page
@@ -47,7 +52,8 @@ context('Booking extension', () => {
     page.shouldShowBookingDetails()
 
     // And I fill out the form
-    const extension = cas3ExtensionFactory.build()
+    const newDepartureDate = DateFormats.dateObjToIsoDate(addDays(departureDate, 1))
+    const extension = cas3ExtensionFactory.build({ newDepartureDate })
     const newExtension = newExtensionFactory.build({
       ...extension,
     })

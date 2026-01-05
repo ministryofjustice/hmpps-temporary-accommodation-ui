@@ -1,6 +1,7 @@
 import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewCas3Arrival as NewArrival } from '@approved-premises/api'
+import { addDays } from 'date-fns'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { ArrivalService, BookingService, PremisesService } from '../../../services'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
@@ -68,10 +69,9 @@ export default class ArrivalsController {
         }
 
         if (newArrival.arrivalDate) {
-          const parsedDepartureDate = DateFormats.isoToDateObj(newArrival.expectedDepartureDate)
-          const maxAllowedDate = new Date(newArrival.arrivalDate)
-          maxAllowedDate.setDate(maxAllowedDate.getDate() + 84)
-          if (parsedDepartureDate > maxAllowedDate) {
+          const maxAllowedDate = DateFormats.dateObjToIsoDate(addDays(newArrival.arrivalDate, 84))
+
+          if (newArrival.expectedDepartureDate > maxAllowedDate) {
             const error = new Error()
             insertGenericError(error, 'expectedDepartureDate', 'exceedsMaxNights')
             throw error

@@ -242,6 +242,47 @@ describe('ArrivalsController', () => {
           paths.bookings.arrivals.new({ premisesId, bedspaceId, bookingId }),
         )
       })
+
+      it('accepts exactly 84 nights from arrival when crossing BST', async () => {
+        jest.useFakeTimers().setSystemTime(new Date('2026-01-08T12:00:00.000Z'))
+
+        const arrivalDate = '2026-01-08'
+        const expectedDepartureDate = '2026-04-02'
+        const arrival = cas3ArrivalFactory.build()
+        const newArrival = newArrivalFactory.build({ arrivalDate, expectedDepartureDate })
+
+        request.params = {
+          premisesId,
+          bedspaceId,
+          bookingId,
+        }
+        request.body = {
+          notes: newArrival.notes,
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
+        }
+
+        arrivalService.createArrival.mockResolvedValue(arrival)
+
+        const handler = arrivalsController.create()
+        await handler(request, response, next)
+
+        expect(arrivalService.createArrival).toHaveBeenCalledWith(
+          callConfig,
+          premisesId,
+          bookingId,
+          expect.objectContaining(newArrival),
+        )
+
+        expect(insertGenericError).not.toHaveBeenCalledWith(
+          expect.any(Error),
+          'expectedDepartureDate',
+          'exceedsMaxNights',
+        )
+        expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
+
+        jest.useRealTimers()
+      })
     })
   })
 

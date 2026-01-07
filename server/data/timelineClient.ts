@@ -13,7 +13,7 @@ export default class TimelineClient {
 
   async fetch(assessmentId: TemporaryAccommodationApplication['assessmentId']): Promise<Array<ReferralHistoryNote>> {
     return this.restClient.get({
-      path: paths.assessments.timeline({ assessmentId }),
+      path: paths.cas3.assessments.timeline({ assessmentId }),
     })
   }
 }

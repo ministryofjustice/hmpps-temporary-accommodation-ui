@@ -1,5 +1,4 @@
 import cancellationReasonsJson from './cancellation-reasons.json'
-import characteristicsJson from './characteristics.json'
 import premisesCharacteristicsJson from './premisesCharacteristics.json'
 import bedspaceCharacteristicsJson from './bedspaceCharacteristics.json'
 import departureReasonsJson from './departure-reasons.json'
@@ -94,21 +93,6 @@ const keyWorkers = {
       'Content-Type': 'application/json;charset=UTF-8',
     },
     jsonBody: keyWorkersJson,
-  },
-}
-
-// TODO -- ENABLE_CAS3V2_API cleanup: this stub will no longer be needed once CAS3V2 is enabled.
-const characteristics = {
-  request: {
-    method: 'GET',
-    url: '/reference-data/characteristics',
-  },
-  response: {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-    },
-    jsonBody: characteristicsJson,
   },
 }
 
@@ -209,7 +193,6 @@ export {
   cancellationReasons,
   lostBedReasons,
   keyWorkers,
-  characteristics,
   premisesCharacteristics,
   bedspaceCharacteristics,
   localAuthorities,

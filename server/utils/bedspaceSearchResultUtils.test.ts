@@ -3,10 +3,10 @@ import {
   assessmentFactory,
   cas3BedspaceCharacteristicsFactory,
   cas3BedspaceFactory,
+  cas3BedspaceSearchResultFactory,
+  cas3BedspaceSearchResultOverlapFactory,
   cas3PremisesCharacteristicsFactory,
   cas3PremisesFactory,
-  cas3v2BedspaceSearchResultFactory,
-  cas3v2BedspaceSearchResultOverlapFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
 import {
@@ -33,7 +33,7 @@ describe('BedspaceSearchResultUtils', () => {
         ],
       })
 
-      const searchResult = cas3v2BedspaceSearchResultFactory.forPremises(premises).build()
+      const searchResult = cas3BedspaceSearchResultFactory.forPremises(premises).build()
 
       expect(premisesKeyCharacteristics(searchResult)).toEqual(['Shared entrance', 'Shared property', 'Women only'])
     })
@@ -56,7 +56,7 @@ describe('BedspaceSearchResultUtils', () => {
         ],
       })
 
-      const searchResult = cas3v2BedspaceSearchResultFactory.forBedspace(premises, bedspace).build()
+      const searchResult = cas3BedspaceSearchResultFactory.forBedspace(premises, bedspace).build()
 
       expect(bedspaceKeyCharacteristics(searchResult)).toEqual([
         'Shared bathroom',
@@ -73,7 +73,7 @@ describe('BedspaceSearchResultUtils', () => {
     let person: FullPerson | RestrictedPerson
 
     const createOverLapResult = () =>
-      cas3v2BedspaceSearchResultOverlapFactory.build({
+      cas3BedspaceSearchResultOverlapFactory.build({
         crn: person.crn,
         days: overLapDays,
         personType: person.type,

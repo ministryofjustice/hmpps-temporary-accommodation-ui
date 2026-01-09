@@ -5,8 +5,11 @@
 export type ActiveOffence = {
     convictionId: number;
     deliusEventNumber: string;
+    mainCategoryDescription: string;
+    mainOffence: boolean;
     offenceDate?: string;
     offenceDescription: string;
     offenceId: string;
+    subCategoryDescription?: string;
 };
 

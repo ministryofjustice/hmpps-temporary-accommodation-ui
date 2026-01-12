@@ -1,7 +1,4 @@
-import {
-  TemporaryAccommodationApplication as Application,
-  TemporaryAccommodationAssessment as Assessment,
-} from '../../@types/shared'
+import { TemporaryAccommodationApplication as Application, Cas3Assessment as Assessment } from '../../@types/shared'
 import { FormSections } from '../../@types/ui'
 import Apply from '../../form-pages/apply'
 import CheckYourAnswers from '../../form-pages/apply/check-your-answers'

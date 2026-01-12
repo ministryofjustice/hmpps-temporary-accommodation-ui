@@ -15,7 +15,7 @@ import {
 import {
   Adjudication,
   TemporaryAccommodationApplication as Application,
-  TemporaryAccommodationAssessment as Assessment,
+  Cas3Assessment as Assessment,
   PersonRisks,
 } from '../../@types/shared'
 import { SessionDataError } from '../../utils/errors'

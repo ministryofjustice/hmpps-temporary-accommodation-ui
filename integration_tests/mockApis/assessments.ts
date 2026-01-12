@@ -1,10 +1,5 @@
 import type { SuperAgentRequest } from 'superagent'
-import {
-  Assessment,
-  Cas3Assessment,
-  Cas3AssessmentSummary,
-  TemporaryAccommodationAssessment,
-} from '@approved-premises/api'
+import { Cas3Assessment, Cas3AssessmentSummary } from '@approved-premises/api'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
@@ -43,10 +38,7 @@ export default {
         jsonBody: assessment,
       },
     }),
-  stubAssessmentReferralHistoryGet: (args: {
-    assessment: TemporaryAccommodationAssessment
-    referralNotes
-  }): SuperAgentRequest =>
+  stubAssessmentReferralHistoryGet: (args: { assessment: Cas3Assessment; referralNotes }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -58,7 +50,7 @@ export default {
         jsonBody: args.referralNotes,
       },
     }),
-  stubUnallocateAssessment: (assessment: Assessment): SuperAgentRequest =>
+  stubUnallocateAssessment: (assessment: Cas3Assessment): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'DELETE',
@@ -77,7 +69,7 @@ export default {
         url: api.assessments.allocation({ id: assessmentId }),
       })
     ).body.requests,
-  stubAllocateAssessment: (assessment: Assessment): SuperAgentRequest =>
+  stubAllocateAssessment: (assessment: Cas3Assessment): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
@@ -97,7 +89,7 @@ export default {
       })
     ).body.requests,
   stubReferralRejectionReasons: (): SuperAgentRequest => stubFor(referralRejectionReasons),
-  stubRejectAssessment: (assessment: Assessment): SuperAgentRequest =>
+  stubRejectAssessment: (assessment: Cas3Assessment): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
@@ -116,7 +108,7 @@ export default {
         url: api.cas3.assessments.rejection({ id: assessmentId }),
       })
     ).body.requests,
-  stubAcceptAssessment: (assessment: Assessment): SuperAgentRequest =>
+  stubAcceptAssessment: (assessment: Cas3Assessment): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
@@ -135,7 +127,7 @@ export default {
         url: api.cas3.assessments.acceptance({ id: assessmentId }),
       })
     ).body.requests,
-  stubCloseAssessment: (assessment: Assessment): SuperAgentRequest =>
+  stubCloseAssessment: (assessment: Cas3Assessment): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
@@ -154,7 +146,7 @@ export default {
         url: api.cas3.assessments.closure({ id: assessmentId }),
       })
     ).body.requests,
-  stubCreateAssessmentNote: (assessment: Assessment): SuperAgentRequest =>
+  stubCreateAssessmentNote: (assessment: Cas3Assessment): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',

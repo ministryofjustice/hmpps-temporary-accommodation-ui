@@ -1,8 +1,5 @@
 import type { TaskWithStatus } from '@approved-premises/ui'
-import {
-  TemporaryAccommodationApplication as Application,
-  TemporaryAccommodationAssessment as Assessment,
-} from '../@types/shared'
+import { TemporaryAccommodationApplication as Application, Cas3Assessment as Assessment } from '../@types/shared'
 import applyPaths from '../paths/apply'
 import assessPaths from '../paths/assess'
 import isAssessment from './assessments/isAssessment'

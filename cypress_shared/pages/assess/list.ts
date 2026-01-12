@@ -1,7 +1,4 @@
-import {
-  TemporaryAccommodationAssessment as Assessment,
-  Cas3AssessmentSummary as AssessmentSummary,
-} from '../../../server/@types/shared'
+import { Cas3Assessment as Assessment, Cas3AssessmentSummary as AssessmentSummary } from '../../../server/@types/shared'
 import paths from '../../../server/paths/temporary-accommodation/manage'
 import { statusName } from '../../../server/utils/assessmentStatusUtils'
 import { DateFormats } from '../../../server/utils/dateUtils'

@@ -10,4 +10,6 @@ export default Factory.define<ActiveOffence>(() => ({
   offenceId: faker.string.uuid(),
   convictionId: faker.number.int(),
   offenceDate: DateFormats.dateObjToIsoDate(faker.date.past()),
+  mainCategoryDescription: faker.lorem.sentence(),
+  mainOffence: faker.helpers.arrayElement([true, false]),
 }))

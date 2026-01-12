@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import { TemporaryAccommodationApplication, TemporaryAccommodationAssessment } from '@approved-premises/api'
+import { Cas3Assessment, TemporaryAccommodationApplication } from '@approved-premises/api'
 import type { DataServices, PageResponse, TaskListErrors } from '@approved-premises/ui'
 import { SessionData } from 'express-session'
 import { CallConfig } from '../data/restClient'
@@ -8,13 +8,13 @@ import { CallConfig } from '../data/restClient'
 export interface TasklistPageInterface {
   new (
     body: Record<string, unknown>,
-    document?: TemporaryAccommodationApplication | TemporaryAccommodationAssessment,
+    document?: TemporaryAccommodationApplication | Cas3Assessment,
     session?: Partial<SessionData>,
   ): TasklistPage
 
   initialize?(
     body: Record<string, unknown>,
-    document: TemporaryAccommodationApplication | TemporaryAccommodationAssessment,
+    document: TemporaryAccommodationApplication | Cas3Assessment,
     callConfig: CallConfig,
     dataServices: DataServices,
     session?: Partial<SessionData>,

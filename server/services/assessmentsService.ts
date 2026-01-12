@@ -7,7 +7,6 @@ import type {
   TableRow,
 } from '@approved-premises/ui'
 import type {
-  TemporaryAccommodationAssessment as Assessment,
   Cas3Assessment,
   Cas3AssessmentRejection,
   Cas3ReferralHistoryUserNote as NewNote,
@@ -105,7 +104,7 @@ export default class AssessmentsService {
     return assessmentClient.createNote(assessmentId, newNote)
   }
 
-  async updateAssessment(callConfig: CallConfig, assessmentId: string, updateData: Partial<Assessment>) {
+  async updateAssessment(callConfig: CallConfig, assessmentId: string, updateData: Partial<Cas3Assessment>) {
     const assessmentClient = this.assessmentClientFactory(callConfig)
     return assessmentClient.update(assessmentId, updateData)
   }

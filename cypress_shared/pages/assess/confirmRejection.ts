@@ -1,5 +1,5 @@
 import Page from '../page'
-import { TemporaryAccommodationAssessment as Assessment } from '../../../server/@types/shared'
+import { Cas3Assessment as Assessment } from '../../../server/@types/shared'
 import { personName } from '../../../server/utils/personUtils'
 
 export default class AssessmentRejectionConfirmPage extends Page {

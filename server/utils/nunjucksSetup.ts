@@ -29,7 +29,7 @@ import * as PhaseBannerUtils from './phaseBannerUtils'
 import * as PremisesUtils from './premisesUtils'
 import * as TasklistUtils from './taskListUtils'
 
-import { TemporaryAccommodationAssessment } from '../@types/shared'
+import { Cas3Assessment } from '../@types/shared'
 import bookingSummaryListRows from '../components/bookingInfo'
 import * as BookingListing from '../components/bookingListing'
 import lostBedSummaryListRows from '../components/lostBedInfo'
@@ -155,9 +155,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   )
 
   njkEnv.addGlobal('personStatusTag', (status: PersonStatus) => markAsSafe(personStatusTag(status)))
-  njkEnv.addGlobal('assessmentStatusTag', (status: TemporaryAccommodationAssessment['status']) =>
-    markAsSafe(assessmentStatusTag(status)),
-  )
+  njkEnv.addGlobal('assessmentStatusTag', (status: Cas3Assessment['status']) => markAsSafe(assessmentStatusTag(status)))
 
   njkEnv.addGlobal('mergeObjects', (obj1: Record<string, unknown>, obj2: Record<string, unknown>) => {
     return { ...obj1, ...obj2 }

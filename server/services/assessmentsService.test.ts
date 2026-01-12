@@ -1,6 +1,6 @@
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import {
-  TemporaryAccommodationAssessment as Assessment,
+  Cas3Assessment as Assessment,
   Cas3AssessmentRejection,
   TemporaryAccommodationAssessmentStatus,
 } from '@approved-premises/api'

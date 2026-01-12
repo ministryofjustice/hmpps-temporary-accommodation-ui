@@ -1,6 +1,6 @@
 import type {
   TemporaryAccommodationApplication as Application,
-  TemporaryAccommodationAssessment as Assessment,
+  Cas3Assessment as Assessment,
 } from '@approved-premises/api'
 import type {
   FormSection,

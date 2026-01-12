@@ -1,7 +1,4 @@
-import {
-  TemporaryAccommodationApplication as Application,
-  TemporaryAccommodationAssessment as Assessment,
-} from '@approved-premises/api'
+import { TemporaryAccommodationApplication as Application, Cas3Assessment as Assessment } from '@approved-premises/api'
 import { FormSections, Task, TaskStatus, TaskWithStatus } from '@approved-premises/ui'
 import getTaskStatus from '../form-pages/utils/getTaskStatus'
 import getSections from '../utils/assessments/getSections'

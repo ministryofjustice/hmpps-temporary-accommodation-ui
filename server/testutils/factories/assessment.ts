@@ -2,10 +2,7 @@
 
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
-import type {
-  TemporaryAccommodationAssessment as Assessment,
-  TemporaryAccommodationAssessmentStatus,
-} from '@approved-premises/api'
+import type { Cas3Assessment as Assessment, TemporaryAccommodationAssessmentStatus } from '@approved-premises/api'
 
 import summaryData from '../../../cypress_shared/fixtures/summaryData.json'
 import { DateFormats } from '../../utils/dateUtils'

@@ -1,7 +1,4 @@
-import {
-  TemporaryAccommodationApplication as Application,
-  TemporaryAccommodationAssessment as Assessment,
-} from '@approved-premises/api'
+import { TemporaryAccommodationApplication as Application, Cas3Assessment as Assessment } from '@approved-premises/api'
 import type { Task, TaskStatus } from '@approved-premises/ui'
 
 const getPageData = (applicationOrAssessment: Application | Assessment, taskName: string, pageName: string) => {

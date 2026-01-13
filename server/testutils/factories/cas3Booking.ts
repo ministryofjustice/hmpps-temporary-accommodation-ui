@@ -2,7 +2,7 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { addDays } from 'date-fns'
 import { Factory } from 'fishery'
 
-import type { Cas3Booking } from '@approved-premises/api'
+import type { Cas3Booking, Cas3Overstay } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 import { fullPersonFactory as personFactory } from './person'
 import cas3ArrivalFactory from './cas3Arrival'
@@ -125,6 +125,7 @@ export default Cas3BookingFactory.define(() => {
     cancellation: cancellations[0],
     cancellations,
     extensions: faker.helpers.arrayElements(cas3ExtensionFactory.buildList(5)),
+    overstays: [] as Array<Cas3Overstay>,
     turnaround: turnarounds[0],
     turnarounds,
     createdAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),

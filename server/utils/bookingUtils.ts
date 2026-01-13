@@ -435,5 +435,6 @@ export const bookingToCas3Booking = (booking: Booking | Cas3Booking): Cas3Bookin
       reference: bed?.name || '',
     },
     status: status as Cas3BookingStatus,
+    overstays: [],
   }
 }

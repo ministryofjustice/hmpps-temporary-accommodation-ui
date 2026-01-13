@@ -11,6 +11,7 @@ import type { Cas3Confirmation } from './Cas3Confirmation';
 import type { Cas3Departure } from './Cas3Departure';
 import type { Cas3Extension } from './Cas3Extension';
 import type { Cas3NonArrival } from './Cas3NonArrival';
+import type { Cas3Overstay } from './Cas3Overstay';
 import type { Cas3Turnaround } from './Cas3Turnaround';
 import type { FullPerson } from './FullPerson';
 import type { RestrictedPerson } from './RestrictedPerson';
@@ -46,6 +47,7 @@ export type Cas3Booking = {
     nonArrival?: Cas3NonArrival;
     originalArrivalDate: string;
     originalDepartureDate: string;
+    overstays: Array<Cas3Overstay>;
     person: (FullPerson | RestrictedPerson | UnknownPerson);
     premises: Cas3BookingPremisesSummary;
     status: Cas3BookingStatus;

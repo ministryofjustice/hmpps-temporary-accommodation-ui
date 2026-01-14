@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker/.'
-import { DateFormats } from '../utils/dateUtils'
 import bookingSearchResultsFactory from '../testutils/factories/bookingSearchResults'
 import BookingClient from './bookingClient'
 import { CallConfig } from './restClient'
@@ -10,7 +9,6 @@ import {
   cancellationFactory,
   cas3NewBookingFactory,
   cas3NewDepartureFactory,
-  cas3NewOverstayFactory,
   confirmationFactory,
   departureFactory,
   newArrivalFactory,
@@ -161,46 +159,6 @@ describeClient('BookingClient - ENABLE_CAS3V2_API flag off', provider => {
 
       const result = await bookingClient.extendBooking(premisesId, booking.id, payload)
       expect(result).toEqual(body)
-    })
-  })
-
-  describe('overstayBooking', () => {
-    it('should return the mocked data', async () => {
-      const premisesId = faker.string.uuid()
-      const booking = bookingFactory.build()
-      const overstay = cas3NewOverstayFactory.build()
-
-      const expected = {
-        bookingId: booking.id,
-        createdAt: DateFormats.dateObjToIsoDate(new Date()),
-        id: '6fced6ba-e775-479b-a5df-967e38672c2e',
-        previousDepartureDate: DateFormats.dateObjToIsoDate(new Date()),
-        newDepartureDate: overstay.newDepartureDate,
-        reason: overstay.reason,
-        isAuthorised: overstay.isAuthorised,
-      }
-
-      await provider.addInteraction({
-        state: 'Booking can be overstayed',
-        uponReceiving: 'a request to overstay a booking',
-        withRequest: {
-          method: 'POST',
-          path: `/premises/${premisesId}/bookings/${booking.id}/overstays`,
-          headers: {
-            authorization: `Bearer ${callConfig.token}`,
-          },
-          body: overstay,
-        },
-        willRespondWith: {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-          body: expected,
-        },
-      })
-
-      const result = await bookingClient.overstayBooking(premisesId, booking.id, overstay)
-
-      expect(result).toEqual(expected)
     })
   })
 

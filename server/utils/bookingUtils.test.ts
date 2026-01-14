@@ -1,3 +1,5 @@
+import { addDays } from 'date-fns'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
 import {
@@ -7,6 +9,7 @@ import {
   cas3BookingFactory,
   cas3DepartureFactory,
   cas3ExtensionFactory,
+  cas3OverstayFactory,
   personFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
@@ -18,11 +21,13 @@ import {
   generateConflictBespokeError,
   generateTurnaroundConflictBespokeError,
   getLatestExtension,
+  getOverstaySummary,
   isCas3Booking,
   shortenedOrExtended,
   statusName,
   statusTag,
 } from './bookingUtils'
+import { DateFormats } from './dateUtils'
 
 const premisesId = 'premisesId'
 const bedspaceId = 'bedspaceId'
@@ -693,6 +698,82 @@ describe('bookingUtils', () => {
         expect(isCas3Booking(result)).toEqual(true)
         expect(result.bedspace.reference).toEqual(booking.bed.name)
       })
+    })
+  })
+
+  describe('getOverstaySummary', () => {
+    it('returns "No" when there are no overstays', () => {
+      const booking = cas3BookingFactory.build({ overstays: [] })
+
+      const summary = getOverstaySummary(booking)
+
+      expect(summary).toEqual('No')
+    })
+
+    it('returns an authorised overstay summary without a reason', () => {
+      const arrivalDate = DateFormats.dateObjtoUIDate(faker.date.recent({ days: 60 }))
+      const newDepartureDate = DateFormats.dateObjToIsoDate(addDays(arrivalDate, 85))
+
+      const booking = cas3BookingFactory.build({
+        arrivalDate,
+        overstays: [cas3OverstayFactory.build({ newDepartureDate, isAuthorised: true, reason: '' })],
+      })
+
+      const summary = getOverstaySummary(booking)
+
+      expect(summary).toEqual('1 day, Authorised')
+    })
+
+    it('returns an unauthorised overstay summary without a reason', () => {
+      const arrivalDate = DateFormats.dateObjtoUIDate(faker.date.recent({ days: 60 }))
+      const newDepartureDate = DateFormats.dateObjtoUIDate(addDays(arrivalDate, 86))
+
+      const booking = cas3BookingFactory.build({
+        arrivalDate,
+        overstays: [cas3OverstayFactory.build({ newDepartureDate, isAuthorised: false, reason: '' })],
+      })
+
+      const summary = getOverstaySummary(booking)
+
+      expect(summary).toEqual('2 days, Not authorised')
+    })
+
+    it('returns an authorised overstay summary with a reason', () => {
+      const arrivalDate = DateFormats.dateObjtoUIDate(faker.date.recent({ days: 60 }))
+      const newDepartureDate = DateFormats.dateObjtoUIDate(addDays(arrivalDate, 87))
+      const booking = cas3BookingFactory.build({
+        arrivalDate,
+        overstays: [cas3OverstayFactory.build({ newDepartureDate, isAuthorised: true, reason: 'They asked nicely' })],
+      })
+
+      const summary = getOverstaySummary(booking)
+
+      expect(summary).toEqual('3 days, Authorised<br />They asked nicely')
+    })
+
+    it('returns the most recent overstay', () => {
+      const reasonLineOne = 'Lorem ipsum dolor sit amet'
+      const reasonLineTwo = 'consectetur adipiscing elit'
+
+      const arrivalDate = DateFormats.dateObjtoUIDate(faker.date.recent({ days: 60 }))
+      const newDepartureDate = DateFormats.dateObjtoUIDate(addDays(arrivalDate, 88))
+      const booking = cas3BookingFactory.build({
+        arrivalDate,
+        overstays: [
+          cas3OverstayFactory.build({ createdAt: DateFormats.dateObjToIsoDateTime(addDays(new Date(), -10)) }),
+          cas3OverstayFactory.build({
+            createdAt: DateFormats.dateObjToIsoDateTime(new Date()),
+            newDepartureDate,
+            isAuthorised: false,
+            reason: `${reasonLineOne}\n${reasonLineTwo}`,
+          }),
+          cas3OverstayFactory.build({ createdAt: DateFormats.dateObjToIsoDateTime(addDays(new Date(), -20)) }),
+        ],
+      })
+
+      const summary = getOverstaySummary(booking)
+
+      expect(summary).toEqual(`4 days, Not authorised<br />${reasonLineOne}<br />${reasonLineTwo}`)
     })
   })
 })

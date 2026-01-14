@@ -1,11 +1,11 @@
 import { SuperAgentRequest } from 'superagent'
 
-import { NewOverstay, Overstay } from '../../server/data/bookingClient'
+import { Cas3Overstay, NewOverstay } from '@approved-premises/api'
 import { getMatchingRequests, stubFor } from '.'
 import paths from '../../server/paths/api'
-import config from '../../server/config'
+import { bedspaceConflictResponseBody } from './utils'
 
-const cas3v2ApiEnabledStubs = {
+export default {
   stubOverstayCreate: (args: { premisesId: string; bookingId: string; overstay: NewOverstay }): SuperAgentRequest =>
     stubFor({
       request: {
@@ -19,36 +19,30 @@ const cas3v2ApiEnabledStubs = {
       },
     }),
 
-  verifyOverstayCreate: async (args: { premisesId: string; bookingId: string }) =>
-    (
-      await getMatchingRequests({
-        method: 'POST',
-        url: paths.cas3.premises.bookings.overstays({ premisesId: args.premisesId, bookingId: args.bookingId }),
-      })
-    ).body.requests,
-}
-
-const cas3v2ApiDisabledStubs = {
-  stubOverstayCreate: (args: { premisesId: string; bookingId: string; overstay: Overstay }): SuperAgentRequest =>
+  stubOverstayCreateConflictError: (args: {
+    premisesId: string
+    bookingId: string
+    conflictingBookingId: string
+  }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
-        url: paths.premises.bookings.overstays({ premisesId: args.premisesId, bookingId: args.bookingId }),
+        url: paths.cas3.premises.bookings.overstays({ premisesId: args.premisesId, bookingId: args.bookingId }),
       },
       response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: args.overstay,
+        status: 409,
+        headers: {
+          'Content-Type': 'application/problem+json;charset=UTF-8',
+        },
+        jsonBody: bedspaceConflictResponseBody(args.conflictingBookingId, 'booking'),
       },
     }),
 
-  verifyOverstayCreate: async (args: { premisesId: string; bookingId: string }) =>
-    (
-      await getMatchingRequests({
-        method: 'POST',
-        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/overstays`,
-      })
-    ).body.requests,
+  verifyOverstayCreate: async (args: { premisesId: string; bookingId: string }) => {
+    const result = await getMatchingRequests({
+      method: 'POST',
+      url: paths.cas3.premises.bookings.overstays({ premisesId: args.premisesId, bookingId: args.bookingId }),
+    })
+    return result.body.requests
+  },
 }
-
-export default config.flags.enableCas3v2Api ? cas3v2ApiEnabledStubs : cas3v2ApiDisabledStubs

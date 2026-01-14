@@ -1,10 +1,11 @@
-import type { Cas3Bedspace, Cas3Booking, Cas3Premises } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3Overstay, Cas3Premises, NewOverstay } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import PopDetailsHeaderComponent from '../../../components/popDetailsHeader'
 import Page from '../../page'
+import { nightsBetween } from '../../../../server/utils/dateUtils'
 
 export default class BookingShowPage extends Page {
   private readonly popDetailsHeaderComponent: PopDetailsHeaderComponent
@@ -78,6 +79,19 @@ export default class BookingShowPage extends Page {
     if (this.booking.assessmentId) {
       this.popDetailsHeaderComponent.shouldHaveNameLink(paths.assessments.summary({ id: this.booking.assessmentId }))
     }
+  }
+
+  shouldShowOverstay(overstay: NewOverstay | Cas3Overstay): void {
+    const days = nightsBetween(this.booking.arrivalDate, overstay.newDepartureDate) - 84
+    cy.get('.govuk-summary-list__key')
+      .contains('Overstay')
+      .siblings()
+      .first()
+      .within(() => {
+        cy.contains(`${days} day${days > 1 && 's'}`).should('exist')
+        cy.contains(overstay.isAuthorised ? 'Authorised' : 'Not authorised').should('exist')
+        overstay.reason.split('\n').forEach(reason => cy.contains(reason).should('exist'))
+      })
   }
 
   private clickAction(action: string) {

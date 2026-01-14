@@ -59,17 +59,19 @@ export default class ExtensionsController {
 
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
-      const lengthOfStay = nightsBetween(booking.arrivalDate, newExtension.newDepartureDate)
+      if (newExtension.newDepartureDate) {
+        const lengthOfStay = nightsBetween(booking.arrivalDate, newExtension.newDepartureDate)
 
-      if (lengthOfStay >= 84) {
-        const address = urlFormat({
-          pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
-          query: {
-            newDepartureDate: newExtension.newDepartureDate,
-          },
-        })
-        res.redirect(address)
-        return
+        if (lengthOfStay >= 84) {
+          const address = urlFormat({
+            pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
+            query: {
+              newDepartureDate: newExtension.newDepartureDate,
+            },
+          })
+          res.redirect(address)
+          return
+        }
       }
 
       try {

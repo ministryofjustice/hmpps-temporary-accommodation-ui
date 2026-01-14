@@ -11,6 +11,7 @@ import type {
   Cas3Extension,
   Cas3NewBooking,
   Cas3NewDeparture,
+  Cas3Overstay,
   Cas3Turnaround,
   Confirmation,
   Extension,
@@ -18,6 +19,7 @@ import type {
   NewCancellation,
   NewConfirmation,
   NewExtension,
+  NewOverstay,
   NewTurnaround,
   Turnaround,
 } from '@approved-premises/api'
@@ -29,26 +31,9 @@ import { appendQueryString } from '../utils/utils'
 import RestClient, { CallConfig } from './restClient'
 import { PaginatedResponse } from '../@types/ui'
 import { BookingSearchResult } from '../@types/shared'
-import { DateFormats } from '../utils/dateUtils'
 
 type SearchResponse = {
   results: Array<BookingSearchResult> | Array<Cas3BookingSearchResult>
-}
-
-export type Overstay = {
-  bookingId: string
-  createdAt: string
-  id: string
-  newDepartureDate: string
-  isAuthorised: boolean
-  previousDepartureDate: string
-  reason?: string
-}
-
-export type NewOverstay = {
-  newDepartureDate: string
-  isAuthorised: boolean
-  reason?: string
 }
 
 export default class BookingClient {
@@ -103,22 +88,10 @@ export default class BookingClient {
     })
   }
 
-  async overstayBooking(premisesId: string, bookingId: string, overstay: NewOverstay): Promise<Overstay> {
-    // returning static data until the backend work has been done
-    //
-    // return this.restClient.post<Overstay>({
-    //   path: paths.premises.bookings.overstays({ premisesId, bookingId }),
-    //   data: overstay,
-    // })
-    return new Promise<Overstay>(resolve => {
-      const result: Overstay = {
-        bookingId,
-        createdAt: DateFormats.dateObjToIsoDate(new Date()),
-        id: '6fced6ba-e775-479b-a5df-967e38672c2e',
-        previousDepartureDate: DateFormats.dateObjToIsoDate(new Date()),
-        ...overstay,
-      }
-      resolve(result)
+  async overstayBooking(premisesId: string, bookingId: string, overstay: NewOverstay): Promise<Cas3Overstay> {
+    return this.restClient.post<Cas3Overstay>({
+      path: paths.cas3.premises.bookings.overstays({ premisesId, bookingId }),
+      data: overstay,
     })
   }
 

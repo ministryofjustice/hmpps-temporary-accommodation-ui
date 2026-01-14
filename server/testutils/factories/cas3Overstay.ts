@@ -1,9 +1,9 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker'
+import { Cas3Overstay } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
-import { Overstay } from '../../data/bookingClient'
 
-export default Factory.define<Overstay>(() => {
+export default Factory.define<Cas3Overstay>(() => {
   const today = new Date()
   const eightyFourDays = today.setDate(today.getDate() + 84)
   return {

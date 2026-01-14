@@ -3,6 +3,7 @@ import describeClient from '../testutils/describeClient'
 import BookingClient from './bookingClient'
 import { CallConfig } from './restClient'
 import {
+  bookingFactory,
   cas3ArrivalFactory,
   cas3BookingFactory,
   cas3BookingSearchResultFactory,
@@ -13,6 +14,8 @@ import {
   cas3ExtensionFactory,
   cas3NewBookingFactory,
   cas3NewDepartureFactory,
+  cas3NewOverstayFactory,
+  cas3OverstayFactory,
   cas3TurnaroundFactory,
   newArrivalFactory,
   newCancellationFactory,
@@ -150,6 +153,37 @@ describeClient('BookingClient - CAS3v2', provider => {
 
       const result = await bookingClient.extendBooking(premisesId, booking.id, payload)
       expect(result).toEqual(extension)
+    })
+  })
+
+  describe('overstayBooking', () => {
+    it('should return the mocked data', async () => {
+      const premisesId = faker.string.uuid()
+      const booking = bookingFactory.build()
+      const newOverstay = cas3NewOverstayFactory.build()
+      const overstay = cas3OverstayFactory.build({ ...newOverstay })
+
+      await provider.addInteraction({
+        state: 'Booking can be overstayed',
+        uponReceiving: 'a request to overstay a booking',
+        withRequest: {
+          method: 'POST',
+          path: `/cas3/v2/premises/${premisesId}/bookings/${booking.id}/overstays`,
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: newOverstay,
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: overstay,
+        },
+      })
+
+      const result = await bookingClient.overstayBooking(premisesId, booking.id, newOverstay)
+
+      expect(result).toEqual(overstay)
     })
   })
 

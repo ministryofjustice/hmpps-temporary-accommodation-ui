@@ -114,7 +114,7 @@ context('Booking extension', () => {
     const page = BookingExtensionNewPage.visit(premises, bedspace, booking)
 
     // And I fill out the form with dates that conflict with an existing booking
-    const extension = cas3ExtensionFactory.build()
+    const extension = cas3ExtensionFactory.afterArrival(booking.arrivalDate).build()
     const newExtension = newExtensionFactory.build({
       ...extension,
     })

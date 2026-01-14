@@ -1,6 +1,6 @@
 import type { Cas3Booking } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
-import { statusTag } from '../utils/bookingUtils'
+import { getOverstaySummary, statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { isFullPerson } from '../utils/personUtils'
 
@@ -29,6 +29,13 @@ export const statusSummaryListRows = (booking: Cas3Booking): SummaryList['rows']
       value: htmlValue(statusTag(booking.status)),
     },
   ] as SummaryList['rows']
+
+  if (booking.overstays?.length > 0) {
+    rows.push({
+      key: textValue('Overstay'),
+      value: htmlValue(getOverstaySummary(booking)),
+    })
+  }
 
   return rows
 }

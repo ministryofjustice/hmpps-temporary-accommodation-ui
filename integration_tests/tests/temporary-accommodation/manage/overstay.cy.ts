@@ -5,8 +5,14 @@ import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommod
 import BookingOverstayNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingOverstayNew'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { cas3BookingFactory, cas3NewOverstayFactory, newExtensionFactory } from '../../../../server/testutils/factories'
+import {
+  cas3BookingFactory,
+  cas3NewOverstayFactory,
+  cas3OverstayFactory,
+  newExtensionFactory,
+} from '../../../../server/testutils/factories'
 import { DateFormats } from '../../../../server/utils/dateUtils'
+import Cas3NewOverstay from '../../../../server/testutils/factories/cas3NewOverstay'
 
 context('Booking overstay', () => {
   beforeEach(() => {
@@ -30,7 +36,8 @@ context('Booking overstay', () => {
     const extension = newExtensionFactory.build({ newDepartureDate: tooLateDepartureDate })
     extensionPage.completeForm(extension)
 
-    Page.verifyOnPage(BookingOverstayNewPage, premises, bedspace, booking)
+    const newOverstay = Cas3NewOverstay.build({ newDepartureDate: tooLateDepartureDate })
+    Page.verifyOnPage(BookingOverstayNewPage, premises, bedspace, booking, newOverstay)
   })
 
   it('allows me to record an overstay', () => {
@@ -48,10 +55,14 @@ context('Booking overstay', () => {
     const extension = newExtensionFactory.build({ newDepartureDate: tooLateDepartureDate })
     extensionPage.completeForm(extension)
 
-    const overstayPage = Page.verifyOnPage(BookingOverstayNewPage, premises, bedspace, booking)
+    const overstay = cas3OverstayFactory.build({ newDepartureDate: tooLateDepartureDate })
+    const overstayPage = Page.verifyOnPage(BookingOverstayNewPage, premises, bedspace, booking, overstay)
 
-    const newOverstay = cas3NewOverstayFactory.build({ newDepartureDate: tooLateDepartureDate })
+    const newOverstay = cas3NewOverstayFactory.build({ ...overstay })
     cy.task('stubOverstayCreate', { premisesId: premises.id, bookingId: booking.id, overstay: newOverstay })
+
+    booking.overstays = [overstay]
+    cy.task('stubBooking', { premisesId: premises.id, booking })
 
     overstayPage.completeForm(newOverstay)
 
@@ -68,5 +79,37 @@ context('Booking overstay', () => {
 
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, bedspace, booking)
     bookingShowPage.shouldShowBanner('Booking departure date changed')
+    bookingShowPage.shouldShowOverstay(newOverstay)
+  })
+
+  it('redirects to the extension page when the server returns an error', () => {
+    cy.signIn()
+
+    const booking = cas3BookingFactory.arrived().build()
+    const { premises, bedspace } = setupBookingStateStubs(booking)
+
+    const bookingShow = BookingShowPage.visit(premises, bedspace, booking)
+    bookingShow.clickExtendBookingButton()
+
+    const extensionPage = Page.verifyOnPage(BookingExtensionNewPage, premises, bedspace, booking)
+
+    const tooLateDepartureDate = DateFormats.dateObjToIsoDate(addDays(booking.departureDate, 85))
+    const extension = newExtensionFactory.build({ newDepartureDate: tooLateDepartureDate })
+    extensionPage.completeForm(extension)
+
+    const newOverstay = cas3NewOverstayFactory.build({ newDepartureDate: tooLateDepartureDate })
+    const overstayPage = Page.verifyOnPage(BookingOverstayNewPage, premises, bedspace, booking, newOverstay)
+
+    const conflictingBooking = cas3BookingFactory.confirmed().build()
+    cy.task('stubBooking', { premisesId: premises.id, booking: conflictingBooking })
+    cy.task('stubOverstayCreateConflictError', {
+      premisesId: premises.id,
+      bookingId: booking.id,
+      conflictingBookingId: conflictingBooking.id,
+    })
+    overstayPage.completeForm(newOverstay)
+
+    const erroredExtensionPage = Page.verifyOnPage(BookingExtensionNewPage, premises, bedspace, booking)
+    erroredExtensionPage.shouldShowDateConflictErrorMessages(conflictingBooking, 'booking')
   })
 })

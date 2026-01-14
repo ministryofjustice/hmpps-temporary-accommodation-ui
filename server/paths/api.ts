@@ -150,7 +150,6 @@ export default {
       create: bookingsPath,
       show: singleBookingPath,
       extensions: singleBookingPath.path('extensions'),
-      overstays: singleBookingPath.path('overstays'),
       confirmations: singleBookingPath.path('confirmations'),
       cancellations: {
         create: singleBookingPath.path('cancellations'),

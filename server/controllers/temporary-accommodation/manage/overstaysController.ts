@@ -1,11 +1,12 @@
 import { Request, RequestHandler, Response } from 'express'
+import { NewOverstay } from '@approved-premises/api'
 import { BookingService, OverstaysService, PremisesService } from '../../../services'
-import { catchValidationErrorOrPropogate } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, insertBespokeError, insertGenericError } from '../../../utils/validation'
 import extractCallConfig from '../../../utils/restUtils'
-import { NewOverstay } from '../../../data/bookingClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { nightsBetween } from '../../../utils/dateUtils'
 import BedspaceService from '../../../services/bedspaceService'
+import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 
 export default class OverstaysController {
   constructor(
@@ -62,6 +63,11 @@ export default class OverstaysController {
         req.flash('success', 'Booking departure date changed')
         res.redirect(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       } catch (err) {
+        if (err.status === 409) {
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, bedspaceId, 'singular'))
+          insertGenericError(err, 'newDepartureDate', 'conflict')
+        }
+
         catchValidationErrorOrPropogate(
           req,
           res,

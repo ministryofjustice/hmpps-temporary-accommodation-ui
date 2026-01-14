@@ -1,6 +1,6 @@
+import { Cas3Overstay, NewOverstay } from '@approved-premises/api'
 import { BookingClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
-import { NewOverstay, Overstay } from '../data/bookingClient'
 
 export default class OverstaysService {
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
@@ -10,7 +10,7 @@ export default class OverstaysService {
     premisesId: string,
     bookingId: string,
     overstay: NewOverstay,
-  ): Promise<Overstay> {
+  ): Promise<Cas3Overstay> {
     const bookingClient = this.bookingClientFactory(callConfig)
     return bookingClient.overstayBooking(premisesId, bookingId, overstay)
   }

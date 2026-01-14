@@ -1,7 +1,7 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker'
+import { NewOverstay } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
-import { NewOverstay } from '../../data/bookingClient'
 
 export default Factory.define<NewOverstay>(() => {
   const today = new Date()

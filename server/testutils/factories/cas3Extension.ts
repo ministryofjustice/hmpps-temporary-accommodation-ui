@@ -7,8 +7,7 @@ import { DateFormats } from '../../utils/dateUtils'
 
 class Cas3ExtensionFactory extends Factory<Cas3Extension> {
   afterArrival(arrival: string, days: number = 84) {
-    const arrivalDate = DateFormats.isoToDateObj(arrival)
-    const dayAfterArrival = addDays(arrivalDate, 1)
+    const dayAfterArrival = addDays(arrival, 1)
     const newDepartureDate = faker.date.soon({ refDate: dayAfterArrival, days: days - 1 })
     return this.params({
       newDepartureDate: DateFormats.dateObjToIsoDate(newDepartureDate),

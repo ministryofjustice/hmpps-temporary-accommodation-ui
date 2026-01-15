@@ -4,15 +4,11 @@ import {
   Cas3NewBedspace,
   Cas3ReferenceData,
   Cas3UpdateBedspace,
-  Characteristic,
 } from '@approved-premises/api'
 import { CallConfig } from '../data/restClient'
 import { RestClientBuilder } from '../data'
 import BedspaceClient from '../data/bedspaceClient'
 import ReferenceDataClient from '../data/referenceDataClient'
-import { characteristicToCas3ReferenceData, filterCharacteristics } from '../utils/characteristicUtils'
-import { populateBedspaceCharacteristics } from '../utils/bedspaceUtils'
-import config from '../config'
 
 export type BedspaceReferenceData = {
   characteristics: Array<Cas3ReferenceData>
@@ -26,33 +22,17 @@ export default class BedspaceService {
 
   async getSingleBedspace(callConfig: CallConfig, premisesId: string, bedspaceId: string): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return populateBedspaceCharacteristics(await bedspaceClient.find(premisesId, bedspaceId))
+    return bedspaceClient.find(premisesId, bedspaceId)
   }
 
   async getBedspacesForPremises(callConfig: CallConfig, premisesId: string): Promise<Cas3Bedspaces> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
 
-    const response = await bedspaceClient.get(premisesId)
-
-    return {
-      ...response,
-      bedspaces: response.bedspaces.map(bedspace => populateBedspaceCharacteristics(bedspace)),
-    }
+    return bedspaceClient.get(premisesId)
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<BedspaceReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
-
-    if (!config.flags.enableCas3v2Api) {
-      return {
-        characteristics: filterCharacteristics(
-          await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
-          'room',
-        )
-          .map(characteristicToCas3ReferenceData)
-          .sort((a, b) => a.description.localeCompare(b.description)),
-      }
-    }
 
     return {
       characteristics: (await referenceDataClient.getCas3ReferenceData('BEDSPACE_CHARACTERISTICS')).sort((a, b) =>
@@ -67,7 +47,7 @@ export default class BedspaceService {
     newBedspace: Cas3NewBedspace,
   ): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return populateBedspaceCharacteristics(await bedspaceClient.create(premisesId, newBedspace))
+    return bedspaceClient.create(premisesId, newBedspace)
   }
 
   async updateBedspace(
@@ -77,7 +57,7 @@ export default class BedspaceService {
     updatedBedspace: Cas3UpdateBedspace,
   ): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return populateBedspaceCharacteristics(await bedspaceClient.update(premisesId, bedspaceId, updatedBedspace))
+    return bedspaceClient.update(premisesId, bedspaceId, updatedBedspace)
   }
 
   async archiveBedspace(
@@ -102,12 +82,12 @@ export default class BedspaceService {
 
   async cancelArchiveBedspace(callConfig: CallConfig, premisesId: string, bedspaceId: string): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return populateBedspaceCharacteristics(await bedspaceClient.cancelArchive(premisesId, bedspaceId))
+    return bedspaceClient.cancelArchive(premisesId, bedspaceId)
   }
 
   async cancelUnarchiveBedspace(callConfig: CallConfig, premisesId: string, bedspaceId: string): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return populateBedspaceCharacteristics(await bedspaceClient.cancelUnarchive(premisesId, bedspaceId))
+    return bedspaceClient.cancelUnarchive(premisesId, bedspaceId)
   }
 
   async canArchiveBedspace(

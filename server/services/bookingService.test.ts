@@ -11,8 +11,6 @@ import {
 
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
-import * as bookingUtils from '../utils/bookingUtils'
-import * as lostBedUtils from '../utils/lostBedUtils'
 
 jest.mock('../data/bookingClient')
 jest.mock('../data/referenceDataClient')
@@ -35,9 +33,6 @@ describe('BookingService', () => {
     jest.clearAllMocks()
     bookingClientFactory.mockReturnValue(bookingClient)
     lostBedClientFactory.mockReturnValue(lostBedClient)
-
-    jest.spyOn(bookingUtils, 'bookingToCas3Booking')
-    jest.spyOn(lostBedUtils, 'lostBedToCas3VoidBedspace')
   })
 
   describe('createForBedspace', () => {
@@ -56,8 +51,6 @@ describe('BookingService', () => {
         ...newBooking,
         bedspaceId,
       })
-
-      expect(bookingUtils.bookingToCas3Booking).toHaveBeenCalledWith(booking)
     })
   })
 
@@ -117,19 +110,6 @@ describe('BookingService', () => {
 
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
       expect(lostBedClient.allLostBedsForPremisesId).toHaveBeenCalledWith(premisesId)
-
-      expect(bookingUtils.bookingToCas3Booking).toHaveBeenCalledWith(booking2, 0, [booking2, booking1])
-      expect(bookingUtils.bookingToCas3Booking).toHaveBeenCalledWith(booking1, 1, [booking2, booking1])
-      expect(lostBedUtils.lostBedToCas3VoidBedspace).toHaveBeenCalledWith(lostBed2, 0, [
-        lostBed2,
-        lostBedInactive,
-        lostBed1,
-      ])
-      expect(lostBedUtils.lostBedToCas3VoidBedspace).toHaveBeenCalledWith(lostBed1, 2, [
-        lostBed2,
-        lostBedInactive,
-        lostBed1,
-      ])
     })
 
     it('ignores bookings and lost beds for other rooms', async () => {
@@ -169,8 +149,6 @@ describe('BookingService', () => {
 
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
-
-      expect(bookingUtils.bookingToCas3Booking).toHaveBeenCalledWith(booking)
     })
   })
 })

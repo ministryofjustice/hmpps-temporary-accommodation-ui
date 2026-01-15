@@ -1,12 +1,4 @@
-import {
-  Booking,
-  Cancellation,
-  Cas3AssessmentSummary,
-  Cas3Booking,
-  Cas3BookingStatus,
-  Departure,
-  Extension,
-} from '@approved-premises/api'
+import { Cancellation, Cas3AssessmentSummary, Cas3Booking, Departure, Extension } from '@approved-premises/api'
 import type { BespokeError, PageHeadingBarItem, RadioItem } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
@@ -284,11 +276,7 @@ const parseConflictError = (detail: string): ParsedConflictError => {
 
   const detailWords = detail.split(' ')
   const conflictingEntityId = detailWords[detailWords.length - 1]
-  // TODO -- ENABLE_CAS3V2_API cleanup: once moved over to the CAS3v2 API, a Lost Bed conflict will always return
-  //  as 'Void Bedspace' rather than 'Lost Bed'
-  const conflictingEntityType = ['Lost Bed', 'Void Bedspace'].some(match => detail.includes(match))
-    ? 'lost-bed'
-    : 'booking'
+  const conflictingEntityType = detail.includes('Void Bedspace') ? 'lost-bed' : 'booking'
 
   return { conflictingEntityId, conflictingEntityType }
 }
@@ -417,24 +405,4 @@ const assessmentRadioItemText = (assessmentSummary: Cas3AssessmentSummary) => {
   return `CRN ${assessmentSummary.person.crn}, referral submitted ${DateFormats.isoDateToUIDate(
     assessmentSummary.createdAt,
   )}`
-}
-
-// TODO -- ENABLE_CAS3V2_API cleanup: remove the following casting utilities and all usages
-export const isCas3Booking = (booking: Booking | Cas3Booking): booking is Cas3Booking =>
-  Boolean((booking as Cas3Booking).bedspace)
-
-export const bookingToCas3Booking = (booking: Booking | Cas3Booking): Cas3Booking => {
-  if (isCas3Booking(booking)) return booking
-
-  const { bed, status, ...sharedProperties } = booking
-
-  return {
-    ...sharedProperties,
-    bedspace: {
-      id: bed?.id || '',
-      reference: bed?.name || '',
-    },
-    status: status as Cas3BookingStatus,
-    overstays: [],
-  }
 }

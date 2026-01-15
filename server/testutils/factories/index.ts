@@ -2,33 +2,14 @@ import acctAlertFactory from './acctAlert'
 import activeOffenceFactory from './activeOffence'
 import adjudicationFactory from './adjudication'
 import applicationFactory from './application'
-import arrivalFactory from './arrival'
 import assessmentFactory from './assessment'
 import assessmentSearchParametersFactory from './assessmentSearchParameters'
 import assessmentSummaryFactory from './assessmentSummary'
-import bedFactory from './bed'
 import bedspaceSearchApiParametersFactory from './bedspaceSearchApiParameters'
 import bedspaceSearchFormParametersFactory from './bedspaceSearchFormParameters'
-import bedspaceSearchResultFactory from './bedspaceSearchResult'
-import bedspaceSearchResultsFactory from './bedspaceSearchResults'
-import bookingFactory from './booking'
 import bookingSearchParametersFactory from './bookingSearchParameters'
-import bookingSearchResultFactory from './bookingSearchResult'
-import bookingSearchResultBedSummaryFactory from './bookingSearchResultBedSummary'
-import bookingSearchResultBookingSummaryFactory from './bookingSearchResultBookingSummary'
-import bookingSearchResultPersonSummaryFactory from './bookingSearchResultPersonSummary'
-import bookingSearchResultPremisesSummaryFactory from './bookingSearchResultPremisesSummary'
-import bookingSearchResultRoomSummaryFactory from './bookingSearchResultRoomSummary'
-import bookingSearchResultsFactory from './bookingSearchResults'
-import cancellationFactory from './cancellation'
-import characteristicFactory from './characteristic'
-import confirmationFactory from './confirmation'
-import departureFactory from './departure'
-import extensionFactory from './extension'
 import flagsFactory from './flags'
 import localAuthorityFactory from './localAuthority'
-import lostBedFactory from './lostBed'
-import lostBedCancellationFactory from './lostBedCancellation'
 import mappaFactory from './mappa'
 import newArrivalFactory from './newArrival'
 import newBookingFactory from './newBooking'
@@ -41,7 +22,6 @@ import newLostBedFactory from './newLostBed'
 import newLostBedCancellationFactory from './newLostBedCancellation'
 import newTurnaroundFactory from './newTurnaround'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
-import overlapFactory from './overlap'
 import pduFactory from './pdu'
 import { fullPersonFactory as personFactory, restrictedPersonFactory } from './person'
 import placeContextFactory from './placeContext'
@@ -83,9 +63,9 @@ import cas3VoidBedspaceFactory from './cas3VoidBedspace'
 import cas3VoidBedspaceReasonFactory from './cas3VoidBedspaceReason'
 import cas3VoidBedspaceRequestFactory from './cas3VoidBedspaceRequest'
 import cas3VoidBedspaceCancellationFactory from './cas3VoidBedspaceCancellation'
-import cas3v2BedspaceSearchResultOverlapFactory from './cas3v2BedspaceSearchResultOverlap'
-import cas3v2BedspaceSearchResultFactory from './cas3v2BedspaceSearchResult'
-import cas3v2BedspaceSearchResultsFactory from './cas3v2BedspaceSearchResults'
+import cas3BedspaceSearchResultOverlapFactory from './cas3BedspaceSearchResultOverlap'
+import cas3BedspaceSearchResultFactory from './cas3BedspaceSearchResult'
+import cas3BedspaceSearchResultsFactory from './cas3BedspaceSearchResults'
 import cas3PremisesCharacteristicsFactory from './cas3PremisesCharacteristics'
 import cas3BedspaceCharacteristicsFactory from './cas3BedspaceCharacteristics'
 import cas3ReferenceDataFactory from './cas3ReferenceData'
@@ -99,8 +79,6 @@ import risksFactory from './risks'
 import roshRisksFactory from './roshRisks'
 import tierEnvelopeFactory from './tierEnvelopeFactory'
 import { timelineEventsFactory } from './timelineEvents'
-import turnaroundFactory from './turnaround'
-import updateLostBedFactory from './updateLostBed'
 import userFactory, { userProfileFactory } from './user'
 
 export {
@@ -108,33 +86,14 @@ export {
   activeOffenceFactory,
   adjudicationFactory,
   applicationFactory,
-  arrivalFactory,
   assessmentFactory,
   assessmentSearchParametersFactory,
   assessmentSummaryFactory,
-  bedFactory,
   bedspaceSearchApiParametersFactory,
   bedspaceSearchFormParametersFactory,
-  bedspaceSearchResultFactory,
-  bedspaceSearchResultsFactory,
-  bookingFactory,
   bookingSearchParametersFactory,
-  bookingSearchResultBedSummaryFactory,
-  bookingSearchResultBookingSummaryFactory,
-  bookingSearchResultFactory,
-  bookingSearchResultPersonSummaryFactory,
-  bookingSearchResultPremisesSummaryFactory,
-  bookingSearchResultRoomSummaryFactory,
-  bookingSearchResultsFactory,
-  cancellationFactory,
-  characteristicFactory,
-  confirmationFactory,
-  departureFactory,
-  extensionFactory,
   flagsFactory,
   localAuthorityFactory,
-  lostBedCancellationFactory,
-  lostBedFactory,
   mappaFactory,
   newArrivalFactory,
   newBookingFactory,
@@ -148,7 +107,6 @@ export {
   cas3ReferralHistoryUserNoteFactory,
   newTurnaroundFactory,
   oasysSectionsFactory,
-  overlapFactory,
   pduFactory,
   personFactory,
   placeContextFactory,
@@ -189,9 +147,9 @@ export {
   cas3VoidBedspaceReasonFactory,
   cas3VoidBedspaceRequestFactory,
   cas3VoidBedspaceCancellationFactory,
-  cas3v2BedspaceSearchResultOverlapFactory,
-  cas3v2BedspaceSearchResultFactory,
-  cas3v2BedspaceSearchResultsFactory,
+  cas3BedspaceSearchResultOverlapFactory,
+  cas3BedspaceSearchResultFactory,
+  cas3BedspaceSearchResultsFactory,
   cas3PremisesCharacteristicsFactory,
   cas3BedspaceCharacteristicsFactory,
   cas3ReferenceDataFactory,
@@ -207,8 +165,6 @@ export {
   roshSummaryFactory,
   tierEnvelopeFactory,
   timelineEventsFactory,
-  turnaroundFactory,
-  updateLostBedFactory,
   userFactory,
   userProfileFactory,
 }

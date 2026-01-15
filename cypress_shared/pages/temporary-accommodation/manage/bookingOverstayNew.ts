@@ -18,9 +18,9 @@ export default class BookingOverstayNewPage extends Page {
   private readonly bookingInfoComponent: BookingInfoComponent
 
   constructor(
-    premises,
-    bedspace,
-    private readonly booking,
+    premises: Cas3Premises,
+    bedspace: Cas3Bedspace,
+    booking: Cas3Booking,
     overstay: Cas3Overstay | NewOverstay,
   ) {
     const overstayDays = nightsBetween(booking.arrivalDate, overstay.newDepartureDate) - 84

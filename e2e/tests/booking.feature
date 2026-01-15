@@ -57,6 +57,17 @@ Feature: Manage Temporary Accommodation - Booking
         When I enter change booking data correctly
         Then I should see the booking with confirmation of arrival change
 
+    Scenario: Creating a booking, confirming, marking as arrived, and reporting an overstay
+        Given I'm creating a booking
+        When I create a booking with all necessary details
+        Then I should see a confirmation for my new booking
+        When I confirm the booking
+        Then I should see the booking with the confirmed status
+        When I mark the booking as arrived
+        Then I should see the booking with the arrived status
+        When I report an overstay
+        Then I should see the booking with the overstay
+
     Scenario: Editing a booking's turnaround time
         Given I'm creating a booking
         And I create a booking with all necessary details

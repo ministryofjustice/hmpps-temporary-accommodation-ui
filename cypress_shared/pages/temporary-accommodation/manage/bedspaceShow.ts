@@ -1,10 +1,17 @@
-import type { Cas3Bedspace, Cas3Booking, Cas3Premises, Cas3VoidBedspace } from '@approved-premises/api'
+import type {
+  Cas3Bedspace,
+  Cas3Booking,
+  Cas3Overstay,
+  Cas3Premises,
+  Cas3VoidBedspace,
+  NewOverstay,
+} from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingListingComponent from '../../../components/bookingListing'
 import LostBedListingComponent from '../../../components/lostBedListing'
 import Page from '../../page'
-import { DateFormats } from '../../../../server/utils/dateUtils'
+import { DateFormats, nightsBetween } from '../../../../server/utils/dateUtils'
 import { createQueryString } from '../../../../server/utils/utils'
 
 export default class BedspaceShowPage extends Page {
@@ -208,5 +215,18 @@ export default class BedspaceShowPage extends Page {
     cy.get('.moj-cas-page-header-actions').within(() => {
       cy.root().should('not.contain', 'Archive')
     })
+  }
+
+  shouldShowOverstay(booking: Cas3Booking, overstay: NewOverstay | Cas3Overstay): void {
+    const days = nightsBetween(booking.arrivalDate, overstay.newDepartureDate) - 84
+    cy.get('.govuk-summary-list__key')
+      .contains('Overstay')
+      .siblings()
+      .first()
+      .within(() => {
+        cy.contains(`${days} day${days > 1 && 's'}`).should('exist')
+        cy.contains(overstay.isAuthorised ? 'Authorised' : 'Not authorised').should('exist')
+        overstay.reason.split('\n').forEach(reason => cy.contains(reason).should('exist'))
+      })
   }
 }

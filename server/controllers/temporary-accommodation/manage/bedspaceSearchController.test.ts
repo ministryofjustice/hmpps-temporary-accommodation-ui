@@ -7,8 +7,8 @@ import BedspaceSearchService from '../../../services/bedspaceSearchService'
 import {
   assessmentFactory,
   bedspaceSearchFormParametersFactory,
+  cas3BedspaceSearchResultsFactory,
   cas3ReferenceDataFactory,
-  cas3v2BedspaceSearchResultsFactory,
   placeContextFactory,
   referenceDataFactory,
 } from '../../../testutils/factories'
@@ -193,7 +193,7 @@ describe('BedspaceSearchController', () => {
           ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
         }
 
-        const searchResults = cas3v2BedspaceSearchResultsFactory.build()
+        const searchResults = cas3BedspaceSearchResultsFactory.build()
 
         bedspaceSearchService.search.mockResolvedValue(searchResults)
 
@@ -237,7 +237,7 @@ describe('BedspaceSearchController', () => {
           ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
         }
 
-        const searchResults = cas3v2BedspaceSearchResultsFactory.build()
+        const searchResults = cas3BedspaceSearchResultsFactory.build()
 
         bedspaceSearchService.search.mockResolvedValue(searchResults)
         ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
@@ -268,7 +268,7 @@ describe('BedspaceSearchController', () => {
         sexualRiskAttributes: ['uuid-3', null, 'uuid-4'],
       }
 
-      const searchResults = cas3v2BedspaceSearchResultsFactory.build()
+      const searchResults = cas3BedspaceSearchResultsFactory.build()
 
       bedspaceSearchService.search.mockResolvedValue(searchResults)
       ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)

@@ -9,10 +9,10 @@ import type {
   Cas3v2BedspaceSearchResult,
 } from '@approved-premises/api'
 import cas3PremisesFactory from './cas3Premises'
-import cas3v2BedspaceSearchResultOverlapFactory from './cas3v2BedspaceSearchResultOverlap'
+import cas3BedspaceSearchResultOverlapFactory from './cas3BedspaceSearchResultOverlap'
 import cas3BedspaceFactory from './cas3Bedspace'
 
-class Cas3v2BedspaceSearchResultFactory extends Factory<Cas3v2BedspaceSearchResult> {
+class Cas3BedspaceSearchResultFactory extends Factory<Cas3v2BedspaceSearchResult> {
   /* istanbul ignore next */
   forPremises(premises: Cas3Premises) {
     return this.params({
@@ -29,14 +29,14 @@ class Cas3v2BedspaceSearchResultFactory extends Factory<Cas3v2BedspaceSearchResu
   }
 }
 
-export default Cas3v2BedspaceSearchResultFactory.define(() => {
+export default Cas3BedspaceSearchResultFactory.define(() => {
   const premises = cas3PremisesFactory.build()
   const bedspace = cas3BedspaceFactory.build()
 
   return {
     premises: premisesToPremisesSummary(premises),
     bedspace: bedspaceToBedspaceSummary(bedspace),
-    overlaps: cas3v2BedspaceSearchResultOverlapFactory.buildList(faker.number.int({ min: 0, max: 5 })),
+    overlaps: cas3BedspaceSearchResultOverlapFactory.buildList(faker.number.int({ min: 0, max: 5 })),
   }
 })
 

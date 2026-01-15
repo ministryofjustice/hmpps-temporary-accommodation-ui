@@ -4,8 +4,6 @@ import type { LostBedClient, RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
-import { bookingToCas3Booking } from '../utils/bookingUtils'
-import { lostBedToCas3VoidBedspace } from '../utils/lostBedUtils'
 
 export type BookingListingEntry = {
   path: string
@@ -37,14 +35,12 @@ export default class BookingService {
   ): Promise<Cas3Booking> {
     const bookingClient = this.bookingClientFactory(callConfig)
 
-    return bookingToCas3Booking(
-      await bookingClient.create(premisesId, {
-        serviceName: 'temporary-accommodation',
-        enableTurnarounds: true,
-        ...booking,
-        bedspaceId,
-      }),
-    )
+    return bookingClient.create(premisesId, {
+      serviceName: 'temporary-accommodation',
+      enableTurnarounds: true,
+      ...booking,
+      bedspaceId,
+    })
   }
 
   async getListingEntries(
@@ -61,7 +57,6 @@ export default class BookingService {
     ])
 
     const bookingEntries: Array<BookingListingEntry & { sortingValue: string }> = premisesBookings
-      .map(bookingToCas3Booking)
       .filter(booking => booking.bedspace.id === bedspaceId)
       .map(booking => ({
         body: booking,
@@ -71,7 +66,6 @@ export default class BookingService {
       }))
 
     const lostBedEntries: Array<LostBedListingEntry & { sortingValue: string }> = premisesLostBeds
-      .map(lostBedToCas3VoidBedspace)
       .filter(lostBed => lostBed.bedspaceId === bedspaceId && lostBed.status === 'active')
       .map(lostBed => ({
         body: lostBed,
@@ -85,6 +79,6 @@ export default class BookingService {
 
   async getBooking(callConfig: CallConfig, premisesId: string, bookingId: string): Promise<Cas3Booking> {
     const bookingClient = this.bookingClientFactory(callConfig)
-    return bookingToCas3Booking(await bookingClient.find(premisesId, bookingId))
+    return bookingClient.find(premisesId, bookingId)
   }
 }

@@ -1,5 +1,3 @@
-import config from '../../server/config'
-
 const getCombinations = (arr: Array<string>) => {
   const result: Array<Array<string>> = []
   arr.forEach(item => {
@@ -57,8 +55,7 @@ const bedspaceConflictResponseBody = (entityId: string, entityType: 'booking' | 
   if (entityType === 'bedspace-end-date') {
     detail = 'BedSpace is archived from 2024-06-06 which overlaps with the desired dates'
   } else {
-    const lostBedLabel = config.flags.enableCas3v2Api ? 'Void Bedspace' : 'Lost Bed'
-    detail = `${entityType === 'booking' ? 'Booking' : lostBedLabel}: ${entityId}`
+    detail = `${entityType === 'booking' ? 'Booking' : 'Void Bedspace'}: ${entityId}`
   }
 
   return {

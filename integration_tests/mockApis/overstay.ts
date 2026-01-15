@@ -1,6 +1,6 @@
 import { SuperAgentRequest } from 'superagent'
 
-import { Cas3Overstay, NewOverstay } from '@approved-premises/api'
+import { NewOverstay } from '@approved-premises/api'
 import { getMatchingRequests, stubFor } from '.'
 import paths from '../../server/paths/api'
 import { bedspaceConflictResponseBody } from './utils'

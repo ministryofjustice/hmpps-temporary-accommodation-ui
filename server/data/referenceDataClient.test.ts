@@ -50,7 +50,7 @@ describeClient('ReferenceDataClient', provider => {
           uponReceiving: 'a request for reference data',
           withRequest: {
             method: 'GET',
-            path: `/reference-data/${key}`,
+            path: paths.referenceData({ objectType: key }),
             headers: {
               authorization: `Bearer ${callConfig.token}`,
             },

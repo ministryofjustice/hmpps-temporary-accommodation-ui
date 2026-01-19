@@ -5,7 +5,6 @@ import {
   DepartureReason,
   DestinationProvider,
   LocalAuthorityArea,
-  LostBedReason,
   MoveOnCategory,
   NonArrivalReason,
   ProbationDeliveryUnit,
@@ -14,6 +13,7 @@ import {
 import {
   cas3BedspaceCharacteristicsFactory,
   cas3PremisesCharacteristicsFactory,
+  cas3VoidBedspaceReasonFactory,
   referenceDataFactory,
 } from '../testutils/factories'
 import ReferenceDataClient from './referenceDataClient'
@@ -35,7 +35,6 @@ describeClient('ReferenceDataClient', provider => {
       'move-on-categories': referenceDataFactory.moveOnCategories().buildList(5) as Array<MoveOnCategory>,
       'destination-providers': referenceDataFactory.destinationProviders().buildList(5) as Array<DestinationProvider>,
       'cancellation-reasons': referenceDataFactory.cancellationReasons().buildList(5) as Array<CancellationReason>,
-      'lost-bed-reasons': referenceDataFactory.lostBedReasons().buildList(5) as Array<LostBedReason>,
       'non-arrival-reasons': referenceDataFactory.nonArrivalReason().buildList(5) as Array<NonArrivalReason>,
       'probation-regions': referenceDataFactory.probationRegion().buildList(5) as Array<ProbationRegion>,
       pdus: referenceDataFactory.pdu().buildList(5) as Array<ProbationDeliveryUnit>,
@@ -72,6 +71,7 @@ describeClient('ReferenceDataClient', provider => {
     it.each([
       ['PREMISES_CHARACTERISTICS', cas3PremisesCharacteristicsFactory.buildList(3)],
       ['BEDSPACE_CHARACTERISTICS', cas3BedspaceCharacteristicsFactory.buildList(3)],
+      ['VOID_BEDSPACE_REASONS', cas3VoidBedspaceReasonFactory.buildList(3)],
     ])('returns reference data of type %s', async (type: Cas3RefDataType, records) => {
       await provider.addInteraction({
         state: 'Reference data exists',

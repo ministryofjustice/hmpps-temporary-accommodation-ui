@@ -8,7 +8,6 @@ import characteristicsJson from '../stubs/characteristics.json'
 import departureReasonsJson from '../stubs/departure-reasons.json'
 import destinationProvidersJson from '../stubs/destination-providers.json'
 import localAuthoritiesJson from '../stubs/local-authorities.json'
-import lostBedReasonsJson from '../stubs/lost-bed-reasons.json'
 import moveOnCategoriesJson from '../stubs/move-on-categories.json'
 import nonArrivalReasonsJson from '../stubs/non-arrival-reasons.json'
 import pdusJson from '../stubs/pdus.json'
@@ -34,11 +33,6 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
   cancellationReasons() {
     const data = faker.helpers.arrayElement(cancellationReasonsJson)
     return this.params(data)
-  }
-
-  lostBedReasons() {
-    const data = faker.helpers.arrayElement(lostBedReasonsJson)
-    return this.params(data as ReferenceData)
   }
 
   nonArrivalReason() {

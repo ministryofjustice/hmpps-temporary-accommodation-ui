@@ -71,7 +71,10 @@ const cancellationReasons = {
 const lostBedReasons = {
   request: {
     method: 'GET',
-    url: paths.referenceData({ objectType: 'lost-bed-reasons' }),
+    urlPath: paths.cas3.referenceData({}),
+    queryParameters: {
+      type: { equalTo: 'VOID_BEDSPACE_REASONS' },
+    },
   },
   response: {
     status: 200,

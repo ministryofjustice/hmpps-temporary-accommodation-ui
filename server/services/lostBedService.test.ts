@@ -45,22 +45,24 @@ describe('LostBedService', () => {
   })
 
   describe('getReferenceData', () => {
-    it('should return the lost bed reasons data needed', async () => {
-      const lostBedReasons = cas3VoidBedspaceReasonFactory.buildList(2)
+    it('should return the lost bed reasons data needed ordered by name', async () => {
+      const lostBedReasons = [
+        cas3VoidBedspaceReasonFactory.build({ name: 'Reason B' }),
+        cas3VoidBedspaceReasonFactory.build({ name: 'Reason A' }),
+        cas3VoidBedspaceReasonFactory.build({ name: 'Reason C' }),
+      ]
 
-      referenceDataClient.getReferenceData.mockImplementation(category => {
-        return Promise.resolve(
-          {
-            'lost-bed-reasons': lostBedReasons,
-          }[category],
-        )
-      })
+      referenceDataClient.getCas3ReferenceData.mockResolvedValue(lostBedReasons)
 
       const result = await service.getReferenceData(callConfig)
 
-      expect(result).toEqual(lostBedReasons)
+      expect(result).toEqual([
+        { name: 'Reason A', id: expect.any(String) },
+        { name: 'Reason B', id: expect.any(String) },
+        { name: 'Reason C', id: expect.any(String) },
+      ])
       expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('lost-bed-reasons')
+      expect(referenceDataClient.getCas3ReferenceData).toHaveBeenCalledWith('VOID_BEDSPACE_REASONS')
     })
   })
 

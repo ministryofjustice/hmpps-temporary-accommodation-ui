@@ -57,7 +57,7 @@ export default class BookingClient {
     })
   }
 
-  async overstayBooking(premisesId: string, bookingId: string, overstay: NewOverstay): Promise<Cas3Overstay> {
+  async overstayBooking(premisesId: string, bookingId: string, overstay: NewOverstay) {
     return this.restClient.post<Cas3Overstay>({
       path: paths.cas3.premises.bookings.overstays({ premisesId, bookingId }),
       data: overstay,

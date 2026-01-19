@@ -112,4 +112,29 @@ context('Booking overstay', () => {
     const erroredExtensionPage = Page.verifyOnPage(BookingExtensionNewPage, premises, bedspace, booking)
     erroredExtensionPage.shouldShowDateConflictErrorMessages(conflictingBooking, 'booking')
   })
+
+  it("returns to the overstay page if the user doesn't select whether the stay is authorised", () => {
+    cy.signIn()
+
+    const booking = cas3BookingFactory.arrived().build()
+    const { premises, bedspace } = setupBookingStateStubs(booking)
+
+    const bookingShow = BookingShowPage.visit(premises, bedspace, booking)
+    bookingShow.clickExtendBookingButton()
+
+    const extensionPage = Page.verifyOnPage(BookingExtensionNewPage, premises, bedspace, booking)
+
+    const tooLateDepartureDate = DateFormats.dateObjToIsoDate(addDays(booking.departureDate, 85))
+    const extension = newExtensionFactory.build({ newDepartureDate: tooLateDepartureDate })
+    extensionPage.completeForm(extension)
+
+    const newOverstay = cas3NewOverstayFactory.build({ newDepartureDate: tooLateDepartureDate })
+    const overstayPage = Page.verifyOnPage(BookingOverstayNewPage, premises, bedspace, booking, newOverstay)
+
+    overstayPage.enterReason(newOverstay.reason)
+    overstayPage.clickSubmit()
+
+    Page.verifyOnPage(BookingOverstayNewPage, premises, bedspace, booking, newOverstay)
+    overstayPage.shouldShowIsAuthorisedErrorMessage()
+  })
 })

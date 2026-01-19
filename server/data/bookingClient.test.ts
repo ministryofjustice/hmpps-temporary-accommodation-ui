@@ -160,7 +160,7 @@ describeClient('BookingClient', provider => {
         uponReceiving: 'a request to overstay a booking',
         withRequest: {
           method: 'POST',
-          path: `/cas3/v2/premises/${premisesId}/bookings/${booking.id}/overstays`,
+          path: paths.cas3.premises.bookings.overstays({ premisesId, bookingId: booking.id }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },

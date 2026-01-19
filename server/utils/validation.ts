@@ -45,6 +45,19 @@ export const catchValidationErrorOrPropogate = (
   response.redirect(redirectPath)
 }
 
+export const addValidationErrorsAndRedirect = (
+  req: Request,
+  res: Response,
+  errors: Record<string, string>,
+  redirectUrl: string,
+): void => {
+  req.flash('errors', generateErrorMessages(errors))
+  req.flash('errorSummary', generateErrorSummary(errors))
+  req.flash('userInput', req.body)
+
+  res.redirect(redirectUrl)
+}
+
 export const catchAPIErrorOrPropogate = (request: Request, response: Response, error: SanitisedError | Error): void => {
   if (error instanceof TasklistAPIError) {
     request.flash('errors', {

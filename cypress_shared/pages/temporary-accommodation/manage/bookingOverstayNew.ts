@@ -24,7 +24,9 @@ export default class BookingOverstayNewPage extends Page {
     overstay: Cas3Overstay | NewOverstay,
   ) {
     const overstayDays = nightsBetween(booking.arrivalDate, overstay.newDepartureDate) - 84
-    super(`The new departure date means the booking is ${overstayDays} nights over the limit`)
+    super(
+      `The new departure date means the booking is ${overstayDays} ${overstayDays === 1 ? 'night' : 'nights'} over the limit`,
+    )
 
     this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, bedspace, 'booking')
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
@@ -55,15 +57,26 @@ export default class BookingOverstayNewPage extends Page {
     this.checkRadioByNameAndValue('isAuthorised', newOverstay.isAuthorised ? 'yes' : 'no')
 
     if ('reason' in newOverstay) {
-      this.getLabel('Reason for overstay (optional)')
-      this.getTextInputByIdAndEnterDetails('reason', newOverstay.reason)
+      this.enterReason(newOverstay.reason)
     }
     this.clickSubmit()
+  }
+
+  enterReason(reason: string) {
+    this.getLabel('Reason for overstay (optional)')
+    this.getTextInputByIdAndEnterDetails('reason', reason)
   }
 
   clearForm(): void {
     cy.get('body').then($body => {
       if ($body.find('#reason').length) this.getTextInputByIdAndClear('reason')
     })
+  }
+
+  shouldShowIsAuthorisedErrorMessage() {
+    cy.get('.govuk-error-summary h2').should('contain', 'There is a problem')
+    cy.get('.govuk-error-summary ul')
+      .contains('You must confirm whether the overstay is authorised')
+      .should('have.attr', 'href', '#isAuthorised')
   }
 }

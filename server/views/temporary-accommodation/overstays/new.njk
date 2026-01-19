@@ -24,7 +24,7 @@
     {{ showErrorSummary(errorSummary, errorTitle) }}
 
     <div class="govuk-!-width-two-thirds">
-        <h1 class="govuk-heading-l govuk-!-margin-bottom-2">The new departure date means the booking is {{ nightsOverLimit }} nights over the limit</h1>
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-2">{{ title }}</h1>
         <p class="govuk-hint govuk-!-margin-bottom-8">CAS3 bookings are for up to 84 nights</p>
 
         {{ popDetailsHeader(booking.person) }}
@@ -52,7 +52,8 @@
                         value: "no",
                         text: "No, unauthorised"
                     }
-                ]
+                ],
+                errorMessage: errors.isAuthorised
             }, fetchContext()) }}
 
             {{ govukTextarea({
@@ -60,11 +61,10 @@
                 id: "reason",
                 label: {
                     isPageHeading: false,
-                    classes: "govuk-label--m"
-                },
-                label: {
+                    classes: "govuk-label--m",
                     text: "Reason for overstay (optional)"
-                }
+                },
+                value: reason
             }, fetchContext()) }}
 
             {{ govukButton({

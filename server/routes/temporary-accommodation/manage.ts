@@ -356,6 +356,10 @@ export default function routes(controllers: Controllers, services: Services, rou
         auditEvent: 'CREATE_BOOKING_OVERSTAY_FAILURE',
       },
       {
+        path: paths.bookings.extensions.new.pattern,
+        auditEvent: 'CREATE_BOOKING_OVERSTAY_FAILURE',
+      },
+      {
         path: paths.bookings.show.pattern,
         auditEvent: 'CREATE_BOOKING_OVERSTAY_SUCCESS',
       },

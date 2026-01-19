@@ -6,7 +6,11 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import BookingDepartureEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureEdit'
 import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import { cas3BookingFactory, cas3DepartureFactory, newDepartureFactory } from '../../../../server/testutils/factories'
+import {
+  cas3BookingFactory,
+  cas3DepartureFactory,
+  cas3NewDepartureFactory,
+} from '../../../../server/testutils/factories'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 
 Given('I mark the booking as departed', () => {
@@ -22,7 +26,7 @@ Given('I mark the booking as departed', () => {
         }),
       ),
     })
-    const newDeparture = newDepartureFactory.build({
+    const newDeparture = cas3NewDepartureFactory.build({
       ...departure,
       reasonId: departure.reason.id,
       moveOnCategoryId: departure.moveOnCategory.id,
@@ -64,7 +68,7 @@ Given('I edit the departed booking', () => {
         faker.date.future({ years: 1, refDate: DateFormats.isoToDateObj(this.booking.arrivalDate) }),
       ),
     })
-    const newDeparture = newDepartureFactory.build({
+    const newDeparture = cas3NewDepartureFactory.build({
       ...departure,
       reasonId: departure.reason.id,
       moveOnCategoryId: departure.moveOnCategory.id,

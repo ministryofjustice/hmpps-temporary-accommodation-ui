@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3ReferenceData = {
-    description: string;
+    description?: string;
     id: string;
     name?: string;
 };

@@ -14,7 +14,6 @@ import {
   cas3BookingFactory,
   cas3NewBookingFactory,
   cas3PremisesFactory,
-  newBookingFactory,
   personFactory,
   placeContextFactory,
 } from '../../../testutils/factories'
@@ -159,7 +158,7 @@ describe('BookingsController', () => {
 
   describe('selectAssessment', () => {
     it('renders the select assessment page', async () => {
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
       const person = personFactory.build()
       const assessmentSummaries = assessmentSummaryFactory.buildList(5)
 
@@ -204,7 +203,7 @@ describe('BookingsController', () => {
     })
 
     it('renders the select with a "no assessment" assessment ID if the Apply feature is disabled', async () => {
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
       const person = personFactory.build()
       const assessmentSummaries = assessmentSummaryFactory.buildList(5)
 
@@ -246,7 +245,7 @@ describe('BookingsController', () => {
     })
 
     it('renders the select with a "no assessment" assessment ID if there are no assessments for the given CRN', async () => {
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
       const person = personFactory.build()
 
       request.params = {
@@ -285,7 +284,7 @@ describe('BookingsController', () => {
     })
 
     it('prefills the asssessment ID if present in a place context', async () => {
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
       const person = personFactory.build({
         crn: newBooking.crn,
       })
@@ -331,8 +330,8 @@ describe('BookingsController', () => {
         'crn is empty',
         {
           crn: '',
-          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().arrivalDate, 'arrivalDate'),
-          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().departureDate, 'departureDate'),
+          ...DateFormats.isoToDateAndTimeInputs(cas3NewBookingFactory.build().arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(cas3NewBookingFactory.build().departureDate, 'departureDate'),
         },
         'crn',
         'empty',
@@ -341,7 +340,7 @@ describe('BookingsController', () => {
         'arrival date is empty',
         {
           crn: 'some-crn',
-          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().departureDate, 'departureDate'),
+          ...DateFormats.isoToDateAndTimeInputs(cas3NewBookingFactory.build().departureDate, 'departureDate'),
         },
         'arrivalDate',
         'empty',
@@ -350,8 +349,8 @@ describe('BookingsController', () => {
         'arrival date is invalid',
         {
           crn: 'some-crn',
-          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().arrivalDate, 'arrivalDate'),
-          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().departureDate, 'departureDate'),
+          ...DateFormats.isoToDateAndTimeInputs(cas3NewBookingFactory.build().arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(cas3NewBookingFactory.build().departureDate, 'departureDate'),
           'arrivalDate-day': 'not-a-number',
         },
         'arrivalDate',
@@ -361,7 +360,7 @@ describe('BookingsController', () => {
         'departure date is empty',
         {
           crn: 'some-crn',
-          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().departureDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(cas3NewBookingFactory.build().departureDate, 'arrivalDate'),
         },
         'departureDate',
         'empty',
@@ -370,8 +369,8 @@ describe('BookingsController', () => {
         'departure date is invalid',
         {
           crn: 'some-crn',
-          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().arrivalDate, 'arrivalDate'),
-          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().departureDate, 'departureDate'),
+          ...DateFormats.isoToDateAndTimeInputs(cas3NewBookingFactory.build().arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(cas3NewBookingFactory.build().departureDate, 'departureDate'),
           'departureDate-day': 'not-a-number',
         },
         'departureDate',
@@ -381,7 +380,7 @@ describe('BookingsController', () => {
         'maximum stay exceeded 84 days',
         {
           crn: 'some-crn',
-          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(cas3NewBookingFactory.build().arrivalDate, 'arrivalDate'),
           ...DateFormats.isoToDateAndTimeInputs('2125-12-30', 'departureDate'),
         },
         'departureDate',
@@ -413,7 +412,7 @@ describe('BookingsController', () => {
     )
 
     it('renders with an error if the API returns a 404 person not found status', async () => {
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
 
       request.params = {
         premisesId,
@@ -442,7 +441,7 @@ describe('BookingsController', () => {
     })
 
     it('renders with an error if the API returns a 403 forbidden status', async () => {
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
 
       request.params = {
         premisesId,
@@ -471,7 +470,7 @@ describe('BookingsController', () => {
     })
 
     it('clears any place context if the received CRN differs from that in the place context', async () => {
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
       const person = personFactory.build({})
       const placeContext = placeContextFactory.build({
         assessment: assessmentFactory.build({
@@ -531,7 +530,7 @@ describe('BookingsController', () => {
 
   describe('confirm', () => {
     it('renders the confirmation page', async () => {
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
       const person = personFactory.build()
@@ -637,7 +636,7 @@ describe('BookingsController', () => {
     })
 
     it('renders with an error if no assessment ID is provided', async () => {
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
       const person = personFactory.build()
@@ -675,7 +674,7 @@ describe('BookingsController', () => {
     })
 
     it('clears any place context if the received assessment ID differs from that in the place context', async () => {
-      const newBooking = newBookingFactory.build()
+      const newBooking = cas3NewBookingFactory.build()
       const premises = cas3PremisesFactory.build()
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
       const person = personFactory.build()
@@ -753,7 +752,7 @@ describe('BookingsController', () => {
       const crnWithSpaces = `  ${crn}  `
 
       const booking = cas3BookingFactory.build()
-      const newBooking = newBookingFactory.build({
+      const newBooking = cas3NewBookingFactory.build({
         ...booking,
         crn: crnWithSpaces,
       })
@@ -788,7 +787,7 @@ describe('BookingsController', () => {
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
 
       const booking = cas3BookingFactory.build()
-      const newBooking = newBookingFactory.build({
+      const newBooking = cas3NewBookingFactory.build({
         ...booking,
       })
 
@@ -834,7 +833,7 @@ describe('BookingsController', () => {
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
       const booking = cas3BookingFactory.build()
-      const newBooking = newBookingFactory.build({
+      const newBooking = cas3NewBookingFactory.build({
         ...booking,
       })
 
@@ -875,7 +874,7 @@ describe('BookingsController', () => {
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
       const booking = cas3BookingFactory.build()
-      const newBooking = newBookingFactory.build({
+      const newBooking = cas3NewBookingFactory.build({
         ...booking,
       })
 
@@ -912,7 +911,7 @@ describe('BookingsController', () => {
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
       const booking = cas3BookingFactory.build()
-      const newBooking = newBookingFactory.build({
+      const newBooking = cas3NewBookingFactory.build({
         ...booking,
       })
 

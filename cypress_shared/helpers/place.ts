@@ -14,8 +14,8 @@ import {
   cas3BedspaceFactory,
   cas3BedspaceSearchResultsFactory,
   cas3BookingFactory,
+  cas3NewBookingFactory,
   cas3VoidBedspaceFactory,
-  newBookingFactory,
   timelineEventsFactory,
 } from '../../server/testutils/factories'
 import type { TimeLineFactory } from '../../server/testutils/factories/timelineEvents'
@@ -178,7 +178,7 @@ export default class PlaceHelper {
     const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.cas3Bedspace)
 
     // When I fill out the form
-    const newBooking = newBookingFactory.build({
+    const newBooking = cas3NewBookingFactory.build({
       crn: this.person.crn,
     })
     bookingNewPage.completeForm(newBooking)

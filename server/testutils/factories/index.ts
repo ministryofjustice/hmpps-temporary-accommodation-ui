@@ -12,14 +12,10 @@ import flagsFactory from './flags'
 import localAuthorityFactory from './localAuthority'
 import mappaFactory from './mappa'
 import newArrivalFactory from './newArrival'
-import newBookingFactory from './newBooking'
 import newCancellationFactory from './newCancellation'
 import newConfirmationFactory from './newConfirmation'
 import cas3NewDepartureFactory from './cas3NewDeparture'
-import newDepartureFactory from './newDeparture'
 import newExtensionFactory from './newExtension'
-import newLostBedFactory from './newLostBed'
-import newLostBedCancellationFactory from './newLostBedCancellation'
 import newTurnaroundFactory from './newTurnaround'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
 import pduFactory from './pdu'
@@ -96,14 +92,10 @@ export {
   localAuthorityFactory,
   mappaFactory,
   newArrivalFactory,
-  newBookingFactory,
   newCancellationFactory,
   newConfirmationFactory,
-  newDepartureFactory,
   cas3NewDepartureFactory,
   newExtensionFactory,
-  newLostBedCancellationFactory,
-  newLostBedFactory,
   cas3ReferralHistoryUserNoteFactory,
   newTurnaroundFactory,
   oasysSectionsFactory,

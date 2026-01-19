@@ -6,7 +6,11 @@ import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accom
 import BookingNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingNew'
 import BookingSelectAssessment from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSelectAssessment'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import { cas3BookingFactory, cas3TurnaroundFactory, newBookingFactory } from '../../../../server/testutils/factories'
+import {
+  cas3BookingFactory,
+  cas3NewBookingFactory,
+  cas3TurnaroundFactory,
+} from '../../../../server/testutils/factories'
 import { person } from '../utils'
 
 Given("I'm creating a booking", () => {
@@ -27,7 +31,7 @@ Given('I create a booking with all necessary details', () => {
     bookingNewPage.assignTurnaroundDays('turnaroundDays')
 
     cy.then(function __() {
-      const newBooking = newBookingFactory.build({
+      const newBooking = cas3NewBookingFactory.build({
         crn: person.crn,
       })
 
@@ -77,7 +81,7 @@ Given('I attempt to create a conflicting booking', () => {
   cy.then(function _() {
     const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.bedspace)
 
-    const newBooking = newBookingFactory.build({
+    const newBooking = cas3NewBookingFactory.build({
       ...this.booking,
     })
 

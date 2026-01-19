@@ -1,12 +1,12 @@
 import { SuperAgentRequest } from 'superagent'
-import type { BookingSearchResult, Cas3BookingSearchResult } from '@approved-premises/api'
+import type { Cas3BookingSearchResult } from '@approved-premises/api'
 import type { BookingSearchApiStatus, BookingSearchParameters, PaginatedResponse } from '@approved-premises/ui'
 import paths from '../../server/paths/api'
 import { stubFor } from '.'
 import { appendQueryString } from '../../server/utils/utils'
 
 export type MockPagination = Pick<
-  PaginatedResponse<BookingSearchResult>,
+  PaginatedResponse<Cas3BookingSearchResult>,
   'totalResults' | 'totalPages' | 'pageNumber' | 'pageSize'
 >
 

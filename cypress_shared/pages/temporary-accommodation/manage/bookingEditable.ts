@@ -1,4 +1,4 @@
-import type { Cas3Bedspace, Cas3Booking, Cas3Premises, Cas3VoidBedspace, NewBooking } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3NewBooking, Cas3Premises, Cas3VoidBedspace } from '@approved-premises/api'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import Page from '../../page'
@@ -32,7 +32,7 @@ export default abstract class BookingEditablePage extends Page {
     cy.get('#departureDate-hint').should('contain', `The end date for a booking of 84 days is ${date}`)
   }
 
-  protected completeEditableForm(newOrUpdateBooking: NewBooking): void {
+  protected completeEditableForm(newOrUpdateBooking: Cas3NewBooking): void {
     this.completeTextInputByLabel("What is the person's CRN", newOrUpdateBooking.crn)
     this.completeDateInputsByLegend('What is the start date?', newOrUpdateBooking.arrivalDate)
     this.completeDateInputsByLegend('What is the end date?', newOrUpdateBooking.departureDate)

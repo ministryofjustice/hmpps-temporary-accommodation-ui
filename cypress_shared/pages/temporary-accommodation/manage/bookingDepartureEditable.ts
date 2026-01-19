@@ -1,9 +1,9 @@
-import type { NewDeparture } from '@approved-premises/api'
+import type { Cas3NewDeparture } from '@approved-premises/api'
 import { Departure } from '../../../../server/@types/shared'
 import Page from '../../page'
 
 export default class BookingDepartureEditablePage extends Page {
-  completeForm(newDeparture: NewDeparture): void {
+  completeForm(newDeparture: Cas3NewDeparture): void {
     this.getLegend('What was the departure date?')
     this.completeDateInputs('dateTime', newDeparture.dateTime)
 

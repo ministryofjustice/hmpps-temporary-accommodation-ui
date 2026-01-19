@@ -1,4 +1,4 @@
-import type { Cas3Bedspace, Cas3Premises, NewBooking } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3NewBooking, Cas3Premises } from '@approved-premises/api'
 import { PlaceContext } from '@approved-premises/ui'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -35,7 +35,7 @@ export default class BookingNewPage extends BookingEditablePage {
       })
   }
 
-  completeForm(newBooking: NewBooking): void {
+  completeForm(newBooking: Cas3NewBooking): void {
     super.completeEditableForm(newBooking)
   }
 
@@ -55,7 +55,7 @@ export default class BookingNewPage extends BookingEditablePage {
     cy.contains('p', this.turnaroundText())
   }
 
-  shouldShowPrefilledBookingDetails(newBooking: NewBooking): void {
+  shouldShowPrefilledBookingDetails(newBooking: Cas3NewBooking): void {
     this.shouldShowTextInputByLabel("What is the person's CRN", newBooking.crn)
     this.shouldShowDateInputsByLegend('What is the start date?', newBooking.arrivalDate)
     this.shouldShowDateInputsByLegend('What is the end date?', newBooking.departureDate)

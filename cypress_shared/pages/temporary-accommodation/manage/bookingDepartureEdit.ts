@@ -1,4 +1,4 @@
-import type { Cas3Bedspace, Cas3Booking, Cas3Premises, NewDeparture } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3NewDeparture, Cas3Premises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -40,7 +40,7 @@ export default class BookingDepartureEditPage extends BookingDepartureEditablePa
     this.shouldShowFormContents(this.booking.departure)
   }
 
-  completeForm(newDeparture: NewDeparture): void {
+  completeForm(newDeparture: Cas3NewDeparture): void {
     this.clearForm()
     super.completeForm(newDeparture)
   }

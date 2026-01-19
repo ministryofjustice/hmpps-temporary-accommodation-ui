@@ -2,9 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/**
- * details of the arrival
- */
 export type NewCas3Arrival = {
     arrivalDate: string;
     expectedDepartureDate: string;

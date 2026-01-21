@@ -12,8 +12,8 @@ import {
   cas3BookingFactory,
   cas3DepartureFactory,
   cas3ExtensionFactory,
+  cas3NewDepartureFactory,
   cas3PremisesFactory,
-  newDepartureFactory,
   newExtensionFactory,
 } from '../../../testutils/factories'
 import { generateConflictBespokeError, getLatestExtension } from '../../../utils/bookingUtils'
@@ -201,7 +201,7 @@ describe('ExtensionsController', () => {
       const requestHandler = extensionsController.create()
 
       const departure = cas3DepartureFactory.build()
-      const newDeparture = newDepartureFactory.build({
+      const newDeparture = cas3NewDepartureFactory.build({
         ...departure,
       })
 
@@ -234,7 +234,7 @@ describe('ExtensionsController', () => {
       const requestHandler = extensionsController.create()
 
       const departure = cas3DepartureFactory.build()
-      const newDeparture = newDepartureFactory.build({
+      const newDeparture = cas3NewDepartureFactory.build({
         ...departure,
       })
 

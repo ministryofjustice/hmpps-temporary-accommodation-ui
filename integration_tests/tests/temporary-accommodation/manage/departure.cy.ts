@@ -4,7 +4,11 @@ import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { cas3BookingFactory, cas3DepartureFactory, newDepartureFactory } from '../../../../server/testutils/factories'
+import {
+  cas3BookingFactory,
+  cas3DepartureFactory,
+  cas3NewDepartureFactory,
+} from '../../../../server/testutils/factories'
 
 context('Booking departure', () => {
   beforeEach(() => {
@@ -65,7 +69,7 @@ context('Booking departure', () => {
 
     // And I fill out the form
     const departure = cas3DepartureFactory.build()
-    const newDeparture = newDepartureFactory.build({
+    const newDeparture = cas3NewDepartureFactory.build({
       ...departure,
       reasonId: departure.reason.id,
       moveOnCategoryId: departure.moveOnCategory.id,
@@ -148,7 +152,7 @@ context('Booking departure', () => {
 
     // And I fill out the form
     const departure = cas3DepartureFactory.build()
-    const newDeparture = newDepartureFactory.build({
+    const newDeparture = cas3NewDepartureFactory.build({
       ...departure,
       reasonId: departure.reason.id,
       moveOnCategoryId: departure.moveOnCategory.id,

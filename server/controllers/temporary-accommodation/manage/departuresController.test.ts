@@ -7,8 +7,8 @@ import {
   cas3BedspaceFactory,
   cas3BookingFactory,
   cas3DepartureFactory,
+  cas3NewDepartureFactory,
   cas3PremisesFactory,
-  newDepartureFactory,
 } from '../../../testutils/factories'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
@@ -95,7 +95,7 @@ describe('DeparturesController', () => {
       const requestHandler = departuresController.create()
 
       const departure = cas3DepartureFactory.build()
-      const newDeparture = newDepartureFactory.build({
+      const newDeparture = cas3NewDepartureFactory.build({
         ...departure,
       })
 
@@ -131,7 +131,7 @@ describe('DeparturesController', () => {
       const requestHandler = departuresController.create()
 
       const departure = cas3DepartureFactory.build()
-      const newDeparture = newDepartureFactory.build({
+      const newDeparture = cas3NewDepartureFactory.build({
         ...departure,
       })
 
@@ -164,7 +164,7 @@ describe('DeparturesController', () => {
       const requestHandler = departuresController.create()
 
       const departure = cas3DepartureFactory.build()
-      const newDeparture = newDepartureFactory.build({
+      const newDeparture = cas3NewDepartureFactory.build({
         ...departure,
         dateTime: DateFormats.dateObjToIsoDate(new Date(Date.now() + 24 * 60 * 60 * 1000)),
       })
@@ -240,7 +240,7 @@ describe('DeparturesController', () => {
       const requestHandler = departuresController.update()
 
       const departure = cas3DepartureFactory.build()
-      const newDeparture = newDepartureFactory.build({
+      const newDeparture = cas3NewDepartureFactory.build({
         ...departure,
       })
 
@@ -273,7 +273,7 @@ describe('DeparturesController', () => {
       const requestHandler = departuresController.update()
 
       const departure = cas3DepartureFactory.build()
-      const newDeparture = newDepartureFactory.build({
+      const newDeparture = cas3NewDepartureFactory.build({
         ...departure,
       })
 
@@ -347,7 +347,7 @@ describe('DeparturesController', () => {
       const requestHandler = departuresController.create()
 
       const departure = cas3DepartureFactory.build()
-      const newDeparture = newDepartureFactory.build({
+      const newDeparture = cas3NewDepartureFactory.build({
         ...departure,
       })
 

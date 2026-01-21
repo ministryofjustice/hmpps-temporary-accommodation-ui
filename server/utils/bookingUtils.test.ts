@@ -652,6 +652,41 @@ describe('bookingUtils', () => {
       expect(summary).toEqual('No')
     })
 
+    it('returns "No" when there is a more recent extension', () => {
+      const booking = cas3BookingFactory.build({
+        overstays: [cas3OverstayFactory.build({ createdAt: '2026-01-01' })],
+        extensions: [
+          cas3ExtensionFactory.build({ createdAt: '2025-12-10' }),
+          cas3ExtensionFactory.build({ createdAt: '2026-01-02' }),
+          cas3ExtensionFactory.build({ createdAt: '2025-12-20' }),
+        ],
+      })
+
+      const summary = getOverstaySummary(booking)
+
+      expect(summary).toEqual('No')
+    })
+
+    it('returns an overstay summary when there are not more recent extensions', () => {
+      const arrivalDate = DateFormats.dateObjtoUIDate(faker.date.recent({ days: 60 }))
+      const newDepartureDate = DateFormats.dateObjToIsoDate(addDays(arrivalDate, 90))
+
+      const booking = cas3BookingFactory.build({
+        arrivalDate,
+        overstays: [
+          cas3OverstayFactory.build({ newDepartureDate, createdAt: '2026-01-01', isAuthorised: true, reason: '' }),
+        ],
+        extensions: [
+          cas3ExtensionFactory.build({ createdAt: '2025-12-10' }),
+          cas3ExtensionFactory.build({ createdAt: '2025-12-20' }),
+        ],
+      })
+
+      const summary = getOverstaySummary(booking)
+
+      expect(summary).toEqual('6 days, Authorised')
+    })
+
     it('returns an authorised overstay summary without a reason', () => {
       const arrivalDate = DateFormats.dateObjtoUIDate(faker.date.recent({ days: 60 }))
       const newDepartureDate = DateFormats.dateObjToIsoDate(addDays(arrivalDate, 85))
@@ -659,6 +694,7 @@ describe('bookingUtils', () => {
       const booking = cas3BookingFactory.build({
         arrivalDate,
         overstays: [cas3OverstayFactory.build({ newDepartureDate, isAuthorised: true, reason: '' })],
+        extensions: [],
       })
 
       const summary = getOverstaySummary(booking)
@@ -673,6 +709,7 @@ describe('bookingUtils', () => {
       const booking = cas3BookingFactory.build({
         arrivalDate,
         overstays: [cas3OverstayFactory.build({ newDepartureDate, isAuthorised: false, reason: '' })],
+        extensions: [],
       })
 
       const summary = getOverstaySummary(booking)
@@ -686,6 +723,7 @@ describe('bookingUtils', () => {
       const booking = cas3BookingFactory.build({
         arrivalDate,
         overstays: [cas3OverstayFactory.build({ newDepartureDate, isAuthorised: true, reason: 'They asked nicely' })],
+        extensions: [],
       })
 
       const summary = getOverstaySummary(booking)
@@ -711,6 +749,7 @@ describe('bookingUtils', () => {
           }),
           cas3OverstayFactory.build({ createdAt: DateFormats.dateObjToIsoDateTime(addDays(new Date(), -20)) }),
         ],
+        extensions: [],
       })
 
       const summary = getOverstaySummary(booking)

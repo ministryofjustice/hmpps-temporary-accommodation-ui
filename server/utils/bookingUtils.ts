@@ -1,9 +1,11 @@
 import { Cancellation, Cas3AssessmentSummary, Cas3Booking, Departure, Extension } from '@approved-premises/api'
 import type { BespokeError, PageHeadingBarItem, RadioItem } from '@approved-premises/ui'
+import { addDays } from 'date-fns'
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
-import { DateFormats } from './dateUtils'
+import { DateFormats, nightsBetween } from './dateUtils'
 import { isFullPerson } from './personUtils'
+import { formatLines } from './viewUtils'
 
 type ParsedConflictError = {
   conflictingEntityId: string | null
@@ -405,4 +407,21 @@ const assessmentRadioItemText = (assessmentSummary: Cas3AssessmentSummary) => {
   return `CRN ${assessmentSummary.person.crn}, referral submitted ${DateFormats.isoDateToUIDate(
     assessmentSummary.createdAt,
   )}`
+}
+
+export const getOverstaySummary = (booking: Cas3Booking): string => {
+  const { arrivalDate, overstays } = booking
+
+  if (overstays.length === 0) {
+    return 'No'
+  }
+
+  const sortedOverstays = overstays.sort((a, b) => a.createdAt.localeCompare(b.createdAt)).reverse()
+
+  const eightyFourDayLimit = DateFormats.dateObjToIsoDate(addDays(arrivalDate, 84))
+  const days = nightsBetween(eightyFourDayLimit, sortedOverstays[0].newDepartureDate)
+  const authorised = sortedOverstays[0].isAuthorised ? 'Authorised' : 'Not authorised'
+
+  const lines = [`${days} ${days === 1 ? 'day' : 'days'}, ${authorised}`, sortedOverstays[0].reason].filter(Boolean)
+  return formatLines(lines.join('\n'))
 }

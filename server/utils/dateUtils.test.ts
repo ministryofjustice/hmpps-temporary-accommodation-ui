@@ -11,6 +11,7 @@ import {
   dateIsInThePast,
   dateIsWithinNextThreeMonths,
   datepickerInputsAreValidDates,
+  nightsBetween,
 } from './dateUtils'
 
 describe('DateFormats', () => {
@@ -490,5 +491,18 @@ describe('dateExists', () => {
     it('returns false if the input is an empty string', () => {
       expect(dateIsWithinNextThreeMonths('')).toBe(false)
     })
+  })
+})
+
+describe('nightsBetween', () => {
+  it.each([
+    [0, '2025-01-01', '2025-01-01'],
+    [1, '2025-01-01', '2025-01-02'],
+    [1, '2024-12-31', '2025-01-01'],
+    [7, '2025-01-01', '2025-01-08'],
+    [366, '2024-01-01', '2025-01-01'],
+    [365, '2025-01-01', '2026-01-01'],
+  ])('returns %i nights between %s and %s', (nights, start, end) => {
+    expect(nightsBetween(start, end)).toEqual(nights)
   })
 })

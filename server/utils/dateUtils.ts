@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { differenceInDays, format, formatISO, isExists, addMonths, subDays } from 'date-fns'
+import { differenceInDays, format, formatISO, isExists, addMonths, subDays, differenceInCalendarDays } from 'date-fns'
 
 export class DateFormats {
   /**
@@ -235,4 +235,10 @@ export function dateIsBetweenInclusive(dateString: string, start: Date, end: Dat
   const endString = DateFormats.dateObjToIsoDate(end)
 
   return dateString >= startString && dateString <= endString
+}
+
+export function nightsBetween(start: string, end: string): number {
+  const startDate = DateFormats.isoToDateObj(start)
+  const endDate = DateFormats.isoToDateObj(end)
+  return differenceInCalendarDays(endDate, startDate)
 }

@@ -48,6 +48,8 @@ import cas3BookingFactory from './cas3Booking'
 import cas3NewBookingFactory from './cas3NewBooking'
 import cas3BookingSearchResultFactory from './cas3BookingSearchResult'
 import cas3ExtensionFactory from './cas3Extension'
+import cas3NewOverstayFactory from './cas3NewOverstay'
+import cas3OverstayFactory from './cas3Overstay'
 import cas3ConfirmationFactory from './cas3Confirmation'
 import cas3ArrivalFactory from './cas3Arrival'
 import cas3CancellationFactory from './cas3Cancellation'
@@ -128,6 +130,8 @@ export {
   cas3NewBookingFactory,
   cas3BookingSearchResultFactory,
   cas3ExtensionFactory,
+  cas3NewOverstayFactory,
+  cas3OverstayFactory,
   cas3ConfirmationFactory,
   cas3ArrivalFactory,
   cas3CancellationFactory,

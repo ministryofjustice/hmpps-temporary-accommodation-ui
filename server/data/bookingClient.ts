@@ -8,11 +8,13 @@ import type {
   Cas3Extension,
   Cas3NewBooking,
   Cas3NewDeparture,
+  Cas3Overstay,
   Cas3Turnaround,
   NewCas3Arrival as NewArrival,
   NewCancellation,
   NewConfirmation,
   NewExtension,
+  NewOverstay,
   NewTurnaround,
 } from '@approved-premises/api'
 import type { BookingSearchApiStatus, BookingSearchParameters, PaginatedResponse } from '@approved-premises/ui'
@@ -52,6 +54,13 @@ export default class BookingClient {
     return this.restClient.post<Cas3Extension>({
       path: paths.cas3.premises.bookings.extensions({ premisesId, bookingId }),
       data: bookingExtension,
+    })
+  }
+
+  async overstayBooking(premisesId: string, bookingId: string, overstay: NewOverstay) {
+    return this.restClient.post<Cas3Overstay>({
+      path: paths.cas3.premises.bookings.overstays({ premisesId, bookingId }),
+      data: overstay,
     })
   }
 

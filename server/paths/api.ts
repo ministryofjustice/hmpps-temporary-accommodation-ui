@@ -80,6 +80,7 @@ const cas3Api = {
         create: cas3SingleBookingPath.path('cancellations'),
         show: cas3SingleBookingPath.path('cancellations/:cancellationId'),
       },
+      overstays: cas3SingleBookingPath.path('overstays'),
       turnarounds: cas3SingleBookingPath.path('turnarounds'),
     },
   },

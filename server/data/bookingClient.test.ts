@@ -13,6 +13,8 @@ import {
   cas3ExtensionFactory,
   cas3NewBookingFactory,
   cas3NewDepartureFactory,
+  cas3NewOverstayFactory,
+  cas3OverstayFactory,
   cas3TurnaroundFactory,
   newArrivalFactory,
   newCancellationFactory,
@@ -143,6 +145,37 @@ describeClient('BookingClient', provider => {
 
       const result = await bookingClient.extendBooking(premisesId, booking.id, payload)
       expect(result).toEqual(extension)
+    })
+  })
+
+  describe('overstayBooking', () => {
+    it('should return the mocked data', async () => {
+      const premisesId = faker.string.uuid()
+      const booking = cas3BookingFactory.build()
+      const newOverstay = cas3NewOverstayFactory.build()
+      const overstay = cas3OverstayFactory.build({ ...newOverstay })
+
+      await provider.addInteraction({
+        state: 'Booking can be overstayed',
+        uponReceiving: 'a request to overstay a booking',
+        withRequest: {
+          method: 'POST',
+          path: paths.cas3.premises.bookings.overstays({ premisesId, bookingId: booking.id }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: newOverstay,
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: overstay,
+        },
+      })
+
+      const result = await bookingClient.overstayBooking(premisesId, booking.id, newOverstay)
+
+      expect(result).toEqual(overstay)
     })
   })
 

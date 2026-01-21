@@ -1,11 +1,11 @@
 import type { Cas3Booking } from '@approved-premises/api'
-import type { SummaryList } from '@approved-premises/ui'
-import { getLatestExtension, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
+import type { SummaryList, SummaryListItem } from '@approved-premises/ui'
+import { getLatestExtension, getOverstaySummary, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { formatLines } from '../utils/viewUtils'
 
 export default (booking: Cas3Booking): SummaryList['rows'] => {
-  const { status, arrivalDate, departureDate } = booking
+  const { status, arrivalDate, departureDate, overstays } = booking
 
   const rows = [
     {
@@ -35,11 +35,19 @@ export default (booking: Cas3Booking): SummaryList['rows'] => {
         value: textValue(DateFormats.isoDateToUIDate(departureDate)),
       },
     )
+
+    if (overstays) {
+      rows.push(overstayRow(booking))
+    }
   } else if (status === 'departed' || status === 'closed') {
     rows.push({
       key: textValue('Departure date'),
       value: textValue(DateFormats.isoDateToUIDate(departureDate)),
     })
+
+    if (overstays) {
+      rows.push(overstayRow(booking))
+    }
   }
 
   const days = booking.turnaround?.workingDays || 0
@@ -112,6 +120,13 @@ export default (booking: Cas3Booking): SummaryList['rows'] => {
   }
 
   return rows
+}
+
+const overstayRow = (booking: Cas3Booking): SummaryListItem => {
+  return {
+    key: textValue('Overstay'),
+    value: htmlValue(getOverstaySummary(booking)),
+  }
 }
 
 const textValue = (value: string) => {

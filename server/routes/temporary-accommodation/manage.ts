@@ -20,6 +20,7 @@ export default function routes(controllers: Controllers, services: Services, rou
     arrivalsController,
     departuresController,
     extensionsController,
+    overstaysController,
     cancellationsController,
     turnaroundsController,
     reportsController,
@@ -341,6 +342,26 @@ export default function routes(controllers: Controllers, services: Services, rou
       {
         path: paths.bookings.show.pattern,
         auditEvent: 'CREATE_BOOKING_EXTENSION_SUCCESS',
+      },
+    ],
+  })
+
+  get(paths.bookings.overstays.new.pattern, overstaysController.new(), {
+    auditEvent: 'VIEW_BOOKING_CREATE_OVERSTAY',
+  })
+  post(paths.bookings.overstays.create.pattern, overstaysController.create(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.bookings.overstays.new.pattern,
+        auditEvent: 'CREATE_BOOKING_OVERSTAY_FAILURE',
+      },
+      {
+        path: paths.bookings.extensions.new.pattern,
+        auditEvent: 'CREATE_BOOKING_OVERSTAY_FAILURE',
+      },
+      {
+        path: paths.bookings.show.pattern,
+        auditEvent: 'CREATE_BOOKING_OVERSTAY_SUCCESS',
       },
     ],
   })

@@ -1,0 +1,203 @@
+import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
+import { format as urlFormat } from 'url'
+import { CallConfig } from '../../../data/restClient'
+import { BookingService, OverstaysService, PremisesService } from '../../../services'
+import BedspaceService from '../../../services/bedspaceService'
+import OverstaysController from './overstaysController'
+import extractCallConfig from '../../../utils/restUtils'
+import {
+  cas3BedspaceFactory,
+  cas3BookingFactory,
+  cas3NewOverstayFactory,
+  cas3OverstayFactory,
+  cas3PremisesFactory,
+} from '../../../testutils/factories'
+import { nightsBetween } from '../../../utils/dateUtils'
+import paths from '../../../paths/temporary-accommodation/manage'
+import {
+  addValidationErrorsAndRedirect,
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+} from '../../../utils/validation'
+import { SanitisedError } from '../../../sanitisedError'
+
+jest.mock('../../../utils/validation')
+jest.mock('../../../utils/restUtils')
+
+describe('OverstaysController', () => {
+  const callConfig = { token: 'some-token' } as CallConfig
+
+  let request: Request
+  const response: DeepMocked<Response> = createMock<Response>({})
+  const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
+
+  const premisesService = createMock<PremisesService>({})
+  const bedspaceService = createMock<BedspaceService>({})
+  const bookingService = createMock<BookingService>({})
+  const overstaysService = createMock<OverstaysService>({})
+
+  const overstaysController = new OverstaysController(
+    premisesService,
+    bedspaceService,
+    bookingService,
+    overstaysService,
+  )
+
+  const premises = cas3PremisesFactory.build()
+  const bedspace = cas3BedspaceFactory.build()
+  const booking = cas3BookingFactory.build()
+
+  beforeEach(() => {
+    request = createMock<Request>()
+    ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
+
+    request.params = {
+      premisesId: premises.id,
+      bedspaceId: bedspace.id,
+      bookingId: booking.id,
+    }
+  })
+
+  describe('new', () => {
+    it('renders the form', async () => {
+      const newOverstay = cas3NewOverstayFactory.build()
+
+      request.query = { newDepartureDate: newOverstay.newDepartureDate }
+
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
+      bookingService.getBooking.mockResolvedValue(booking)
+
+      const requestHandler = overstaysController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getSingleBedspace)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
+
+      const expectedNightsOverLimit = nightsBetween(booking.arrivalDate, newOverstay.newDepartureDate) - 84
+      const expectedTitle = `The new departure date means the booking is ${expectedNightsOverLimit} night${expectedNightsOverLimit === 1 ? '' : 's'} over the limit`
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/overstays/new', {
+        premises,
+        bedspace,
+        booking,
+        newDepartureDate: newOverstay.newDepartureDate,
+        nightsOverLimit: expectedNightsOverLimit,
+        title: expectedTitle,
+        errorSummary: [],
+        errors: {},
+      })
+    })
+  })
+
+  describe('create', () => {
+    it('creates an overstay and redirects to the show booking page', async () => {
+      const requestHandler = overstaysController.create()
+
+      const overstay = cas3OverstayFactory.build()
+      const newOverstay = cas3NewOverstayFactory.build({
+        newDepartureDate: overstay.newDepartureDate,
+        isAuthorised: overstay.isAuthorised,
+        reason: overstay.reason,
+      })
+
+      request.body = {
+        newDepartureDate: newOverstay.newDepartureDate,
+        reason: newOverstay.reason,
+        isAuthorised: newOverstay.isAuthorised ? 'yes' : 'no',
+      }
+
+      overstaysService.createOverstay.mockResolvedValue(overstay)
+
+      await requestHandler(request, response, next)
+
+      expect(overstaysService.createOverstay).toHaveBeenCalledWith(callConfig, premises.id, booking.id, newOverstay)
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Booking departure date changed')
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.bookings.show({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
+      )
+    })
+
+    it('redirects to the booking extension page with errors if the API returns a 409 error', async () => {
+      const requestHandler = overstaysController.create()
+
+      const overstay = cas3NewOverstayFactory.build()
+
+      request.body = { ...overstay }
+
+      const err: SanitisedError = {
+        stack: '',
+        message: 'error',
+        status: 409,
+        data: { detail: 'error' },
+      }
+      overstaysService.createOverstay.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.extensions.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
+      )
+    })
+
+    it('redirects to the new overstays page with errors if the API returns any other error', async () => {
+      const requestHandler = overstaysController.create()
+
+      const overstay = cas3NewOverstayFactory.build()
+
+      request.body = { ...overstay }
+
+      const err = new Error()
+      overstaysService.createOverstay.mockImplementation(() => {
+        throw err
+      })
+
+      const expectedUrl = urlFormat({
+        pathname: paths.bookings.overstays.new({
+          premisesId: premises.id,
+          bedspaceId: bedspace.id,
+          bookingId: booking.id,
+        }),
+        query: { newDepartureDate: overstay.newDepartureDate },
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, expectedUrl)
+    })
+
+    it('shows an error when the user tries to submit without selecting whether the overstay is authorised', async () => {
+      const requestHandler = overstaysController.create()
+
+      const overstay = cas3NewOverstayFactory.build()
+      request.body = { reason: overstay.reason, newDepartureDate: overstay.newDepartureDate }
+
+      await requestHandler(request, response, next)
+
+      const expectedErrors: Record<string, string> = {
+        isAuthorised: 'You must confirm whether the overstay is authorised',
+      }
+
+      const expectedUrl = urlFormat({
+        pathname: paths.bookings.overstays.new({
+          premisesId: premises.id,
+          bedspaceId: bedspace.id,
+          bookingId: booking.id,
+        }),
+        query: { newDepartureDate: overstay.newDepartureDate },
+      })
+
+      expect(addValidationErrorsAndRedirect).toHaveBeenCalledWith(request, response, expectedErrors, expectedUrl)
+    })
+  })
+})

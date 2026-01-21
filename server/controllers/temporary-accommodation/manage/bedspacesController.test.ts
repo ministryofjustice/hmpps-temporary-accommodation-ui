@@ -20,6 +20,7 @@ import {
   probationRegionFactory,
 } from '../../../testutils/factories'
 import {
+  addValidationErrorsAndRedirect,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   generateErrorMessages,
@@ -867,21 +868,18 @@ describe('BedspacesController', () => {
       request.params.bedspaceId = bedspaceId
       request.body = {}
 
-      const errorMessage = 'Select a date to archive the bedspace'
-
-      ;(generateErrorMessages as jest.Mock).mockReturnValue([{ today: { text: errorMessage } }])
-      ;(generateErrorSummary as jest.Mock).mockReturnValue([{ text: errorMessage, href: '#today' }])
-
       const requestHandler = bedspacesController.archiveSubmit()
 
       await requestHandler(request, response, next)
 
-      const expectedErrors = [{ today: { text: 'Select a date to archive the bedspace' } }]
-      const expectedErrorSummary = [{ text: 'Select a date to archive the bedspace', href: '#today' }]
+      const expectedErrors = { today: 'Select a date to archive the bedspace' }
 
-      expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
-      expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
-      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}/archive`)
+      expect(addValidationErrorsAndRedirect).toHaveBeenCalledWith(
+        request,
+        response,
+        expectedErrors,
+        `/properties/${premisesId}/bedspaces/${bedspaceId}/archive`,
+      )
     })
   })
 

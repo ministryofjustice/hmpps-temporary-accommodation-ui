@@ -18,6 +18,7 @@ import {
 import { summaryList as bedspaceSummaryList } from '../../../utils/bedspaceUtils'
 import {
   InvalidParams,
+  addValidationErrorsAndRedirect,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   generateErrorMessages,
@@ -314,10 +315,7 @@ export default class PremisesController {
       }
 
       if (Object.keys(errors).length > 0) {
-        req.flash('errors', generateErrorMessages(errors))
-        req.flash('errorSummary', generateErrorSummary(errors))
-        req.flash('userInput', req.body)
-        return res.redirect(paths.premises.archive({ premisesId }))
+        return addValidationErrorsAndRedirect(req, res, errors, paths.premises.archive({ premisesId }))
       }
 
       try {

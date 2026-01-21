@@ -11,6 +11,7 @@ import PremisesService from '../../../services/premisesService'
 
 import {
   InvalidParams,
+  addValidationErrorsAndRedirect,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   generateErrorMessages,
@@ -315,10 +316,12 @@ export default class BedspacesController {
       }
 
       if (Object.keys(errors).length > 0) {
-        req.flash('errors', generateErrorMessages(errors))
-        req.flash('errorSummary', generateErrorSummary(errors))
-        req.flash('userInput', req.body)
-        return res.redirect(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
+        return addValidationErrorsAndRedirect(
+          req,
+          res,
+          errors,
+          paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
+        )
       }
 
       try {

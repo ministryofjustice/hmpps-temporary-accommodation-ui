@@ -8,6 +8,7 @@ import { SanitisedError } from '../sanitisedError'
 import { TasklistAPIError, ValidationError } from './errors'
 import {
   InvalidParams,
+  addValidationErrorsAndRedirect,
   catchAPIErrorOrPropogate,
   catchValidationErrorOrPropogate,
   clearUserInput,
@@ -265,6 +266,31 @@ describe('catchValidationErrorOrPropogate', () => {
     expect(() => catchValidationErrorOrPropogate(request, response, error, 'some/url')).toThrowError(
       'Cannot find a translation for an error at the path $.crn with the type invalid',
     )
+  })
+})
+
+describe('addValidationErrorsAndRedirect', () => {
+  const request = createMock<Request>({ body: { field: 'hello' } })
+  const response = createMock<Response>()
+
+  const errors: Record<string, string> = {
+    first: 'This is the first error',
+    second: 'This is the second error',
+  }
+
+  it('should return the errors to the user and redirect to the redirectUrl', () => {
+    addValidationErrorsAndRedirect(request, response, errors, '/path/for/redirect')
+
+    expect(request.flash).toHaveBeenCalledWith('errors', {
+      first: { text: 'This is the first error', attributes: { 'data-cy-error-first': true } },
+      second: { text: 'This is the second error', attributes: { 'data-cy-error-second': true } },
+    })
+    expect(request.flash).toHaveBeenCalledWith('errorSummary', [
+      { text: 'This is the first error', href: '#first' },
+      { text: 'This is the second error', href: '#second' },
+    ])
+    expect(request.flash).toHaveBeenCalledWith('userInput', { field: 'hello' })
+    expect(response.redirect).toHaveBeenCalledWith('/path/for/redirect')
   })
 })
 

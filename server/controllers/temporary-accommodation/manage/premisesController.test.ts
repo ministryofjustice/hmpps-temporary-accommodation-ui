@@ -24,6 +24,7 @@ import extractCallConfig from '../../../utils/restUtils'
 import PremisesController from './premisesController'
 import { filterProbationRegions } from '../../../utils/userUtils'
 import {
+  addValidationErrorsAndRedirect,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   generateErrorMessages,
@@ -1252,21 +1253,18 @@ describe('PremisesController', () => {
       request.params.premisesId = premises.id
       request.body = {}
 
-      const errorMessage = 'Select a date to archive the property'
-
-      ;(generateErrorMessages as jest.Mock).mockReturnValue([{ today: { text: errorMessage } }])
-      ;(generateErrorSummary as jest.Mock).mockReturnValue([{ text: errorMessage, href: '#today' }])
-
       const requestHandler = premisesController.archiveSubmit()
 
       await requestHandler(request, response, next)
 
-      const expectedErrors = [{ today: { text: 'Select a date to archive the property' } }]
-      const expectedErrorSummary = [{ text: 'Select a date to archive the property', href: '#today' }]
+      const expectedErrors = { today: 'Select a date to archive the property' }
 
-      expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
-      expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
-      expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}/archive`)
+      expect(addValidationErrorsAndRedirect).toHaveBeenCalledWith(
+        request,
+        response,
+        expectedErrors,
+        `/properties/${premises.id}/archive`,
+      )
     })
   })
 

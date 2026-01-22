@@ -12,7 +12,7 @@ export default class ReferenceDataClient {
   }
 
   async getReferenceData<T = ReferenceData>(objectType: string, query?: Record<string, string>) {
-    return this.restClient.get<Array<T>>({ path: `/reference-data/${objectType}`, query })
+    return this.restClient.get<Array<T>>({ path: paths.referenceData({ objectType }), query })
   }
 
   async getCas3ReferenceData(objectType: Cas3RefDataType) {

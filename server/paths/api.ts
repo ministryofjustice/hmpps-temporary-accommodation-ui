@@ -140,4 +140,5 @@ export default {
       profile: path('/profile/v2'),
     },
   },
+  referenceData: path('/reference-data/:objectType'),
 }

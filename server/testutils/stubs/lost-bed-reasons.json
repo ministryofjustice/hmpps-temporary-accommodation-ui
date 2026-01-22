@@ -1,47 +1,38 @@
 [
   {
     "id": "607c5526-e101-4b8b-b26d-dfefb4173e1d",
-    "name": "Cooling off after incident (e.g. crime scene)",
-    "isActive": true
+    "name": "Cooling off after incident (e.g. crime scene)"
   },
   {
     "id": "6697bb59-5b2b-48c7-82b1-d73013018602",
-    "name": "Damage repairs (e.g. by person, from flooding)",
-    "isActive": true
+    "name": "Damage repairs (e.g. by person, from flooding)"
   },
   {
     "id": "ee5b1638-d578-4fc6-b83f-1c9b94b5bffd",
-    "name": "Death – personal property collection",
-    "isActive": true
+    "name": "Death – personal property collection"
   },
   {
     "id": "040dce03-24f8-4fc4-8536-c1a311a307b3",
-    "name": "Deep clean",
-    "isActive": true
+    "name": "Deep clean"
   },
   {
     "id": "ae8cfadf-b556-4119-a471-baa87d316ef9",
-    "name": "Maintenance repairs (e.g. damp, infestation)",
-    "isActive": true
+    "name": "Maintenance repairs (e.g. damp, infestation)"
   },
   {
     "id": "1cfd451c-afde-4dba-a157-c1cf3289299f",
-    "name": "Needle sweep",
-    "isActive": true
+    "name": "Needle sweep"
   },
   {
     "id": "f47ac10b-58cc-4372-a567-0e02b2c3d480",
-    "name": "Occupancy reduced (e.g. from 2 bed to single)",
-    "isActive": true
+    "name": "Occupancy reduced (e.g. from 2 bed to single)"
   },
   {
     "id": "6ba7b818-9dad-11d1-80b4-00c04fd430c8",
-    "name": "Pending handback of property",
-    "isActive": true
+    "name": "Pending handback of property"
   },
   {
     "id": "479e8765-a978-4343-9eba-34f5e055bd30",
-    "name": "Replacing furniture or stolen goods",
-    "isActive": true
+    "name": "Replacing furniture or stolen goods"
   }
 ]

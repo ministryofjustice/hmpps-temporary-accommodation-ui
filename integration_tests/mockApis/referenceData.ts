@@ -1,11 +1,12 @@
 import { LocalAuthorityArea, ProbationDeliveryUnit, ProbationRegion } from '@approved-premises/api'
 import { stubFor } from '.'
+import paths from '../../server/paths/api'
 
 const stubLocalAuthorities = (localAuthorities: Array<LocalAuthorityArea>) =>
   stubFor({
     request: {
       method: 'GET',
-      url: '/reference-data/local-authority-areas',
+      url: paths.referenceData({ objectType: 'local-authority-areas' }),
     },
     response: {
       status: 200,
@@ -20,7 +21,12 @@ const stubPdus = (args: { pdus: Array<ProbationDeliveryUnit>; probationRegionId?
   stubFor({
     request: {
       method: 'GET',
-      url: `/reference-data/probation-delivery-units${args.probationRegionId ? `?probationRegionId=${args.probationRegionId}` : ''}`,
+      urlPath: paths.referenceData({
+        objectType: 'probation-delivery-units',
+      }),
+      queryParameters: {
+        probationRegionId: args.probationRegionId ? { equalTo: args.probationRegionId } : undefined,
+      },
     },
     response: {
       status: 200,
@@ -35,7 +41,7 @@ const stubProbationRegions = (regions: Array<ProbationRegion>) =>
   stubFor({
     request: {
       method: 'GET',
-      url: '/reference-data/probation-regions',
+      url: paths.referenceData({ objectType: 'probation-regions' }),
     },
     response: {
       status: 200,

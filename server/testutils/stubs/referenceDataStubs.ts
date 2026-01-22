@@ -15,7 +15,7 @@ import paths from '../../paths/api'
 const departureReasons = {
   request: {
     method: 'GET',
-    url: '/reference-data/departure-reasons',
+    url: paths.referenceData({ objectType: 'departure-reasons' }),
   },
   response: {
     status: 200,
@@ -29,7 +29,7 @@ const departureReasons = {
 const moveOnCategories = {
   request: {
     method: 'GET',
-    url: '/reference-data/move-on-categories',
+    url: paths.referenceData({ objectType: 'move-on-categories' }),
   },
   response: {
     status: 200,
@@ -43,7 +43,7 @@ const moveOnCategories = {
 const destinationProviders = {
   request: {
     method: 'GET',
-    url: '/reference-data/destination-providers',
+    url: paths.referenceData({ objectType: 'destination-providers' }),
   },
   response: {
     status: 200,
@@ -57,7 +57,7 @@ const destinationProviders = {
 const cancellationReasons = {
   request: {
     method: 'GET',
-    url: '/reference-data/cancellation-reasons',
+    url: paths.referenceData({ objectType: 'cancellation-reasons' }),
   },
   response: {
     status: 200,
@@ -71,7 +71,10 @@ const cancellationReasons = {
 const lostBedReasons = {
   request: {
     method: 'GET',
-    url: '/reference-data/lost-bed-reasons',
+    urlPath: paths.cas3.referenceData({}),
+    queryParameters: {
+      type: { equalTo: 'VOID_BEDSPACE_REASONS' },
+    },
   },
   response: {
     status: 200,
@@ -85,7 +88,7 @@ const lostBedReasons = {
 const keyWorkers = {
   request: {
     method: 'GET',
-    url: '/reference-data/key-workers',
+    url: paths.referenceData({ objectType: 'key-workers' }),
   },
   response: {
     status: 200,
@@ -133,7 +136,7 @@ const bedspaceCharacteristics = {
 const localAuthorities = {
   request: {
     method: 'GET',
-    url: '/reference-data/local-authority-areas',
+    url: paths.referenceData({ objectType: 'local-authority-areas' }),
   },
   response: {
     status: 200,
@@ -147,7 +150,7 @@ const localAuthorities = {
 const probationRegions = {
   request: {
     method: 'GET',
-    url: '/reference-data/probation-regions',
+    url: paths.referenceData({ objectType: 'probation-regions' }),
   },
   response: {
     status: 200,
@@ -161,7 +164,7 @@ const probationRegions = {
 const pdus = {
   request: {
     method: 'GET',
-    urlPath: '/reference-data/probation-delivery-units',
+    urlPath: paths.referenceData({ objectType: 'probation-delivery-units' }),
   },
   response: {
     status: 200,
@@ -175,7 +178,7 @@ const pdus = {
 const referralRejectionReasons = {
   request: {
     method: 'GET',
-    urlPath: '/reference-data/referral-rejection-reasons',
+    urlPath: paths.referenceData({ objectType: 'referral-rejection-reasons' }),
   },
   response: {
     status: 200,

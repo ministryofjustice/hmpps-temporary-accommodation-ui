@@ -1,7 +1,7 @@
 import type {
+  Cas3ReferenceData,
   Cas3VoidBedspace,
   Cas3VoidBedspaceCancellation,
-  Cas3VoidBedspaceReason,
   Cas3VoidBedspaceRequest,
 } from '@approved-premises/api'
 import type { LostBedClient, ReferenceDataClient, RestClientBuilder } from '../data'
@@ -80,9 +80,11 @@ export default class LostBedService {
     )) as Cas3VoidBedspaceCancellation
   }
 
-  async getReferenceData(callConfig: CallConfig): Promise<Array<Cas3VoidBedspaceReason>> {
+  async getReferenceData(callConfig: CallConfig): Promise<Array<Cas3ReferenceData>> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
-    return (await referenceDataClient.getReferenceData('lost-bed-reasons')).sort((a, b) => a.name.localeCompare(b.name))
+    return (await referenceDataClient.getCas3ReferenceData('VOID_BEDSPACE_REASONS')).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    )
   }
 }

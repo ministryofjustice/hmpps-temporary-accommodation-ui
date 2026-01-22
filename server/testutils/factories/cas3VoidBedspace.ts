@@ -1,8 +1,7 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
 
-import type { Cas3VoidBedspace } from '@approved-premises/api'
-import { ReferenceData } from '@approved-premises/ui'
+import type { Cas3ReferenceData, Cas3VoidBedspace, Cas3VoidBedspaceReason } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 import cas3VoidBedspaceReasonFactory from './cas3VoidBedspaceReason'
 
@@ -27,7 +26,7 @@ class Cas3VoidBedspaceFactory extends Factory<Cas3VoidBedspace> {
   }
 
   /* istanbul ignore next */
-  forEnvironment(reasons: ReferenceData[]) {
+  forEnvironment(reasons: Cas3ReferenceData[]) {
     return this.params({
       reason: faker.helpers.arrayElement(reasons),
     })
@@ -43,7 +42,7 @@ export default Cas3VoidBedspaceFactory.define(() => ({
   endDate: DateFormats.dateObjToIsoDate(faker.date.future()),
   id: faker.string.uuid(),
   notes: faker.lorem.sentence(),
-  reason: cas3VoidBedspaceReasonFactory.build(),
+  reason: cas3VoidBedspaceReasonFactory.build() as Cas3VoidBedspaceReason,
   referenceNumber: faker.string.uuid(),
   startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
   status: faker.helpers.arrayElement(['active', 'cancelled'] as const),

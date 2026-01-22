@@ -410,18 +410,32 @@ const assessmentRadioItemText = (assessmentSummary: Cas3AssessmentSummary) => {
 }
 
 export const getOverstaySummary = (booking: Cas3Booking): string => {
-  const { arrivalDate, overstays } = booking
+  const { arrivalDate, overstays, extensions } = booking
 
   if (overstays.length === 0) {
     return 'No'
   }
 
-  const sortedOverstays = overstays.sort((a, b) => a.createdAt.localeCompare(b.createdAt)).reverse()
+  const sortedOverstays = overstays.sort(compareCreatedAt).reverse()
+  const latestOverstay = sortedOverstays[0]
+
+  if (extensions.length > 0) {
+    const sortedExtensions = extensions.sort(compareCreatedAt).reverse()
+    const latestExtension = sortedExtensions[0]
+
+    if (compareCreatedAt(latestExtension, latestOverstay) > 0) {
+      return 'No'
+    }
+  }
 
   const eightyFourDayLimit = DateFormats.dateObjToIsoDate(addDays(arrivalDate, 84))
-  const days = nightsBetween(eightyFourDayLimit, sortedOverstays[0].newDepartureDate)
-  const authorised = sortedOverstays[0].isAuthorised ? 'Authorised' : 'Not authorised'
+  const days = nightsBetween(eightyFourDayLimit, latestOverstay.newDepartureDate)
+  const authorised = latestOverstay.isAuthorised ? 'Authorised' : 'Not authorised'
 
-  const lines = [`${days} ${days === 1 ? 'day' : 'days'}, ${authorised}`, sortedOverstays[0].reason].filter(Boolean)
+  const lines = [`${days} ${days === 1 ? 'day' : 'days'}, ${authorised}`, latestOverstay.reason].filter(Boolean)
   return formatLines(lines.join('\n'))
+}
+
+const compareCreatedAt = (first: { createdAt: string }, second: { createdAt: string }): number => {
+  return first.createdAt.localeCompare(second.createdAt)
 }

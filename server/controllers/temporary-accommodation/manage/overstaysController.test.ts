@@ -21,6 +21,7 @@ import {
   fetchErrorsAndUserInput,
 } from '../../../utils/validation'
 import { SanitisedError } from '../../../sanitisedError'
+import config from '../../../config'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -49,6 +50,8 @@ describe('OverstaysController', () => {
   const booking = cas3BookingFactory.build()
 
   beforeEach(() => {
+    config.flags.bookingOverstayEnabled = true
+
     request = createMock<Request>()
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
 
@@ -91,6 +94,22 @@ describe('OverstaysController', () => {
         errorSummary: [],
         errors: {},
       })
+    })
+
+    it('redirects to the new extension page when the booking overstay feature flag is disabled', async () => {
+      config.flags.bookingOverstayEnabled = false
+
+      const newOverstay = cas3NewOverstayFactory.build()
+      request.query = { newDepartureDate: newOverstay.newDepartureDate }
+
+      const requestHandler = overstaysController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.bookings.extensions.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
+      )
     })
   })
 
@@ -198,6 +217,19 @@ describe('OverstaysController', () => {
       })
 
       expect(addValidationErrorsAndRedirect).toHaveBeenCalledWith(request, response, expectedErrors, expectedUrl)
+    })
+
+    it('redirects to the new extension page when the booking overstay feature flag is disabled', async () => {
+      config.flags.bookingOverstayEnabled = false
+
+      const requestHandler = overstaysController.create()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.bookings.extensions.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
+      )
     })
   })
 })

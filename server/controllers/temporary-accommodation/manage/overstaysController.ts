@@ -1,6 +1,7 @@
 import { Request, RequestHandler, Response } from 'express'
 import { NewOverstay } from '@approved-premises/api'
 import { format as urlFormat } from 'url'
+import config from '../../../config'
 import { BookingService, OverstaysService, PremisesService } from '../../../services'
 import {
   addValidationErrorsAndRedirect,
@@ -27,8 +28,11 @@ export default class OverstaysController {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, bedspaceId, bookingId } = req.params
-
       const callConfig = extractCallConfig(req)
+
+      if (!config.flags.bookingOverstayEnabled) {
+        return res.redirect(paths.bookings.extensions.new({ premisesId, bedspaceId, bookingId }))
+      }
 
       const [premises, bedspace, booking] = await Promise.all([
         this.premisesService.getSinglePremises(callConfig, premisesId),
@@ -61,6 +65,10 @@ export default class OverstaysController {
     return async (req: Request, res: Response) => {
       const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
+
+      if (!config.flags.bookingOverstayEnabled) {
+        return res.redirect(paths.bookings.extensions.new({ premisesId, bedspaceId, bookingId }))
+      }
 
       if (req.body.isAuthorised === undefined) {
         const errors: Record<string, string> = { isAuthorised: 'You must confirm whether the overstay is authorised' }

@@ -25,6 +25,7 @@ generic-service:
     CANCEL_SCHEDULED_ARCHIVE_ENABLED: true
     SHOW_GAP_REPORT_BUTTON: true
     IN_MAINTENANCE_MODE: false
+    BOOKING_OVERSTAY_ENABLED: true
 
   allowlist: null
 

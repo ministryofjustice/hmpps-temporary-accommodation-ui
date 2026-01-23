@@ -1,5 +1,6 @@
 import type { Cas3Booking } from '@approved-premises/api'
 import type { SummaryList, SummaryListItem } from '@approved-premises/ui'
+import config from '../config'
 import { getLatestExtension, getOverstaySummary, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { formatLines } from '../utils/viewUtils'
@@ -36,7 +37,7 @@ export default (booking: Cas3Booking): SummaryList['rows'] => {
       },
     )
 
-    if (overstays) {
+    if (config.flags.bookingOverstayEnabled && overstays) {
       rows.push(overstayRow(booking))
     }
   } else if (status === 'departed' || status === 'closed') {
@@ -45,7 +46,7 @@ export default (booking: Cas3Booking): SummaryList['rows'] => {
       value: textValue(DateFormats.isoDateToUIDate(departureDate)),
     })
 
-    if (overstays) {
+    if (config.flags.bookingOverstayEnabled && overstays) {
       rows.push(overstayRow(booking))
     }
   }

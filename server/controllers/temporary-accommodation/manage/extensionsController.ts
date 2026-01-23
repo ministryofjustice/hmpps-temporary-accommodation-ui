@@ -1,6 +1,7 @@
 import type { Request, RequestHandler, Response } from 'express'
 import type { NewExtension } from '@approved-premises/api'
 import { format as urlFormat } from 'url'
+import config from '../../../config'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, ExtensionService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
@@ -59,7 +60,7 @@ export default class ExtensionsController {
 
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
-      if (newExtension.newDepartureDate) {
+      if (config.flags.bookingOverstayEnabled && newExtension.newDepartureDate) {
         const lengthOfStay = nightsBetween(booking.arrivalDate, newExtension.newDepartureDate)
 
         if (lengthOfStay >= 84) {

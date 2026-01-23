@@ -26,6 +26,7 @@ import {
   insertGenericError,
 } from '../../../utils/validation'
 import ExtensionsController from './extensionsController'
+import config from '../../../config'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')
@@ -55,6 +56,8 @@ describe('ExtensionsController', () => {
   )
 
   beforeEach(() => {
+    config.flags.bookingOverstayEnabled = true
+
     request = createMock<Request>()
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
@@ -195,6 +198,38 @@ describe('ExtensionsController', () => {
       })
 
       expect(response.redirect).toHaveBeenCalledWith(address)
+    })
+
+    it("doesn't redirect to the overstay page when the booking overstay feature flag is disabled", async () => {
+      config.flags.bookingOverstayEnabled = false
+
+      const requestHandler = extensionsController.create()
+
+      const extension = newExtensionFactory.build({
+        newDepartureDate: DateFormats.dateObjToIsoDate(addDays(booking.arrivalDate, 85)),
+      })
+
+      request.params = {
+        premisesId,
+        bedspaceId,
+        bookingId,
+      }
+      request.body = {
+        ...extension,
+        ...DateFormats.isoToDateAndTimeInputs(extension.newDepartureDate, 'newDepartureDate'),
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(extensionService.createExtension).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bookingId,
+        expect.objectContaining(extension),
+      )
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Booking departure date changed')
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {

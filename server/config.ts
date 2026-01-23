@@ -53,6 +53,7 @@ export default {
     domainEventsEmit: get('DOMAIN_EVENTS_EMIT_ENABLED', ''),
     cancelScheduledArchiveEnabled: get('CANCEL_SCHEDULED_ARCHIVE_ENABLED', 'false') === 'true',
     showGapReportButton: get('SHOW_GAP_REPORT_BUTTON', 'false') === 'true',
+    bookingOverstayEnabled: get('BOOKING_OVERSTAY_ENABLED', 'false') === 'true',
   },
   environment,
   sentry: {

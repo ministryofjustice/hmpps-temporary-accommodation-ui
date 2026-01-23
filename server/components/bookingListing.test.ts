@@ -1,16 +1,18 @@
 import {
   cas3BookingFactory,
+  cas3OverstayFactory,
   cas3TurnaroundFactory,
   personFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
-import { statusTag } from '../utils/bookingUtils'
+import { getOverstaySummary, statusTag } from '../utils/bookingUtils'
 import {
   personSummaryListRows,
   placementSummaryListRows,
   statusSummaryListRows,
   turnaroundSummaryListRows,
 } from './bookingListing'
+import config from '../config'
 
 jest.mock('../utils/bookingUtils')
 
@@ -56,6 +58,49 @@ describe('BookingListing', () => {
   describe('statusSummaryListRows', () => {
     it('returns a summary list row for the booking status', () => {
       const booking = cas3BookingFactory.build()
+
+      const statusHtml = '<strong>Some status</strong>'
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
+
+      const result = statusSummaryListRows(booking)
+
+      expect(result).toEqual([
+        {
+          key: { text: 'Status' },
+          value: { html: statusHtml },
+        },
+      ])
+    })
+
+    it('returns a summary list for the booking status with an overstay', () => {
+      config.flags.bookingOverstayEnabled = true
+
+      const booking = cas3BookingFactory.build({ overstays: cas3OverstayFactory.buildList(1) })
+
+      const statusHtml = '<strong>Some status</strong>'
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
+
+      const overstayHtml = 'n days, Authorised'
+      ;(getOverstaySummary as jest.MockedFunction<typeof getOverstaySummary>).mockReturnValue(overstayHtml)
+
+      const result = statusSummaryListRows(booking)
+
+      expect(result).toEqual([
+        {
+          key: { text: 'Status' },
+          value: { html: statusHtml },
+        },
+        {
+          key: { text: 'Overstay' },
+          value: { html: overstayHtml },
+        },
+      ])
+    })
+
+    it('returns a summary list for the booking status when the overstay feature flag is disabled', () => {
+      config.flags.bookingOverstayEnabled = false
+
+      const booking = cas3BookingFactory.build({ overstays: cas3OverstayFactory.buildList(1) })
 
       const statusHtml = '<strong>Some status</strong>'
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)

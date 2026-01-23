@@ -295,7 +295,7 @@ describe('BookingInfo', () => {
       expect(shortenedOrExtended).toHaveBeenCalledWith(booking.extensions[0])
     })
 
-    it('returns summary list rows for an arrived and shortended booking', () => {
+    it('returns summary list rows for an arrived and shortened booking', () => {
       const booking = cas3BookingFactory.arrived().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',

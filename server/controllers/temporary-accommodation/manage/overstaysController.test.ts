@@ -2,18 +2,20 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 import { format as urlFormat } from 'url'
 import { CallConfig } from '../../../data/restClient'
-import { BookingService, OverstaysService, PremisesService } from '../../../services'
+import { BookingService, DepartureService, OverstaysService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import OverstaysController from './overstaysController'
 import extractCallConfig from '../../../utils/restUtils'
 import {
   cas3BedspaceFactory,
   cas3BookingFactory,
+  cas3DepartureFactory,
+  cas3NewDepartureFactory,
   cas3NewOverstayFactory,
   cas3OverstayFactory,
   cas3PremisesFactory,
 } from '../../../testutils/factories'
-import { nightsBetween } from '../../../utils/dateUtils'
+import { DateFormats, nightsBetween } from '../../../utils/dateUtils'
 import paths from '../../../paths/temporary-accommodation/manage'
 import {
   addValidationErrorsAndRedirect,
@@ -37,12 +39,14 @@ describe('OverstaysController', () => {
   const bedspaceService = createMock<BedspaceService>({})
   const bookingService = createMock<BookingService>({})
   const overstaysService = createMock<OverstaysService>({})
+  const departuresService = createMock<DepartureService>()
 
   const overstaysController = new OverstaysController(
     premisesService,
     bedspaceService,
     bookingService,
     overstaysService,
+    departuresService,
   )
 
   const premises = cas3PremisesFactory.build()
@@ -63,7 +67,7 @@ describe('OverstaysController', () => {
   })
 
   describe('new', () => {
-    it('renders the form', async () => {
+    it('renders the form for creating an overstay', async () => {
       const newOverstay = cas3NewOverstayFactory.build()
 
       request.query = { newDepartureDate: newOverstay.newDepartureDate }
@@ -83,6 +87,7 @@ describe('OverstaysController', () => {
 
       const expectedNightsOverLimit = nightsBetween(booking.arrivalDate, newOverstay.newDepartureDate) - 84
       const expectedTitle = `The new departure date means the booking is ${expectedNightsOverLimit} night${expectedNightsOverLimit === 1 ? '' : 's'} over the limit`
+      const expectedQuestion = 'Is this an authorised overstay?'
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/overstays/new', {
         premises,
@@ -91,6 +96,46 @@ describe('OverstaysController', () => {
         newDepartureDate: newOverstay.newDepartureDate,
         nightsOverLimit: expectedNightsOverLimit,
         title: expectedTitle,
+        question: expectedQuestion,
+        errorSummary: [],
+        errors: {},
+      })
+    })
+
+    it('renders the form for creating an overstayed departure', async () => {
+      const newOverstay = cas3NewOverstayFactory.build()
+      const newDeparture = cas3NewDepartureFactory.build({
+        dateTime: DateFormats.dateObjToIsoDateTime(DateFormats.isoToDateObj(newOverstay.newDepartureDate)),
+      })
+
+      request.query = { newDepartureDate: newOverstay.newDepartureDate }
+      request.session.departure = newDeparture
+
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
+      bookingService.getBooking.mockResolvedValue(booking)
+
+      const requestHandler = overstaysController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
+
+      const expectedNightsOverLimit = nightsBetween(booking.arrivalDate, newOverstay.newDepartureDate) - 84
+      const expectedTitle = `The departure date means the booking was overstayed by ${expectedNightsOverLimit} night${expectedNightsOverLimit === 1 ? '' : 's'}`
+      const expectedQuestion = 'Was this an authorised overstay?'
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/overstays/new', {
+        premises,
+        bedspace,
+        booking,
+        newDepartureDate: newOverstay.newDepartureDate,
+        nightsOverLimit: expectedNightsOverLimit,
+        title: expectedTitle,
+        question: expectedQuestion,
         errorSummary: [],
         errors: {},
       })
@@ -142,7 +187,39 @@ describe('OverstaysController', () => {
       )
     })
 
-    it('redirects to the booking extension page with errors if the API returns a 409 error', async () => {
+    it('creates an overstay and marks a booking as departed before redirecting to the booking page', async () => {
+      const departure = cas3DepartureFactory.build()
+      const newDeparture = cas3NewDepartureFactory.build({ ...departure })
+      const newOverstay = cas3NewOverstayFactory.build({
+        newDepartureDate: DateFormats.dateObjToIsoDate(DateFormats.isoToDateObj(newDeparture.dateTime)),
+      })
+      const overstay = cas3OverstayFactory.build({ ...newOverstay })
+
+      request.session.departure = newDeparture
+
+      request.body = {
+        newDepartureDate: newOverstay.newDepartureDate,
+        reason: newOverstay.reason,
+        isAuthorised: newOverstay.isAuthorised ? 'yes' : 'no',
+      }
+
+      overstaysService.createOverstay.mockResolvedValue(overstay)
+      departuresService.createDeparture.mockResolvedValue(departure)
+
+      const requestHandler = overstaysController.create()
+
+      await requestHandler(request, response, next)
+
+      expect(overstaysService.createOverstay).toHaveBeenCalledWith(callConfig, premises.id, booking.id, newOverstay)
+      expect(departuresService.createDeparture).toHaveBeenCalledWith(callConfig, premises.id, booking.id, newDeparture)
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Booking marked as departed')
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.bookings.show({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
+      )
+    })
+
+    it('redirects to the booking extension page with errors if the overstay API endpoint returns a 409 error', async () => {
       const requestHandler = overstaysController.create()
 
       const overstay = cas3NewOverstayFactory.build()
@@ -169,7 +246,7 @@ describe('OverstaysController', () => {
       )
     })
 
-    it('redirects to the new overstays page with errors if the API returns any other error', async () => {
+    it('redirects to the new overstays page with errors if the overstay API returns any other error', async () => {
       const requestHandler = overstaysController.create()
 
       const overstay = cas3NewOverstayFactory.build()
@@ -193,6 +270,40 @@ describe('OverstaysController', () => {
       await requestHandler(request, response, next)
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, expectedUrl)
+    })
+
+    it('redirects to the departure page with errors if the departure API returns an error', async () => {
+      const departure = cas3DepartureFactory.build()
+      const newDeparture = cas3NewDepartureFactory.build({ ...departure })
+      const newOverstay = cas3NewOverstayFactory.build({
+        newDepartureDate: DateFormats.dateObjToIsoDate(DateFormats.isoToDateObj(newDeparture.dateTime)),
+      })
+      const overstay = cas3OverstayFactory.build({ ...newOverstay })
+
+      request.session.departure = newDeparture
+
+      request.body = {
+        newDepartureDate: newOverstay.newDepartureDate,
+        reason: newOverstay.reason,
+        isAuthorised: newOverstay.isAuthorised ? 'yes' : 'no',
+      }
+
+      overstaysService.createOverstay.mockResolvedValue(overstay)
+      const err = new Error()
+      departuresService.createDeparture.mockImplementation(() => {
+        throw err
+      })
+
+      const requestHandler = overstaysController.create()
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.departures.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
+      )
     })
 
     it('shows an error when the user tries to submit without selecting whether the overstay is authorised', async () => {

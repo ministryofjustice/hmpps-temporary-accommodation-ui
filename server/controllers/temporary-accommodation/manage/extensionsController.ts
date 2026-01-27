@@ -58,9 +58,9 @@ export default class ExtensionsController {
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'newDepartureDate'),
       }
 
-      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
-
       if (config.flags.bookingOverstayEnabled && newExtension.newDepartureDate) {
+        const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+
         const lengthOfStay = nightsBetween(booking.arrivalDate, newExtension.newDepartureDate)
 
         if (lengthOfStay >= 84) {
@@ -70,6 +70,7 @@ export default class ExtensionsController {
               newDepartureDate: newExtension.newDepartureDate,
             },
           })
+          req.session.departure = undefined
           res.redirect(address)
           return
         }

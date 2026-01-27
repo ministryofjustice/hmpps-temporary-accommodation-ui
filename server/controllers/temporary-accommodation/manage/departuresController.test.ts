@@ -1,5 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
+import { format as urlFormat } from 'url'
+import { addDays } from 'date-fns'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, DepartureService, PremisesService } from '../../../services'
@@ -91,6 +93,10 @@ describe('DeparturesController', () => {
   })
 
   describe('create', () => {
+    afterEach(() => {
+      config.flags.bookingOverstayEnabled = false
+    })
+
     it('creates a departure and redirects to the show booking page', async () => {
       const requestHandler = departuresController.create()
 
@@ -127,6 +133,44 @@ describe('DeparturesController', () => {
       expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
+    it('redirects to the overstay page when the extension puts the stay over 84 nights', async () => {
+      config.flags.bookingOverstayEnabled = true
+
+      const ninetyDaysAgo = addDays(new Date(), -90)
+      const yesterday = addDays(new Date(), -1)
+      const newDepartureDate = DateFormats.dateObjToIsoDate(yesterday)
+
+      const booking = cas3BookingFactory.build({ arrivalDate: DateFormats.dateObjToIsoDate(ninetyDaysAgo) })
+
+      const departure = cas3DepartureFactory.build({ dateTime: DateFormats.dateObjToIsoDateTime(yesterday) })
+      const newDeparture = cas3NewDepartureFactory.build({ ...departure })
+
+      request.params = {
+        premisesId,
+        bedspaceId,
+        bookingId,
+      }
+      request.body = {
+        ...newDeparture,
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
+      }
+
+      bookingService.getBooking.mockResolvedValue(booking)
+
+      const requestHandler = departuresController.create()
+
+      await requestHandler(request, response, next)
+
+      const address = urlFormat({
+        pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
+        query: { newDepartureDate },
+      })
+
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, bookingId)
+      expect(response.redirect).toHaveBeenCalledWith(address)
+      expect(request.session.departure).toEqual(expect.objectContaining(newDeparture))
+    })
+
     it('renders with errors if the API returns an error', async () => {
       const requestHandler = departuresController.create()
 
@@ -156,6 +200,24 @@ describe('DeparturesController', () => {
         request,
         response,
         err,
+        paths.bookings.departures.new({ premisesId, bedspaceId, bookingId }),
+      )
+    })
+
+    it('renders with errors if the departure date is missing', async () => {
+      const requestHandler = departuresController.create()
+
+      const newDeparture = cas3NewDepartureFactory.build({ dateTime: undefined })
+
+      request.params = { premisesId, bedspaceId, bookingId }
+      request.body = { ...newDeparture }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        expect.any(Error),
         paths.bookings.departures.new({ premisesId, bedspaceId, bookingId }),
       )
     })

@@ -1,9 +1,10 @@
 import type { Request, RequestHandler, Response } from 'express'
 import type { Cas3NewDeparture } from '@approved-premises/api'
+import { format as urlFormat } from 'url'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, DepartureService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import { DateFormats } from '../../../utils/dateUtils'
+import { DateFormats, nightsBetween } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import config from '../../../config'
@@ -55,13 +56,45 @@ export default class DeparturesController {
       }
 
       try {
-        await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
+        if (!newDeparture.dateTime || !newDeparture.reasonId || !newDeparture.moveOnCategoryId) {
+          const error = new Error()
+          if (!newDeparture.dateTime) {
+            insertGenericError(error, 'dateTime', 'empty')
+          }
+          if (!newDeparture.reasonId) {
+            insertGenericError(error, 'reasonId', 'empty')
+          }
+          if (!newDeparture.moveOnCategoryId) {
+            insertGenericError(error, 'moveOnCategoryId', 'empty')
+          }
+          throw error
+        }
 
         if (DateFormats.isoToDateObj(newDeparture.dateTime) > new Date()) {
           const error = new Error()
           insertGenericError(error, 'dateTime', 'departureDateInFuture')
           throw error
         }
+
+        if (config.flags.bookingOverstayEnabled && newDeparture.dateTime) {
+          const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+
+          const newDepartureDate = DateFormats.dateObjToIsoDate(DateFormats.isoToDateObj(newDeparture.dateTime))
+          const lengthOfStay = nightsBetween(booking.arrivalDate, newDepartureDate)
+
+          if (lengthOfStay >= 84) {
+            const address = urlFormat({
+              pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
+              query: { newDepartureDate },
+            })
+
+            req.session.departure = newDeparture
+            res.redirect(address)
+            return
+          }
+        }
+
+        await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
 
         req.flash('success', {
           title: 'Booking marked as departed',

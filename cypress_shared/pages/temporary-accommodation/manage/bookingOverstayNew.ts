@@ -22,11 +22,14 @@ export default class BookingOverstayNewPage extends Page {
     bedspace: Cas3Bedspace,
     booking: Cas3Booking,
     overstay: Cas3Overstay | NewOverstay,
+    private departed: boolean,
   ) {
     const overstayDays = nightsBetween(booking.arrivalDate, overstay.newDepartureDate) - 84
-    super(
-      `The new departure date means the booking is ${overstayDays} ${overstayDays === 1 ? 'night' : 'nights'} over the limit`,
-    )
+    const nights = `${overstayDays} ${overstayDays === 1 ? 'night' : 'nights'}`
+    const title = departed
+      ? `The departure date means the booking was overstayed by ${nights}`
+      : `The new departure date means the booking is ${nights} over the limit`
+    super(title)
 
     this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, bedspace, 'booking')
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
@@ -39,9 +42,10 @@ export default class BookingOverstayNewPage extends Page {
     bedspace: Cas3Bedspace,
     booking: Cas3Booking,
     overstay: NewOverstay | Cas3Overstay,
+    departed: boolean,
   ): BookingOverstayNewPage {
     cy.visit(paths.bookings.overstays.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))
-    return new BookingOverstayNewPage(premises, bedspace, booking, overstay)
+    return new BookingOverstayNewPage(premises, bedspace, booking, overstay, departed)
   }
 
   shouldShowBookingDetails(): void {
@@ -53,7 +57,7 @@ export default class BookingOverstayNewPage extends Page {
   completeForm(newOverstay: NewOverstay): void {
     this.clearForm()
 
-    this.getLegend('Is this an authorised overstay?')
+    this.getLegend(this.departed ? 'Was this an authorised overstay' : 'Is this an authorised overstay?')
     this.checkRadioByNameAndValue('isAuthorised', newOverstay.isAuthorised ? 'yes' : 'no')
 
     if ('reason' in newOverstay) {

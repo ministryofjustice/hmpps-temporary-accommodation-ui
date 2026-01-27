@@ -2,7 +2,7 @@ import { Request, RequestHandler, Response } from 'express'
 import { NewOverstay } from '@approved-premises/api'
 import { format as urlFormat } from 'url'
 import config from '../../../config'
-import { BookingService, OverstaysService, PremisesService } from '../../../services'
+import { BookingService, DepartureService, OverstaysService, PremisesService } from '../../../services'
 import {
   addValidationErrorsAndRedirect,
   catchValidationErrorOrPropogate,
@@ -22,6 +22,7 @@ export default class OverstaysController {
     private readonly bedspaceService: BedspaceService,
     private readonly bookingsService: BookingService,
     private readonly overstaysService: OverstaysService,
+    private readonly departureService: DepartureService,
   ) {}
 
   new(): RequestHandler {
@@ -45,7 +46,20 @@ export default class OverstaysController {
       const nights = nightsBetween(booking.arrivalDate, newDepartureDate as string)
       const nightsOverLimit = nights - 84
 
-      const title = `The new departure date means the booking is ${nightsOverLimit} ${nightsOverLimit === 1 ? 'night' : 'nights'} over the limit`
+      const numberOfNights = `${nightsOverLimit} ${nightsOverLimit === 1 ? 'night' : 'nights'}`
+
+      let title: string
+      let question: string
+
+      const { departure } = req.session
+
+      if (departure === undefined) {
+        title = `The new departure date means the booking is ${numberOfNights} over the limit`
+        question = 'Is this an authorised overstay?'
+      } else {
+        title = `The departure date means the booking was overstayed by ${numberOfNights}`
+        question = 'Was this an authorised overstay?'
+      }
 
       return res.render('temporary-accommodation/overstays/new', {
         premises,
@@ -54,6 +68,7 @@ export default class OverstaysController {
         newDepartureDate,
         nightsOverLimit,
         title,
+        question,
         errors,
         errorSummary,
         ...userInput,
@@ -85,18 +100,27 @@ export default class OverstaysController {
         newOverstay.reason = req.body.reason
       }
 
+      let redirectUrl = this.getOverstayUrl(premisesId, bedspaceId, bookingId, req.body.newDepartureDate)
+      let successMessage = 'Booking departure date changed'
+
       try {
+        const { departure } = req.session
+
         await this.overstaysService.createOverstay(callConfig, premisesId, bookingId, newOverstay)
 
-        req.flash('success', 'Booking departure date changed')
+        if (departure !== undefined) {
+          // redirectUrl is used in the catch block, ignore any IDE warnings about it being unused
+          redirectUrl = paths.bookings.departures.new({ premisesId, bedspaceId, bookingId })
+          successMessage = 'Booking marked as departed'
+          await this.departureService.createDeparture(callConfig, premisesId, bookingId, departure)
+          req.session.departure = undefined
+        }
+
+        req.flash('success', successMessage)
         return res.redirect(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       } catch (err) {
-        const redirectUrl =
-          err.status === 409
-            ? paths.bookings.extensions.new({ premisesId, bedspaceId, bookingId })
-            : this.getOverstayUrl(premisesId, bedspaceId, bookingId, req.body.newDepartureDate)
-
         if (err.status === 409) {
+          redirectUrl = paths.bookings.extensions.new({ premisesId, bedspaceId, bookingId })
           insertBespokeError(err, generateConflictBespokeError(err, premisesId, bedspaceId, 'singular'))
           insertGenericError(err, 'newDepartureDate', 'conflict')
         }

@@ -31,7 +31,11 @@ export default class ListPage extends Page {
 
   clickAssessment(assessment: Assessment) {
     if (isFullPerson(assessment.application.person)) {
-      cy.get('a').contains(assessment.application.person.name).click()
+      cy.get('td')
+        .contains(DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate))
+        .parent('tr')
+        .contains(assessment.application.person.name)
+        .click()
     } else {
       cy.get(`a[href*="${paths.assessments.summary({ id: assessment.id })}"]`).click()
     }

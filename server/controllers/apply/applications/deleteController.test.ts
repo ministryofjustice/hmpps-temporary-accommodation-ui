@@ -84,7 +84,7 @@ describe('DeleteController', () => {
         request,
         response,
         expect.any(Error),
-        paths.applications.index({ id: 'some-id' }),
+        paths.applications.show({ id: 'some-id' }),
         'application',
       )
     })

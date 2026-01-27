@@ -242,6 +242,7 @@ context('Apply', () => {
             status: 'unallocated',
             person: assessment.application.person,
             id: assessment.id,
+            arrivalDate: assessment.accommodationRequiredFromDate,
           })
 
           const timeline = timelineEventsFactory.build()
@@ -430,6 +431,7 @@ context('Apply', () => {
             status: 'unallocated',
             person: assessment.application.person,
             id: assessment.id,
+            arrivalDate: assessment.accommodationRequiredFromDate,
           })
 
           cy.task('stubAssessments', { data: assessmentSummary })

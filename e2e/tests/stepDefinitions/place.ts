@@ -1,7 +1,7 @@
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 
 import type {
-  TemporaryAccommodationAssessment as Assessment,
+  Cas3Assessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
 } from '@approved-premises/api'
 import PlaceHelper from '../../../cypress_shared/helpers/place'

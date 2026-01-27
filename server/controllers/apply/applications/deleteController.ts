@@ -37,11 +37,11 @@ export default class DeleteController {
       if (confirmDelete === 'yes') {
         try {
           await this.applicationService.deleteApplication(callConfig, id)
-          req.flash('success', `You have deleted the referral`)
+          req.flash('success', 'You have deleted the referral')
           return res.redirect(paths.applications.index({}))
         } catch (err) {
           insertGenericError(err, 'delete', 'invalid')
-          catchValidationErrorOrPropogate(req, res, err, paths.applications.index({ id }), 'application')
+          return catchValidationErrorOrPropogate(req, res, err, paths.applications.show({ id }), 'application')
         }
       }
 

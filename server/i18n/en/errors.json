@@ -329,6 +329,9 @@
     },
     "confirmation": {
       "invalid": "You must confirm the information provided is complete, accurate and up to date"
+    },
+    "delete": {
+      "invalid": "Unable to delete referral"
     }
   },
   "assessmentUpdate": {

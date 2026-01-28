@@ -19,6 +19,8 @@
 
 {% block content %}
 
+    {% include 'partials/plannedMaintenanceBanner.njk' %}
+
     {{ showErrorSummary(errorSummary) }}
     
     <h1 class="govuk-heading-xl">

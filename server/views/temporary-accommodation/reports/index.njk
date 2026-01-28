@@ -23,6 +23,8 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
 
+            {% include 'partials/plannedMaintenanceBanner.njk' %}
+
             {% include "../../_messages.njk" %}
             {% set context = fetchContext() %}
 

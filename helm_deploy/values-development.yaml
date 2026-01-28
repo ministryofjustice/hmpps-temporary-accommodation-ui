@@ -27,6 +27,7 @@ generic-service:
     SHOW_GAP_REPORT_BUTTON: true
     IN_MAINTENANCE_MODE: false
     BOOKING_OVERSTAY_ENABLED: true
+    PLANNED_MAINTENANCE_BANNER: true
 
   namespace_secrets:
     sqs-hmpps-audit-secret:

@@ -1,9 +1,10 @@
 import type { Request, RequestHandler, Response } from 'express'
 import type { Cas3NewDeparture } from '@approved-premises/api'
+import { format as urlFormat } from 'url'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, DepartureService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import { DateFormats } from '../../../utils/dateUtils'
+import { DateFormats, nightsBetween } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import config from '../../../config'
@@ -52,6 +53,24 @@ export default class DeparturesController {
       const newDeparture: Cas3NewDeparture = {
         ...req.body,
         ...DateFormats.dateAndTimeInputsToIsoString({ ...req.body }, 'dateTime', { representation: 'complete' }),
+      }
+
+      if (config.flags.bookingOverstayEnabled && newDeparture.dateTime) {
+        const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+
+        const newDepartureDate = DateFormats.dateObjToIsoDate(DateFormats.isoToDateObj(newDeparture.dateTime))
+        const lengthOfStay = nightsBetween(booking.arrivalDate, newDepartureDate)
+
+        if (lengthOfStay >= 84) {
+          const address = urlFormat({
+            pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
+            query: { newDepartureDate },
+          })
+
+          req.session.departure = newDeparture
+          res.redirect(address)
+          return
+        }
       }
 
       try {

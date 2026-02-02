@@ -13,6 +13,11 @@ export default function setUpMaintenancePageRedirect(): Router {
         return res.redirect(302, paths.static.maintenance({}))
       }
     }
+
+    if (!config.flags.maintenanceMode && req.path === '/maintenance') {
+      return res.redirect(302, '/')
+    }
+
     return next()
   })
 

@@ -28,7 +28,7 @@ export class EditBedspacePage extends BasePage {
   async clearFormDetails() {
     await this.page.getByLabel('Bedspace reference').clear()
     // using a for loop with awaits as using Promise.all with checkboxes.map was very flaky
-    // eslint-disable-next-line no-restricted-syntax
+
     for (const checkbox of await this.page.getByRole('checkbox').all()) {
       // eslint-disable-next-line no-await-in-loop
       await checkbox.uncheck()

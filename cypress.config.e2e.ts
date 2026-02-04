@@ -1,8 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { defineConfig } from 'cypress'
 import createBundler from '@bahmutov/cypress-esbuild-preprocessor'
 import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor'
+// eslint-disable-next-line import/no-named-as-default
 import createEsbuildPlugin from '@badeball/cypress-cucumber-preprocessor/esbuild'
-import NodeModulesPolyfillPlugin from '@esbuild-plugins/node-modules-polyfill'
+import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
 
 async function setupNodeEvents(
   on: Cypress.PluginEvents,

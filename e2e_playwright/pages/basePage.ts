@@ -61,7 +61,7 @@ export class BasePage {
     const labels = []
 
     // using a for loop with awaits here as playwright was unreliable checking checkboxes with Promise.all and map/forEach
-    // eslint-disable-next-line no-restricted-syntax
+
     for (const checkbox of checkBoxes.filter(_ => Math.random() > 0.5)) {
       const parent = checkbox.locator('..')
       const label = parent.locator('label').first()

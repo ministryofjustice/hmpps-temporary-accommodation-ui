@@ -1,8 +1,0 @@
-node_modules
-public
-assets
-cypress.json
-reporter-config.json
-dist/
-e2e_playwright/playwright-report
-e2e_playwright/test-results

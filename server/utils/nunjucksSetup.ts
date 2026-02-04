@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* istanbul ignore file */
 
 import * as pathModule from 'path'

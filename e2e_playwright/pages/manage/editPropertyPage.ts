@@ -10,7 +10,7 @@ export class EditPropertyPage extends EditablePropertyPage {
 
   async clearFormDetails() {
     await this.page.getByLabel('Enter a property reference').clear()
-    // eslint-disable-next-line no-restricted-syntax
+
     for (const input of await this.getInputsByLabel('What is the property address?').all()) {
       // eslint-disable-next-line no-await-in-loop
       await input.clear()
@@ -18,7 +18,7 @@ export class EditPropertyPage extends EditablePropertyPage {
     await this.page.getByLabel('What is the local authority?').clear()
     await this.page.getByLabel('What is the region?').selectOption('Select a probation region')
     await this.page.getByLabel('What is the PDU?').selectOption('Select a PDU')
-    // eslint-disable-next-line no-restricted-syntax
+
     for (const checkbox of await this.page.getByRole('checkbox').all()) {
       // eslint-disable-next-line no-await-in-loop
       await checkbox.uncheck()

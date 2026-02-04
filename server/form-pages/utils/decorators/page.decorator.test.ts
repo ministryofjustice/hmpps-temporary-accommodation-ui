@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { TemporaryAccommodationApplication } from '@approved-premises/api'
 import { applicationFactory } from '../../../testutils/factories'
 import Page from './page.decorator'

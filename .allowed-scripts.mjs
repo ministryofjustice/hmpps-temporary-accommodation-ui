@@ -8,5 +8,6 @@ export default configureAllowedScripts({
     'node_modules/esbuild@0.27.0': 'ALLOW',
     'node_modules/fsevents@2.3.3': 'ALLOW',
     'node_modules/playwright/node_modules/fsevents@2.3.2': 'ALLOW',
+    'node_modules/unrs-resolver@1.11.1': 'ALLOW',
   },
 })

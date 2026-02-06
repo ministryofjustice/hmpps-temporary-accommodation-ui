@@ -16,6 +16,7 @@ import {
 import { DateFormats } from '../../../../server/utils/dateUtils'
 import Cas3NewOverstay from '../../../../server/testutils/factories/cas3NewOverstay'
 import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureNew'
+import BookingDepartureEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureEdit'
 
 context('Booking overstay', () => {
   beforeEach(() => {
@@ -89,6 +90,66 @@ context('Booking overstay', () => {
     departurePage.completeForm(newDeparture)
 
     const overstay = cas3OverstayFactory.build({ newDepartureDate: DateFormats.dateObjToIsoDate(yesterday) })
+    const overstayPage = Page.verifyOnPage(BookingOverstayNewPage, premises, bedspace, booking, overstay, true)
+
+    const newOverstay = Cas3NewOverstay.build({ ...overstay })
+    cy.task('stubOverstayCreate', { premisesId: premises.id, bookingId: booking.id, overstay: newOverstay })
+    cy.task('stubDepartureCreate', { premisesId: premises.id, bookingId: booking.id, departure })
+
+    overstayPage.completeForm(newOverstay)
+
+    cy.task('verifyOverstayCreate', { premisesId: premises.id, bookingId: booking.id }).then(requests => {
+      expect(requests).to.have.length(1)
+      const requestBody = JSON.parse(requests[0].body)
+
+      const normaliseNewlines = (value?: string) => (value || '').replace(/\r\n/g, '\n')
+
+      expect(requestBody.newDepartureDate).equal(newOverstay.newDepartureDate)
+      expect(requestBody.isAuthorised).equal(newOverstay.isAuthorised)
+      expect(normaliseNewlines(requestBody.reason)).equal(normaliseNewlines(newOverstay.reason))
+    })
+
+    cy.task('verifyDepartureCreate', { premisesId: premises.id, bookingId: booking.id }).then(requests => {
+      expect(requests).to.have.length(1)
+      const requestBody = JSON.parse(requests[0].body)
+      expect(requestBody.dateTime).equal(newDeparture.dateTime)
+      expect(requestBody.reasonId).equal(newDeparture.reasonId)
+      expect(requestBody.moveOnCategoryId).equal(newDeparture.moveOnCategoryId)
+      expect(requestBody.notes).equal(newDeparture.notes)
+    })
+
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, bedspace, booking)
+    bookingShowPage.shouldShowBanner('Booking marked as departed')
+  })
+
+  it('allows me to record an overstay when editing a departure', () => {
+    cy.signIn()
+
+    const arrivalDate = addDays(new Date(), -86)
+    const initialDepartureDate = addDays(new Date(), -2)
+    const newDepartureDate = addDays(new Date(), -1)
+
+    const booking = cas3BookingFactory.departed().build({
+      arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),
+      departureDate: DateFormats.dateObjToIsoDate(initialDepartureDate),
+    })
+    const { premises, bedspace } = setupBookingStateStubs(booking)
+
+    const bookingShow = BookingShowPage.visit(premises, bedspace, booking)
+    cy.task('stubDepartureReferenceData')
+    bookingShow.clickEditDepartedBookingButton()
+
+    const departure = cas3DepartureFactory.build({ dateTime: DateFormats.dateObjToIsoDateTime(newDepartureDate) })
+    const newDeparture = cas3NewDepartureFactory.build({
+      ...departure,
+      reasonId: departure.reason.id,
+      moveOnCategoryId: departure.moveOnCategory.id,
+    })
+
+    const departurePage = Page.verifyOnPage(BookingDepartureEditPage, premises, bedspace, booking)
+    departurePage.completeForm(newDeparture)
+
+    const overstay = cas3OverstayFactory.build({ newDepartureDate: DateFormats.dateObjToIsoDate(newDepartureDate) })
     const overstayPage = Page.verifyOnPage(BookingOverstayNewPage, premises, bedspace, booking, overstay, true)
 
     const newOverstay = Cas3NewOverstay.build({ ...overstay })

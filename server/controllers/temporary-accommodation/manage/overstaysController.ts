@@ -110,10 +110,11 @@ export default class OverstaysController {
 
         if (departure !== undefined) {
           // redirectUrl is used in the catch block, ignore any IDE warnings about it being unused
-          redirectUrl = paths.bookings.departures.new({ premisesId, bedspaceId, bookingId })
+          redirectUrl = req.session.previousPage
           successMessage = 'Booking marked as departed'
           await this.departureService.createDeparture(callConfig, premisesId, bookingId, departure)
           req.session.departure = undefined
+          req.session.previousPage = undefined
         }
 
         req.flash('success', successMessage)

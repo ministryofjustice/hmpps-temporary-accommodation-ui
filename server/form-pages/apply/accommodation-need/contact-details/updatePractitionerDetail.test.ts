@@ -7,12 +7,12 @@ import { errorMessages } from './probationPractitioner'
 
 const testBody = {
   name: 'Jane Doe',
-  email: 'jane.doe@example.org',
+  email: 'jane.doe@justice.gov.uk',
   phone: '0123456789',
 }
 const mockSessionUser = {
   displayName: 'John Smith',
-  email: 'john.smith@example.org',
+  email: 'john.smith@justice.gov.uk',
   telephoneNumber: '0987654321',
 }
 
@@ -73,9 +73,25 @@ describe.each(['name', 'email', 'phone'])('updatePractitionerDetail', (propertyN
     it('returns an error if the relevant property is not populated', () => {
       const page = new ConcreteUpdatePractitionerDetail({}, application)
 
-      expect(page.errors()).toEqual({
-        [propertyName]: errorMessages[propertyName],
-      })
+      if (propertyName === 'email') {
+        expect(page.errors()).toEqual({
+          [propertyName]: errorMessages.emailEmpty,
+        })
+      } else {
+        expect(page.errors()).toEqual({
+          [propertyName]: errorMessages[propertyName],
+        })
+      }
     })
+
+    if (propertyName === 'email') {
+      it.each(['invalid-email', 'test@example.com'])('returns an error if the email is invalid: %s', invalidEmail => {
+        const page = new ConcreteUpdatePractitionerDetail({ email: invalidEmail }, application)
+
+        expect(page.errors()).toEqual({
+          email: errorMessages.emailInvalid,
+        })
+      })
+    }
   })
 })

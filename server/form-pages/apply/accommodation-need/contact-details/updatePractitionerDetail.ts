@@ -2,6 +2,7 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import { PageResponse, type TaskListErrors } from '@approved-premises/ui'
 import { SessionData } from 'express-session'
 import { errorMessages } from './probationPractitioner'
+import { isValidEmail } from '../../../../utils/validation'
 
 export type UpdatePractitionerDetailKey = 'name' | 'email' | 'phone'
 export type UpdatePractitionerDetailBody = Record<UpdatePractitionerDetailKey, string>
@@ -60,7 +61,10 @@ export default abstract class UpdatePractitionerDetail {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body[this.propertyName]) {
-      errors[this.propertyName] = errorMessages[this.propertyName]
+      errors[this.propertyName] =
+        this.propertyName === 'email' ? errorMessages.emailEmpty : errorMessages[this.propertyName]
+    } else if (this.propertyName === 'email' && !isValidEmail(this.body[this.propertyName] || '')) {
+      errors[this.propertyName] = errorMessages.emailInvalid
     }
 
     return errors

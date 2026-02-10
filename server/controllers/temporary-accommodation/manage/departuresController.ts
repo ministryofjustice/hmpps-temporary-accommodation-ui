@@ -1,13 +1,19 @@
 import type { Request, RequestHandler, Response } from 'express'
-import type { Cas3NewDeparture } from '@approved-premises/api'
 import { format as urlFormat } from 'url'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, DepartureService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import { DateFormats, nightsBetween } from '../../../utils/dateUtils'
+import {
+  dateAndTimeInputsAreValidDates,
+  DateFormats,
+  dateIsBlank,
+  dateIsInFuture,
+  nightsBetween,
+} from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import config from '../../../config'
+import { SanitisedError } from '../../../sanitisedError'
 
 export default class DeparturesController {
   constructor(
@@ -50,33 +56,15 @@ export default class DeparturesController {
       const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
-      const newDeparture: Cas3NewDeparture = {
-        ...req.body,
-        ...DateFormats.dateAndTimeInputsToIsoString({ ...req.body }, 'dateTime', { representation: 'complete' }),
-      }
-
       try {
-        if (!newDeparture.dateTime || !newDeparture.reasonId || !newDeparture.moveOnCategoryId) {
-          const error = new Error()
-          if (!newDeparture.dateTime) {
-            insertGenericError(error, 'dateTime', 'empty')
-          }
-          if (!newDeparture.reasonId) {
-            insertGenericError(error, 'reasonId', 'empty')
-          }
-          if (!newDeparture.moveOnCategoryId) {
-            insertGenericError(error, 'moveOnCategoryId', 'empty')
-          }
-          throw error
+        this.validateNewDeparture(req)
+
+        const newDeparture = {
+          ...req.body,
+          ...DateFormats.dateAndTimeInputsToIsoString({ ...req.body }, 'dateTime', { representation: 'complete' }),
         }
 
-        if (DateFormats.isoToDateObj(newDeparture.dateTime) > new Date()) {
-          const error = new Error()
-          insertGenericError(error, 'dateTime', 'departureDateInFuture')
-          throw error
-        }
-
-        if (config.flags.bookingOverstayEnabled && newDeparture.dateTime) {
+        if (config.flags.bookingOverstayEnabled) {
           const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
           const newDepartureDate = DateFormats.dateObjToIsoDate(DateFormats.isoToDateObj(newDeparture.dateTime))
@@ -89,6 +77,7 @@ export default class DeparturesController {
             })
 
             req.session.departure = newDeparture
+            req.session.previousPage = paths.bookings.departures.new({ premisesId, bedspaceId, bookingId })
             res.redirect(address)
             return
           }
@@ -150,12 +139,33 @@ export default class DeparturesController {
       const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
-      const newDeparture: Cas3NewDeparture = {
-        ...req.body,
-        ...DateFormats.dateAndTimeInputsToIsoString({ ...req.body }, 'dateTime', { representation: 'complete' }),
-      }
-
       try {
+        this.validateNewDeparture(req)
+
+        const newDeparture = {
+          ...req.body,
+          ...DateFormats.dateAndTimeInputsToIsoString({ ...req.body }, 'dateTime', { representation: 'complete' }),
+        }
+
+        if (config.flags.bookingOverstayEnabled) {
+          const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+
+          const newDepartureDate = DateFormats.dateObjToIsoDate(DateFormats.isoToDateObj(newDeparture.dateTime))
+          const lengthOfStay = nightsBetween(booking.arrivalDate, newDepartureDate)
+
+          if (lengthOfStay >= 84) {
+            const address = urlFormat({
+              pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
+              query: { newDepartureDate },
+            })
+
+            req.session.departure = newDeparture
+            req.session.previousPage = paths.bookings.departures.edit({ premisesId, bedspaceId, bookingId })
+            res.redirect(address)
+            return
+          }
+        }
+
         await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
 
         req.flash('success', 'Departure details changed')
@@ -168,6 +178,30 @@ export default class DeparturesController {
           paths.bookings.departures.edit({ premisesId, bedspaceId, bookingId }),
         )
       }
+    }
+  }
+
+  private validateNewDeparture(req: Request): void {
+    const error = new Error()
+
+    if (dateIsBlank(req.body, 'dateTime')) {
+      insertGenericError(error, 'dateTime', 'empty')
+    } else if (!dateAndTimeInputsAreValidDates(req.body, 'dateTime')) {
+      insertGenericError(error, 'dateTime', 'invalidDate')
+    } else if (dateIsInFuture(req.body.dateTime)) {
+      insertGenericError(error, 'dateTime', 'departureDateInFuture')
+    }
+
+    if (!req.body.reasonId) {
+      insertGenericError(error, 'reasonId', 'empty')
+    }
+
+    if (!req.body.moveOnCategoryId) {
+      insertGenericError(error, 'moveOnCategoryId', 'empty')
+    }
+
+    if ((error as SanitisedError).data) {
+      throw error
     }
   }
 }

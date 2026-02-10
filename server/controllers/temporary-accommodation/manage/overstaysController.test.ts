@@ -280,7 +280,14 @@ describe('OverstaysController', () => {
       })
       const overstay = cas3OverstayFactory.build({ ...newOverstay })
 
+      const newDeparturesPage = paths.bookings.departures.new({
+        premisesId: premises.id,
+        bedspaceId: bedspace.id,
+        bookingId: booking.id,
+      })
+
       request.session.departure = newDeparture
+      request.session.previousPage = newDeparturesPage
 
       request.body = {
         newDepartureDate: newOverstay.newDepartureDate,
@@ -298,12 +305,7 @@ describe('OverstaysController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        err,
-        paths.bookings.departures.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
-      )
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, newDeparturesPage)
     })
 
     it('shows an error when the user tries to submit without selecting whether the overstay is authorised', async () => {

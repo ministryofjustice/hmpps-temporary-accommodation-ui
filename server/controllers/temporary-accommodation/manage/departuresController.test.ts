@@ -133,7 +133,7 @@ describe('DeparturesController', () => {
       expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
-    it('redirects to the overstay page when the extension puts the stay over 84 nights', async () => {
+    it('redirects to the overstay page when the departure puts the stay over 84 nights', async () => {
       config.flags.bookingOverstayEnabled = true
 
       const ninetyDaysAgo = addDays(new Date(), -90)
@@ -169,6 +169,7 @@ describe('DeparturesController', () => {
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, bookingId)
       expect(response.redirect).toHaveBeenCalledWith(address)
       expect(request.session.departure).toEqual(expect.objectContaining(newDeparture))
+      expect(request.session.previousPage).toEqual(paths.bookings.departures.new({ premisesId, bedspaceId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -211,6 +212,66 @@ describe('DeparturesController', () => {
 
       request.params = { premisesId, bedspaceId, bookingId }
       request.body = { ...newDeparture }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        expect.any(Error),
+        paths.bookings.departures.new({ premisesId, bedspaceId, bookingId }),
+      )
+    })
+
+    it('renders with errors if the departure reason is missing', async () => {
+      const requestHandler = departuresController.create()
+
+      const newDeparture = cas3NewDepartureFactory.build({ reasonId: undefined })
+
+      request.params = { premisesId, bedspaceId, bookingId }
+      request.body = { ...newDeparture }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        expect.any(Error),
+        paths.bookings.departures.new({ premisesId, bedspaceId, bookingId }),
+      )
+    })
+
+    it('renders with errors if the move on category is missing', async () => {
+      const requestHandler = departuresController.create()
+
+      const newDeparture = cas3NewDepartureFactory.build({ moveOnCategoryId: undefined })
+
+      request.params = { premisesId, bedspaceId, bookingId }
+      request.body = { ...newDeparture }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        expect.any(Error),
+        paths.bookings.departures.new({ premisesId, bedspaceId, bookingId }),
+      )
+    })
+
+    it('renders with errors if the departure date is incorrectly formatted', async () => {
+      const requestHandler = departuresController.create()
+
+      const newDeparture = cas3NewDepartureFactory.build({})
+
+      request.params = { premisesId, bedspaceId, bookingId }
+      const dateParts = DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime')
+      request.body = {
+        ...newDeparture,
+        'dateTime-day': dateParts['dateTime-day'],
+        'dateTime-month': '',
+        'dateTime-year': dateParts['dateTime-year'],
+      }
 
       await requestHandler(request, response, next)
 
@@ -329,6 +390,47 @@ describe('DeparturesController', () => {
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Departure details changed')
       expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
+    })
+
+    it('redirects to the overstay page when the departure puts the stay over 84 nights', async () => {
+      config.flags.bookingOverstayEnabled = true
+
+      const ninetyDaysAgo = addDays(new Date(), -90)
+      const yesterday = addDays(new Date(), -1)
+      const newDepartureDate = DateFormats.dateObjToIsoDate(yesterday)
+
+      const booking = cas3BookingFactory.build({ arrivalDate: DateFormats.dateObjToIsoDate(ninetyDaysAgo) })
+
+      const departure = cas3DepartureFactory.build({ dateTime: DateFormats.dateObjToIsoDateTime(yesterday) })
+      const newDeparture = cas3NewDepartureFactory.build({ ...departure })
+
+      request.params = {
+        premisesId,
+        bedspaceId,
+        bookingId,
+      }
+      request.body = {
+        ...newDeparture,
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
+      }
+
+      bookingService.getBooking.mockResolvedValue(booking)
+
+      const requestHandler = departuresController.update()
+
+      await requestHandler(request, response, next)
+
+      const address = urlFormat({
+        pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
+        query: { newDepartureDate },
+      })
+
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, bookingId)
+      expect(response.redirect).toHaveBeenCalledWith(address)
+      expect(request.session.departure).toEqual(expect.objectContaining(newDeparture))
+      expect(request.session.previousPage).toEqual(
+        paths.bookings.departures.edit({ premisesId, bedspaceId, bookingId }),
+      )
     })
 
     it('renders with errors if the API returns an error', async () => {

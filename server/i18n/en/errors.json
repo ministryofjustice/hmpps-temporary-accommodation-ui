@@ -60,6 +60,7 @@
     "dateTime": {
       "empty": "You must enter a departure date and time",
       "invalid": "The departure date and time is an invalid date and time",
+      "invalidDate": "The departure date is an invalid date",
       "beforeBookingArrivalDate": "The departure date and time must be after the booking's arrival date",
       "departureDateInFuture": "Departure date cannot be in the future"
     },

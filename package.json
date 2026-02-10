@@ -235,6 +235,7 @@
   "overrides": {
     "typescript-json-schema": {
       "typescript": "$typescript"
-    }
+    },
+    "undici": "^6.23.0"
   }
 }

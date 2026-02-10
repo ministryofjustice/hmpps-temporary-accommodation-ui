@@ -86,6 +86,7 @@ export type { Cas3ReferralHistory } from './models/Cas3ReferralHistory';
 export type { Cas3ReferralHistoryUserNote } from './models/Cas3ReferralHistoryUserNote';
 export type { Cas3ReportType } from './models/Cas3ReportType';
 export type { Cas3SubmitApplication } from './models/Cas3SubmitApplication';
+export type { Cas3SuitableApplication } from './models/Cas3SuitableApplication';
 export type { Cas3Turnaround } from './models/Cas3Turnaround';
 export type { Cas3UnarchiveBedspace } from './models/Cas3UnarchiveBedspace';
 export type { Cas3UnarchivePremises } from './models/Cas3UnarchivePremises';

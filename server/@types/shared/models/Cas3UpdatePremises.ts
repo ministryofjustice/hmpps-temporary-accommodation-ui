@@ -13,11 +13,6 @@ export type Cas3UpdatePremises = {
     probationRegionId: string;
     reference: string;
     town?: string;
-    /**
-     * Will be replaced with turnaroundWorkingDays for v2
-     * @deprecated
-     */
-    turnaroundWorkingDayCount?: number;
     turnaroundWorkingDays?: number;
 };
 

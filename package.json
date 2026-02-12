@@ -138,7 +138,7 @@
     "@badeball/cypress-cucumber-preprocessor": "^22.0.1",
     "@faker-js/faker": "^9.0.3",
     "@microsoft/applicationinsights-web": "^3.3.5",
-    "@ministryofjustice/frontend": "^5.1.2",
+    "@ministryofjustice/frontend": "^8.0.0",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@playwright/test": "^1.56.1",
     "@sentry/node": "^7.14.1",

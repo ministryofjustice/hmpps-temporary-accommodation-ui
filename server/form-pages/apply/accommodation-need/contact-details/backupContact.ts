@@ -2,6 +2,7 @@ import { TaskListErrors } from '@approved-premises/ui'
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import TasklistPage from '../../../tasklistPage'
 import { Page } from '../../../utils/decorators'
+import { isValidEmail } from '../../../../utils/validation'
 
 type BackupContactBody = {
   name: string
@@ -53,6 +54,8 @@ export default class BackupContact implements TasklistPage {
 
     if (!this.body.email) {
       errors.email = 'You must specify an email address'
+    } else if (!isValidEmail(this.body.email)) {
+      errors.email = 'Enter an email address ending .gov.uk'
     }
 
     return errors

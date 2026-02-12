@@ -2,7 +2,7 @@ import { applicationFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import BackupContact from './backupContact'
 
-const body = { name: 'Some Name', phone: '01234 56789', email: 'name@example.com' }
+const body = { name: 'Some Name', phone: '01234 56789', email: 'name@justice.gov.uk' }
 
 describe('BackupContact', () => {
   const application = applicationFactory.build()
@@ -38,6 +38,16 @@ describe('BackupContact', () => {
       const page = new BackupContact({ ...body, email: undefined }, application)
       expect(page.errors()).toEqual({ email: 'You must specify an email address' })
     })
+
+    it('returns an error if the email address is not valid', () => {
+      const page = new BackupContact({ ...body, email: 'invalid-email' }, application)
+      expect(page.errors()).toEqual({ email: 'Enter an email address ending .gov.uk' })
+    })
+
+    it('returns an error if the email address is not a .gov.uk email address', () => {
+      const page = new BackupContact({ ...body, email: 'name@example.com' }, application)
+      expect(page.errors()).toEqual({ email: 'Enter an email address ending .gov.uk' })
+    })
   })
 
   describe('response', () => {
@@ -49,7 +59,7 @@ describe('BackupContact', () => {
           {
             Name: 'Some Name',
             Phone: '01234 56789',
-            Email: 'name@example.com',
+            Email: 'name@justice.gov.uk',
           },
         ],
       })

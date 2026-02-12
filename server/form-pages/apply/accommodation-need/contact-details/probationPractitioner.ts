@@ -4,6 +4,7 @@ import { SessionData } from 'express-session'
 import TasklistPage from '../../../tasklistPage'
 import { Page } from '../../../utils/decorators'
 import paths from '../../../../paths/apply'
+import { isValidEmail } from '../../../../utils/validation'
 
 const bodyProperties = ['name', 'email', 'phone', 'pdu']
 
@@ -16,7 +17,8 @@ export type ProbationPractitionerBody = {
 
 export const errorMessages = {
   name: 'You must specify a name',
-  email: 'You must specify an email address',
+  emailEmpty: 'You must specify an email address',
+  emailInvalid: 'Enter an email address ending .gov.uk',
   phone: 'You must specify a phone number',
   pdu: 'You must select a PDU',
 }
@@ -89,7 +91,9 @@ export default class ProbationPractitioner implements TasklistPage {
     }
 
     if (!this.body.email) {
-      errors.email = errorMessages.email
+      errors.email = errorMessages.emailEmpty
+    } else if (!isValidEmail(this.body.email)) {
+      errors.email = errorMessages.emailInvalid
     }
 
     if (!this.body.phone) {

@@ -7,7 +7,7 @@ import paths from '../../../../paths/apply'
 describe('ProbationPractitioner', () => {
   const body: ProbationPractitionerBody = {
     name: 'Jane Doe',
-    email: 'jane.doe@example.org',
+    email: 'jane.doe@justice.gov.uk',
     phone: '0123456789',
     pdu: { id: 'pdu-id', name: 'PDU Name' },
   }
@@ -23,7 +23,7 @@ describe('ProbationPractitioner', () => {
   const session = {
     userDetails: {
       displayName: 'John Smith',
-      email: 'john.smith@example.org',
+      email: 'john.smith@justice.gov.uk',
       telephoneNumber: '0987654321',
       probationDeliveryUnit: {
         id: 'user-pdu-id',
@@ -42,7 +42,7 @@ describe('ProbationPractitioner', () => {
             name: 'Jack Black',
           },
           'practitioner-email': {
-            email: 'jack.black@example.org',
+            email: 'jack.black@justice.gov.uk',
           },
           'practitioner-phone': {
             phone: '0333222111',
@@ -58,7 +58,7 @@ describe('ProbationPractitioner', () => {
 
       expect(page.body).toEqual({
         name: 'Jack Black',
-        email: 'jack.black@example.org',
+        email: 'jack.black@justice.gov.uk',
         phone: '0333222111',
         pdu: {
           id: 'updated-pdu-id',
@@ -80,7 +80,7 @@ describe('ProbationPractitioner', () => {
 
       expect(page.body).toEqual({
         name: 'John Smith',
-        email: 'john.smith@example.org',
+        email: 'john.smith@justice.gov.uk',
         phone: '0987654321',
         pdu: {
           id: 'user-pdu-id',
@@ -96,7 +96,7 @@ describe('ProbationPractitioner', () => {
           'contact-details': {
             'probation-practitioner': {
               name: 'Jane Doe',
-              email: 'jane.doe@example.org',
+              email: 'jane.doe@justice.gov.uk',
               phone: '0123456789',
             },
             'practitioner-pdu': {
@@ -109,7 +109,7 @@ describe('ProbationPractitioner', () => {
 
         expect(page.body).toEqual({
           name: 'Jane Doe',
-          email: 'jane.doe@example.org',
+          email: 'jane.doe@justice.gov.uk',
           phone: '0123456789',
           pdu: {
             id: undefined,
@@ -131,7 +131,7 @@ describe('ProbationPractitioner', () => {
         'Probation practitioner details': [
           {
             Name: 'Jane Doe',
-            Email: 'jane.doe@example.org',
+            Email: 'jane.doe@justice.gov.uk',
             Phone: '0123456789',
             PDU: 'PDU Name',
           },
@@ -147,7 +147,7 @@ describe('ProbationPractitioner', () => {
       expect(page.errors()).toEqual({})
     })
 
-    it.each(['name', 'email', 'phone', 'pdu'] as const)(
+    it.each(['name', 'phone', 'pdu'] as const)(
       'returns an error if the %s property is missing in the application',
       key => {
         const bodyIncomplete = { ...body, [key]: undefined } as Partial<ProbationPractitionerBody>
@@ -163,6 +163,24 @@ describe('ProbationPractitioner', () => {
         expect(page.errors()).toEqual({ [key]: errorMessages[key] })
       },
     )
+
+    it.each([
+      { email: undefined, expectedError: errorMessages.emailEmpty, description: 'empty' },
+      { email: 'invalid-email', expectedError: errorMessages.emailInvalid, description: 'invalid-email' },
+      { email: 'test@example.com', expectedError: errorMessages.emailInvalid, description: 'test@example.com' },
+    ])('returns an email error when email is $description', ({ email, expectedError }) => {
+      const bodyInvalidEmail = { ...body, email } as Partial<ProbationPractitionerBody>
+      const applicationInvalidEmail = applicationFactory.build()
+      applicationInvalidEmail.data = {
+        'contact-details': {
+          'probation-practitioner': bodyInvalidEmail,
+        },
+      }
+
+      const page = new ProbationPractitioner({}, applicationInvalidEmail)
+
+      expect(page.errors()).toEqual({ email: expectedError })
+    })
 
     it.each([{}, { id: 'pdu-id' }, { name: 'PDU name' }, { pdu: 'Some PDU' }])(
       'returns a PDU error if the PDU data is missing id or name',
@@ -256,7 +274,7 @@ describe('ProbationPractitioner', () => {
           },
           {
             key: { text: 'Email address' },
-            value: { text: 'jane.doe@example.org' },
+            value: { text: 'jane.doe@justice.gov.uk' },
             actions: {
               items: [
                 {

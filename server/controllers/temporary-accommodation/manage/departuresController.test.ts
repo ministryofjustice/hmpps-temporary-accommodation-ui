@@ -133,6 +133,49 @@ describe('DeparturesController', () => {
       expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
+    it('creates a new departure and redirects to the show booking page when the stay is exactly 84 nights', async () => {
+      config.flags.bookingOverstayEnabled = true
+
+      const requestHandler = departuresController.create()
+
+      const ninetyDaysAgo = addDays(new Date(), -90)
+      const booking = cas3BookingFactory.build({ arrivalDate: DateFormats.dateObjToIsoDate(ninetyDaysAgo) })
+
+      const newDepartureDate = addDays(ninetyDaysAgo, 84)
+      const departure = cas3DepartureFactory.build({ dateTime: DateFormats.dateObjToIsoDateTime(newDepartureDate) })
+      const newDeparture = cas3NewDepartureFactory.build({
+        ...departure,
+      })
+
+      request.params = {
+        premisesId,
+        bedspaceId,
+        bookingId,
+      }
+      request.body = {
+        ...newDeparture,
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
+      }
+
+      bookingService.getBooking.mockResolvedValue(booking)
+      departureService.createDeparture.mockResolvedValue(departure)
+
+      await requestHandler(request, response, next)
+
+      expect(departureService.createDeparture).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bookingId,
+        expect.objectContaining(newDeparture),
+      )
+
+      expect(request.flash).toHaveBeenCalledWith('success', {
+        title: 'Booking marked as departed',
+        text: 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
+      })
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
+    })
+
     it('redirects to the overstay page when the departure puts the stay over 84 nights', async () => {
       config.flags.bookingOverstayEnabled = true
 
@@ -377,6 +420,46 @@ describe('DeparturesController', () => {
         ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
       }
 
+      departureService.createDeparture.mockResolvedValue(departure)
+
+      await requestHandler(request, response, next)
+
+      expect(departureService.createDeparture).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bookingId,
+        expect.objectContaining(newDeparture),
+      )
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Departure details changed')
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
+    })
+
+    it('creates a new departure and redirects to the show booking page when the stay is exactly 84 nights', async () => {
+      config.flags.bookingOverstayEnabled = true
+
+      const requestHandler = departuresController.update()
+
+      const ninetyDaysAgo = addDays(new Date(), -90)
+      const booking = cas3BookingFactory.build({ arrivalDate: DateFormats.dateObjToIsoDate(ninetyDaysAgo) })
+
+      const newDepartureDate = addDays(ninetyDaysAgo, 84)
+      const departure = cas3DepartureFactory.build({ dateTime: DateFormats.dateObjToIsoDateTime(newDepartureDate) })
+      const newDeparture = cas3NewDepartureFactory.build({
+        ...departure,
+      })
+
+      request.params = {
+        premisesId,
+        bedspaceId,
+        bookingId,
+      }
+      request.body = {
+        ...newDeparture,
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
+      }
+
+      bookingService.getBooking.mockResolvedValue(booking)
       departureService.createDeparture.mockResolvedValue(departure)
 
       await requestHandler(request, response, next)

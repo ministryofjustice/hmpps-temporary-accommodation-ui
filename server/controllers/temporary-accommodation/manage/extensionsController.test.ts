@@ -2,6 +2,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 import { addDays } from 'date-fns'
 import { format as urlFormat } from 'url'
+import { Cas3Booking } from '@approved-premises/api'
 import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -137,8 +138,12 @@ describe('ExtensionsController', () => {
   })
 
   describe('create', () => {
-    const booking = cas3BookingFactory.arrived().build({ extensions: [] })
-    bookingService.getBooking.mockResolvedValue(booking)
+    let booking: Cas3Booking
+
+    beforeEach(() => {
+      booking = cas3BookingFactory.arrived().build({ extensions: [] })
+      bookingService.getBooking.mockResolvedValue(booking)
+    })
 
     it('creates an extension and redirects to the show booking page', async () => {
       const requestHandler = extensionsController.create()

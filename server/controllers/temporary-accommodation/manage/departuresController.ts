@@ -70,7 +70,7 @@ export default class DeparturesController {
           const newDepartureDate = DateFormats.dateObjToIsoDate(DateFormats.isoToDateObj(newDeparture.dateTime))
           const lengthOfStay = nightsBetween(booking.arrivalDate, newDepartureDate)
 
-          if (lengthOfStay >= 84) {
+          if (lengthOfStay > 84) {
             const address = urlFormat({
               pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
               query: { newDepartureDate },
@@ -153,7 +153,7 @@ export default class DeparturesController {
           const newDepartureDate = DateFormats.dateObjToIsoDate(DateFormats.isoToDateObj(newDeparture.dateTime))
           const lengthOfStay = nightsBetween(booking.arrivalDate, newDepartureDate)
 
-          if (lengthOfStay >= 84) {
+          if (lengthOfStay > 84) {
             const address = urlFormat({
               pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
               query: { newDepartureDate },

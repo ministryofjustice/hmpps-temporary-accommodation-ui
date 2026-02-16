@@ -63,7 +63,7 @@ export default class ExtensionsController {
 
         const lengthOfStay = nightsBetween(booking.arrivalDate, newExtension.newDepartureDate)
 
-        if (lengthOfStay >= 84) {
+        if (lengthOfStay > 84) {
           const address = urlFormat({
             pathname: paths.bookings.overstays.new({ premisesId, bedspaceId, bookingId }),
             query: {

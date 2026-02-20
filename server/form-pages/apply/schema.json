@@ -165,193 +165,193 @@
               "items": {
                 "enum": [
                   "crdLicence",
-                  "fourteenDayFixedTermRecall",
-                  "twentyEightDayFixedTermRecall",
                   "parole",
-                  "pss",
-                  "standardRecall"
+                  "fixedTermRecall",
+                  "standardRecall",
+                  "riskAssessedRecallReview",
+                  "indeterminatePublicProtectionRarr"
                 ],
                 "type": "string"
               }
             },
-            "pssStartDate-year": {
+            "crdLicenceStartDate-year": {
               "type": "string"
             },
             "paroleStartDate-year": {
               "type": "string"
             },
-            "crdLicenceStartDate-year": {
-              "type": "string"
-            },
-            "fourteenDayFixedTermRecallStartDate-year": {
-              "type": "string"
-            },
-            "twentyEightDayFixedTermRecallStartDate-year": {
+            "fixedTermRecallStartDate-year": {
               "type": "string"
             },
             "standardRecallStartDate-year": {
               "type": "string"
             },
-            "pssStartDate-month": {
+            "riskAssessedRecallReviewStartDate-year": {
               "type": "string"
             },
-            "paroleStartDate-month": {
+            "indeterminatePublicProtectionRarrStartDate-year": {
               "type": "string"
             },
             "crdLicenceStartDate-month": {
               "type": "string"
             },
-            "fourteenDayFixedTermRecallStartDate-month": {
+            "paroleStartDate-month": {
               "type": "string"
             },
-            "twentyEightDayFixedTermRecallStartDate-month": {
+            "fixedTermRecallStartDate-month": {
               "type": "string"
             },
             "standardRecallStartDate-month": {
               "type": "string"
             },
-            "pssStartDate-day": {
+            "riskAssessedRecallReviewStartDate-month": {
               "type": "string"
             },
-            "paroleStartDate-day": {
+            "indeterminatePublicProtectionRarrStartDate-month": {
               "type": "string"
             },
             "crdLicenceStartDate-day": {
               "type": "string"
             },
-            "fourteenDayFixedTermRecallStartDate-day": {
+            "paroleStartDate-day": {
               "type": "string"
             },
-            "twentyEightDayFixedTermRecallStartDate-day": {
+            "fixedTermRecallStartDate-day": {
               "type": "string"
             },
             "standardRecallStartDate-day": {
               "type": "string"
             },
-            "pssStartDate-time": {
+            "riskAssessedRecallReviewStartDate-day": {
               "type": "string"
             },
-            "paroleStartDate-time": {
+            "indeterminatePublicProtectionRarrStartDate-day": {
               "type": "string"
             },
             "crdLicenceStartDate-time": {
               "type": "string"
             },
-            "fourteenDayFixedTermRecallStartDate-time": {
+            "paroleStartDate-time": {
               "type": "string"
             },
-            "twentyEightDayFixedTermRecallStartDate-time": {
+            "fixedTermRecallStartDate-time": {
               "type": "string"
             },
             "standardRecallStartDate-time": {
               "type": "string"
             },
-            "pssStartDate": {
+            "riskAssessedRecallReviewStartDate-time": {
               "type": "string"
             },
-            "paroleStartDate": {
+            "indeterminatePublicProtectionRarrStartDate-time": {
               "type": "string"
             },
             "crdLicenceStartDate": {
               "type": "string"
             },
-            "fourteenDayFixedTermRecallStartDate": {
+            "paroleStartDate": {
               "type": "string"
             },
-            "twentyEightDayFixedTermRecallStartDate": {
+            "fixedTermRecallStartDate": {
               "type": "string"
             },
             "standardRecallStartDate": {
               "type": "string"
             },
-            "pssEndDate-year": {
+            "riskAssessedRecallReviewStartDate": {
               "type": "string"
             },
-            "paroleEndDate-year": {
+            "indeterminatePublicProtectionRarrStartDate": {
               "type": "string"
             },
             "crdLicenceEndDate-year": {
               "type": "string"
             },
-            "fourteenDayFixedTermRecallEndDate-year": {
+            "paroleEndDate-year": {
               "type": "string"
             },
-            "twentyEightDayFixedTermRecallEndDate-year": {
+            "fixedTermRecallEndDate-year": {
               "type": "string"
             },
             "standardRecallEndDate-year": {
               "type": "string"
             },
-            "pssEndDate-month": {
+            "riskAssessedRecallReviewEndDate-year": {
               "type": "string"
             },
-            "paroleEndDate-month": {
+            "indeterminatePublicProtectionRarrEndDate-year": {
               "type": "string"
             },
             "crdLicenceEndDate-month": {
               "type": "string"
             },
-            "fourteenDayFixedTermRecallEndDate-month": {
+            "paroleEndDate-month": {
               "type": "string"
             },
-            "twentyEightDayFixedTermRecallEndDate-month": {
+            "fixedTermRecallEndDate-month": {
               "type": "string"
             },
             "standardRecallEndDate-month": {
               "type": "string"
             },
-            "pssEndDate-day": {
+            "riskAssessedRecallReviewEndDate-month": {
               "type": "string"
             },
-            "paroleEndDate-day": {
+            "indeterminatePublicProtectionRarrEndDate-month": {
               "type": "string"
             },
             "crdLicenceEndDate-day": {
               "type": "string"
             },
-            "fourteenDayFixedTermRecallEndDate-day": {
+            "paroleEndDate-day": {
               "type": "string"
             },
-            "twentyEightDayFixedTermRecallEndDate-day": {
+            "fixedTermRecallEndDate-day": {
               "type": "string"
             },
             "standardRecallEndDate-day": {
               "type": "string"
             },
-            "pssEndDate-time": {
+            "riskAssessedRecallReviewEndDate-day": {
               "type": "string"
             },
-            "paroleEndDate-time": {
+            "indeterminatePublicProtectionRarrEndDate-day": {
               "type": "string"
             },
             "crdLicenceEndDate-time": {
               "type": "string"
             },
-            "fourteenDayFixedTermRecallEndDate-time": {
+            "paroleEndDate-time": {
               "type": "string"
             },
-            "twentyEightDayFixedTermRecallEndDate-time": {
+            "fixedTermRecallEndDate-time": {
               "type": "string"
             },
             "standardRecallEndDate-time": {
               "type": "string"
             },
-            "pssEndDate": {
+            "riskAssessedRecallReviewEndDate-time": {
               "type": "string"
             },
-            "paroleEndDate": {
+            "indeterminatePublicProtectionRarrEndDate-time": {
               "type": "string"
             },
             "crdLicenceEndDate": {
               "type": "string"
             },
-            "fourteenDayFixedTermRecallEndDate": {
+            "paroleEndDate": {
               "type": "string"
             },
-            "twentyEightDayFixedTermRecallEndDate": {
+            "fixedTermRecallEndDate": {
               "type": "string"
             },
             "standardRecallEndDate": {
+              "type": "string"
+            },
+            "riskAssessedRecallReviewEndDate": {
+              "type": "string"
+            },
+            "indeterminatePublicProtectionRarrEndDate": {
               "type": "string"
             }
           }

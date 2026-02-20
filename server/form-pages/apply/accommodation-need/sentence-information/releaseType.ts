@@ -7,44 +7,50 @@ import labelLookupData from '../../../../i18n/en/application/releaseType.json'
 import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
+import { joinStrings } from '../../../../utils/utils'
 
-const optionsToExclude = ['ecsl']
+function getOptionsToExclude(): Array<string> {
+  const options = ['ecsl']
+
+  const today = new Date()
+  const disablePss = DateFormats.isoToDateObj('2026-04-30')
+
+  if (today >= disablePss) {
+    options.push('pss')
+  }
+
+  return options
+}
+
+const optionsToExclude = getOptionsToExclude()
 
 export const releaseTypes: Record<string, { text: string; abbr: string }> = {
-  fourteenDayFixedTermRecall: {
-    text: '14-day fixed-term recall release licence',
-    abbr: '14-day fixed-term recall',
-  },
-  twentyEightDayFixedTermRecall: {
-    text: '28-day fixed-term recall release licence',
-    abbr: '28-day fixed-term recall',
-  },
-  standardRecall: {
-    text: 'Standard recall release licence',
-    abbr: 'Standard recall',
-  },
   crdLicence: {
-    text: 'Conditional release date (CRD) licence',
-    abbr: 'CRD licence',
-  },
-  indeterminatePublicProtectionRarr: {
-    text: 'Indeterminate Public Protection RARR release licence',
-    abbr: 'Indeterminate Public Protection RARR',
-  },
-  nonPresumptiveRarr: {
-    text: 'Non-Presumptive Risk Assessed Recall Review (NP-RARR) release licence',
-    abbr: 'Non-Presumptive RARR',
-  },
-  presumptiveRarr: {
-    text: 'Presumptive RARR release licence',
-    abbr: 'Presumptive RARR',
+    text: 'Conditional release date (CRD)',
+    abbr: 'CRD',
   },
   parole: {
     text: 'Parole',
     abbr: 'Parole',
   },
+  fixedTermRecall: {
+    text: 'Fixed-term Recall',
+    abbr: 'Fixed-term recall',
+  },
+  standardRecall: {
+    text: 'Standard Recall',
+    abbr: 'Standard recall',
+  },
+  riskAssessedRecallReview: {
+    text: 'Risk Assessed Recall Review (RARR)',
+    abbr: 'RARR',
+  },
+  indeterminatePublicProtectionRarr: {
+    text: 'Indeterminate Public Protection (IPP RARR)',
+    abbr: 'IPP RARR',
+  },
   pss: {
-    text: 'Post sentence supervision (PSS)',
+    text: 'Post Sentence Supervision (PSS)',
     abbr: 'PSS',
   },
 }
@@ -95,6 +101,32 @@ export const errorLookups: ErrorLookups = {
   },
 }
 
+const invalidReleaseCombinations: Record<ReleaseTypeKey, Array<ReleaseTypeKey>> = {
+  standardRecall: ['fixedTermRecall'],
+  fixedTermRecall: ['parole', 'standardRecall', 'riskAssessedRecallReview', 'indeterminatePublicProtectionRarr'],
+  crdLicence: ['parole', 'indeterminatePublicProtectionRarr'],
+  indeterminatePublicProtectionRarr: ['crdLicence', 'fixedTermRecall', 'riskAssessedRecallReview', 'pss'],
+  riskAssessedRecallReview: ['fixedTermRecall', 'indeterminatePublicProtectionRarr', 'pss'],
+  parole: ['crdLicence', 'fixedTermRecall', 'pss'],
+  pss: ['parole', 'riskAssessedRecallReview', 'indeterminatePublicProtectionRarr'],
+}
+
+function combineReleases(releases: Array<ReleaseTypeKey>): string {
+  const names = releases.map(rel => releaseTypes[rel].abbr)
+  return joinStrings(names, 'or')
+}
+
+function isReleaseCombinationValid(first: ReleaseTypeKey, second: ReleaseTypeKey): boolean {
+  const invalidReleases = invalidReleaseCombinations[first] ?? []
+  return !invalidReleases.includes(second)
+}
+
+function getReleaseTypeError(key: ReleaseTypeKey): string {
+  const firstAbbr = releaseTypes[key].abbr
+  const invalidReleases = combineReleases(invalidReleaseCombinations[key])
+  return `${firstAbbr} cannot be combined with ${invalidReleases}`
+}
+
 @Page({
   name: 'release-type',
   bodyProperties: [
@@ -114,12 +146,10 @@ export default class ReleaseType implements TasklistPage {
 
   htmlDocumentTitle = this.title
 
-  recallLicenceTypes = [
-    'fourteenDayFixedTermRecall',
-    'twentyEightDayFixedTermRecall',
+  recallLicenceTypes: Array<ReleaseTypeKey> = [
+    'fixedTermRecall',
     'standardRecall',
-    'nonPresumptiveRarr',
-    'presumptiveRarr',
+    'riskAssessedRecallReview',
     'indeterminatePublicProtectionRarr',
   ]
 
@@ -178,12 +208,8 @@ export default class ReleaseType implements TasklistPage {
       errors.releaseTypes = errorLookups.generic.application.releaseType.empty
     } else if (this.body.releaseTypes.length > 2) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.maximumSelected
-    } else if (this.checkOnlyOneLicenceTypeIsSelected()) {
-      errors.releaseTypes = errorLookups.generic.application.releaseType.oneRecallOrRARR
-    } else if (this.body.releaseTypes.includes('parole') && this.body.releaseTypes.includes('pss')) {
-      errors.releaseTypes = errorLookups.generic.application.releaseType.invalidParoleSelection
-    } else if (this.checkCRDSelection()) {
-      errors.releaseTypes = errorLookups.generic.application.releaseType.invalidCRDSelection
+    } else if (!isReleaseCombinationValid(this.body.releaseTypes[0], this.body.releaseTypes[1])) {
+      errors.releaseTypes = getReleaseTypeError(this.body.releaseTypes[0])
     } else {
       this.body.releaseTypes.forEach((key: ReleaseTypeKey) => {
         if (!errorLookups.application.releaseType[key]) return
@@ -242,20 +268,5 @@ export default class ReleaseType implements TasklistPage {
       releaseType => releaseType !== undefined && !validReleaseTypeKeys.includes(releaseType),
     )
     return invalidReleaseTypes.length > 0
-  }
-
-  checkOnlyOneLicenceTypeIsSelected() {
-    const licenceMatches = this.body.releaseTypes.filter(release => this.recallLicenceTypes.includes(release))
-
-    // Check if there is more than one match from licenceTypes
-    return licenceMatches.length > 1
-  }
-
-  checkCRDSelection() {
-    const selected = this.body.releaseTypes
-    if (!selected?.includes('crdLicence')) return false
-
-    // Check if any recallLicenceTypes or parole are also selected
-    return selected.some(type => this.recallLicenceTypes.includes(type) || type === 'parole')
   }
 }

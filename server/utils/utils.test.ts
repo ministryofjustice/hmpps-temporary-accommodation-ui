@@ -8,6 +8,7 @@ import {
   convertToTitleCase,
   exact,
   initialiseName,
+  joinStrings,
   kebabCase,
   lowerCase,
   mapApiPersonRisksForUi,
@@ -256,5 +257,36 @@ describe('notFound', () => {
 
     expect(response.status).toHaveBeenCalledWith(404)
     expect(response.render).toHaveBeenCalledWith('pages/error')
+  })
+})
+
+describe('joinStrings', () => {
+  it('should join multiple strings with an oxford comma', () => {
+    const words = ['red', 'green', 'blue']
+    const joined = joinStrings(words, 'and')
+    expect(joined).toEqual('red, green, and blue')
+  })
+
+  it('should join multiple strings without an oxford comma', () => {
+    const words = ['dog', 'cat', 'mouse']
+    const joined = joinStrings(words, 'or', false)
+    expect(joined).toEqual('dog, cat or mouse')
+  })
+
+  it('should join two words without a comma', () => {
+    const words = ['salt', 'pepper']
+    const joined = joinStrings(words, 'and')
+    expect(joined).toEqual('salt and pepper')
+  })
+
+  it('should return a single word without modification', () => {
+    const word = 'hi'
+    const joined = joinStrings([word], 'or')
+    expect(joined).toEqual(word)
+  })
+
+  it('should return an empty string when no words are provided to join', () => {
+    const joined = joinStrings([], 'and')
+    expect(joined).toEqual('')
   })
 })

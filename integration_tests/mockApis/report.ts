@@ -61,7 +61,7 @@ export default {
           'invalid-params': [
             {
               propertyName: '$.endDate',
-              errorType: 'rangeTooLargeGapReport',
+              errorType: 'rangeTooLarge',
             },
           ],
         },

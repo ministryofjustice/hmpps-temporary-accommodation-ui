@@ -44,7 +44,7 @@ context('Report', () => {
     cy.then(function _() {
       const probationRegion = this.actingUserProbationRegion
       const startDate = '12/01/2024'
-      const endDate = '12/04/2024'
+      const endDate = '12/07/2024'
 
       page.completeForm(startDate, endDate)
 
@@ -61,7 +61,7 @@ context('Report', () => {
     page.clickDownload(type)
 
     // Then I should see an error message
-    cy.get('#endDate-error').should('contain', 'The end date cannot be more than 31 days from the start date')
+    cy.get('#endDate-error').should('contain', 'The end date cannot be more than 6 months after the start date')
   })
 
   it('does not download a file when the API returns an error', () => {

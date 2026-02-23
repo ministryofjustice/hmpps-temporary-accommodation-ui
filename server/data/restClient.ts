@@ -212,7 +212,7 @@ export default class RestClient {
         .responseType(responseType)
         .timeout(this.timeoutConfig())
 
-      return raw ? result : result.body
+      return (raw ? result : result.body) as T
     } catch (error) {
       const sanitisedError = sanitiseError(error)
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: ${method}`)

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import jsonpath from 'jsonpath'
+import { JSONPath } from 'jsonpath-plus'
 
 import type { BespokeError, ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from '@approved-premises/ui'
 import errorLookup from '../i18n/en/errors.json'
@@ -198,7 +198,7 @@ const errorText = (
   mergeVariables: Record<string, Record<string, string>>,
 ): ErrorSummary => {
   const errors =
-    jsonpath.value(errorLookup[context], error.propertyName) ||
+    JSONPath({ json: errorLookup[context], path: error.propertyName, wrap: false }) ||
     throwUndefinedError(`Cannot find a translation for an error at the path ${error.propertyName}`)
 
   let text =

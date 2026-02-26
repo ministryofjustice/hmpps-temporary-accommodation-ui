@@ -135,3 +135,35 @@ export const stripWhitespace = (text: string): string => {
  * @returns name converted to upper case.
  */
 export const normalise = (string: string) => string.toUpperCase().trim()
+
+/**
+ * Joins strings together using commas and a separating word for the last pair
+ * with an optional oxford comma
+ * E.g.
+ * joinStrings(['red', 'green', 'blue'], 'and', true) => 'red, green, and blue'
+ * joinStrings(['dog', 'cat', 'mouse'], 'or', false) => 'dog, cat or mouse'
+ * joinStrings(['salt', 'pepper'], 'and') => 'salt and pepper'
+ * joinStrings(['hi'], 'or') => 'hi'
+ * @param words words to join together
+ * @param lastPairJoiningWord word to join the last pair of words together
+ * @param oxfordComma whether or not to use an oxford comma
+ */
+export const joinStrings = (words: Array<string>, lastPairJoiningWord: string, oxfordComma: boolean = true): string => {
+  const recurse = (remaining: Array<string>): string => {
+    if (remaining.length > 2) {
+      return `${remaining[0]}, ${recurse(remaining.slice(1))}`
+    }
+
+    if (remaining.length === 2) {
+      return remaining.join(oxfordComma && words.length > 2 ? `, ${lastPairJoiningWord} ` : ` ${lastPairJoiningWord} `)
+    }
+
+    if (remaining.length === 1) {
+      return remaining[0]
+    }
+
+    return ''
+  }
+
+  return recurse(words)
+}

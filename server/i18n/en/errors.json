@@ -254,22 +254,13 @@
           "beforeStartDate": "The CRD licence end date must be after the start date"
         }
       },
-      "fourteenDayFixedTermRecall": {
+      "fixedTermRecall": {
         "dates": {
-          "emptyStartDate": "Enter the 14-day fixed-term recall release licence start date",
-          "emptyEndDate": "Enter the 14-day fixed-term recall release licence end date",
-          "invalidStartDate": "14-day fixed-term recall start date must be a real date",
-          "invalidEndDate": "14-day fixed-term recall end date must be a real date",
-          "beforeStartDate": "The 14-day fixed-term recall end date must be after the start date"
-        }
-      },
-      "twentyEightDayFixedTermRecall": {
-        "dates": {
-          "emptyStartDate": "Enter the 28-day fixed-term recall release licence start date",
-          "emptyEndDate": "Enter the 28-day fixed-term recall release licence end date",
-          "invalidStartDate": "28-day fixed-term recall start date must be a real date",
-          "invalidEndDate": "28-day fixed-term recall end date must be a real date",
-          "beforeStartDate": "The 28-day fixed-term recall end date must be after the start date"
+          "emptyStartDate": "Enter the fixed-term recall release licence start date",
+          "emptyEndDate": "Enter the fixed-term recall release licence end date",
+          "invalidStartDate": "Fixed-term recall start date must be a real date",
+          "invalidEndDate": "Fixed-term recall end date must be a real date",
+          "beforeStartDate": "The fixed-term recall end date must be after the start date"
         }
       },
       "standardRecall": {
@@ -281,22 +272,13 @@
           "beforeStartDate": "The licence following standard recall end date must be after the start date"
         }
       },
-      "nonPresumptiveRarr": {
+      "riskAssessedRecallReview": {
         "dates": {
-          "emptyStartDate": "Enter the licence following NP-RARR start date",
-          "emptyEndDate": "Enter the licence following NP-RARR end date",
-          "invalidStartDate": "Licence following NP-RARR start date must be a real date",
-          "invalidEndDate": "Licence following NP-RARR end date must be a real date",
-          "beforeStartDate": "The NP-RARR end date must be after the start date"
-        }
-      },
-      "presumptiveRarr": {
-        "dates": {
-          "emptyStartDate": "Enter the licence following Presumptive RARR start date",
-          "emptyEndDate": "Enter the licence following Presumptive RARR end date",
-          "invalidStartDate": "Licence following Presumptive RARR start date must be a real date",
-          "invalidEndDate": "Licence following Presumptive RARR end date must be a real date",
-          "beforeStartDate": "The Presumptive RARR end date must be after the start date"
+          "emptyStartDate": "Enter the licence following RARR start date",
+          "emptyEndDate": "Enter the licence following RARR end date",
+          "invalidStartDate": "Licence following RARR start date must be a real date",
+          "invalidEndDate": "Licence following RARR end date must be a real date",
+          "beforeStartDate": "The RARR end date must be after the start date"
         }
       },
       "indeterminatePublicProtectionRarr": {

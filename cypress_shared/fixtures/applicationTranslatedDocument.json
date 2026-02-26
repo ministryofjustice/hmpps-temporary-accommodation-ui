@@ -50,11 +50,11 @@
               "Sentence expiry date": "19 January 2124"
             },
             {
-              "What is the release type?": "Fixed-term recall, Parole",
+              "What is the release type?": "Fixed-term recall, Conditional release date (CRD)",
               "Fixed-term recall start date": "19 January 2024",
               "Fixed-term recall end date": "9 July 2024",
-              "Parole start date": "1 April 2122",
-              "Parole end date": "18 July 2122"
+              "CRD start date": "1 April 2122",
+              "CRD end date": "18 July 2122"
             }
           ]
         },

@@ -36,7 +36,7 @@ describe('getApplicationSubmissionData', () => {
       isConcerningSexualBehaviour: true,
       hasHistoryOfArson: false,
       isConcerningArsonBehaviour: true,
-      prisonReleaseTypes: ['14-day fixed-term recall', 'Parole'],
+      prisonReleaseTypes: ['CRD', 'Fixed-term recall'],
       probationDeliveryUnitId: applicationDataJson['contact-details']['probation-practitioner'].pdu.id,
     })
   })

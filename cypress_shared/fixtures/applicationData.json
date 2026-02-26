@@ -51,25 +51,25 @@
     },
     "release-type": {
       "releaseTypes": [
-        "fourteenDayFixedTermRecall",
-        "parole"
+        "crdLicence",
+        "fixedTermRecall"
       ],
-      "fourteenDayFixedTermRecallStartDate": "2024-01-19",
-      "fourteenDayFixedTermRecallStartDate-year": "2024",
-      "fourteenDayFixedTermRecallStartDate-month": "1",
-      "fourteenDayFixedTermRecallStartDate-day": "19",
-      "fourteenDayFixedTermRecallEndDate": "2024-07-09",
-      "fourteenDayFixedTermRecallEndDate-year": "2024",
-      "fourteenDayFixedTermRecallEndDate-month": "7",
-      "fourteenDayFixedTermRecallEndDate-day": "9",
-      "paroleStartDate": "2122-04-01",
-      "paroleStartDate-year": "2122",
-      "paroleStartDate-month": "4",
-      "paroleStartDate-day": "1",
-      "paroleEndDate": "2122-07-18",
-      "paroleEndDate-year": "2122",
-      "paroleEndDate-month": "7",
-      "paroleEndDate-day": "18"
+      "crdLicenceStartDate": "2122-04-01",
+      "crdLicenceStartDate-year": "2122",
+      "crdLicenceStartDate-month": "4",
+      "crdLicenceStartDate-day": "1",
+      "crdLicenceEndDate": "2122-07-18",
+      "crdLicenceEndDate-year": "2122",
+      "crdLicenceEndDate-month": "7",
+      "crdLicenceEndDate-day": "18",
+      "fixedTermRecallStartDate": "2024-01-19",
+      "fixedTermRecallStartDate-year": "2024",
+      "fixedTermRecallStartDate-month": "1",
+      "fixedTermRecallStartDate-day": "19",
+      "fixedTermRecallEndDate": "2024-07-09",
+      "fixedTermRecallEndDate-year": "2024",
+      "fixedTermRecallEndDate-month": "7",
+      "fixedTermRecallEndDate-day": "9"
     }
   },
   "contact-details": {

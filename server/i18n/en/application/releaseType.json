@@ -1,13 +1,11 @@
 {
   "labels": {
-    "crdLicenceStartDate": "Start date",
-    "fourteenDayFixedTermRecallStartDate": "Start date",
-    "twentyEightDayFixedTermRecallStartDate": "Start date",
-    "standardRecallStartDate": "Start date",
-    "nonPresumptiveRarrStartDate": "Start date",
-    "presumptiveRarrStartDate": "Start date",
-    "indeterminatePublicProtectionRarrStartDate": "Start date",
-    "paroleStartDate": "Start date",
-    "pssStartDate": "Start date"
+    "crdLicenceStartDate": "Licence start date",
+    "paroleStartDate": "Licence start date",
+    "fixedTermRecallStartDate": "Licence start date",
+    "standardRecallStartDate": "Licence start date",
+    "riskAssessedRecallReviewStartDate": "Licence start date",
+    "indeterminatePublicProtectionRarrStartDate": "Licence start date",
+    "pssStartDate": "Licence start date"
   }
 }

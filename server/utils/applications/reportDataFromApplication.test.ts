@@ -348,14 +348,11 @@ describe('reportDataFromApplication', () => {
             'release-type': {
               releaseTypes: [
                 'crdLicence',
-                'fourteenDayFixedTermRecall',
-                'twentyEightDayFixedTermRecall',
-                'standardRecall',
-                'nonPresumptiveRarr',
-                'presumptiveRarr',
-                'indeterminatePublicProtectionRarr',
                 'parole',
-                'pss',
+                'fixedTermRecall',
+                'standardRecall',
+                'riskAssessedRecallReview',
+                'indeterminatePublicProtectionRarr',
               ],
             },
           },
@@ -363,15 +360,12 @@ describe('reportDataFromApplication', () => {
       })
 
       expect(releaseTypesFromApplication(application)).toEqual([
-        'CRD licence',
-        '14-day fixed-term recall',
-        '28-day fixed-term recall',
-        'Standard recall',
-        'Non-Presumptive RARR',
-        'Presumptive RARR',
-        'Indeterminate Public Protection RARR',
+        'CRD',
         'Parole',
-        'PSS',
+        'Fixed-term recall',
+        'Standard recall',
+        'RARR',
+        'IPP RARR',
       ])
     })
 

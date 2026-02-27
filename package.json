@@ -141,7 +141,7 @@
     "@ministryofjustice/frontend": "^5.1.2",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@playwright/test": "^1.56.1",
-    "@sentry/node": "^7.14.1",
+    "@sentry/node": "^10.40.0",
     "@types/path-to-regexp": "^1.7.0",
     "accessible-autocomplete": "^3.0.0",
     "agentkeepalive": "^4.2.1",

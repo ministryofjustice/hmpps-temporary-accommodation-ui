@@ -1,7 +1,7 @@
 services:
 
   redis:
-    image: 'redis:8.4.0'
+    image: 'redis:8.6.1'
     networks:
       - hmpps_int
     environment:

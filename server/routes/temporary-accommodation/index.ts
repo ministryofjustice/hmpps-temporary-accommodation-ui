@@ -14,7 +14,7 @@ export default function routes(controllers: Controllers, services: Services): Ro
 
   const { landingController, staticController } = controllers
 
-  const { get } = actions(router, services.auditService)
+  const { get } = actions(router)
 
   get('/', landingController.index(), { auditEvent: 'VIEW_LANDING' })
   get(paths.static.cookies.pattern, staticController.cookies(), { auditEvent: 'VIEW_COOKIES' })
@@ -26,7 +26,7 @@ export default function routes(controllers: Controllers, services: Services): Ro
   get(paths.static.maintenance.pattern, staticController.maintenance(), { auditEvent: 'VIEW_MAINTENANCE' })
 
   manageRoutes(controllers, services, router)
-  applyRoutes(controllers, services, router)
+  applyRoutes(controllers, router)
 
   return router
 }

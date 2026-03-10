@@ -2,11 +2,9 @@
 
 import { dataAccess } from '../data'
 
-import config from '../config'
 import ApplicationService from './applicationService'
 import ArrivalService from './arrivalService'
 import AssessmentsService from './assessmentsService'
-import AuditService from './auditService'
 import BedspaceSearchService from './bedspaceSearchService'
 import BedspaceService from './bedspaceService'
 import BookingSearchService from './bookingSearchService'
@@ -41,7 +39,6 @@ export const services = () => {
   } = dataAccess()
 
   const userService = new UserService(userClientBuilder)
-  const auditService = new AuditService(config.apis.audit)
   const premisesService = new PremisesService(premisesClientBuilder, referenceDataClientBuilder)
   const personService = new PersonService(personClientBuilder)
   const bookingService = new BookingService(bookingClientBuilder, lostBedClientBuilder)
@@ -64,7 +61,6 @@ export const services = () => {
 
   return {
     userService,
-    auditService,
     personService,
     bookingService,
     arrivalService,

@@ -8,10 +8,7 @@ import { Services } from '../../services'
 import { actions, compose } from '../utils'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
-  const { get, post, put, patch } = compose(
-    actions(router, services.auditService),
-    createUserCheckMiddleware(userIsAuthorisedForManage),
-  )
+  const { get, post, put, patch } = compose(actions(router), createUserCheckMiddleware(userIsAuthorisedForManage))
 
   const {
     dashboardController,

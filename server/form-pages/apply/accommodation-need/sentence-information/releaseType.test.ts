@@ -286,15 +286,7 @@ describe('ReleaseType', () => {
         },
       ]
 
-      // only add pss before 30th April 2026
-      if (new Date() < DateFormats.isoToDateObj('2026-04-30')) {
-        expectedReleaseTypeOptions.push({
-          name: 'Post Sentence Supervision (PSS)',
-          value: 'pss',
-        })
-      }
-
-      expect(page.currentReleaseTypeOptions()).toEqual(expectedReleaseTypeOptions)
+      expect(page.currentReleaseTypeOptions()).toEqual(expect.objectContaining(expectedReleaseTypeOptions))
     })
 
     it('includes an excluded option if it is present in the current body', () => {
@@ -307,6 +299,38 @@ describe('ReleaseType', () => {
       )
 
       delete releaseTypes.ecsl
+    })
+
+    // TODO: remove tests after 30th April 2026
+    describe('PSS', () => {
+      let page: ReleaseType
+
+      const pss = {
+        name: 'Post Sentence Supervision (PSS)',
+        value: 'pss',
+      }
+
+      beforeEach(() => {
+        jest.useFakeTimers()
+        page = new ReleaseType(body, application)
+      })
+
+      afterEach(jest.useRealTimers)
+
+      it('should allow the user to select PSS before 30th April', () => {
+        jest.setSystemTime(DateFormats.isoToDateObj('2026-04-29'))
+        expect(page.currentReleaseTypeOptions()).toContainEqual(pss)
+      })
+
+      it('should not allow the user to select PSS on 30th April', () => {
+        jest.setSystemTime(DateFormats.isoToDateObj('2026-04-30'))
+        expect(page.currentReleaseTypeOptions()).not.toContainEqual(pss)
+      })
+
+      it('should not allow the user to select PSS after 30th April', () => {
+        jest.setSystemTime(DateFormats.isoToDateObj('2026-05-01'))
+        expect(page.currentReleaseTypeOptions()).not.toContainEqual(pss)
+      })
     })
   })
 

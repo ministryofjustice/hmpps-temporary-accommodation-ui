@@ -12,17 +12,14 @@ import { joinStrings } from '../../../../utils/utils'
 function getOptionsToExclude(): Array<string> {
   const options = ['ecsl']
 
-  const today = new Date()
-  const disablePss = DateFormats.isoToDateObj('2026-04-30')
-
-  if (today >= disablePss) {
+  // TODO: move pss to `options` after 30th April 2026
+  const today = DateFormats.dateObjToIsoDate(new Date())
+  if (today >= '2026-04-30') {
     options.push('pss')
   }
 
   return options
 }
-
-const optionsToExclude = getOptionsToExclude()
 
 export const releaseTypes: Record<string, { text: string; abbr: string }> = {
   crdLicence: {
@@ -176,6 +173,7 @@ export default class ReleaseType implements TasklistPage {
   }
 
   response() {
+    const optionsToExclude = getOptionsToExclude()
     const selectedTypes = this.body.releaseTypes?.filter(
       key => Boolean(releaseTypes[key]) || optionsToExclude.includes(key),
     )
@@ -255,6 +253,7 @@ export default class ReleaseType implements TasklistPage {
       [],
     )
 
+    const optionsToExclude = getOptionsToExclude()
     return releaseTypeOptions.filter(
       item =>
         !optionsToExclude.includes(item.value) ||
@@ -263,7 +262,7 @@ export default class ReleaseType implements TasklistPage {
   }
 
   checkForOldReleaseTypes() {
-    const validReleaseTypeKeys = [...Object.keys(releaseTypes), ...optionsToExclude]
+    const validReleaseTypeKeys = [...Object.keys(releaseTypes), ...getOptionsToExclude()]
     const invalidReleaseTypes = this.body.releaseTypes.filter(
       releaseType => releaseType !== undefined && !validReleaseTypeKeys.includes(releaseType),
     )

@@ -27,6 +27,9 @@ generic-service:
     IN_MAINTENANCE_MODE: false
     BOOKING_OVERSTAY_ENABLED: true
     PLANNED_MAINTENANCE_BANNER: false
+    # required so hmpps-audit-client doesn't raise an error
+    AUDIT_SQS_QUEUE_URL: ""
+    AUDIT_SQS_QUEUE_NAME: ""
 
   allowlist: null
 

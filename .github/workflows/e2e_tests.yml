@@ -46,7 +46,7 @@ jobs:
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: CAS3-E2E-playwright-report-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: e2e_playwright/playwright-report
@@ -55,7 +55,7 @@ jobs:
 
       - name: Upload E2E artefacts
         if: failure()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: CAS3-E2E-playwright-artefacts-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: e2e_playwright/test-results
@@ -111,7 +111,7 @@ jobs:
 
       - name: Upload Cypress report
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: CAS3-E2E-cypress-report
           path: test_results/cypress
@@ -120,7 +120,7 @@ jobs:
 
       - name: Upload E2E artefacts
         if: failure()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: CAS3-E2E-cypress-artefacts
           path: |

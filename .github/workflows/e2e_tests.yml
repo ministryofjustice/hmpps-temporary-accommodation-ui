@@ -14,16 +14,19 @@ jobs:
         shard: [ 1, 2 ]
     steps:
       - name: Check out code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           # Repository is specified to run the workflow from the API repository
           repository: 'ministryofjustice/hmpps-temporary-accommodation-ui'
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version-file: '.node-version'
           cache: 'npm'
+
+#      - name: SLSA
+#        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
 
       - name: Install dependencies
         run: npm ci --no-audit
@@ -43,7 +46,7 @@ jobs:
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: CAS3-E2E-playwright-report-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: e2e_playwright/playwright-report
@@ -52,7 +55,7 @@ jobs:
 
       - name: Upload E2E artefacts
         if: failure()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: CAS3-E2E-playwright-artefacts-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: e2e_playwright/test-results
@@ -66,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack notification
-        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@main
+        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@3c605b6b62b9abaa9780e007f5835d4213398cf3 # main
         with:
           title: "CAS3 E2E Tests (Playwright)"
           job: "e2e_test_playwright"
@@ -76,33 +79,24 @@ jobs:
   e2e_test_cypress:
     name: "CAS3 E2E Tests 🧪 (Cypress)"
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [ 1, 2, 3, 4, 5, 6 ]
     steps:
       - name: Check out code
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           # Repository is specified to run the workflow from the API repository
           repository: 'ministryofjustice/hmpps-temporary-accommodation-ui'
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
         with:
           node-version-file: '.node-version'
           cache: 'npm'
 
+#      - name: SLSA
+#        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+
       - name: Install dependencies
         run: npm run setup
-
-      - name: Determine tests splitting
-        uses: chaosaffe/split-tests@v1
-        id: split-tests
-        with:
-          glob: e2e/tests/*.feature
-          split-index: ${{ strategy.job-index }}
-          split-total: ${{ strategy.job-total }}
 
       - name: Run E2E Tests
         env:
@@ -113,23 +107,22 @@ jobs:
           CYPRESS_environment: 'dev'
         run: |
           npm run test:e2e:ci -- \
-          --config baseUrl=https://transitional-accommodation-dev.hmpps.service.justice.gov.uk \
-          --spec $(echo ${{ steps.split-tests.outputs.test-suite }} | sed -E 's/ /,/g')
+          --config baseUrl=https://transitional-accommodation-dev.hmpps.service.justice.gov.uk
 
       - name: Upload Cypress report
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: CAS3-E2E-cypress-report-${{ matrix.shard }}-of-${{ strategy.job-total }}
+          name: CAS3-E2E-cypress-report
           path: test_results/cypress
           retention-days: 30
           if-no-files-found: ignore
 
       - name: Upload E2E artefacts
         if: failure()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: CAS3-E2E-cypress-artefacts-${{ matrix.shard }}-of-${{ strategy.job-total }}
+          name: CAS3-E2E-cypress-artefacts
           path: |
             e2e/screenshots
             e2e/videos
@@ -143,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack notification
-        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@main
+        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@3c605b6b62b9abaa9780e007f5835d4213398cf3 # main
         with:
           title: "CAS3 E2E Tests (Cypress)"
           job: "e2e_test_cypress"

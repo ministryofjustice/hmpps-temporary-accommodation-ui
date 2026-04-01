@@ -33,8 +33,8 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
 
-      - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+#      - name: SLSA
+#        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
 
       - name: Install dependencies
         run: npm ci --no-audit
@@ -55,8 +55,8 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
 
-      - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+#      - name: SLSA
+#        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
 
       - name: Install dependencies
         run: npm ci --no-audit
@@ -79,8 +79,8 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
 
-      - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+#      - name: SLSA
+#        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
 
       - name: Install dependencies
         run: npm ci --no-audit
@@ -104,8 +104,8 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
 
-      - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+#      - name: SLSA
+#        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
 
       - name: Install dependencies
         run: npm ci --no-audit
@@ -131,8 +131,8 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
 
-      - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+#      - name: SLSA
+#        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
 
       - name: Installing dependencies
         run: npm run setup

@@ -121,6 +121,10 @@ jobs:
   integration_test:
     name: "Integration testing 🧪"
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [ 1, 2 ]
     steps:
       - name: Check out code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -140,14 +144,18 @@ jobs:
       - name: Building source
         run: npm run build
 
+      - name: Split tests
+        id: split-tests
+        run: ./script/split-integration-tests  ${{ strategy.job-index }} ${{ strategy.job-total }}
+
       - name: Running Integration tests
-        run: npm run test:integration
+        run: TEST_RUN_ARGS="--spec $(echo ${{ steps.split-tests.outputs.test-suite }})" npm run test:integration
 
       - name: Upload Integration test artefacts
         if: failure()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: integration-test-artefacts
+          name: integration-test-artefacts-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: |
             integration_tests/videos
             integration_tests/screenshots

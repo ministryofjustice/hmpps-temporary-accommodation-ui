@@ -33,6 +33,9 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
 
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@3e9410cef31dd9cec64ad567efc959afd88a591c
+
       - name: Install dependencies
         run: npm ci --no-audit
 
@@ -51,6 +54,9 @@ jobs:
         with:
           node-version-file: '.node-version'
           cache: 'npm'
+
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@3e9410cef31dd9cec64ad567efc959afd88a591c
 
       - name: Install dependencies
         run: npm ci --no-audit
@@ -73,6 +79,9 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
 
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@3e9410cef31dd9cec64ad567efc959afd88a591c
+
       - name: Install dependencies
         run: npm ci --no-audit
 
@@ -94,6 +103,9 @@ jobs:
         with:
           node-version-file: '.node-version'
           cache: 'npm'
+
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@3e9410cef31dd9cec64ad567efc959afd88a591c
 
       - name: Install dependencies
         run: npm ci --no-audit
@@ -118,6 +130,9 @@ jobs:
         with:
           node-version-file: '.node-version'
           cache: 'npm'
+
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@3e9410cef31dd9cec64ad567efc959afd88a591c
 
       - name: Installing dependencies
         run: npm run setup

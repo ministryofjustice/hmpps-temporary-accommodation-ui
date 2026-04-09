@@ -17,6 +17,7 @@ import { Cas3AssessmentSummary } from '../@types/shared'
 import type { AssessmentClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 import { assessmentTableRows } from '../utils/assessmentUtils'
+import { DateFormats } from '../utils/dateUtils'
 
 export type AssessmentReferenceData = {
   referralRejectionReasons: Array<ReferenceData>
@@ -53,9 +54,18 @@ export default class AssessmentsService {
   async getReferenceData(callConfig: CallConfig): Promise<AssessmentReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
-    return {
-      referralRejectionReasons: await referenceDataClient.getReferenceData('referral-rejection-reasons'),
+    let referralRejectionReasons = await referenceDataClient.getReferenceData('referral-rejection-reasons')
+
+    const today = DateFormats.dateObjToIsoDate(new Date())
+    if (today >= '2026-04-30') {
+      referralRejectionReasons = referralRejectionReasons.filter(
+        // Remove PSS from 30th April 2026
+        // TODO: Remove from API/DB after this date
+        reason => reason.id !== '88c3b8d5-77c8-4c52-84f0-ec9073e4df50',
+      )
     }
+
+    return { referralRejectionReasons }
   }
 
   async rejectAssessment(

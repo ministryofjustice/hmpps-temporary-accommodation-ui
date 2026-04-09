@@ -17,6 +17,7 @@ import { assessmentTableRows } from '../utils/assessmentUtils'
 import AssessmentsService from './assessmentsService'
 import assessmentSummaries from '../testutils/factories/assessmentSummaries'
 import ReferenceDataClient from '../data/referenceDataClient'
+import { DateFormats } from '../utils/dateUtils'
 
 jest.mock('../data/assessmentClient')
 jest.mock('../utils/assessmentUtils')
@@ -121,6 +122,43 @@ describe('AssessmentsService', () => {
       expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('referral-rejection-reasons')
+    })
+
+    describe('PSs filtering', () => {
+      const unfilteredReferralRejectionReasons = referenceDataFactory.buildList(3)
+      const pssReferralRejectionReason = referenceDataFactory.build({
+        id: '88c3b8d5-77c8-4c52-84f0-ec9073e4df50',
+        name: 'Not enough time on their licence or post-sentence supervision (PSS)',
+      })
+      const referralRejectionReasons = [...unfilteredReferralRejectionReasons, pssReferralRejectionReason]
+
+      beforeEach(() => {
+        jest.useFakeTimers()
+
+        referenceDataClient.getReferenceData.mockResolvedValue(referralRejectionReasons)
+      })
+
+      afterEach(jest.useRealTimers)
+
+      it('should not filter out PSS before 30th April 2026', async () => {
+        jest.setSystemTime(DateFormats.isoToDateObj('2026-04-29'))
+
+        const result = await service.getReferenceData(callConfig)
+
+        expect(result).toEqual({ referralRejectionReasons })
+        expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
+        expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('referral-rejection-reasons')
+      })
+
+      it('should filter out PSS after 30th April 2026', async () => {
+        jest.setSystemTime(DateFormats.isoToDateObj('2026-04-30'))
+
+        const result = await service.getReferenceData(callConfig)
+
+        expect(result).toEqual({ referralRejectionReasons: unfilteredReferralRejectionReasons })
+        expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
+        expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('referral-rejection-reasons')
+      })
     })
   })
 

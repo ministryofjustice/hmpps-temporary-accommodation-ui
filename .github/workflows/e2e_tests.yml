@@ -4,6 +4,9 @@ on:
   workflow_call:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   e2e_test_playwright:
     name: "CAS3 E2E Tests 🧪 (Playwright)"
@@ -25,8 +28,8 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
 
-#      - name: SLSA
-#        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+      #      - name: SLSA
+      #        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
 
       - name: Install dependencies
         run: npm ci --no-audit
@@ -96,8 +99,8 @@ jobs:
           node-version-file: '.node-version'
           cache: 'npm'
 
-#      - name: SLSA
-#        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+      #      - name: SLSA
+      #        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
 
       - name: Install dependencies
         run: npm run setup

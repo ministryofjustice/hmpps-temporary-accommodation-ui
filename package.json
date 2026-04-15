@@ -232,9 +232,7 @@
     "typescript": "^5.5.4"
   },
   "overrides": {
-    "typescript-json-schema": {
-      "typescript": "$typescript"
-    },
-    "undici": "^6.23.0"
+    "axios": "^1.15.0",
+    "diff": "^8.0.3"
   }
 }

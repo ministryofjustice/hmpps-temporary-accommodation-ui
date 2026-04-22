@@ -107,11 +107,33 @@
 
             <h2>Risk to self</h2>
             {% set riskToSelfHintHtml %}
-                <p class="govuk-hint">
-                    Explain what the risk is, the triggers and why it happens. Include details about whether it's severe
-                    and how often it happens. Consider how the risk could be managed in the placement.
-                </p>
+                <ul class="govuk-list govuk-list--bullet govuk-hint">
+                    <li>Explain what the risk is, the frequency, the triggers and why it happens.</li>
+                    <li>Use information from AP: SASP/CARE, ACCT, OASys.</li>
+                    <li>Include details about whether it’s severe and how often it happens.</li>
+                    <li>Consider how the risk could be managed in the placement.</li>
+                </ul>
             {% endset %}
+
+            {{ formPageRadios({
+                fieldName: "riskToSelfConcerns",
+                fieldset: {
+                    legend: {
+                        text: page.questions.riskToSelfConcerns,
+                        classes: "govuk-fieldset__legend--m"
+                    }
+                },
+                items: [
+                    {
+                        value: "yes",
+                        text: "Yes"
+                    },
+                    {
+                        value: "no",
+                        text: "No"
+                    }
+                ]
+            }, fetchContext()) }}
 
             {{ formPageTextarea({
                 fieldName: 'riskToSelf',
@@ -122,6 +144,40 @@
                 hint: {
                     html: riskToSelfHintHtml
                 }
+            }, fetchContext()) }}
+
+            <h2>Safety plan</h2>
+            <p class="govuk-hint">
+                The probation safety plan template is a self management tool for individuals to manage a suicide crisis.
+                The <a class="govuk-link" href="{{ page.safetyPlanTemplateUrl }}">safety plan template</a> is in EQuiP
+                which can be accessed via the ‘risk to self’ process map.
+            </p>
+
+            {{ formPageRadios({
+                fieldName: "safetyPlanCompleted",
+                fieldset: {
+                    legend: {
+                        text: page.questions.safetyPlanCompleted,
+                        classes: "govuk-fieldset__legend--m"
+                    }
+                },
+                hint: {
+                    text: "The person on probation must consent to the plan being shared."
+                },
+                items: [
+                    {
+                        value: "yesAndConsentToShareHasBeenGiven",
+                        text: "Yes, and consent to share has been given"
+                    },
+                    {
+                        value: "yesButNoConsentToShare",
+                        text: "Yes, but no consent to share"
+                    },
+                    {
+                        value: "noSafetyPlan",
+                        text: "No safety plan"
+                    }
+                ]
             }, fetchContext()) }}
 
             {{ govukButton({

@@ -47,7 +47,8 @@ export default class RoshLevel implements TasklistPage {
     safetyPlanCompleted: 'Has a safety plan been completed?',
   }
 
-  safetyPlanTemplateUrl = 'https://equip-portal.equip.service.justice.gov.uk/'
+  safetyPlanTemplateUrl =
+    'https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/app/documents/A9B1745B307C4E1BAE10828FE0800CED/master'
 
   constructor(
     readonly body: Partial<RoshLevelBody>,

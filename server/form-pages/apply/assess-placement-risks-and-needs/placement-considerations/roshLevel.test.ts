@@ -1,10 +1,8 @@
 import { PersonRisksUI } from '../../../../@types/ui'
 import { applicationFactory, personFactory } from '../../../../testutils/factories'
-import { mapApiPersonRisksForUi, sentenceCase } from '../../../../utils/utils'
+import * as utils from '../../../../utils/utils'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import RoshLevel from './roshLevel'
-
-jest.mock('../../../../utils/utils')
 
 const body: ConstructorParameters<typeof RoshLevel>[0] = {
   riskToChildren: 'Risk to children detail',
@@ -24,22 +22,20 @@ describe('RoshLevel', () => {
     }),
   })
 
-  beforeEach(() => {
-    ;(sentenceCase as jest.MockedFunction<typeof sentenceCase>).mockImplementation(
-      value => value.charAt(0).toUpperCase() + value.slice(1),
-    )
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
   describe('constructor', () => {
     it('sets the body and risk information', () => {
-      ;(mapApiPersonRisksForUi as jest.MockedFunction<typeof mapApiPersonRisksForUi>).mockReturnValue(personRisksUi)
+      const mapApiPersonRisksForUiSpy = jest.spyOn(utils, 'mapApiPersonRisksForUi').mockReturnValue(personRisksUi)
 
       const page = new RoshLevel(body, application)
 
       expect(page.body).toEqual(body)
       expect(page.risks).toEqual(personRisksUi)
 
-      expect(mapApiPersonRisksForUi).toHaveBeenCalledWith(application.risks)
+      expect(mapApiPersonRisksForUiSpy).toHaveBeenCalledWith(application.risks)
     })
   })
 

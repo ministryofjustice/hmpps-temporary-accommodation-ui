@@ -9,6 +9,11 @@ export default function getSummaryDataFromApplication(application: Application):
       application.data?.['placement-considerations']?.['accommodation-sharing']?.['accommodationSharing'],
     ),
     releaseType: getReleaseType(application.data?.['eligibility']?.['eligibility-reason']?.['reason']),
+    safetyPlanShared:
+      application.data?.['placement-considerations']?.['rosh-level']?.['safetyPlanCompleted'] ===
+      'yesAndConsentToShareHasBeenGiven',
+    riskToSelfConcerns:
+      application.data?.['placement-considerations']?.['rosh-level']?.['riskToSelfConcerns'] === 'yes',
     /* eslint-enable dot-notation */
   }
 }

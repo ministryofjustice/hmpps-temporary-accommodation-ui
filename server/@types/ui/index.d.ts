@@ -303,6 +303,8 @@ export type ApplicationSummaryData = {
     | 'Approved Premises'
     | 'CAS2 (formerly Bail Accommodation Support Services)'
     | null
+  safetyPlanShared: boolean
+  riskToSelfConcerns: boolean
 }
 
 export type AssessmentSearchApiStatus =

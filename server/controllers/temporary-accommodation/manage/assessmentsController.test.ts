@@ -33,6 +33,7 @@ import AssessmentsController, {
 import assessmentSummaries from '../../../testutils/factories/assessmentSummaries'
 import { pathFromStatus } from '../../../utils/assessmentUtils'
 import { DateFormats } from '../../../utils/dateUtils'
+import * as getSummaryDataFromApplication from '../../../utils/applications/getSummaryDataFromApplication'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
@@ -234,29 +235,31 @@ describe('AssessmentsController', () => {
   })
 
   describe('summary', () => {
-    it('shows a summary view of the assessment', async () => {
-      const assessmentId = 'some-assessment-id'
-      const assessment = assessmentFactory.build({ id: assessmentId })
-      const submittedTimelineEvent: ReferralHistorySystemNote = referralHistorySystemNoteFactory.build({
-        category: 'submitted',
-      })
-      const timelineEvents: Array<TimelineItem> = [
-        {
-          byline: { text: submittedTimelineEvent.createdByUserName },
-          datetime: { timestamp: submittedTimelineEvent.createdAt, type: 'datetime' },
-          html: undefined,
-          label: { text: 'Referral submitted' },
-        },
-      ]
+    const assessmentId = 'some-assessment-id'
+    const assessment = assessmentFactory.build({ id: assessmentId })
+    const applicationSummary = getSummaryDataFromApplication.default(assessment.application)
+    const submittedTimelineEvent: ReferralHistorySystemNote = referralHistorySystemNoteFactory.build({
+      category: 'submitted',
+    })
+    const timelineEvents: Array<TimelineItem> = [
+      {
+        byline: { text: submittedTimelineEvent.createdByUserName },
+        datetime: { timestamp: submittedTimelineEvent.createdAt, type: 'datetime' },
+        html: undefined,
+        label: { text: 'Referral submitted' },
+      },
+    ]
 
+    beforeEach(() => {
       assessmentsService.findAssessment.mockResolvedValue(assessment)
       timelineService.getTimelineForAssessment.mockResolvedValue(timelineEvents)
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
       jest.spyOn(assessmentUtils, 'assessmentActions').mockReturnValue(actions)
       request.params = { id: assessmentId }
+    })
 
-      const requestHandler = assessmentsController.summary()
-      await requestHandler(request, response, next)
+    it('shows a summary view of the assessment', async () => {
+      await assessmentsController.summary()(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/summary', {
         assessment,
@@ -267,6 +270,40 @@ describe('AssessmentsController', () => {
       })
       expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentsService)
+    })
+
+    it('includes a warning for risk to self', async () => {
+      jest.spyOn(getSummaryDataFromApplication, 'default').mockReturnValue({
+        ...applicationSummary,
+        riskToSelfConcerns: true,
+      })
+
+      await assessmentsController.summary()(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith(
+        'temporary-accommodation/assessments/summary',
+        expect.objectContaining({
+          riskToSelfWarning: '<div class="govuk-heading-s">Risk of self harm or suicide</div>',
+        }),
+      )
+      expect(getSummaryDataFromApplication.default).toHaveBeenCalledWith(assessment.application)
+    })
+
+    it('includes a warning for safety plan sharing', async () => {
+      jest.spyOn(getSummaryDataFromApplication, 'default').mockReturnValue({
+        ...applicationSummary,
+        safetyPlanShared: true,
+      })
+
+      await assessmentsController.summary()(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith(
+        'temporary-accommodation/assessments/summary',
+        expect.objectContaining({
+          riskToSelfWarning:
+            '<div class="govuk-heading-s">Risk of self harm or suicide</div><p>You should request the Safety plan from the probation practioner and share it with the property supplier.</p>',
+        }),
+      )
     })
   })
 

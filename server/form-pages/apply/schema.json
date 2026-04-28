@@ -745,7 +745,22 @@
             "riskToStaff": {
               "type": "string"
             },
+            "riskToSelfConcerns": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
             "riskToSelf": {
+              "type": "string"
+            },
+            "safetyPlanCompleted": {
+              "enum": [
+                "noSafetyPlan",
+                "yesAndConsentToShareHasBeenGiven",
+                "yesButNoConsentToShare"
+              ],
               "type": "string"
             }
           }

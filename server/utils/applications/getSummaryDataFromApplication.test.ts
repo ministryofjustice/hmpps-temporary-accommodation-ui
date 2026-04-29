@@ -9,6 +9,8 @@ describe('getSummaryDataFromApplication', () => {
     expect(getSummaryDataFromApplication(application)).toEqual({
       isAbleToShare: true,
       releaseType: 'Approved Premises',
+      riskToSelfConcerns: true,
+      safetyPlanShared: true,
     })
   })
 })

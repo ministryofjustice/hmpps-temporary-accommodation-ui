@@ -96,10 +96,7 @@
     ],
     "transform": {
       "^.+\\.tsx?$": [
-        "ts-jest",
-        {
-          "isolatedModules": true
-        }
+        "ts-jest"
       ]
     }
   },

@@ -22,6 +22,8 @@ describe('getApplicationSubmissionData', () => {
       summaryData: {
         isAbleToShare: true,
         releaseType: 'Approved Premises',
+        riskToSelfConcerns: true,
+        safetyPlanShared: true,
       },
       isDutyToReferSubmitted: true,
       dutyToReferSubmissionDate: '2022-04-12',

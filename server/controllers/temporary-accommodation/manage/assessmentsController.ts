@@ -104,8 +104,7 @@ export default class AssessmentsController {
       const timelineEvents = await this.timelineService.getTimelineForAssessment(callConfig, req.params.id)
       const applicationSummary = getSummaryDataFromApplication(assessment.application)
       const riskToSelfWarning =
-        config.flags.riskToSelfEnabled &&
-        (applicationSummary.riskToSelfConcerns || applicationSummary.safetyPlanShared)
+        config.flags.riskToSelfEnabled && (applicationSummary.riskToSelfConcerns || applicationSummary.safetyPlanShared)
           ? `<div class="govuk-heading-s">Risk of self harm or suicide</div>${applicationSummary.safetyPlanShared ? '<p>You should request the Safety plan from the probation practioner and share it with the property supplier.</p>' : ''}`
           : undefined
       return res.render('temporary-accommodation/assessments/summary', {

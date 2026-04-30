@@ -4,6 +4,7 @@ import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
 import { mapApiPersonRisksForUi, sentenceCase } from '../../../../utils/utils'
+import config from '../../../../config'
 
 type SafetyPlanCompleted = 'yesAndConsentToShareHasBeenGiven' | 'yesButNoConsentToShare' | 'noSafetyPlan'
 
@@ -58,16 +59,21 @@ export default class RoshLevel implements TasklistPage {
   }
 
   response() {
-    return {
+    const response: Record<string, string> = {
       'How will risk to children impact placement?': this.body.riskToChildren,
       'How will risk to public impact placement?': this.body.riskToPublic,
       'How will risk to known adult impact placement?': this.body.riskToKnownAdult,
       'How will risk to staff impact placement?': this.body.riskToStaff,
-      [this.questions.riskToSelfConcerns]: sentenceCase(this.body.riskToSelfConcerns as string),
-      'How will risk to self impact placement?': this.body.riskToSelf,
-      [this.questions.safetyPlanCompleted]:
-        safetyPlanCompletedResponses[this.body.safetyPlanCompleted as SafetyPlanCompleted],
     }
+
+    if (config.flags.riskToSelfEnabled) {
+      response[this.questions.riskToSelfConcerns] = sentenceCase(this.body.riskToSelfConcerns as string)
+      response['How will risk to self impact placement?'] = this.body.riskToSelf
+      response[this.questions.safetyPlanCompleted] =
+        safetyPlanCompletedResponses[this.body.safetyPlanCompleted as SafetyPlanCompleted]
+    }
+
+    return response
   }
 
   previous() {
@@ -97,16 +103,18 @@ export default class RoshLevel implements TasklistPage {
       errors.riskToStaff = 'You must provide details on how risk to staff will impact placement'
     }
 
-    if (!this.body.riskToSelfConcerns) {
-      errors.riskToSelfConcerns = 'Select yes if there are any current or past concerns about self harm or suicide'
-    }
+    if (config.flags.riskToSelfEnabled) {
+      if (!this.body.riskToSelfConcerns) {
+        errors.riskToSelfConcerns = 'Select yes if there are any current or past concerns about self harm or suicide'
+      }
 
-    if (this.body.riskToSelfConcerns === 'yes' && !this.body.riskToSelf) {
-      errors.riskToSelf = 'You must provide details on how risk to self will impact placement'
-    }
+      if (this.body.riskToSelfConcerns === 'yes' && !this.body.riskToSelf) {
+        errors.riskToSelf = 'You must provide details on how risk to self will impact placement'
+      }
 
-    if (!this.body.safetyPlanCompleted) {
-      errors.safetyPlanCompleted = 'Select if a Safety plan has been completed'
+      if (!this.body.safetyPlanCompleted) {
+        errors.safetyPlanCompleted = 'Select if a Safety plan has been completed'
+      }
     }
 
     return errors

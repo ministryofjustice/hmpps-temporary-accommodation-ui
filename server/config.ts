@@ -54,6 +54,7 @@ export default {
     cancelScheduledArchiveEnabled: get('CANCEL_SCHEDULED_ARCHIVE_ENABLED', 'false') === 'true',
     showGapReportButton: get('SHOW_GAP_REPORT_BUTTON', 'false') === 'true',
     bookingOverstayEnabled: get('BOOKING_OVERSTAY_ENABLED', 'false') === 'true',
+    riskToSelfEnabled: get('RISK_TO_SELF_ENABLED', environment === 'prod' ? 'false' : 'true') === 'true',
     plannedMaintenance: get('PLANNED_MAINTENANCE_BANNER', 'false') === 'true',
   },
   environment,

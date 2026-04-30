@@ -30,6 +30,7 @@ import { pagination } from '../../../utils/pagination'
 import { DateFormats, dateExists } from '../../../utils/dateUtils'
 import { TimelineService } from '../../../services'
 import getSummaryDataFromApplication from '../../../utils/applications/getSummaryDataFromApplication'
+import config from '../../../config'
 
 export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: string; text: string }> = {
   in_review: {
@@ -103,7 +104,8 @@ export default class AssessmentsController {
       const timelineEvents = await this.timelineService.getTimelineForAssessment(callConfig, req.params.id)
       const applicationSummary = getSummaryDataFromApplication(assessment.application)
       const riskToSelfWarning =
-        applicationSummary.riskToSelfConcerns || applicationSummary.safetyPlanShared
+        config.flags.riskToSelfEnabled &&
+        (applicationSummary.riskToSelfConcerns || applicationSummary.safetyPlanShared)
           ? `<div class="govuk-heading-s">Risk of self harm or suicide</div>${applicationSummary.safetyPlanShared ? '<p>You should request the Safety plan from the probation practioner and share it with the property supplier.</p>' : ''}`
           : undefined
       return res.render('temporary-accommodation/assessments/summary', {

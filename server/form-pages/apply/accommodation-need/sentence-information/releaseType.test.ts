@@ -317,18 +317,18 @@ describe('ReleaseType', () => {
 
       afterEach(jest.useRealTimers)
 
-      it('should allow the user to select PSS before 30th April', () => {
-        jest.setSystemTime(DateFormats.isoToDateObj('2026-04-29'))
+      it('should allow the user to select PSS before 11th May', () => {
+        jest.setSystemTime(DateFormats.isoToDateObj('2026-05-10'))
         expect(page.currentReleaseTypeOptions()).toContainEqual(pss)
       })
 
-      it('should not allow the user to select PSS on 30th April', () => {
-        jest.setSystemTime(DateFormats.isoToDateObj('2026-04-30'))
+      it('should not allow the user to select PSS on 11th May', () => {
+        jest.setSystemTime(DateFormats.isoToDateObj('2026-05-11'))
         expect(page.currentReleaseTypeOptions()).not.toContainEqual(pss)
       })
 
-      it('should not allow the user to select PSS after 30th April', () => {
-        jest.setSystemTime(DateFormats.isoToDateObj('2026-05-01'))
+      it('should not allow the user to select PSS after 11th May', () => {
+        jest.setSystemTime(DateFormats.isoToDateObj('2026-05-12'))
         expect(page.currentReleaseTypeOptions()).not.toContainEqual(pss)
       })
     })

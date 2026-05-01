@@ -12,9 +12,9 @@ import { joinStrings } from '../../../../utils/utils'
 function getOptionsToExclude(): Array<string> {
   const options = ['ecsl']
 
-  // TODO: move pss to `options` after 30th April 2026
+  // TODO: move pss to `options` after 11th May 2026
   const today = DateFormats.dateObjToIsoDate(new Date())
-  if (today >= '2026-04-30') {
+  if (today >= '2026-05-11') {
     options.push('pss')
   }
 

@@ -3,7 +3,7 @@ import { configureAllowedScripts } from '@ministryofjustice/hmpps-npm-script-all
 export default configureAllowedScripts({
   allowlist: {
     'node_modules/@badeball/cypress-cucumber-preprocessor@22.2.0': 'FORBID',
-    'node_modules/cypress@13.12.0': 'ALLOW',
+    'node_modules/cypress@13.17.0': 'ALLOW',
     'node_modules/dtrace-provider@0.8.8': 'ALLOW',
     'node_modules/esbuild@0.27.0': 'ALLOW',
     'node_modules/fsevents@2.3.3': 'ALLOW',

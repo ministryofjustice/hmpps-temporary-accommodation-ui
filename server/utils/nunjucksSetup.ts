@@ -170,7 +170,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('oasysDisabled', config.flags.oasysDisabled)
   njkEnv.addGlobal('plannedMaintenance', config.flags.plannedMaintenance)
-  njkEnv.addGlobal('riskToSelfEnabled', config.flags.riskToSelfEnabled)
 
   njkEnv.addFilter('mapApiPersonRisksForUi', mapApiPersonRisksForUi)
 

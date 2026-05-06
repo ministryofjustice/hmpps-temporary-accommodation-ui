@@ -7,7 +7,7 @@ export type Cas3Extension = {
     createdAt: string;
     id: string;
     newDepartureDate: string;
-    notes?: string;
+    notes?: string | null;
     previousDepartureDate: string;
 };
 

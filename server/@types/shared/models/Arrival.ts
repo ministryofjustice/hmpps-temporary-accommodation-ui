@@ -8,7 +8,7 @@ export type Arrival = {
     bookingId: string;
     createdAt: string;
     expectedDepartureDate: string;
-    keyWorkerStaffCode?: string;
-    notes?: string;
+    keyWorkerStaffCode?: string | null;
+    notes?: string | null;
 };
 

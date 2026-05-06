@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type NamedId = {
-    code?: string;
+    code?: string | null;
     id: string;
     name: string;
 };

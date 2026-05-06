@@ -6,6 +6,6 @@ import type { RiskEnvelopeStatus } from './RiskEnvelopeStatus';
 import type { RiskTier } from './RiskTier';
 export type RiskTierEnvelope = {
     status: RiskEnvelopeStatus;
-    value?: RiskTier;
+    value?: (RiskTier | null);
 };
 

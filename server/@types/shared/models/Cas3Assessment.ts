@@ -8,19 +8,19 @@ import type { TemporaryAccommodationApplication } from './TemporaryAccommodation
 import type { TemporaryAccommodationAssessmentStatus } from './TemporaryAccommodationAssessmentStatus';
 import type { TemporaryAccommodationUser } from './TemporaryAccommodationUser';
 export type Cas3Assessment = {
-    accommodationRequiredFromDate?: string;
-    allocatedAt?: string;
-    allocatedToStaffMember?: TemporaryAccommodationUser;
+    accommodationRequiredFromDate?: string | null;
+    allocatedAt?: string | null;
+    allocatedToStaffMember?: (TemporaryAccommodationUser | null);
     application: TemporaryAccommodationApplication;
     clarificationNotes: Array<ClarificationNote>;
     createdAt: string;
-    data?: any;
-    decision?: AssessmentDecision;
+    data?: null;
+    decision?: (AssessmentDecision | null);
     id: string;
-    rejectionRationale?: string;
-    releaseDate?: string;
-    status?: TemporaryAccommodationAssessmentStatus;
-    submittedAt?: string;
+    rejectionRationale?: string | null;
+    releaseDate?: string | null;
+    status?: (TemporaryAccommodationAssessmentStatus | null);
+    submittedAt?: string | null;
     summaryData: any;
 };
 

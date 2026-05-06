@@ -3,19 +3,19 @@
 /* tslint:disable */
 /* eslint-disable */
 export type AssessmentRejection = {
-    agreeWithShortNoticeReason?: boolean;
-    agreeWithShortNoticeReasonComments?: string;
+    agreeWithShortNoticeReason?: boolean | null;
+    agreeWithShortNoticeReasonComments?: string | null;
     document: any;
-    isWithdrawn?: boolean;
-    reasonForLateApplication?: string;
+    isWithdrawn?: boolean | null;
+    reasonForLateApplication?: string | null;
     /**
      * Only used by CAS3
      */
-    referralRejectionReasonDetail?: string;
+    referralRejectionReasonDetail?: string | null;
     /**
      * Only used by CAS3
      */
-    referralRejectionReasonId?: string;
+    referralRejectionReasonId?: string | null;
     rejectionRationale: string;
 };
 

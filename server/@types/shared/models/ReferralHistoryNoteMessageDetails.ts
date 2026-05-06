@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ReferralHistoryNoteMessageDetails = {
-    domainEvent?: any;
-    isWithdrawn?: boolean;
-    rejectionReason?: string;
-    rejectionReasonDetails?: string;
+    domainEvent?: null;
+    isWithdrawn?: boolean | null;
+    rejectionReason?: string | null;
+    rejectionReasonDetails?: string | null;
 };
 

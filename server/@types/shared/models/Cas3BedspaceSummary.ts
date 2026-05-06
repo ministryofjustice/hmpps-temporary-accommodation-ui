@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3BedspaceSummary = {
-    endDate?: string;
+    endDate?: string | null;
     id: string;
     reference: string;
 };

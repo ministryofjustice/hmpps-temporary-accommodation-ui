@@ -4,6 +4,6 @@
 /* eslint-disable */
 export type Cas3BookingSearchResultPersonSummary = {
     crn: string;
-    name?: string;
+    name?: string | null;
 };
 

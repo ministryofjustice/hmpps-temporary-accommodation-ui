@@ -6,15 +6,15 @@ import type { Person } from './Person';
 import type { PersonStatus } from './PersonStatus';
 export type FullPerson = (Person & {
     dateOfBirth?: string;
-    ethnicity?: string;
-    genderIdentity?: string;
-    isRestricted?: boolean;
+    ethnicity?: string | null;
+    genderIdentity?: string | null;
+    isRestricted?: boolean | null;
     name?: string;
-    nationality?: string;
-    nomsNumber?: string;
-    pncNumber?: string;
-    prisonName?: string;
-    religionOrBelief?: string;
+    nationality?: string | null;
+    nomsNumber?: string | null;
+    pncNumber?: string | null;
+    prisonName?: string | null;
+    religionOrBelief?: string | null;
     sex?: string;
     status?: PersonStatus;
 } & {

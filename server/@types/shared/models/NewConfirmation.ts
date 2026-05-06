@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type NewConfirmation = {
-    notes?: string;
+    notes?: string | null;
 };
 

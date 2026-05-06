@@ -20,6 +20,7 @@ export type { AssessmentSortField } from './models/AssessmentSortField';
 export type { AssessmentStatus } from './models/AssessmentStatus';
 export type { AssessmentTask } from './models/AssessmentTask';
 export type { Attachment } from './models/Attachment';
+export type { AttachmentHeader } from './models/AttachmentHeader';
 export type { Bed } from './models/Bed';
 export type { BedspaceFilters } from './models/BedspaceFilters';
 export type { Booking } from './models/Booking';

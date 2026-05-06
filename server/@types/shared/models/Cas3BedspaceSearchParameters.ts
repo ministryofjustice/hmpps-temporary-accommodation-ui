@@ -5,12 +5,12 @@
 import type { BedspaceFilters } from './BedspaceFilters';
 import type { PremisesFilters } from './PremisesFilters';
 export type Cas3BedspaceSearchParameters = {
-    bedspaceFilters?: BedspaceFilters;
+    bedspaceFilters?: (BedspaceFilters | null);
     /**
      * The number of days the Bed will need to be free from the start_date until
      */
     durationDays: number;
-    premisesFilters?: PremisesFilters;
+    premisesFilters?: (PremisesFilters | null);
     /**
      * The list of pdus Ids to search within
      */

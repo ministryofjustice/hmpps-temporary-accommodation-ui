@@ -8,7 +8,7 @@ export type Characteristic = {
     id: string;
     modelScope: ModelScope;
     name: string;
-    propertyName?: string;
+    propertyName?: string | null;
     serviceScope: ServiceScope;
 };
 

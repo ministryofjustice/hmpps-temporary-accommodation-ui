@@ -7,7 +7,7 @@ export type ClarificationNote = {
     createdByStaffMemberId: string;
     id: string;
     query: string;
-    response?: string;
-    responseReceivedOn?: string;
+    response?: string | null;
+    responseReceivedOn?: string | null;
 };
 

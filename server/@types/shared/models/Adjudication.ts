@@ -4,7 +4,7 @@
 /* eslint-disable */
 export type Adjudication = {
     establishment: string;
-    finding?: string;
+    finding?: string | null;
     hearingHeld: boolean;
     id: number;
     offenceDescription: string;

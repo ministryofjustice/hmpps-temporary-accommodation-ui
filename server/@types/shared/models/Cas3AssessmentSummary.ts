@@ -10,14 +10,14 @@ import type { TemporaryAccommodationAssessmentStatus } from './TemporaryAccommod
 import type { UnknownPerson } from './UnknownPerson';
 export type Cas3AssessmentSummary = {
     applicationId: string;
-    arrivalDate?: string;
+    arrivalDate?: string | null;
     createdAt: string;
-    dateOfInfoRequest?: string;
-    decision?: AssessmentDecision;
+    dateOfInfoRequest?: string | null;
+    decision?: (AssessmentDecision | null);
     id: string;
     person: (FullPerson | RestrictedPerson | UnknownPerson);
-    probationDeliveryUnitName?: string;
-    risks?: PersonRisks;
+    probationDeliveryUnitName?: string | null;
+    risks?: (PersonRisks | null);
     status: TemporaryAccommodationAssessmentStatus;
 };
 

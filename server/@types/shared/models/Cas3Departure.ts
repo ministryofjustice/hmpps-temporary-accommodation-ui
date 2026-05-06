@@ -10,7 +10,7 @@ export type Cas3Departure = {
     dateTime: string;
     id: string;
     moveOnCategory: MoveOnCategory;
-    notes?: string;
+    notes?: string | null;
     reason: DepartureReason;
 };
 

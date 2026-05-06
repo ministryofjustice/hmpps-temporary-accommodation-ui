@@ -17,48 +17,39 @@ import type { FullPerson } from './FullPerson';
 import type { RestrictedPerson } from './RestrictedPerson';
 import type { UnknownPerson } from './UnknownPerson';
 export type Cas3Booking = {
-    applicationId?: string;
-    arrival?: Cas3Arrival;
+    applicationId?: string | null;
+    arrival?: (Cas3Arrival | null);
     arrivalDate: string;
-    assessmentId?: string;
+    assessmentId?: string | null;
     bedspace: Cas3BedspaceSummary;
-    /**
-     * The latest version of the cancellation, if it exists
-     */
-    cancellation?: Cas3Cancellation;
+    cancellation?: (Cas3Cancellation | null);
     /**
      * The full history of the cancellation
      */
     cancellations: Array<Cas3Cancellation>;
-    confirmation?: Cas3Confirmation;
+    confirmation?: (Cas3Confirmation | null);
     createdAt: string;
-    /**
-     * The latest version of the departure, if it exists
-     */
-    departure?: Cas3Departure;
+    departure?: (Cas3Departure | null);
     departureDate: string;
     /**
      * The full history of the departure
      */
     departures: Array<Cas3Departure>;
-    effectiveEndDate?: string;
+    effectiveEndDate?: string | null;
     extensions: Array<Cas3Extension>;
     id: string;
-    nonArrival?: Cas3NonArrival;
+    nonArrival?: (Cas3NonArrival | null);
     originalArrivalDate: string;
     originalDepartureDate: string;
     overstays: Array<Cas3Overstay>;
     person: (FullPerson | RestrictedPerson | UnknownPerson);
     premises: Cas3BookingPremisesSummary;
     status: Cas3BookingStatus;
-    /**
-     * The latest version of the turnaround, if it exists
-     */
-    turnaround?: Cas3Turnaround;
-    turnaroundStartDate?: string;
+    turnaround?: (Cas3Turnaround | null);
+    turnaroundStartDate?: string | null;
     /**
      * The full history of turnarounds
      */
-    turnarounds?: Array<Cas3Turnaround>;
+    turnarounds?: any[] | null;
 };
 

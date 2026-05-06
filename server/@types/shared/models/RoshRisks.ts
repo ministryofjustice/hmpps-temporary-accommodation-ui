@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type RoshRisks = {
-    lastUpdated?: string;
+    lastUpdated?: string | null;
     overallRisk: string;
     riskToChildren: string;
     riskToKnownAdult: string;

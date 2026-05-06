@@ -4,7 +4,7 @@
 /* eslint-disable */
 export type Cas3UpdateBedspace = {
     characteristicIds: Array<string>;
-    notes?: string;
+    notes?: string | null;
     reference: string;
 };
 

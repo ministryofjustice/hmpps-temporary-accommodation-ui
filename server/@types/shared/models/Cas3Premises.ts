@@ -2,38 +2,35 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Cas3PremisesArchiveAction } from './Cas3PremisesArchiveAction';
-import type { Cas3PremisesCharacteristic } from './Cas3PremisesCharacteristic';
 import type { Cas3PremisesStatus } from './Cas3PremisesStatus';
-import type { Characteristic } from './Characteristic';
 import type { LocalAuthorityArea } from './LocalAuthorityArea';
 import type { ProbationDeliveryUnit } from './ProbationDeliveryUnit';
 import type { ProbationRegion } from './ProbationRegion';
 export type Cas3Premises = {
     addressLine1: string;
-    addressLine2?: string;
-    archiveHistory?: Array<Cas3PremisesArchiveAction>;
+    addressLine2?: string | null;
+    archiveHistory?: any[] | null;
     /**
      * Will be replaced with Cas3PremisesCharacteristics for v2
      * @deprecated
      */
-    characteristics?: Array<Characteristic>;
-    endDate?: string;
+    characteristics?: any[] | null;
+    endDate?: string | null;
     id: string;
-    localAuthorityArea?: LocalAuthorityArea;
-    notes?: string;
+    localAuthorityArea?: (LocalAuthorityArea | null);
+    notes?: string | null;
     postcode: string;
-    premisesCharacteristics?: Array<Cas3PremisesCharacteristic>;
+    premisesCharacteristics?: any[] | null;
     probationDeliveryUnit: ProbationDeliveryUnit;
     probationRegion: ProbationRegion;
     reference: string;
-    scheduleUnarchiveDate?: string;
+    scheduleUnarchiveDate?: string | null;
     startDate: string;
     status: Cas3PremisesStatus;
     totalArchivedBedspaces: number;
     totalOnlineBedspaces: number;
     totalUpcomingBedspaces: number;
-    town?: string;
-    turnaroundWorkingDays?: number;
+    town?: string | null;
+    turnaroundWorkingDays?: number | null;
 };
 

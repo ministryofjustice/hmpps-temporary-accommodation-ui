@@ -8,7 +8,7 @@ export type Cas3NonArrival = {
     createdAt: string;
     date: string;
     id: string;
-    notes?: string;
+    notes?: string | null;
     reason: NonArrivalReason;
 };
 

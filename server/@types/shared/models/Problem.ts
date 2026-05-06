@@ -3,10 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Problem = {
-    detail?: string;
-    instance?: string;
-    status?: number;
-    title?: string;
-    type?: string;
+    detail?: string | null;
+    instance?: string | null;
+    status?: number | null;
+    title?: string | null;
+    type?: string | null;
 };
 

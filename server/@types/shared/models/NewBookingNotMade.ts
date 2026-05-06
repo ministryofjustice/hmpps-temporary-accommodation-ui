@@ -6,6 +6,6 @@
  * Details about the failure to match
  */
 export type NewBookingNotMade = {
-    notes?: string;
+    notes?: string | null;
 };
 

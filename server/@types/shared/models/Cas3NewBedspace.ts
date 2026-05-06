@@ -4,7 +4,7 @@
 /* eslint-disable */
 export type Cas3NewBedspace = {
     characteristicIds: Array<string>;
-    notes?: string;
+    notes?: string | null;
     reference: string;
     /**
      * Start date of the bedspace availability.

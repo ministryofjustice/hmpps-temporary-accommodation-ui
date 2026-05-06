@@ -9,18 +9,18 @@ import type { PersonRisks } from './PersonRisks';
 import type { RestrictedPerson } from './RestrictedPerson';
 import type { UnknownPerson } from './UnknownPerson';
 export type Cas3Application = {
-    arrivalDate?: string;
-    assessmentDecision?: AssessmentDecision;
-    assessmentId?: string;
+    arrivalDate?: string | null;
+    assessmentDecision?: (AssessmentDecision | null);
+    assessmentId?: string | null;
     createdAt: string;
     createdByUserId: string;
-    data?: any;
-    document?: any;
+    data?: null;
+    document?: null;
     id: string;
     offenceId: string;
     person: (FullPerson | RestrictedPerson | UnknownPerson);
-    risks?: PersonRisks;
+    risks?: (PersonRisks | null);
     status: ApplicationStatus;
-    submittedAt?: string;
+    submittedAt?: string | null;
 };
 

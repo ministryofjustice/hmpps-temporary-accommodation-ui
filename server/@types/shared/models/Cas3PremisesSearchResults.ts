@@ -2,11 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Cas3PremisesSearchResult } from './Cas3PremisesSearchResult';
 export type Cas3PremisesSearchResults = {
-    results?: Array<Cas3PremisesSearchResult>;
-    totalOnlineBedspaces?: number;
+    results?: any[] | null;
+    totalOnlineBedspaces?: number | null;
     totalPremises: number;
-    totalUpcomingBedspaces?: number;
+    totalUpcomingBedspaces?: number | null;
 };
 

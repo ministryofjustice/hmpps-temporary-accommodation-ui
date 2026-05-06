@@ -7,8 +7,8 @@
  */
 export type NewPlacementRequestBooking = {
     arrivalDate: string;
-    bedId?: string;
+    bedId?: string | null;
     departureDate: string;
-    premisesId?: string;
+    premisesId?: string | null;
 };
 

@@ -7,7 +7,7 @@ import type { LoadError } from './LoadError';
 import type { TemporaryAccommodationUser } from './TemporaryAccommodationUser';
 export type ProfileResponse = {
     deliusUsername: string;
-    loadError?: LoadError;
+    loadError?: (LoadError | null);
     user?: (ApprovedPremisesUser | TemporaryAccommodationUser);
 };
 

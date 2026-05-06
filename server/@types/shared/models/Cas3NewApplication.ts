@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3NewApplication = {
-    convictionId?: number;
+    convictionId?: number | null;
     crn: string;
-    deliusEventNumber?: string;
-    offenceId?: string;
+    deliusEventNumber?: string | null;
+    offenceId?: string | null;
 };
 

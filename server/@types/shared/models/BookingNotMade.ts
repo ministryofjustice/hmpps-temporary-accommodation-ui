@@ -5,7 +5,7 @@
 export type BookingNotMade = {
     createdAt: string;
     id: string;
-    notes?: string;
+    notes?: string | null;
     placementRequestId: string;
 };
 

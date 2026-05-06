@@ -9,6 +9,6 @@ export type Cas3Overstay = {
     isAuthorised: boolean;
     newDepartureDate: string;
     previousDepartureDate: string;
-    reason?: string;
+    reason?: string | null;
 };
 

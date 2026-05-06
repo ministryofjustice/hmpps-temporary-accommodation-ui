@@ -4,11 +4,11 @@
 /* eslint-disable */
 import type { Cas3CostCentre } from './Cas3CostCentre';
 export type Cas3VoidBedspaceRequest = {
-    costCentre?: Cas3CostCentre;
+    costCentre?: (Cas3CostCentre | null);
     endDate: string;
-    notes?: string;
+    notes?: string | null;
     reasonId: string;
-    referenceNumber?: string;
+    referenceNumber?: string | null;
     startDate: string;
 };
 

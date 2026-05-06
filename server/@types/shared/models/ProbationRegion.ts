@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ProbationRegion = {
-    hptEmail?: string;
+    hptEmail?: string | null;
     id: string;
     name: string;
 };

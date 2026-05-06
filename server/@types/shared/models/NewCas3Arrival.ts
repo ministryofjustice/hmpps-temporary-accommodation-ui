@@ -5,8 +5,8 @@
 export type NewCas3Arrival = {
     arrivalDate: string;
     expectedDepartureDate: string;
-    keyWorkerStaffCode?: string;
-    notes?: string;
+    keyWorkerStaffCode?: string | null;
+    notes?: string | null;
     type: string;
 };
 

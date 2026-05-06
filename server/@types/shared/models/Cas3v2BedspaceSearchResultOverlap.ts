@@ -4,7 +4,7 @@
 /* eslint-disable */
 import type { PersonType } from './PersonType';
 export type Cas3v2BedspaceSearchResultOverlap = {
-    assessmentId?: string;
+    assessmentId?: string | null;
     bedspaceId: string;
     bookingId: string;
     crn: string;
@@ -12,6 +12,6 @@ export type Cas3v2BedspaceSearchResultOverlap = {
     isSexualRisk: boolean;
     name: string;
     personType: PersonType;
-    sex?: string;
+    sex?: string | null;
 };
 

@@ -3,25 +3,24 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ApArea } from './ApArea';
-import type { Characteristic } from './Characteristic';
 import type { LocalAuthorityArea } from './LocalAuthorityArea';
 import type { ProbationRegion } from './ProbationRegion';
 import type { PropertyStatus } from './PropertyStatus';
 export type Premises = {
     addressLine1: string;
-    addressLine2?: string;
+    addressLine2?: string | null;
     apArea: ApArea;
     availableBedsForToday: number;
     bedCount: number;
-    characteristics?: Array<Characteristic>;
+    characteristics?: any[] | null;
     id: string;
-    localAuthorityArea?: LocalAuthorityArea;
+    localAuthorityArea?: (LocalAuthorityArea | null);
     name: string;
-    notes?: string;
+    notes?: string | null;
     postcode: string;
     probationRegion: ProbationRegion;
     service: string;
     status: PropertyStatus;
-    town?: string;
+    town?: string | null;
 };
 

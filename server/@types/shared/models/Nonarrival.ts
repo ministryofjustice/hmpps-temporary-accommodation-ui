@@ -8,7 +8,7 @@ export type Nonarrival = {
     createdAt: string;
     date: string;
     id: string;
-    notes?: string;
+    notes?: string | null;
     reason: NonArrivalReason;
 };
 

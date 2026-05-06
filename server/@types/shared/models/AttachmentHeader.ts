@@ -2,10 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas3VoidBedspaceReason = {
-    description?: string | null;
-    id: string;
-    isActive: boolean;
+export type AttachmentHeader = {
+    /**
+     * The name of the header
+     */
     name: string;
+    /**
+     * The value of the header
+     */
+    value: string;
 };
 

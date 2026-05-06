@@ -11,7 +11,7 @@ export type OASysSections = {
      */
     assessmentId: number;
     assessmentState: OASysAssessmentState;
-    dateCompleted?: string;
+    dateCompleted?: string | null;
     dateStarted: string;
     offenceDetails: Array<OASysQuestion>;
     riskManagementPlan: Array<OASysQuestion>;

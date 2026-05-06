@@ -12,8 +12,8 @@ export type Cas3ApplicationSummary = {
     createdByUserId: string;
     id: string;
     person: (FullPerson | RestrictedPerson | UnknownPerson);
-    risks?: PersonRisks;
+    risks?: (PersonRisks | null);
     status: ApplicationStatus;
-    submittedAt?: string;
+    submittedAt?: string | null;
 };
 

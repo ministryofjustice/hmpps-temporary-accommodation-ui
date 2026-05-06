@@ -4,9 +4,11 @@
 /* eslint-disable */
 import type { ApplicationStatus } from './ApplicationStatus';
 import type { Cas3BookingStatus } from './Cas3BookingStatus';
+import type { TemporaryAccommodationAssessmentStatus } from './TemporaryAccommodationAssessmentStatus';
 export type Cas3SuitableApplication = {
     applicationStatus: ApplicationStatus;
-    bookingStatus?: Cas3BookingStatus;
+    assessmentStatus?: (TemporaryAccommodationAssessmentStatus | null);
+    bookingStatus?: (Cas3BookingStatus | null);
     id: string;
 };
 

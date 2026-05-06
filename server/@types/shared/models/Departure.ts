@@ -9,10 +9,10 @@ export type Departure = {
     bookingId: string;
     createdAt: string;
     dateTime: string;
-    destinationProvider?: DestinationProvider;
+    destinationProvider?: (DestinationProvider | null);
     id: string;
     moveOnCategory: MoveOnCategory;
-    notes?: string;
+    notes?: string | null;
     reason: DepartureReason;
 };
 

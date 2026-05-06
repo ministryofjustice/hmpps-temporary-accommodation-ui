@@ -7,6 +7,6 @@ export type Cas3Confirmation = {
     createdAt: string;
     dateTime: string;
     id: string;
-    notes?: string;
+    notes?: string | null;
 };
 

@@ -4,6 +4,6 @@
 /* eslint-disable */
 export type NewExtension = {
     newDepartureDate: string;
-    notes?: string;
+    notes?: string | null;
 };
 

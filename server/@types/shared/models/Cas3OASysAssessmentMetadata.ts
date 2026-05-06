@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3OASysAssessmentMetadata = {
-    dateCompleted?: string;
-    dateStarted?: string;
+    dateCompleted?: string | null;
+    dateStarted?: string | null;
     hasApplicableAssessment: boolean;
 };
 

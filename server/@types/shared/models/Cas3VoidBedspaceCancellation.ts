@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3VoidBedspaceCancellation = {
-    cancellationNotes?: string;
+    cancellationNotes?: string | null;
 };
 

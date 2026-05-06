@@ -2,17 +2,16 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Cas3BedspacePremisesSearchResult } from './Cas3BedspacePremisesSearchResult';
 export type Cas3PremisesSearchResult = {
     addressLine1: string;
-    addressLine2?: string;
-    bedspaces?: Array<Cas3BedspacePremisesSearchResult>;
+    addressLine2?: string | null;
+    bedspaces?: any[] | null;
     id: string;
-    localAuthorityAreaName?: string;
+    localAuthorityAreaName?: string | null;
     pdu: string;
     postcode: string;
     reference: string;
-    totalArchivedBedspaces?: number;
-    town?: string;
+    totalArchivedBedspaces?: number | null;
+    town?: string | null;
 };
 

@@ -3,5 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ReferralHistoryNote } from './ReferralHistoryNote';
-export type ReferralHistoryUserNote = ReferralHistoryNote;
+import type { ReferralHistoryNoteMessageDetails } from './ReferralHistoryNoteMessageDetails';
+export type ReferralHistoryUserNote = (ReferralHistoryNote & {
+    message?: string | null;
+    messageDetails?: (ReferralHistoryNoteMessageDetails | null);
+});
 

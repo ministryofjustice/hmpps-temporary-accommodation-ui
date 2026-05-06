@@ -6,26 +6,21 @@ import type { ApArea } from './ApArea';
 import type { NamedId } from './NamedId';
 import type { ProbationDeliveryUnit } from './ProbationDeliveryUnit';
 import type { ProbationRegion } from './ProbationRegion';
-import type { UserQualification } from './UserQualification';
 export type UserWithWorkload = {
-    /**
-     * This is deprecated. Used cruManagementArea instead as this is used to group task management
-     * @deprecated
-     */
-    apArea?: ApArea;
-    cruManagementArea?: NamedId;
+    apArea?: (ApArea | null);
+    cruManagementArea?: (NamedId | null);
     deliusUsername: string;
-    email?: string;
+    email?: string | null;
     id: string;
-    isActive?: boolean;
+    isActive?: boolean | null;
     name: string;
-    numTasksCompleted30Days?: number;
-    numTasksCompleted7Days?: number;
-    numTasksPending?: number;
-    probationDeliveryUnit?: ProbationDeliveryUnit;
-    qualifications?: Array<UserQualification>;
+    numTasksCompleted30Days?: number | null;
+    numTasksCompleted7Days?: number | null;
+    numTasksPending?: number | null;
+    probationDeliveryUnit?: (ProbationDeliveryUnit | null);
+    qualifications?: any[] | null;
     region: ProbationRegion;
     service: string;
-    telephoneNumber?: string;
+    telephoneNumber?: string | null;
 };
 

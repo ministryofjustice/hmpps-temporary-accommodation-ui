@@ -8,17 +8,17 @@ import type { PropertyStatus } from './PropertyStatus';
  */
 export type UpdatePremises = {
     addressLine1: string;
-    addressLine2?: string;
+    addressLine2?: string | null;
     characteristicIds: Array<string>;
-    localAuthorityAreaId?: string;
-    name?: string;
-    notes?: string;
-    pdu?: string;
+    localAuthorityAreaId?: string | null;
+    name?: string | null;
+    notes?: string | null;
+    pdu?: string | null;
     postcode: string;
-    probationDeliveryUnitId?: string;
+    probationDeliveryUnitId?: string | null;
     probationRegionId: string;
     status: PropertyStatus;
-    town?: string;
-    turnaroundWorkingDayCount?: number;
+    town?: string | null;
+    turnaroundWorkingDayCount?: number | null;
 };
 

@@ -4,10 +4,10 @@
 /* eslint-disable */
 export type Cas3BookingSearchResultPremisesSummary = {
     addressLine1: string;
-    addressLine2?: string;
+    addressLine2?: string | null;
     id: string;
     name: string;
     postcode: string;
-    town?: string;
+    town?: string | null;
 };
 

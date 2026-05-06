@@ -20,6 +20,10 @@ export type Attachment = {
      */
     filesize: number;
     /**
+     * The additional headers to use when calling the url for fetching this attachment
+     */
+    headers?: any[] | null;
+    /**
      * The name or description of the attachment which will be included in the report
      */
     name: string;

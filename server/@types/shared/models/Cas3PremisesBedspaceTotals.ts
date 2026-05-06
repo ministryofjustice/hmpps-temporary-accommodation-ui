@@ -5,7 +5,7 @@
 import type { Cas3PremisesStatus } from './Cas3PremisesStatus';
 export type Cas3PremisesBedspaceTotals = {
     id: string;
-    premisesEndDate?: string;
+    premisesEndDate?: string | null;
     status: Cas3PremisesStatus;
     totalArchivedBedspaces: number;
     totalOnlineBedspaces: number;

@@ -5,6 +5,6 @@
 import type { RiskEnvelopeStatus } from './RiskEnvelopeStatus';
 export type FlagsEnvelope = {
     status: RiskEnvelopeStatus;
-    value?: Array<string>;
+    value?: any[] | null;
 };
 

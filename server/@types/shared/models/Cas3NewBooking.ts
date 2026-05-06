@@ -5,12 +5,12 @@
 import type { ServiceName } from './ServiceName';
 export type Cas3NewBooking = {
     arrivalDate: string;
-    assessmentId?: string;
-    bedspaceId?: string;
+    assessmentId?: string | null;
+    bedspaceId?: string | null;
     crn: string;
     departureDate: string;
-    enableTurnarounds?: boolean;
-    eventNumber?: string;
+    enableTurnarounds?: boolean | null;
+    eventNumber?: string | null;
     serviceName: ServiceName;
 };
 

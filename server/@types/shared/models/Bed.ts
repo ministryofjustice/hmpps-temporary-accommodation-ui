@@ -6,8 +6,8 @@ export type Bed = {
     /**
      * End date of the bed availability, open for availability if not specified
      */
-    bedEndDate?: string;
-    code?: string;
+    bedEndDate?: string | null;
+    code?: string | null;
     id: string;
     name: string;
 };

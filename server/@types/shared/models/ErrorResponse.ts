@@ -3,10 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ErrorResponse = {
-    developerMessage?: string;
-    errorCode?: string;
-    moreInfo?: string;
+    developerMessage?: string | null;
+    errorCode?: string | null;
+    moreInfo?: string | null;
     status: number;
-    userMessage?: string;
+    userMessage?: string | null;
 };
 

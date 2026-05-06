@@ -7,9 +7,9 @@ export type Cas3Cancellation = {
     bookingId: string;
     createdAt: string;
     date: string;
-    id?: string;
-    notes?: string;
-    otherReason?: string;
+    id?: string | null;
+    notes?: string | null;
+    otherReason?: string | null;
     premisesName: string;
     reason: CancellationReason;
 };

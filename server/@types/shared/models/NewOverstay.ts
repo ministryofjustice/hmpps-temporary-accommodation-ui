@@ -5,6 +5,6 @@
 export type NewOverstay = {
     isAuthorised: boolean;
     newDepartureDate: string;
-    reason?: string;
+    reason?: string | null;
 };
 

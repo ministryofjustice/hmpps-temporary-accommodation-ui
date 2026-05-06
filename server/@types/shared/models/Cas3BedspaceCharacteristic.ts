@@ -5,6 +5,6 @@
 export type Cas3BedspaceCharacteristic = {
     description: string;
     id: string;
-    name?: string;
+    name?: string | null;
 };
 

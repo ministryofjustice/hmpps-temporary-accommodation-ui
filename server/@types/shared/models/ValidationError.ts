@@ -4,11 +4,11 @@
 /* eslint-disable */
 import type { InvalidParam } from './InvalidParam';
 export type ValidationError = {
-    detail?: string;
-    instance?: string;
+    detail?: string | null;
+    instance?: string | null;
     'invalid-params'?: Array<InvalidParam>;
-    status?: number;
-    title?: string;
-    type?: string;
+    status?: number | null;
+    title?: string | null;
+    type?: string | null;
 };
 

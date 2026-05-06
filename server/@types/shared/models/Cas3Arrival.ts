@@ -8,6 +8,6 @@ export type Cas3Arrival = {
     bookingId: string;
     createdAt: string;
     expectedDepartureDate: string;
-    notes?: string;
+    notes?: string | null;
 };
 

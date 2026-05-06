@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ApArea } from './ApArea';
-import type { ApprovedPremisesUserPermission } from './ApprovedPremisesUserPermission';
 import type { ApprovedPremisesUserRole } from './ApprovedPremisesUserRole';
 import type { NamedId } from './NamedId';
+import type { ProbationDeliveryUnit } from './ProbationDeliveryUnit';
 import type { User } from './User';
 import type { UserQualification } from './UserQualification';
 export type ApprovedPremisesUser = (User & {
@@ -18,14 +18,15 @@ export type ApprovedPremisesUser = (User & {
      * The CRU Management Area used if no override is defined. This is provided to support the user configuration page.
      */
     cruManagementAreaDefault?: NamedId;
-    /**
-     * The CRU Management Area manually set on this user. This is provided to support the user configuration page.
-     */
-    cruManagementAreaOverride?: NamedId;
-    permissions?: Array<ApprovedPremisesUserPermission>;
+    cruManagementAreaOverride?: (NamedId | null);
+    email?: string | null;
+    isActive?: boolean | null;
+    permissions?: any[] | null;
+    probationDeliveryUnit?: (ProbationDeliveryUnit | null);
     qualifications?: Array<UserQualification>;
     roles?: Array<ApprovedPremisesUserRole>;
-    version?: number;
+    telephoneNumber?: string | null;
+    version?: number | null;
 } & {
     apArea: ApArea;
     /**

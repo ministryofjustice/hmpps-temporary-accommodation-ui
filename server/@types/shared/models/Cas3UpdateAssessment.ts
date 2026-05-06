@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3UpdateAssessment = {
-    accommodationRequiredFromDate?: string;
-    releaseDate?: string;
+    accommodationRequiredFromDate?: string | null;
+    releaseDate?: string | null;
 };
 

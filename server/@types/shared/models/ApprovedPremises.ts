@@ -5,9 +5,13 @@
 import type { LocalAuthorityArea } from './LocalAuthorityArea';
 import type { Premises } from './Premises';
 export type ApprovedPremises = (Premises & {
+    addressLine2?: string | null;
     apCode?: string;
+    characteristics?: any[] | null;
+    notes?: string | null;
+    town?: string | null;
 } & {
-    localAuthorityArea: LocalAuthorityArea;
+    localAuthorityArea: (LocalAuthorityArea | null);
     apCode: string;
 });
 

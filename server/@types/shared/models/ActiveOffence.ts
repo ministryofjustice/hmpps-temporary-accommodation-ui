@@ -7,9 +7,9 @@ export type ActiveOffence = {
     deliusEventNumber: string;
     mainCategoryDescription: string;
     mainOffence: boolean;
-    offenceDate?: string;
+    offenceDate?: string | null;
     offenceDescription: string;
     offenceId: string;
-    subCategoryDescription?: string;
+    subCategoryDescription?: string | null;
 };
 

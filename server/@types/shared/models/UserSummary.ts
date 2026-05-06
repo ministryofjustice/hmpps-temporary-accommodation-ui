@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type UserSummary = {
-    emailAddress?: string;
+    emailAddress?: string | null;
     id: string;
     name: string;
 };

@@ -3,5 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ReferralHistoryNote } from './ReferralHistoryNote';
-export type ReferralHistoryDomainEventNote = ReferralHistoryNote;
+import type { ReferralHistoryNoteMessageDetails } from './ReferralHistoryNoteMessageDetails';
+export type ReferralHistoryDomainEventNote = (ReferralHistoryNote & {
+    message?: string | null;
+    messageDetails?: (ReferralHistoryNoteMessageDetails | null);
+});
 

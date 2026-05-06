@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type InvalidParam = {
-    errorType?: string;
-    propertyName?: string;
+    errorType?: string | null;
+    propertyName?: string | null;
 };
 

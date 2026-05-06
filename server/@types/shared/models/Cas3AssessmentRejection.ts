@@ -4,9 +4,9 @@
 /* eslint-disable */
 export type Cas3AssessmentRejection = {
     document: any;
-    isWithdrawn?: boolean;
-    referralRejectionReasonDetail?: string;
-    referralRejectionReasonId?: string;
+    isWithdrawn?: boolean | null;
+    referralRejectionReasonDetail?: string | null;
+    referralRejectionReasonId?: string | null;
     rejectionRationale: string;
 };
 

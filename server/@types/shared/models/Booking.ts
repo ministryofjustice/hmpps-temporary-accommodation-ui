@@ -17,48 +17,39 @@ import type { ServiceName } from './ServiceName';
 import type { Turnaround } from './Turnaround';
 import type { UnknownPerson } from './UnknownPerson';
 export type Booking = {
-    applicationId?: string;
-    arrival?: Arrival;
+    applicationId?: string | null;
+    arrival?: (Arrival | null);
     arrivalDate: string;
-    assessmentId?: string;
-    bed?: Bed;
-    /**
-     * The latest version of the cancellation, if it exists
-     */
-    cancellation?: Cancellation;
+    assessmentId?: string | null;
+    bed?: (Bed | null);
+    cancellation?: (Cancellation | null);
     /**
      * The full history of the cancellation
      */
     cancellations: Array<Cancellation>;
-    confirmation?: Confirmation;
+    confirmation?: (Confirmation | null);
     createdAt: string;
-    /**
-     * The latest version of the departure, if it exists
-     */
-    departure?: Departure;
+    departure?: (Departure | null);
     departureDate: string;
     /**
      * The full history of the departure
      */
     departures: Array<Departure>;
-    effectiveEndDate?: string;
+    effectiveEndDate?: string | null;
     extensions: Array<Extension>;
     id: string;
-    nonArrival?: Nonarrival;
+    nonArrival?: (Nonarrival | null);
     originalArrivalDate: string;
     originalDepartureDate: string;
     person: (FullPerson | RestrictedPerson | UnknownPerson);
     premises: BookingPremisesSummary;
     serviceName: ServiceName;
     status: BookingStatus;
-    /**
-     * The latest version of the turnaround, if it exists
-     */
-    turnaround?: Turnaround;
-    turnaroundStartDate?: string;
+    turnaround?: (Turnaround | null);
+    turnaroundStartDate?: string | null;
     /**
      * The full history of turnarounds
      */
-    turnarounds?: Array<Turnaround>;
+    turnarounds?: any[] | null;
 };
 

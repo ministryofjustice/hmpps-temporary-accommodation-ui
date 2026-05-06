@@ -4,7 +4,6 @@ import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
 import { mapApiPersonRisksForUi, sentenceCase } from '../../../../utils/utils'
-import config from '../../../../config'
 
 type SafetyPlanCompleted = 'yesAndConsentToShareHasBeenGiven' | 'yesButNoConsentToShare' | 'noSafetyPlan'
 
@@ -66,12 +65,10 @@ export default class RoshLevel implements TasklistPage {
       'How will risk to staff impact placement?': this.body.riskToStaff,
     }
 
-    if (config.flags.riskToSelfEnabled) {
-      response[this.questions.riskToSelfConcerns] = sentenceCase(this.body.riskToSelfConcerns as string)
-      response['How will risk to self impact placement?'] = this.body.riskToSelf
-      response[this.questions.safetyPlanCompleted] =
-        safetyPlanCompletedResponses[this.body.safetyPlanCompleted as SafetyPlanCompleted]
-    }
+    response[this.questions.riskToSelfConcerns] = sentenceCase(this.body.riskToSelfConcerns as string)
+    response['How will risk to self impact placement?'] = this.body.riskToSelf
+    response[this.questions.safetyPlanCompleted] =
+      safetyPlanCompletedResponses[this.body.safetyPlanCompleted as SafetyPlanCompleted]
 
     return response
   }
@@ -103,18 +100,16 @@ export default class RoshLevel implements TasklistPage {
       errors.riskToStaff = 'You must provide details on how risk to staff will impact placement'
     }
 
-    if (config.flags.riskToSelfEnabled) {
-      if (!this.body.riskToSelfConcerns) {
-        errors.riskToSelfConcerns = 'Select yes if there are any current or past concerns about self harm or suicide'
-      }
+    if (!this.body.riskToSelfConcerns) {
+      errors.riskToSelfConcerns = 'Select yes if there are any current or past concerns about self harm or suicide'
+    }
 
-      if (this.body.riskToSelfConcerns === 'yes' && !this.body.riskToSelf) {
-        errors.riskToSelf = 'You must provide details on how risk to self will impact placement'
-      }
+    if (this.body.riskToSelfConcerns === 'yes' && !this.body.riskToSelf) {
+      errors.riskToSelf = 'You must provide details on how risk to self will impact placement'
+    }
 
-      if (!this.body.safetyPlanCompleted) {
-        errors.safetyPlanCompleted = 'Select if a Safety plan has been completed'
-      }
+    if (!this.body.safetyPlanCompleted) {
+      errors.safetyPlanCompleted = 'Select if a Safety plan has been completed'
     }
 
     return errors

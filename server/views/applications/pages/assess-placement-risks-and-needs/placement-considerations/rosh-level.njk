@@ -105,7 +105,6 @@
                 }
             }, fetchContext()) }}
 
-            {% if riskToSelfEnabled %}
             <h2>Risk to self</h2>
             {% set riskToSelfHintHtml %}
                 <ul class="govuk-list govuk-list--bullet govuk-hint">
@@ -180,7 +179,6 @@
                     }
                 ]
             }, fetchContext()) }}
-            {% endif %}
 
             {{ govukButton({
                 text: "Next",

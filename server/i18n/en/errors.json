@@ -122,7 +122,8 @@
       "empty": "You must enter a town or city"
     },
     "postcode": {
-      "empty": "You must enter a postcode"
+      "empty": "You must enter a postcode",
+      "tooLong": "Postcode must be 8 characters or fewer"
     },
     "probationRegionId": {
       "empty": "You must choose a probation region"

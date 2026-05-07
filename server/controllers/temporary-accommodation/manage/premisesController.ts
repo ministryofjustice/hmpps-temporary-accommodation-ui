@@ -2,6 +2,7 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import { PremisesSearchParameters } from '@approved-premises/ui'
 import type { Cas3NewPremises, Cas3PremisesStatus, Cas3UpdatePremises } from '@approved-premises/api'
+import errorLookup from '../../../i18n/en/errors.json'
 import paths from '../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../services/premisesService'
 import BedspaceService from '../../../services/bedspaceService'
@@ -29,6 +30,19 @@ import { filterProbationRegions } from '../../../utils/userUtils'
 import { parseNumber } from '../../../utils/formUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import { addPlaceContext, preservePlaceContext } from '../../../utils/placeUtils'
+
+const maxPremisesPostcodeLength = 8
+const premisesPostcodeTooLongError = errorLookup.generic.postcode.tooLong
+
+const normalisePostcode = (postcode?: string) => postcode?.trim()
+
+const postcodeValidationError = (postcode?: string): Record<string, string> => {
+  if (postcode && postcode.length > maxPremisesPostcodeLength) {
+    return { postcode: premisesPostcodeTooLongError }
+  }
+
+  return {}
+}
 
 export default class PremisesController {
   constructor(
@@ -152,6 +166,8 @@ export default class PremisesController {
 
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
+      req.body.postcode = normalisePostcode(req.body.postcode)
+
       const newPremises: Cas3NewPremises = {
         reference: req.body.reference,
         addressLine1: req.body.addressLine1,
@@ -167,6 +183,13 @@ export default class PremisesController {
       }
 
       const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
+      const errors = postcodeValidationError(newPremises.postcode)
+
+      if (Object.keys(errors).length > 0) {
+        addValidationErrorsAndRedirect(req, res, errors, addPlaceContext(paths.premises.new(), placeContext))
+        return
+      }
 
       try {
         const callConfig = extractCallConfig(req)
@@ -202,7 +225,7 @@ export default class PremisesController {
         addressLine1: premises.addressLine1,
         addressLine2: premises.addressLine2,
         town: premises.town,
-        postcode: premises.postcode,
+        postcode: normalisePostcode(premises.postcode),
         localAuthorityAreaId: premises.localAuthorityArea?.id,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
@@ -230,6 +253,8 @@ export default class PremisesController {
 
   update(): RequestHandler {
     return async (req: Request, res: Response) => {
+      req.body.postcode = normalisePostcode(req.body.postcode)
+
       const updatedPremises: Cas3UpdatePremises = {
         reference: req.body.reference,
         addressLine1: req.body.addressLine1,
@@ -247,6 +272,18 @@ export default class PremisesController {
       const { premisesId } = req.params
 
       const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
+      const errors = postcodeValidationError(updatedPremises.postcode)
+
+      if (Object.keys(errors).length > 0) {
+        addValidationErrorsAndRedirect(
+          req,
+          res,
+          errors,
+          addPlaceContext(paths.premises.edit({ premisesId }), placeContext),
+        )
+        return
+      }
 
       try {
         const callConfig = extractCallConfig(req)

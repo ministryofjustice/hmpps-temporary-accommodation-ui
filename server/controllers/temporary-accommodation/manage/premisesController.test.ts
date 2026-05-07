@@ -885,7 +885,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.create()
 
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      const newPremises = cas3NewPremisesFactory.build({ reference: premises.reference })
+      const newPremises = cas3NewPremisesFactory.build({ reference: premises.reference, postcode: ' SW1A 1AA ' })
 
       request.body = {
         ...newPremises,
@@ -897,10 +897,27 @@ describe('PremisesController', () => {
 
       expect(premisesService.createPremises).toHaveBeenCalledWith(callConfig, {
         ...newPremises,
+        postcode: 'SW1A 1AA',
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property added')
       expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
+    })
+
+    it('should show a validation error when the trimmed postcode is longer than 8 characters', async () => {
+      const requestHandler = premisesController.create()
+
+      request.body = cas3NewPremisesFactory.build({ postcode: ' SW1A 1AAA ' })
+
+      await requestHandler(request, response, next)
+
+      expect(addValidationErrorsAndRedirect).toHaveBeenCalledWith(
+        request,
+        response,
+        { postcode: 'Postcode must be 8 characters or fewer' },
+        '/properties/new',
+      )
+      expect(premisesService.createPremises).not.toHaveBeenCalled()
     })
 
     it('should fail to create a premises when the service returns an error', async () => {
@@ -932,7 +949,7 @@ describe('PremisesController', () => {
   })
 
   describe('edit', () => {
-    const premises = cas3PremisesFactory.build()
+    const premises = cas3PremisesFactory.build({ postcode: 'SW1A 1AA  ' })
     const summaryList: SummaryList = {
       rows: [
         {
@@ -978,7 +995,7 @@ describe('PremisesController', () => {
         addressLine1: premises.addressLine1,
         addressLine2: premises.addressLine2,
         town: premises.town,
-        postcode: premises.postcode,
+        postcode: 'SW1A 1AA',
         localAuthorityAreaId: premises.localAuthorityArea.id,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
@@ -1016,7 +1033,7 @@ describe('PremisesController', () => {
         addressLine1: premises.addressLine1,
         addressLine2: premises.addressLine2,
         town: premises.town,
-        postcode: premises.postcode,
+        postcode: 'SW1A 1AA',
         localAuthorityAreaId: undefined,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
@@ -1049,7 +1066,7 @@ describe('PremisesController', () => {
         addressLine1: premises.addressLine1,
         addressLine2: premises.addressLine2,
         town: premises.town,
-        postcode: premises.postcode,
+        postcode: 'SW1A 1AA',
         localAuthorityAreaId: premises.localAuthorityArea.id,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
@@ -1065,7 +1082,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.update()
 
       const premises = cas3PremisesFactory.build()
-      const updatedPremises = cas3UpdatePremisesFactory.build()
+      const updatedPremises = cas3UpdatePremisesFactory.build({ postcode: ' SW1A 1AA ' })
 
       request.params.premisesId = premises.id
 
@@ -1075,9 +1092,29 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.updatePremises).toHaveBeenCalledWith(callConfig, premises.id, { ...updatedPremises })
+      expect(premisesService.updatePremises).toHaveBeenCalledWith(callConfig, premises.id, {
+        ...updatedPremises,
+        postcode: 'SW1A 1AA',
+      })
       expect(request.flash).toHaveBeenCalledWith('success', 'Property edited')
       expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
+    })
+
+    it('should show a validation error when the trimmed postcode is longer than 8 characters', async () => {
+      const requestHandler = premisesController.update()
+
+      request.params.premisesId = '789f2246-0b90-43ba-b394-6b2433591c92'
+      request.body = cas3UpdatePremisesFactory.build({ postcode: ' SW1A 1AAA ' })
+
+      await requestHandler(request, response, next)
+
+      expect(addValidationErrorsAndRedirect).toHaveBeenCalledWith(
+        request,
+        response,
+        { postcode: 'Postcode must be 8 characters or fewer' },
+        `/properties/${request.params.premisesId}/edit`,
+      )
+      expect(premisesService.updatePremises).not.toHaveBeenCalled()
     })
 
     it('should fail to update a premises when the service returns an error', async () => {

@@ -65,6 +65,10 @@ describe('PremisesController', () => {
   const assessment = assessmentFactory.build({ status: 'ready_to_place' })
   const placeContext = placeContextFactory.build({ assessment })
   const placeContextQueryString = `placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`
+  const postcodeWithOuterWhitespace = ' SW1A 1AA '
+  const trimmedPostcode = postcodeWithOuterWhitespace.trim()
+  const overlongPostcodeWithOuterWhitespace = ' 1234567890 '
+  const postcodeTooLongError = 'Postcode must be 8 characters or fewer'
 
   let request: Request
 
@@ -885,7 +889,10 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.create()
 
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      const newPremises = cas3NewPremisesFactory.build({ reference: premises.reference, postcode: ' SW1A 1AA ' })
+      const newPremises = cas3NewPremisesFactory.build({
+        reference: premises.reference,
+        postcode: postcodeWithOuterWhitespace,
+      })
 
       request.body = {
         ...newPremises,
@@ -897,7 +904,7 @@ describe('PremisesController', () => {
 
       expect(premisesService.createPremises).toHaveBeenCalledWith(callConfig, {
         ...newPremises,
-        postcode: 'SW1A 1AA',
+        postcode: trimmedPostcode,
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property added')
@@ -907,14 +914,14 @@ describe('PremisesController', () => {
     it('should show a validation error when the trimmed postcode is longer than 8 characters', async () => {
       const requestHandler = premisesController.create()
 
-      request.body = cas3NewPremisesFactory.build({ postcode: ' SW1A 1AAA ' })
+      request.body = cas3NewPremisesFactory.build({ postcode: overlongPostcodeWithOuterWhitespace })
 
       await requestHandler(request, response, next)
 
       expect(addValidationErrorsAndRedirect).toHaveBeenCalledWith(
         request,
         response,
-        { postcode: 'Postcode must be 8 characters or fewer' },
+        { postcode: postcodeTooLongError },
         '/properties/new',
       )
       expect(premisesService.createPremises).not.toHaveBeenCalled()
@@ -949,7 +956,7 @@ describe('PremisesController', () => {
   })
 
   describe('edit', () => {
-    const premises = cas3PremisesFactory.build({ postcode: 'SW1A 1AA  ' })
+    const premises = cas3PremisesFactory.build({ postcode: `${trimmedPostcode}  ` })
     const summaryList: SummaryList = {
       rows: [
         {
@@ -995,7 +1002,7 @@ describe('PremisesController', () => {
         addressLine1: premises.addressLine1,
         addressLine2: premises.addressLine2,
         town: premises.town,
-        postcode: 'SW1A 1AA',
+        postcode: trimmedPostcode,
         localAuthorityAreaId: premises.localAuthorityArea.id,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
@@ -1033,7 +1040,7 @@ describe('PremisesController', () => {
         addressLine1: premises.addressLine1,
         addressLine2: premises.addressLine2,
         town: premises.town,
-        postcode: 'SW1A 1AA',
+        postcode: trimmedPostcode,
         localAuthorityAreaId: undefined,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
@@ -1066,7 +1073,7 @@ describe('PremisesController', () => {
         addressLine1: premises.addressLine1,
         addressLine2: premises.addressLine2,
         town: premises.town,
-        postcode: 'SW1A 1AA',
+        postcode: trimmedPostcode,
         localAuthorityAreaId: premises.localAuthorityArea.id,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
@@ -1082,7 +1089,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.update()
 
       const premises = cas3PremisesFactory.build()
-      const updatedPremises = cas3UpdatePremisesFactory.build({ postcode: ' SW1A 1AA ' })
+      const updatedPremises = cas3UpdatePremisesFactory.build({ postcode: postcodeWithOuterWhitespace })
 
       request.params.premisesId = premises.id
 
@@ -1094,7 +1101,7 @@ describe('PremisesController', () => {
 
       expect(premisesService.updatePremises).toHaveBeenCalledWith(callConfig, premises.id, {
         ...updatedPremises,
-        postcode: 'SW1A 1AA',
+        postcode: trimmedPostcode,
       })
       expect(request.flash).toHaveBeenCalledWith('success', 'Property edited')
       expect(response.redirect).toHaveBeenCalledWith(`/properties/${premises.id}`)
@@ -1104,14 +1111,14 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.update()
 
       request.params.premisesId = '789f2246-0b90-43ba-b394-6b2433591c92'
-      request.body = cas3UpdatePremisesFactory.build({ postcode: ' SW1A 1AAA ' })
+      request.body = cas3UpdatePremisesFactory.build({ postcode: overlongPostcodeWithOuterWhitespace })
 
       await requestHandler(request, response, next)
 
       expect(addValidationErrorsAndRedirect).toHaveBeenCalledWith(
         request,
         response,
-        { postcode: 'Postcode must be 8 characters or fewer' },
+        { postcode: postcodeTooLongError },
         `/properties/${request.params.premisesId}/edit`,
       )
       expect(premisesService.updatePremises).not.toHaveBeenCalled()

@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack notification
-        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@3c605b6b62b9abaa9780e007f5835d4213398cf3 # main
+        uses: ministryofjustice/hmpps-approved-premises-ui/.github/actions/slack_failure_notification@d03ccce7b908369b59e77cb4ce13468dbe6e278a # v1
         with:
           title: "CAS3 E2E Tests (Playwright)"
           job: "e2e_test_playwright"
@@ -148,7 +148,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack notification
-        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@3c605b6b62b9abaa9780e007f5835d4213398cf3 # main
+        uses: ministryofjustice/hmpps-approved-premises-ui/.github/actions/slack_failure_notification@d03ccce7b908369b59e77cb4ce13468dbe6e278a # v1
         with:
           title: "CAS3 E2E Tests (Cypress)"
           job: "e2e_test_cypress"

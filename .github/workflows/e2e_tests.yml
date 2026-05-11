@@ -107,7 +107,12 @@ jobs:
 
       - name: Split tests
         id: split-tests
-        run: ./script/split-e2e-tests ${{ strategy.job-index }} ${{ strategy.job-total }}
+        uses: ministryofjustice/hmpps-approved-premises-ui/.github/actions/split_tests@d03ccce7b908369b59e77cb4ce13468dbe6e278a # v1
+        with:
+          tests_directory: e2e
+          tests_spec_glob: '*.feature'
+          matrix_index: ${{ strategy.job-index }}
+          matrix_total: ${{ strategy.job-total }}
 
       - name: Run E2E Tests
         env:
@@ -119,7 +124,7 @@ jobs:
         run: |
           npm run test:e2e:ci -- \
           --config baseUrl=https://transitional-accommodation-dev.hmpps.service.justice.gov.uk \
-          --spec $(echo ${{ steps.split-tests.outputs.test-suite }} | sed -E 's/ /,/g')
+          --spec ${{ steps.split-tests.outputs.test-suite }}
 
       - name: Upload Cypress report
         if: ${{ !cancelled() }}

@@ -149,14 +149,19 @@ jobs:
 
       - name: Split tests
         id: split-tests
-        run: ./script/split-integration-tests  ${{ strategy.job-index }} ${{ strategy.job-total }}
+        uses: ministryofjustice/hmpps-approved-premises-ui/.github/actions/split_tests@d03ccce7b908369b59e77cb4ce13468dbe6e278a # v1
+        with:
+          tests_directory: integration_tests
+          tests_spec_glob: '*.cy.ts'
+          matrix_index: ${{ strategy.job-index }}
+          matrix_total: ${{ strategy.job-total }}
 
       - name: Running Integration tests
-        run: TEST_RUN_ARGS="--spec $(echo ${{ steps.split-tests.outputs.test-suite }})" npm run test:integration
+        run: TEST_RUN_ARGS="--spec ${{ steps.split-tests.outputs.test-suite }}" npm run test:integration
 
       - name: Upload Integration test artefacts
         if: failure()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: integration-test-artefacts-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: |

@@ -49,7 +49,7 @@ jobs:
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: CAS3-E2E-playwright-report-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: e2e_playwright/playwright-report
@@ -58,7 +58,7 @@ jobs:
 
       - name: Upload E2E artefacts
         if: failure()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: CAS3-E2E-playwright-artefacts-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: e2e_playwright/test-results
@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack notification
-        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@3c605b6b62b9abaa9780e007f5835d4213398cf3 # main
+        uses: ministryofjustice/hmpps-approved-premises-ui/.github/actions/slack_failure_notification@d03ccce7b908369b59e77cb4ce13468dbe6e278a # v1
         with:
           title: "CAS3 E2E Tests (Playwright)"
           job: "e2e_test_playwright"
@@ -107,7 +107,12 @@ jobs:
 
       - name: Split tests
         id: split-tests
-        run: ./script/split-e2e-tests ${{ strategy.job-index }} ${{ strategy.job-total }}
+        uses: ministryofjustice/hmpps-approved-premises-ui/.github/actions/split_tests@d03ccce7b908369b59e77cb4ce13468dbe6e278a # v1
+        with:
+          tests_directory: e2e
+          tests_spec_glob: '*.feature'
+          matrix_index: ${{ strategy.job-index }}
+          matrix_total: ${{ strategy.job-total }}
 
       - name: Run E2E Tests
         env:
@@ -119,11 +124,11 @@ jobs:
         run: |
           npm run test:e2e:ci -- \
           --config baseUrl=https://transitional-accommodation-dev.hmpps.service.justice.gov.uk \
-          --spec $(echo ${{ steps.split-tests.outputs.test-suite }} | sed -E 's/ /,/g')
+          --spec ${{ steps.split-tests.outputs.test-suite }}
 
       - name: Upload Cypress report
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: CAS3-E2E-cypress-report-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: test_results/cypress
@@ -132,7 +137,7 @@ jobs:
 
       - name: Upload E2E artefacts
         if: failure()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: CAS3-E2E-cypress-artefacts
           path: |
@@ -148,7 +153,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack notification
-        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@3c605b6b62b9abaa9780e007f5835d4213398cf3 # main
+        uses: ministryofjustice/hmpps-approved-premises-ui/.github/actions/slack_failure_notification@d03ccce7b908369b59e77cb4ce13468dbe6e278a # v1
         with:
           title: "CAS3 E2E Tests (Cypress)"
           job: "e2e_test_cypress"

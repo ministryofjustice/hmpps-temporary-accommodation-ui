@@ -2,9 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type UserSummary = {
-    emailAddress?: string;
-    id: string;
+export type AttachmentHeader = {
+    /**
+     * The name of the header
+     */
     name: string;
+    /**
+     * The value of the header
+     */
+    value: string;
 };
 

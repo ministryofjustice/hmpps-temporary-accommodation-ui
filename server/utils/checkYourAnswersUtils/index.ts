@@ -19,23 +19,27 @@ export const getTaskResponsesAsSummaryListItems = (
 ): Array<SummaryListItem> => {
   const items: Array<SummaryListItem> = []
 
-  forPagesInTask(application, task, (page, pageName) => {
-    const response = page.response()
+  try {
+    forPagesInTask(application, task, (page, pageName) => {
+      const response = page.response()
 
-    try {
-      Object.keys(response).forEach(key => {
-        const value =
-          typeof response[key] === 'string' || response[key] instanceof String
-            ? ({ html: formatLines(response[key] as string) } as HtmlItem)
-            : ({ html: embeddedSummaryListItem(response[key] as Array<Record<string, unknown>>) } as HtmlItem)
+      try {
+        Object.keys(response).forEach(key => {
+          const value =
+            typeof response[key] === 'string' || response[key] instanceof String
+              ? ({ html: formatLines(response[key] as string) } as HtmlItem)
+              : ({ html: embeddedSummaryListItem(response[key] as Array<Record<string, unknown>>) } as HtmlItem)
 
-        items.push(summaryListItemForResponse(key, value, task, pageName, application))
-      })
-    } catch (e) {
-      logger.error(e)
-      logger.debug('response:', response)
-    }
-  })
+          items.push(summaryListItemForResponse(key, value, task, pageName, application))
+        })
+      } catch (e) {
+        logger.error(e)
+        logger.debug('response:', response)
+      }
+    })
+  } catch (e) {
+    logger.error(e, `for task ${task.id}`)
+  }
 
   return items
 }

@@ -173,7 +173,7 @@
     "passport-oauth2": "^1.8.0",
     "path-to-regexp": "^8.4.0",
     "prom-client": "^15.1.2",
-    "qs": "^6.14.2",
+    "qs": "^6.15.2",
     "redis": "^4.7.0",
     "reflect-metadata": "^0.2.2",
     "static-path": "^0.0.4",

@@ -2,4 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type PropertyStatus = 'active' | 'archived';
+export type AssignmentType = 'ALLOCATED' | 'DEALLOCATED' | 'IN_PROGRESS' | 'PRISON' | 'UNALLOCATED';

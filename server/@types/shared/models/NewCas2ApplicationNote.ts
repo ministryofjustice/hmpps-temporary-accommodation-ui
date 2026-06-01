@@ -2,11 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Confirmation = {
-    bookingId: string;
-    createdAt: string;
-    dateTime: string;
-    id: string;
-    notes?: string;
+export type NewCas2ApplicationNote = {
+    note: string;
 };
 

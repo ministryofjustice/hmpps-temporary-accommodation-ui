@@ -2,9 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type UserSummary = {
-    emailAddress?: string;
-    id: string;
-    name: string;
+export type Cas3StaffDto = {
+    staffCode: string;
+    username: string;
 };
 

@@ -2,4 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type UserSortField = 'name';
+export type LatestCas2StatusUpdate = {
+    label: string;
+    statusId: string;
+};
+

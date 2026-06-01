@@ -2,13 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Bed = {
-    /**
-     * End date of the bed availability, open for availability if not specified
-     */
-    bedEndDate?: string;
-    code?: string;
+export type Cas2StatusUpdateDetail = {
     id: string;
+    label: string;
     name: string;
 };
 

@@ -2,10 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Cas3StaffDto } from './Cas3StaffDto';
 import type { ServiceType } from './ServiceType';
-import type { TemporaryAccommodationAssessmentStatus } from './TemporaryAccommodationAssessmentStatus';
-export type Cas3ReferralHistory = {
+export type Cas2ReferralHistory = {
     applicationId: string;
     createdAt: string;
     id: string;
@@ -14,9 +12,8 @@ export type Cas3ReferralHistory = {
     placementAddress?: string;
     placementStatus?: string;
     referralRejectionReason?: string;
-    referralRejectionReasonDetail?: string;
-    referredBy?: Cas3StaffDto;
-    status: TemporaryAccommodationAssessmentStatus;
+    referredBy?: string;
+    status: string;
     type: ServiceType;
 };
 

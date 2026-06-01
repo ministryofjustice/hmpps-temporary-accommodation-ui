@@ -2,10 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Turnaround = {
-    bookingId: string;
-    createdAt: string;
-    id: string;
-    workingDays: number;
-};
-
+export type ApplicationOrigin = 'courtBail' | 'prisonBail' | 'homeDetentionCurfew' | 'other';

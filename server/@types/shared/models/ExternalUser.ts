@@ -2,8 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type DlqMessage = {
-    body: Record<string, any>;
-    messageId: string;
+export type ExternalUser = {
+    email: string;
+    id: string;
+    name: string;
+    origin?: string;
+    username: string;
 };
 

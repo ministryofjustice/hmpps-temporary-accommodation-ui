@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type BookingPremisesSummary = {
-    id: string;
-    name: string;
+export type UpdateCas2Assessment = {
+    assessorName?: string;
+    nacroReferralId?: string;
 };
 

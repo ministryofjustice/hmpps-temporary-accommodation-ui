@@ -2,12 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Extension = {
-    bookingId: string;
+export type Cas2SubmittedApplicationSummary = {
     createdAt: string;
+    createdByUserId: string;
+    crn: string;
     id: string;
-    newDepartureDate: string;
-    notes?: string;
-    previousDepartureDate: string;
+    nomsNumber: string;
+    personName: string;
+    submittedAt?: string;
 };
 

@@ -2,7 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RetryDlqResult = {
-    messagesFoundCount: number;
-};
-
+export type Cas2ReportName = 'submitted-applications' | 'application-status-updates' | 'unsubmitted-applications';

@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { AttachmentHeader } from './AttachmentHeader';
 export type Attachment = {
     /**
      * The number of the attachment which will match any corresponding reference in the content section
@@ -18,7 +19,11 @@ export type Attachment = {
     /**
      * The size of the attachment file in bytes
      */
-    filesize: number;
+    filesize?: number;
+    /**
+     * The additional headers to use when calling the url for fetching this attachment
+     */
+    headers?: Array<AttachmentHeader>;
     /**
      * The name or description of the attachment which will be included in the report
      */

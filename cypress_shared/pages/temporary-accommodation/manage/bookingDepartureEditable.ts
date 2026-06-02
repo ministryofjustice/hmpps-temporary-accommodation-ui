@@ -1,5 +1,5 @@
 import type { Cas3NewDeparture } from '@approved-premises/api'
-import { Departure } from '../../../../server/@types/shared'
+import { Cas3Departure } from '../../../../server/@types/shared'
 import Page from '../../page'
 
 export default class BookingDepartureEditablePage extends Page {
@@ -26,7 +26,7 @@ export default class BookingDepartureEditablePage extends Page {
     this.getTextInputByIdAndClear('notes')
   }
 
-  protected shouldShowFormContents(departure: Departure) {
+  protected shouldShowFormContents(departure: Cas3Departure) {
     this.shouldShowDateInputs('dateTime', departure.dateTime)
     this.shouldShowSelectInput('reasonId', departure.reason.name)
     this.shouldShowSelectInput('moveOnCategoryId', departure.moveOnCategory.name)

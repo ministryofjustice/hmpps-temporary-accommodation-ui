@@ -1,4 +1,4 @@
-import type { Booking, Cas3BookingSearchResult, Premises } from '@approved-premises/api'
+import type { Cas3Booking, Cas3BookingSearchResult, Cas3Premises } from '@approved-premises/api'
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -38,7 +38,7 @@ export default class BookingSearchPage extends Page {
     })
   }
 
-  checkBookingDetailsAndClickView(premises: Premises, booking: Booking) {
+  checkBookingDetailsAndClickView(premises: Cas3Premises, booking: Cas3Booking) {
     cy.get('tr')
       .filter(
         `:contains(${personName(booking.person, 'Limited access offender')}):contains(${booking.person.crn}):contains(${

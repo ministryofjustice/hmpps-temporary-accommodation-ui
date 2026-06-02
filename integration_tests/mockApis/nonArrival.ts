@@ -1,12 +1,16 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { Nonarrival } from '@approved-premises/api'
+import type { Cas3NonArrival } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '.'
 import { errorStub } from './utils'
 
 export default {
-  stubNonArrivalCreate: (args: { premisesId: string; bookingId: string; nonArrival: Nonarrival }): SuperAgentRequest =>
+  stubNonArrivalCreate: (args: {
+    premisesId: string
+    bookingId: string
+    nonArrival: Cas3NonArrival
+  }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',

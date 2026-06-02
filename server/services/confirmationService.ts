@@ -1,4 +1,4 @@
-import type { Confirmation, NewConfirmation } from '@approved-premises/api'
+import type { Cas3Confirmation, NewConfirmation } from '@approved-premises/api'
 import type { BookingClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 
@@ -10,7 +10,7 @@ export default class ConfirmationService {
     premisesId: string,
     bookingId: string,
     confirmation: NewConfirmation,
-  ): Promise<Confirmation> {
+  ): Promise<Cas3Confirmation> {
     const bookingClient = this.bookingClientFactory(callConfig)
 
     return bookingClient.markAsConfirmed(premisesId, bookingId, confirmation)

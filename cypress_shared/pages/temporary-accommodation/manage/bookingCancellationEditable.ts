@@ -1,5 +1,5 @@
 import type { NewCancellation } from '@approved-premises/api'
-import { Cancellation } from '../../../../server/@types/shared'
+import { Cas3Cancellation } from '../../../../server/@types/shared'
 import Page from '../../page'
 
 export default class BookingCancellationEditablePage extends Page {
@@ -22,7 +22,7 @@ export default class BookingCancellationEditablePage extends Page {
     this.getTextInputByIdAndClear('notes')
   }
 
-  protected shouldShowFormContents(cancellation: Cancellation) {
+  protected shouldShowFormContents(cancellation: Cas3Cancellation) {
     this.shouldShowDateInputs('date', cancellation.date)
     this.shouldShowSelectInput('reason', cancellation.reason.name)
     this.shouldShowTextareaInput('notes', cancellation.notes)

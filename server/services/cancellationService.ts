@@ -1,5 +1,5 @@
 import type { ReferenceData } from '@approved-premises/ui'
-import type { Cancellation, NewCancellation } from '@approved-premises/api'
+import type { Cas3Cancellation, NewCancellation } from '@approved-premises/api'
 import type { BookingClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 
@@ -18,7 +18,7 @@ export default class CancellationService {
     premisesId: string,
     bookingId: string,
     cancellation: NewCancellation,
-  ): Promise<Cancellation> {
+  ): Promise<Cas3Cancellation> {
     const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedCancellation = await bookingClient.cancel(premisesId, bookingId, cancellation)

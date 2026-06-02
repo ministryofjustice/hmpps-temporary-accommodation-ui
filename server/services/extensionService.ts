@@ -1,4 +1,4 @@
-import type { Extension, NewExtension } from '@approved-premises/api'
+import type { Cas3Extension, NewExtension } from '@approved-premises/api'
 import type { BookingClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 
@@ -10,7 +10,7 @@ export default class ExtensionService {
     premisesId: string,
     bookingId: string,
     extension: NewExtension,
-  ): Promise<Extension> {
+  ): Promise<Cas3Extension> {
     const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedExtension = await bookingClient.extendBooking(premisesId, bookingId, extension)

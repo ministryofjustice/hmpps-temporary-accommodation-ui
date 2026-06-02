@@ -2,13 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Bed = {
+export type AttachmentHeader = {
     /**
-     * End date of the bed availability, open for availability if not specified
+     * The name of the header
      */
-    bedEndDate?: string;
-    code?: string;
-    id: string;
     name: string;
+    /**
+     * The value of the header
+     */
+    value: string;
 };
 

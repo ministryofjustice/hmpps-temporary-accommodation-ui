@@ -1,4 +1,4 @@
-import { BookingStatus, Cas3Bedspace, Cas3Booking, Cas3Premises } from '@approved-premises/api'
+import { Cas3BookingStatus, Cas3Bedspace, Cas3Booking, Cas3Premises } from '@approved-premises/api'
 import { cas3BedspaceFactory, cas3PremisesFactory } from '../../server/testutils/factories'
 import { statusName } from '../../server/utils/bookingUtils'
 
@@ -18,7 +18,7 @@ export const assignModifiedBookingForTurnarounds = (
   statusElement: JQuery<HTMLElement>,
   alias: string,
 ) => {
-  if (booking.status === ('unknown-departed-or-closed' as BookingStatus)) {
+  if (booking.status === ('unknown-departed-or-closed' as Cas3BookingStatus)) {
     const status = statusElement.text().trim() === statusName('closed') ? 'closed' : 'departed'
     cy.wrap({ ...booking, status }).as(alias)
   } else {

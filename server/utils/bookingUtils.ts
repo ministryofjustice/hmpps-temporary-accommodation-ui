@@ -1,4 +1,10 @@
-import { Cancellation, Cas3AssessmentSummary, Cas3Booking, Departure, Extension } from '@approved-premises/api'
+import {
+  Cas3Cancellation,
+  Cas3AssessmentSummary,
+  Cas3Booking,
+  Cas3Departure,
+  Cas3Extension,
+} from '@approved-premises/api'
 import type { BespokeError, PageHeadingBarItem, RadioItem } from '@approved-premises/ui'
 import { addDays } from 'date-fns'
 import paths from '../paths/temporary-accommodation/manage'
@@ -177,7 +183,7 @@ export const deriveBookingHistory = (booking: Cas3Booking) => {
   return history
 }
 
-export const shortenedOrExtended = (extension: Extension): 'shortened' | 'extended' => {
+export const shortenedOrExtended = (extension: Cas3Extension): 'shortened' | 'extended' => {
   const previousDepartureDate = DateFormats.isoToDateObj(extension.previousDepartureDate)
   const newDepartureDate = DateFormats.isoToDateObj(extension.newDepartureDate)
 
@@ -391,7 +397,10 @@ const getPredecessorForConfirmedBooking = (booking: Cas3Booking): Cas3Booking =>
   }
 }
 
-const compareBookingState = (a: Extension | Departure | Cancellation, b: Extension | Departure | Cancellation) => {
+const compareBookingState = (
+  a: Cas3Extension | Cas3Departure | Cas3Cancellation,
+  b: Cas3Extension | Cas3Departure | Cas3Cancellation,
+) => {
   const dateA = DateFormats.isoToDateObj(a.createdAt)
   const dateB = DateFormats.isoToDateObj(b.createdAt)
 

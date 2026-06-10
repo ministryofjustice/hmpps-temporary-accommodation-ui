@@ -4,7 +4,7 @@ import Assess from '../form-pages/assess'
 import paths from '../paths/apply'
 import { applicationFactory, personFactory } from '../testutils/factories'
 import { DateFormats } from './dateUtils'
-import { isApplicableTier, personName, tierBadge } from './personUtils'
+import { personName, tierBadge } from './personUtils'
 
 import { FullPerson } from '../@types/shared'
 import {
@@ -383,7 +383,6 @@ describe('applicationUtils', () => {
 
   describe('firstPageOfApplicationJourney', () => {
     it('returns the sentence type page', () => {
-      ;(isApplicableTier as jest.Mock).mockReturnValue(true)
       const application = applicationFactory.build()
 
       expect(firstPageOfApplicationJourney(application)).toEqual(paths.applications.show({ id: application.id }))

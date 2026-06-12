@@ -4,13 +4,13 @@
 /* eslint-disable */
 import type { ApplicationStatus } from './ApplicationStatus';
 import type { Cas3BookingStatus } from './Cas3BookingStatus';
-import type { Cas3SuitablePremisesDto } from './Cas3SuitablePremisesDto';
+import type { Cas3ExternalPremisesDto } from './Cas3ExternalPremisesDto';
 import type { TemporaryAccommodationAssessmentStatus } from './TemporaryAccommodationAssessmentStatus';
 export type Cas3SuitableApplication = {
     applicationStatus: ApplicationStatus;
     assessmentStatus?: TemporaryAccommodationAssessmentStatus;
     bookingStatus?: Cas3BookingStatus;
     id: string;
-    premises?: Cas3SuitablePremisesDto;
+    premises?: Cas3ExternalPremisesDto;
 };
 

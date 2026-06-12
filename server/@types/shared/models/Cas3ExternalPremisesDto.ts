@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas3SuitablePremisesDto = {
+export type Cas3ExternalPremisesDto = {
     addressLine1: string;
     addressLine2?: string;
     endDate?: string;

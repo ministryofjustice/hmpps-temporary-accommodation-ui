@@ -17,11 +17,17 @@ export type PlacementApplicationTask = (Task & {
     placementDates?: Array<PlacementDates>;
     placementType?: PlacementType;
     releaseType?: ReleaseTypeOption;
+    /**
+     * Tier when the application was created
+     */
     tier?: RiskTierEnvelope;
 } & {
     dates: PlacementDates;
     placementType: PlacementType;
     releaseType: ReleaseTypeOption;
+    /**
+     * Tier when the application was created
+     */
     tier: RiskTierEnvelope;
 });
 

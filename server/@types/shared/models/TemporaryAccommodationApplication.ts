@@ -17,6 +17,9 @@ export type TemporaryAccommodationApplication = {
     id: string;
     offenceId: string;
     person: (FullPerson | RestrictedPerson | UnknownPerson);
+    /**
+     * Contains ROSH Risks, Tier, Risk Flags and MAPPA captured when the application was created
+     */
     risks?: PersonRisks;
     status: ApplicationStatus;
     submittedAt?: string;

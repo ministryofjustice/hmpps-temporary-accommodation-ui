@@ -15,7 +15,7 @@ export type Cas3ReferralHistory = {
     placementStatus?: string;
     referralRejectionReason?: string;
     referralRejectionReasonDetail?: string;
-    referredBy?: Cas3StaffDto;
+    referredBy: Cas3StaffDto;
     status: TemporaryAccommodationAssessmentStatus;
     type: ServiceType;
 };

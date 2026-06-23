@@ -128,8 +128,6 @@ export type { NewCas3Arrival } from './models/NewCas3Arrival';
 export type { NewConfirmation } from './models/NewConfirmation';
 export type { NewExtension } from './models/NewExtension';
 export type { NewOverstay } from './models/NewOverstay';
-export type { NewPlacementRequestBooking } from './models/NewPlacementRequestBooking';
-export type { NewPlacementRequestBookingConfirmation } from './models/NewPlacementRequestBookingConfirmation';
 export type { NewReallocation } from './models/NewReallocation';
 export type { NewReferralHistoryUserNote } from './models/NewReferralHistoryUserNote';
 export type { NewTurnaround } from './models/NewTurnaround';

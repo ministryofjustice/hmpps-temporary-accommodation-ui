@@ -1,66 +1,54 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>ministryofjustice/hmpps-renovate-config:node"
-  ],
+  "extends": ["github>ministryofjustice/hmpps-renovate-config:node"],
   "prBodyTemplate": "{{{table}}}{{{notes}}}{{{warnings}}}{{{controls}}}",
   "packageRules": [
     {
-      "matchManagers": [
-        "npm"
-      ],
+      "matchManagers": ["npm"],
       "rangeStrategy": "bump"
     },
     {
-      "matchManagers": [
-        "npm"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non major NPM dependencies",
       "groupSlug": "all-npm-minor-patch",
-      "stabilityDays": 5
+      "minimumReleaseAge": "7 days"
     },
     {
-      "matchPackageNames": [
-        "typescript",
-        "govuk-frontend"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "enabled": true,
-      "stabilityDays": 0
-    },
-    {
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "@types/node"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchDepTypes": ["engines"],
       "enabled": false
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "node"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
+      "matchPackageNames": ["typescript", "govuk-frontend"],
+      "rangeStrategy": "bump",
+      "minimumReleaseAge": null
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["@types/node"],
+      "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["node", "hmpps-node"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchFileNames": ["**/.github/workflows/**/*.ya?ml"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["pre-commit"],
+      "groupName": "all pre-commit dependencies"
     }
   ],
   "vulnerabilityAlerts": {
-    "stabilityDays": 0
+    "minimumReleaseAge": null
   },
-  "rebaseWhen": "conflicted"
+  "platformCommit": "enabled",
+  "dependencyDashboard": true
 }

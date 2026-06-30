@@ -160,7 +160,6 @@ export type { ReferralHistoryNoteMessageDetails } from './models/ReferralHistory
 export type { ReferralHistorySystemNote } from './models/ReferralHistorySystemNote';
 export type { ReferralHistoryUserNote } from './models/ReferralHistoryUserNote';
 export type { ReferralRejectionReason } from './models/ReferralRejectionReason';
-export type { ReleaseTypeOption } from './models/ReleaseTypeOption';
 export type { RestrictedPerson } from './models/RestrictedPerson';
 export type { RestrictedPersonSummary } from './models/RestrictedPersonSummary';
 export type { RiskEnvelopeStatus } from './models/RiskEnvelopeStatus';

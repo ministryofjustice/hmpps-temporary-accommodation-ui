@@ -5,7 +5,6 @@
 import type { PlacementApplicationDecision } from './PlacementApplicationDecision';
 import type { PlacementDates } from './PlacementDates';
 import type { PlacementType } from './PlacementType';
-import type { ReleaseTypeOption } from './ReleaseTypeOption';
 import type { RiskTierEnvelope } from './RiskTierEnvelope';
 import type { Task } from './Task';
 export type PlacementApplicationTask = (Task & {
@@ -16,7 +15,6 @@ export type PlacementApplicationTask = (Task & {
      */
     placementDates?: Array<PlacementDates>;
     placementType?: PlacementType;
-    releaseType?: ReleaseTypeOption;
     /**
      * Tier when the application was created
      */
@@ -24,7 +22,6 @@ export type PlacementApplicationTask = (Task & {
 } & {
     dates: PlacementDates;
     placementType: PlacementType;
-    releaseType: ReleaseTypeOption;
     /**
      * Tier when the application was created
      */

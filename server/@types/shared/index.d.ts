@@ -90,6 +90,7 @@ export type { Cas3UpdateApplication } from './models/Cas3UpdateApplication';
 export type { Cas3UpdateAssessment } from './models/Cas3UpdateAssessment';
 export type { Cas3UpdateBedspace } from './models/Cas3UpdateBedspace';
 export type { Cas3UpdatePremises } from './models/Cas3UpdatePremises';
+export type { Cas3UrlTemplates } from './models/Cas3UrlTemplates';
 export type { Cas3v2BedspaceSearchResult } from './models/Cas3v2BedspaceSearchResult';
 export type { Cas3v2BedspaceSearchResultOverlap } from './models/Cas3v2BedspaceSearchResultOverlap';
 export type { Cas3v2BedspaceSearchResults } from './models/Cas3v2BedspaceSearchResults';
@@ -160,7 +161,6 @@ export type { ReferralHistoryNoteMessageDetails } from './models/ReferralHistory
 export type { ReferralHistorySystemNote } from './models/ReferralHistorySystemNote';
 export type { ReferralHistoryUserNote } from './models/ReferralHistoryUserNote';
 export type { ReferralRejectionReason } from './models/ReferralRejectionReason';
-export type { ReleaseTypeOption } from './models/ReleaseTypeOption';
 export type { RestrictedPerson } from './models/RestrictedPerson';
 export type { RestrictedPersonSummary } from './models/RestrictedPersonSummary';
 export type { RiskEnvelopeStatus } from './models/RiskEnvelopeStatus';

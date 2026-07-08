@@ -12,5 +12,6 @@ export type Cas3SuitableApplication = {
     bookingStatus?: Cas3BookingStatus;
     id: string;
     premises?: Cas3ExternalPremisesDto;
+    uiUrl: string;
 };
 

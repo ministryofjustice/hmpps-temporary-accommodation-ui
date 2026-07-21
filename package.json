@@ -130,7 +130,7 @@
     }
   },
   "dependencies": {
-    "@badeball/cypress-cucumber-preprocessor": "^22.0.1",
+    "@badeball/cypress-cucumber-preprocessor": "^26.0.0",
     "@faker-js/faker": "^9.0.3",
     "@microsoft/applicationinsights-web": "^3.3.5",
     "@ministryofjustice/frontend": "^5.1.2",

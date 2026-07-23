@@ -2,10 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/**
- * Details about the failure to match
- */
-export type NewBookingNotMade = {
-    notes?: string;
-};
-
+export type TierVersionDto = 'V2' | 'V3';

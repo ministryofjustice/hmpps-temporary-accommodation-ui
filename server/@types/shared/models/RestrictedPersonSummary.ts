@@ -3,5 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { PersonSummary } from './PersonSummary';
-export type RestrictedPersonSummary = PersonSummary;
+import type { TierDto } from './TierDto';
+export type RestrictedPersonSummary = (PersonSummary & {
+    /**
+     * The person's current tier, if available
+     */
+    tier?: TierDto;
+});
 

@@ -12,7 +12,7 @@ export type Cas3ReferralHistory = {
     applicationStatus: ApplicationStatus;
     assessmentStatus?: TemporaryAccommodationAssessmentStatus;
     bookingStatus?: Cas3BookingStatus;
-    createdAt: string;
+    date: string;
     id: string;
     localAuthorityArea?: string;
     pdu?: string;

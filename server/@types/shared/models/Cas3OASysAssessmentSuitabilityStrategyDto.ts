@@ -2,10 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/**
- * Details about the failure to match
- */
-export type NewBookingNotMade = {
-    notes?: string;
-};
-
+export type Cas3OASysAssessmentSuitabilityStrategyDto = 'allow_all' | 'completed_in_last_six_months';

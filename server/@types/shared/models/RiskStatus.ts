@@ -2,10 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type BookingNotMade = {
-    createdAt: string;
-    id: string;
-    notes?: string;
-    placementRequestId: string;
-};
-
+export type RiskStatus = 'Retrieved' | 'NotFound' | 'Error';

@@ -17,5 +17,6 @@ export default Factory.define<PersonRisks['tier']>(() => ({
   value: {
     level: riskTierLevel,
     lastUpdated: DateFormats.dateObjToIsoDate(faker.date.past()),
+    version: faker.helpers.arrayElement(['V2', 'V3']),
   },
 }))

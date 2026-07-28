@@ -1,10 +1,9 @@
 import { SuperAgentRequest } from 'superagent'
-import qs from 'qs'
 
 import type {
   ActiveOffence,
   Adjudication,
-  OASysSections,
+  Cas3OASysGroup,
   Person,
   PersonAcctAlert,
   PersonRisks,
@@ -118,36 +117,16 @@ export default {
       },
     }),
 
-  stubOasysSections: (args: { person: Person; oasysSections: OASysSections }) =>
+  stubOasysRiskManagementPlan: (args: { person: Person; riskManagementPlan: Cas3OASysGroup }) =>
     stubFor({
       request: {
         method: 'GET',
-        url: `/people/${args.person.crn}/oasys/sections`,
+        url: `/cas3/people/${args.person.crn}/oasys/riskManagement`,
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: args.oasysSections,
-      },
-    }),
-
-  stubOasysSectionsWithSelectedSections: (args: {
-    person: Person
-    oasysSections: OASysSections
-    selectedSections: Array<number>
-  }) =>
-    stubFor({
-      request: {
-        method: 'GET',
-        url: `/people/${args.person.crn}/oasys/sections?${qs.stringify(
-          { 'selected-sections': args.selectedSections },
-          { encode: false, indices: false },
-        )}`,
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: args.oasysSections,
+        jsonBody: args.riskManagementPlan,
       },
     }),
 }

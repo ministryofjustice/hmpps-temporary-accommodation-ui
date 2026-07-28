@@ -17,7 +17,7 @@ import newConfirmationFactory from './newConfirmation'
 import cas3NewDepartureFactory from './cas3NewDeparture'
 import newExtensionFactory from './newExtension'
 import newTurnaroundFactory from './newTurnaround'
-import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
+import oasysRiskManagementFactory, { riskManagementPlanFactory } from './oasysRiskManagement'
 import pduFactory from './pdu'
 import { fullPersonFactory as personFactory, restrictedPersonFactory } from './person'
 import placeContextFactory from './placeContext'
@@ -100,7 +100,8 @@ export {
   newExtensionFactory,
   cas3ReferralHistoryUserNoteFactory,
   newTurnaroundFactory,
-  oasysSectionsFactory,
+  oasysRiskManagementFactory,
+  riskManagementPlanFactory,
   pduFactory,
   personFactory,
   placeContextFactory,
@@ -158,7 +159,6 @@ export {
   restrictedPersonFactory,
   risksFactory,
   roshRisksFactory,
-  roshSummaryFactory,
   tierEnvelopeFactory,
   timelineEventsFactory,
   userFactory,

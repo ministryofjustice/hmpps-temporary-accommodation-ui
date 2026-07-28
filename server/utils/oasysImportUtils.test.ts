@@ -1,26 +1,29 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
-import { applicationFactory, oasysSectionsFactory, risksFactory, roshSummaryFactory } from '../testutils/factories'
+import {
+  applicationFactory,
+  oasysRiskManagementFactory,
+  riskManagementPlanFactory,
+  risksFactory,
+} from '../testutils/factories'
 import { OasysPage } from '../@types/ui'
 import { CallConfig } from '../data/restClient'
 import oasysStubs from '../data/stubs/oasysStubs.json'
 import { PersonService } from '../services'
 import { OasysNotFoundError } from '../services/personService'
-import { offenceDetailsFactory } from '../testutils/factories/oasysSections'
 import {
   Constructor,
-  getOasysSections,
+  getOasysRiskManagement,
   oasysImportReponse,
   questionKeyFromNumber,
   questionNumberFromKey,
   sortOasysImportSummaries,
-  textareas,
   validateOasysEntries,
 } from './oasysImportUtils'
 import { mapApiPersonRisksForUi } from './utils'
 
 describe('OASysImportUtils', () => {
-  describe('getOasysSections', () => {
-    let getOasysSectionsMock: jest.Mock
+  describe('getOasysRiskManagement', () => {
+    let getOasysRiskManagementMock: jest.Mock
     let personService: DeepMocked<PersonService>
     let constructor: DeepMocked<Constructor<OasysPage>>
 
@@ -34,9 +37,9 @@ describe('OASysImportUtils', () => {
       constructor = createMock<Constructor<OasysPage>>(
         jest.fn().mockImplementation(() => ({ body: {} }) as unknown as OasysPage),
       )
-      getOasysSectionsMock = jest.fn()
+      getOasysRiskManagementMock = jest.fn()
       personService = createMock<PersonService>({
-        getOasysSections: getOasysSectionsMock,
+        getOasysRiskManagement: getOasysRiskManagementMock,
       })
     })
 
@@ -44,18 +47,17 @@ describe('OASysImportUtils', () => {
       const personRisks = risksFactory.build()
       const application = applicationFactory.build({ risks: personRisks })
 
-      getOasysSectionsMock.mockImplementation(() => {
+      getOasysRiskManagementMock.mockImplementation(() => {
         throw new OasysNotFoundError()
       })
 
-      const result = await getOasysSections({}, application, callConfig, { personService }, constructor, {
-        sectionName: 'offenceDetails',
-        summaryKey: 'offenceDetailsSummary',
-        answerKey: 'offenceDetailsAnswers',
+      const result = await getOasysRiskManagement({}, application, callConfig, { personService }, constructor, {
+        summaryKey: 'riskManagementSummary',
+        answerKey: 'riskManagementAnswers',
       })
 
       expect(result.oasysSuccess).toEqual(false)
-      expect(result.body.offenceDetailsSummary).toEqual(sortOasysImportSummaries(oasysStubs.offenceDetails))
+      expect(result.body.riskManagementSummary).toEqual(sortOasysImportSummaries(oasysStubs.answers))
       expect(result.risks).toEqual(mapApiPersonRisksForUi(application.risks))
     })
 
@@ -65,19 +67,17 @@ describe('OASysImportUtils', () => {
       const personRisks = risksFactory.build()
       const application = applicationFactory.build({ risks: personRisks })
 
-      const oasysSections = oasysSectionsFactory.build()
+      const oasysRiskManagement = oasysRiskManagementFactory.build()
 
-      getOasysSectionsMock.mockResolvedValue(oasysSections)
+      getOasysRiskManagementMock.mockResolvedValue(oasysRiskManagement)
 
-      const result = await getOasysSections({}, application, callConfig, { personService }, constructor, {
-        sectionName: 'offenceDetails',
+      const result = await getOasysRiskManagement({}, application, callConfig, { personService }, constructor, {
         summaryKey: 'offenceDetailsSummary',
         answerKey: 'offenceDetailsAnswers',
       })
 
       expect(result.oasysSuccess).toEqual(true)
-      expect(result.body.offenceDetailsSummary).toEqual(sortOasysImportSummaries(oasysSections.offenceDetails))
-      expect(result.body.oasysCompleted).toEqual(oasysSections.dateCompleted)
+      expect(result.body.oasysCompleted).toEqual(oasysRiskManagement.assessmentMetadata.dateCompleted)
       expect(result.body.oasysImported).toEqual('2024-05-01')
       expect(result.risks).toEqual(mapApiPersonRisksForUi(application.risks))
 
@@ -88,21 +88,21 @@ describe('OASysImportUtils', () => {
       const personRisks = risksFactory.build()
       const application = applicationFactory.build({ risks: personRisks })
 
-      const offenceDetails = [
-        offenceDetailsFactory.build({ questionNumber: '1' }),
-        offenceDetailsFactory.build({ questionNumber: '2' }),
+      const riskManagementQuestions = [
+        riskManagementPlanFactory.build({ questionNumber: 'RM30' }),
+        riskManagementPlanFactory.build({ questionNumber: 'RM31' }),
       ]
 
-      const oasysSections = oasysSectionsFactory.build({
-        offenceDetails,
-        dateCompleted: '2023-01-01',
+      const oasysRiskManagement = oasysRiskManagementFactory.build({
+        answers: riskManagementQuestions,
+        assessmentMetadata: { dateCompleted: '2023-01-01' },
       })
 
-      getOasysSectionsMock.mockResolvedValue(oasysSections)
+      getOasysRiskManagementMock.mockResolvedValue(oasysRiskManagement)
 
-      const result = await getOasysSections(
+      const result = await getOasysRiskManagement(
         {
-          offenceDetailsAnswers: { [questionKeyFromNumber('1')]: 'My Response' },
+          riskManagementAnswers: { [questionKeyFromNumber('RM30')]: 'My Response' },
           oasysImported: '2022-01-01',
           oasysCompleted: '2022-02-01',
         },
@@ -111,18 +111,21 @@ describe('OASysImportUtils', () => {
         { personService },
         constructor,
         {
-          sectionName: 'offenceDetails',
-          summaryKey: 'offenceDetailsSummary',
-          answerKey: 'offenceDetailsAnswers',
+          summaryKey: 'riskManagementSummary',
+          answerKey: 'riskManagementAnswers',
         },
       )
 
-      expect(result.body.offenceDetailsSummary).toEqual([
-        { answer: 'My Response', label: offenceDetails[0].label, questionNumber: offenceDetails[0].questionNumber },
+      expect(result.body.riskManagementSummary).toEqual([
         {
-          answer: offenceDetails[1].answer,
-          label: offenceDetails[1].label,
-          questionNumber: offenceDetails[1].questionNumber,
+          answer: 'My Response',
+          label: riskManagementQuestions[0].label,
+          questionNumber: riskManagementQuestions[0].questionNumber,
+        },
+        {
+          answer: riskManagementQuestions[1].answer,
+          label: riskManagementQuestions[1].label,
+          questionNumber: riskManagementQuestions[1].questionNumber,
         },
       ])
       expect(result.body.oasysImported).toEqual('2022-01-01')
@@ -133,12 +136,11 @@ describe('OASysImportUtils', () => {
       const personRisks = risksFactory.build()
       const application = applicationFactory.build({ risks: personRisks })
 
-      getOasysSectionsMock.mockImplementation(() => {
+      getOasysRiskManagementMock.mockImplementation(() => {
         throw new OasysNotFoundError()
       })
 
-      const result = await getOasysSections({}, application, callConfig, { personService }, constructor, {
-        sectionName: 'riskManagementPlan',
+      const result = await getOasysRiskManagement({}, application, callConfig, { personService }, constructor, {
         summaryKey: 'riskManagementPlanSummary',
         answerKey: 'riskManagementPlanAnswers',
       })
@@ -227,46 +229,6 @@ describe('OASysImportUtils', () => {
     })
   })
 
-  describe('textareas', () => {
-    it('it returns reoffending needs as textareas', () => {
-      const roshSummaries = roshSummaryFactory.buildList(2)
-      const sectionName = 'roshAnswers'
-      const result = textareas(roshSummaries, sectionName)
-
-      expect(result).toMatchStringIgnoringWhitespace(`
-              <div class="govuk-form-group">
-              <h3 class="govuk-label-wrapper">
-                  <label class="govuk-label govuk-label--m" for=${sectionName}[${questionKeyFromNumber(
-                    roshSummaries[0].questionNumber,
-                  )}]>
-                      ${roshSummaries[0].label}
-                  </label>
-              </h3>
-              <textarea class="govuk-textarea" id=${sectionName}[${questionKeyFromNumber(
-                roshSummaries[0].questionNumber,
-              )}] name=${sectionName}[${questionKeyFromNumber(roshSummaries[0].questionNumber)}] rows="8">${
-                roshSummaries[0].answer
-              }</textarea>
-          </div>
-          <hr>
-          <div class="govuk-form-group">
-          <h3 class="govuk-label-wrapper">
-              <label class="govuk-label govuk-label--m" for=${sectionName}[${questionKeyFromNumber(
-                roshSummaries[1].questionNumber,
-              )}]>
-                  ${roshSummaries[1].label}
-              </label>
-          </h3>
-          <textarea class="govuk-textarea" id=${sectionName}[${questionKeyFromNumber(
-            roshSummaries[1].questionNumber,
-          )}] name=${sectionName}[${questionKeyFromNumber(roshSummaries[1].questionNumber)}] rows="8">${
-            roshSummaries[1].answer
-          }</textarea>
-      </div>
-      <hr>`)
-    })
-  })
-
   describe('oasysImportReponse', () => {
     it('returns a human readable response for each question', () => {
       const answers = {
@@ -309,12 +271,12 @@ describe('OASysImportUtils', () => {
 
   describe('sortOasysImportSummaries', () => {
     it('sorts the imports into order of questions', () => {
-      const oasysSummary1 = roshSummaryFactory.build({ questionNumber: '1' })
-      const oasysSummary2 = roshSummaryFactory.build({ questionNumber: '2' })
-      const oasysSummary3 = roshSummaryFactory.build({ questionNumber: '3' })
+      const riskManagement1 = riskManagementPlanFactory.build({ questionNumber: '1' })
+      const riskManagement2 = riskManagementPlanFactory.build({ questionNumber: '2' })
+      const riskManagement3 = riskManagementPlanFactory.build({ questionNumber: '3' })
 
-      const result = sortOasysImportSummaries([oasysSummary3, oasysSummary2, oasysSummary1])
-      expect(result).toEqual([oasysSummary1, oasysSummary2, oasysSummary3])
+      const result = sortOasysImportSummaries([riskManagement3, riskManagement2, riskManagement1])
+      expect(result).toEqual([riskManagement1, riskManagement2, riskManagement3])
     })
   })
 })

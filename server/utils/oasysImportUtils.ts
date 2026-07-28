@@ -1,51 +1,40 @@
-import { TemporaryAccommodationApplication as Application, OASysQuestion, OASysSections } from '../@types/shared'
-import { DataServices, OasysImportArrays, OasysPage } from '../@types/ui'
+import { TemporaryAccommodationApplication as Application, OASysQuestion, Cas3OASysGroup } from '../@types/shared'
+import { DataServices, OasysPage } from '../@types/ui'
 import { CallConfig } from '../data/restClient'
 import oasysStubs from '../data/stubs/oasysStubs.json'
 import { DateFormats } from './dateUtils'
 import { mapApiPersonRisksForUi } from './utils'
-import { escape } from './viewUtils'
-
-type OASysQuestionsSections = Omit<OASysSections, 'assessmentId' | 'assessmentState' | 'dateStarted' | 'dateCompleted'>
 
 export type Constructor<T> = new (body: Record<string, unknown>) => T
 
-export const getOasysSections = async <T extends OasysPage>(
+export const getOasysRiskManagement = async <T extends OasysPage>(
   body: Record<string, unknown>,
   application: Application,
   callConfig: CallConfig,
   dataServices: DataServices,
   constructor: Constructor<T>,
   {
-    sectionName,
     summaryKey,
     answerKey,
-    selectedSections = [],
   }: {
-    sectionName: keyof OASysQuestionsSections
     summaryKey: string
     answerKey: string
-    selectedSections?: Array<number>
   },
 ): Promise<T> => {
-  let oasysSections: OASysSections
+  let oasysRiskManagement: Cas3OASysGroup
   let oasysSuccess: boolean
 
   try {
-    oasysSections = await dataServices.personService.getOasysSections(
-      callConfig,
-      application.person.crn,
-      selectedSections,
-    )
-    oasysSuccess = true
+    oasysRiskManagement = await dataServices.personService.getOasysRiskManagement(callConfig, application.person.crn)
+    oasysSuccess = oasysRiskManagement?.assessmentMetadata?.hasApplicableAssessment ?? false
   } catch (err) {
-    oasysSections = oasysStubs
+    oasysRiskManagement = oasysStubs
     oasysSuccess = false
   }
 
-  oasysSections = filterOasysSections(oasysSections)
+  oasysRiskManagement = filterOasysQuestions(oasysRiskManagement)
 
-  const summaries = sortOasysImportSummaries(oasysSections[sectionName]).map(question => {
+  const summaries = sortOasysImportSummaries(oasysRiskManagement.answers).map(question => {
     const answer =
       (body[answerKey] as Record<string, unknown>)?.[questionKeyFromNumber(question.questionNumber)] || question.answer
     return {
@@ -59,7 +48,10 @@ export const getOasysSections = async <T extends OasysPage>(
 
   page.body[summaryKey] = summaries
   page.body.oasysImported = body.oasysImported || DateFormats.dateObjToIsoDate(new Date())
-  page.body.oasysCompleted = body.oasysCompleted || oasysSections?.dateCompleted || oasysSections?.dateStarted
+  page.body.oasysCompleted =
+    body.oasysCompleted ||
+    oasysRiskManagement?.assessmentMetadata?.dateCompleted ||
+    oasysRiskManagement?.assessmentMetadata?.dateStarted
   page.oasysSuccess = oasysSuccess
   page.risks = mapApiPersonRisksForUi(application.risks)
 
@@ -87,28 +79,6 @@ export const questionKeyFromNumber = (questionNumber: string) => `Q${questionNum
 
 export const questionNumberFromKey = (key: string) => key.substring(1)
 
-export const textareas = (questions: OasysImportArrays, key: 'roshAnswers' | 'offenceDetails') => {
-  return questions
-    .map(question => {
-      return `<div class="govuk-form-group">
-                <h3 class="govuk-label-wrapper">
-                    <label class="govuk-label govuk-label--m" for=${key}[${questionKeyFromNumber(
-                      question.questionNumber,
-                    )}]>
-                        ${question.label}
-                    </label>
-                </h3>
-                <textarea class="govuk-textarea" id=${key}[${questionKeyFromNumber(
-                  question.questionNumber,
-                )}] name=${key}[${questionKeyFromNumber(question.questionNumber)}] rows="8">${escape(
-                  question?.answer,
-                )}</textarea>
-            </div>
-            <hr>`
-    })
-    .join('')
-}
-
 export const oasysImportReponse = (answers: Record<string, string>, summaries: Array<OASysQuestion>) => {
   return Object.keys(answers).reduce((prev, key) => {
     const questionNumber = questionNumberFromKey(key)
@@ -128,13 +98,11 @@ export const sortOasysImportSummaries = (summaries: Array<OASysQuestion>): Array
   return summaries.sort((a, b) => Number(a.questionNumber) - Number(b.questionNumber))
 }
 
-const filterOasysSections = (oasysSections: OASysSections): OASysSections => {
+const filterOasysQuestions = (oasysGroup: Cas3OASysGroup): Cas3OASysGroup => {
   const permittedRiskManagementQuestions = ['RM30', 'RM31', 'RM32', 'RM33']
 
   return {
-    ...oasysSections,
-    riskManagementPlan: oasysSections.riskManagementPlan.filter(question =>
-      permittedRiskManagementQuestions.includes(question.questionNumber),
-    ),
+    assessmentMetadata: oasysGroup.assessmentMetadata,
+    answers: oasysGroup.answers.filter(a => permittedRiskManagementQuestions.includes(a.questionNumber)),
   }
 }

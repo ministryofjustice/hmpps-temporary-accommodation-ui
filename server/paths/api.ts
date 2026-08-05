@@ -27,10 +27,11 @@ const cas3SingleBookingPath = cas3BookingsPath.path(':bookingId')
 const cas3AssessmentsPath = cas3Path.path('assessments')
 const cas3SingleAssessmentPath = cas3AssessmentsPath.path(':id')
 
+const cas3OasysPath = cas3Path.path('people/:crn/oasys')
+
 // Non-namespaced
 const peoplePath = path('/people')
 const personPath = peoplePath.path(':crn')
-const oasysPath = personPath.path('oasys')
 
 const tasksPath = path('/tasks')
 const allocationPath = tasksPath.path('assessment/:id/allocations')
@@ -132,7 +133,7 @@ export default {
     acctAlerts: personPath.path('acct-alerts'),
     offences: personPath.path('offences'),
     oasys: {
-      sections: oasysPath.path('sections'),
+      riskManagement: cas3OasysPath.path('riskManagement'),
     },
   },
   users: {

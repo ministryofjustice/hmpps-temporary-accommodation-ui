@@ -3,7 +3,7 @@ import type { DataServices, OasysPage, PersonRisksUI } from '@approved-premises/
 import { Page } from '../../../utils/decorators'
 
 import { CallConfig } from '../../../../data/restClient'
-import { getOasysSections, oasysImportReponse, validateOasysEntries } from '../../../../utils/oasysImportUtils'
+import { getOasysRiskManagement, oasysImportReponse, validateOasysEntries } from '../../../../utils/oasysImportUtils'
 
 export type RiskManagementPlanBody = {
   version: string
@@ -38,8 +38,7 @@ export default class RiskManagementPlan implements OasysPage {
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {
-    return getOasysSections(body, application, callConfig, dataServices, RiskManagementPlan, {
-      sectionName: 'riskManagementPlan',
+    return getOasysRiskManagement(body, application, callConfig, dataServices, RiskManagementPlan, {
       summaryKey: 'riskManagementSummaries',
       answerKey: 'riskManagementAnswers',
     })

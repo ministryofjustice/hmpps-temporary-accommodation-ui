@@ -27,7 +27,9 @@ const cas3SingleBookingPath = cas3BookingsPath.path(':bookingId')
 const cas3AssessmentsPath = cas3Path.path('assessments')
 const cas3SingleAssessmentPath = cas3AssessmentsPath.path(':id')
 
-const cas3OasysPath = cas3Path.path('people/:crn/oasys')
+const cas3PeoplePath = cas3Path.path('people')
+const cas3PersonPath = cas3PeoplePath.path(':crn')
+const cas3OasysPath = cas3PersonPath.path('oasys')
 
 // Non-namespaced
 const peoplePath = path('/people')

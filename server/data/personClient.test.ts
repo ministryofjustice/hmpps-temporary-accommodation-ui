@@ -3,7 +3,7 @@ import {
   acctAlertFactory,
   activeOffenceFactory,
   adjudicationFactory,
-  oasysSectionsFactory,
+  oasysRiskManagementFactory,
   personFactory,
   prisonCaseNotesFactory,
 } from '../testutils/factories'
@@ -130,19 +130,17 @@ describeClient('PersonClient', provider => {
     })
   })
 
-  describe('oasysSections', () => {
-    it('should return the sections of OASys when there is optional selected sections', async () => {
+  describe('oasysRiskManagement', () => {
+    it('should return the OASys risk management ', async () => {
       const crn = 'crn'
-      const optionalSections = [1, 2, 3]
-      const oasysSections = oasysSectionsFactory.build()
+      const oasysRiskManagement = oasysRiskManagementFactory.build()
 
       await provider.addInteraction({
-        state: 'OASys sections exist for person',
-        uponReceiving: 'a request for OASys sections with selected sections',
+        state: 'OASys risk management exists for person',
+        uponReceiving: 'a request for OASys risk management',
         withRequest: {
           method: 'GET',
-          path: paths.people.oasys.sections({ crn }),
-          query: { 'selected-sections': ['1', '2', '3'] },
+          path: paths.people.oasys.riskManagement({ crn }),
           headers: {
             authorization: `Bearer ${callConfig.token}`,
           },
@@ -150,37 +148,12 @@ describeClient('PersonClient', provider => {
         willRespondWith: {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
-          body: oasysSections,
+          body: oasysRiskManagement,
         },
       })
 
-      const result = await personClient.oasysSections(crn, optionalSections)
-      expect(result).toEqual(oasysSections)
-    })
-
-    it('should return the sections of OASys with no optional selected sections', async () => {
-      const crn = 'crn'
-      const oasysSections = oasysSectionsFactory.build()
-
-      await provider.addInteraction({
-        state: 'OASys sections exist for person',
-        uponReceiving: 'a request for OASys sections with no selected sections',
-        withRequest: {
-          method: 'GET',
-          path: paths.people.oasys.sections({ crn }),
-          headers: {
-            authorization: `Bearer ${callConfig.token}`,
-          },
-        },
-        willRespondWith: {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-          body: oasysSections,
-        },
-      })
-
-      const result = await personClient.oasysSections(crn)
-      expect(result).toEqual(oasysSections)
+      const result = await personClient.oasysRiskManagement(crn)
+      expect(result).toEqual(oasysRiskManagement)
     })
   })
 
@@ -212,18 +185,18 @@ describeClient('PersonClient', provider => {
   })
 })
 
-describe('PersonClient oasysSections when integration is disabled', () => {
+describe('PersonClient oasysRiskManagement when integration is disabled', () => {
   let personClient: PersonClient
   const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     personClient = new PersonClient(callConfig)
-    jest.spyOn(personClient, 'oasysSections').mockResolvedValue(oasysStubs)
+    jest.spyOn(personClient, 'oasysRiskManagement').mockResolvedValue(oasysStubs)
   })
 
   it('should return the stub dataset with blank responses', async () => {
     const crn = 'crn'
-    const result = await personClient.oasysSections(crn)
+    const result = await personClient.oasysRiskManagement(crn)
     expect(result).toEqual(oasysStubs)
   })
 })

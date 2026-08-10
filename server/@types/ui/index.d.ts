@@ -7,7 +7,6 @@ import {
   Cas3Assessment,
   LocalAuthorityArea,
   OASysQuestion,
-  OASysSections,
   OASysSupportingInformationQuestion,
   PersonAcctAlert,
   PersonRisks,
@@ -16,6 +15,7 @@ import {
   SortDirection,
   TemporaryAccommodationAssessmentStatus,
   User,
+  Cas3OASysGroup,
 } from '@approved-premises/api'
 import { CallConfig } from '../../data/restClient'
 import { TasklistPageInterface } from '../../form-pages/tasklistPage'
@@ -235,7 +235,7 @@ export type DataServices = Partial<{
     getPrisonCaseNotes: (callConfig: CallConfig, crn: string) => Promise<Array<PrisonCaseNote>>
     getAdjudications: (callConfig: CallConfig, crn: string) => Promise<Array<Adjudication>>
     getAcctAlerts: (callConfig: CallConfig, crn: string) => Promise<Array<PersonAcctAlert>>
-    getOasysSections: (callConfig: CallConfig, crn: string, selectedSections?: Array<number>) => Promise<OASysSections>
+    getOasysRiskManagement: (callConfig: CallConfig, crn: string) => Promise<Cas3OASysGroup>
   }
   userService: {
     getUserById: (callConfig: CallConfig, id: string) => Promise<User>

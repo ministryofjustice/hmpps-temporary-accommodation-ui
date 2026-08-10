@@ -1,5 +1,5 @@
 import { applicationFactory, personFactory } from '../../../../testutils/factories'
-import { getOasysSections, oasysImportReponse, validateOasysEntries } from '../../../../utils/oasysImportUtils'
+import { getOasysRiskManagement, oasysImportReponse, validateOasysEntries } from '../../../../utils/oasysImportUtils'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import RiskManagementPlan from './riskManagementPlan'
 
@@ -43,18 +43,24 @@ describe('RiskManagementPlan', () => {
   })
 
   describe('initialize', () => {
-    it('returns the result of getOasysSections', async () => {
+    it('returns the result of getOasysRiskManagement', async () => {
       const page = new RiskManagementPlan(body)
-      ;(getOasysSections as jest.MockedFunction<typeof getOasysSections>).mockResolvedValue(page)
+      ;(getOasysRiskManagement as jest.MockedFunction<typeof getOasysRiskManagement>).mockResolvedValue(page)
 
       const result = await RiskManagementPlan.initialize(body, application, callConfig, dataServices)
 
       expect(result).toEqual(page)
-      expect(getOasysSections).toHaveBeenCalledWith(body, application, callConfig, dataServices, RiskManagementPlan, {
-        sectionName: 'riskManagementPlan',
-        summaryKey: 'riskManagementSummaries',
-        answerKey: 'riskManagementAnswers',
-      })
+      expect(getOasysRiskManagement).toHaveBeenCalledWith(
+        body,
+        application,
+        callConfig,
+        dataServices,
+        RiskManagementPlan,
+        {
+          summaryKey: 'riskManagementSummaries',
+          answerKey: 'riskManagementAnswers',
+        },
+      )
     })
   })
 

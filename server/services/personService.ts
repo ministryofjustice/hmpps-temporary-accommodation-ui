@@ -1,7 +1,7 @@
 import type {
   ActiveOffence,
   Adjudication,
-  OASysSections,
+  Cas3OASysGroup,
   Person,
   PersonAcctAlert,
   PrisonCaseNote,
@@ -18,52 +18,38 @@ export default class PersonService {
   async findByCrn(callConfig: CallConfig, crn: string): Promise<Person> {
     const personClient = this.personClientFactory(callConfig)
 
-    const person = await personClient.search(crn)
-    return person
+    return personClient.search(crn)
   }
 
   async getOffences(callConfig: CallConfig, crn: string): Promise<Array<ActiveOffence>> {
     const personClient = this.personClientFactory(callConfig)
 
-    const offences = await personClient.offences(crn)
-    return offences
+    return personClient.offences(crn)
   }
 
   async getPrisonCaseNotes(callConfig: CallConfig, crn: string): Promise<Array<PrisonCaseNote>> {
     const personClient = this.personClientFactory(callConfig)
 
-    const prisonCaseNotes = await personClient.prisonCaseNotes(crn)
-
-    return prisonCaseNotes
+    return personClient.prisonCaseNotes(crn)
   }
 
   async getAdjudications(callConfig: CallConfig, crn: string): Promise<Array<Adjudication>> {
     const personClient = this.personClientFactory(callConfig)
 
-    const adjudications = await personClient.adjudications(crn)
-
-    return adjudications
+    return personClient.adjudications(crn)
   }
 
   async getAcctAlerts(callConfig: CallConfig, crn: string): Promise<Array<PersonAcctAlert>> {
     const personClient = this.personClientFactory(callConfig)
 
-    const acctAlerts = await personClient.acctAlerts(crn)
-
-    return acctAlerts
+    return personClient.acctAlerts(crn)
   }
 
-  async getOasysSections(
-    callConfig: CallConfig,
-    crn: string,
-    selectedSections: Array<number> = [],
-  ): Promise<OASysSections> {
+  async getOasysRiskManagement(callConfig: CallConfig, crn: string): Promise<Cas3OASysGroup> {
     const personClient = this.personClientFactory(callConfig)
 
     try {
-      const oasysSections = await personClient.oasysSections(crn, selectedSections)
-
-      return oasysSections
+      return personClient.oasysRiskManagement(crn)
     } catch (e) {
       if (e?.data?.status === 404) {
         throw new OasysNotFoundError(`Oasys record not found for CRN: ${crn}`)

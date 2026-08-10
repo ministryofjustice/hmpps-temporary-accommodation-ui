@@ -2,26 +2,19 @@ import {
   ActiveOffence,
   Adjudication,
   OASysQuestion,
-  OASysSupportingInformationQuestion,
   Person,
   PersonAcctAlert,
   TemporaryAccommodationApplication,
   TemporaryAccommodationUser,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
-import {
-  offenceDetailSummariesFromJson,
-  riskManagementPlanFromJson,
-  riskToSelfSummariesFromJson,
-  roshSummariesFromJson,
-  supportInformationFromJson,
-} from '.'
+import { riskManagementPlanFromJson } from '.'
 import { hasSubmittedDtr } from '../../server/form-pages/utils'
 import {
   acctAlertFactory,
   adjudicationFactory,
   localAuthorityFactory,
-  oasysSectionsFactory,
+  oasysRiskManagementFactory,
   referenceDataFactory,
 } from '../../server/testutils/factories'
 import applicationDataJson from '../fixtures/applicationData.json'
@@ -104,15 +97,7 @@ export default class ApplyHelper {
 
   uiRisks?: PersonRisksUI
 
-  roshSummaries: Array<OASysQuestion> = []
-
-  offenceDetailSummaries: Array<OASysQuestion> = []
-
-  supportingInformationSummaries: Array<OASysSupportingInformationQuestion> = []
-
   riskManagementPlanSummaries: Array<OASysQuestion> = []
-
-  riskToSelfSummaries: Array<OASysQuestion> = []
 
   adjudications: Array<Adjudication> = []
 
@@ -232,33 +217,13 @@ export default class ApplyHelper {
 
   private stubOasysEndpoints() {
     // And there are OASys sections in the db
-    const oasysSections = oasysSectionsFactory.build()
-
-    this.roshSummaries = roshSummariesFromJson()
-    this.offenceDetailSummaries = offenceDetailSummariesFromJson()
-    this.supportingInformationSummaries = supportInformationFromJson()
     this.riskManagementPlanSummaries = riskManagementPlanFromJson()
-    this.riskToSelfSummaries = riskToSelfSummariesFromJson()
 
-    cy.task('stubOasysSections', {
+    const riskManagementPlan = oasysRiskManagementFactory.build({ answers: this.riskManagementPlanSummaries })
+
+    cy.task('stubOasysRiskManagementPlan', {
       person: this.person,
-      oasysSections: {
-        ...oasysSections,
-        roshSummary: this.roshSummaries,
-        offenceDetails: this.offenceDetailSummaries,
-        riskManagementPlan: this.riskManagementPlanSummaries,
-        riskToSelf: this.riskToSelfSummaries,
-      },
-    })
-    cy.task('stubOasysSectionsWithSelectedSections', {
-      person: this.person,
-      oasysSections: {
-        ...oasysSections,
-        roshSummary: this.roshSummaries,
-        offenceDetails: this.offenceDetailSummaries,
-        supportingInformation: this.supportingInformationSummaries,
-      },
-      selectedSections: [1, 2, 3, 4],
+      riskManagementPlan,
     })
   }
 

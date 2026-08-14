@@ -1,6 +1,7 @@
 import type {
   ActiveOffence,
   Adjudication,
+  Cas3OASysAssessmentSuitabilityStrategyDto,
   Cas3OASysGroup,
   Person,
   PersonAcctAlert,
@@ -11,7 +12,7 @@ import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import RestClient, { CallConfig } from './restClient'
 
-import { normalise } from '../utils/utils'
+import { createQueryString, normalise } from '../utils/utils'
 import oasysStubs from './stubs/oasysStubs.json'
 
 export default class PersonClient {
@@ -43,12 +44,14 @@ export default class PersonClient {
     return this.restClient.get<Array<ActiveOffence>>({ path: paths.people.offences({ crn: crn.trim() }) })
   }
 
-  async oasysRiskManagement(crn: string) {
+  async oasysRiskManagement(crn: string, suitabilityStrategy: Cas3OASysAssessmentSuitabilityStrategyDto) {
     if (config.flags.oasysDisabled) {
       return oasysStubs as Cas3OASysGroup
     }
 
     const path = paths.people.oasys.riskManagement({ crn: crn.trim() })
-    return this.restClient.get<Cas3OASysGroup>({ path })
+    const queryString = createQueryString({ suitabilityStrategy })
+
+    return this.restClient.get<Cas3OASysGroup>({ path: `${path}?${queryString}` })
   }
 }

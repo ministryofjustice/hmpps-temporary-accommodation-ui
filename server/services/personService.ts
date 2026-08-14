@@ -9,6 +9,7 @@ import type {
 import type { PersonClient, RestClientBuilder } from '../data'
 
 import { CallConfig } from '../data/restClient'
+import config from '../config'
 
 export class OasysNotFoundError extends Error {}
 
@@ -48,8 +49,10 @@ export default class PersonService {
   async getOasysRiskManagement(callConfig: CallConfig, crn: string): Promise<Cas3OASysGroup> {
     const personClient = this.personClientFactory(callConfig)
 
+    const suitabilityStrategy = config.flags.oasysSixMonthRuleDisabled ? 'allow_all' : 'completed_in_last_six_months'
+
     try {
-      return personClient.oasysRiskManagement(crn)
+      return personClient.oasysRiskManagement(crn, suitabilityStrategy)
     } catch (e) {
       if (e?.data?.status === 404) {
         throw new OasysNotFoundError(`Oasys record not found for CRN: ${crn}`)

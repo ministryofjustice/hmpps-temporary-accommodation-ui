@@ -13,6 +13,7 @@ import {
 } from '../testutils/factories'
 import PersonService, { OasysNotFoundError } from './personService'
 import { SanitisedError } from '../sanitisedError'
+import config from '../config'
 
 jest.mock('../data/personClient.ts')
 
@@ -103,7 +104,13 @@ describe('PersonService', () => {
   })
 
   describe('getOasysRiskManagement', () => {
+    afterAll(() => {
+      config.flags.oasysSixMonthRuleDisabled = false
+    })
+
     it("on success returns the person's OASys risk management given their CRN", async () => {
+      config.flags.oasysSixMonthRuleDisabled = true
+
       const oasysRiskManagement = oasysRiskManagementFactory.build()
 
       personClient.oasysRiskManagement.mockResolvedValue(oasysRiskManagement)
@@ -113,7 +120,7 @@ describe('PersonService', () => {
       expect(serviceOasysRiskManagement).toEqual(oasysRiskManagement)
 
       expect(personClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(personClient.oasysRiskManagement).toHaveBeenCalledWith('crn')
+      expect(personClient.oasysRiskManagement).toHaveBeenCalledWith('crn', 'allow_all')
     })
 
     it('on 404 it throws an OasysNotFoundError', async () => {

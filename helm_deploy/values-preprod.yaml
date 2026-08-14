@@ -25,6 +25,7 @@ generic-service:
     IN_MAINTENANCE_MODE: false
     BOOKING_OVERSTAY_ENABLED: true
     PLANNED_MAINTENANCE_BANNER: false
+    OASYS_SIX_MONTH_RULE_DISABLED: true
 
   namespace_secrets:
     sqs-hmpps-audit-secret:

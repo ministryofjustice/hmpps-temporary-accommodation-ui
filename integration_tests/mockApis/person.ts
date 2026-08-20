@@ -3,6 +3,7 @@ import { SuperAgentRequest } from 'superagent'
 import type {
   ActiveOffence,
   Adjudication,
+  Cas3OASysAssessmentSuitabilityStrategyDto,
   Cas3OASysGroup,
   Person,
   PersonAcctAlert,
@@ -12,6 +13,7 @@ import type {
 
 import paths from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
+import { createQueryString } from '../../server/utils/utils'
 
 export default {
   stubFindPerson: (args: { person: Person }): SuperAgentRequest =>
@@ -117,16 +119,27 @@ export default {
       },
     }),
 
-  stubOasysRiskManagementPlan: (args: { person: Person; riskManagementPlan: Cas3OASysGroup }) =>
-    stubFor({
+  stubOasysRiskManagementPlan: (args: {
+    person: Person
+    suitabilityStrategy: Cas3OASysAssessmentSuitabilityStrategyDto
+    riskManagementPlan: Cas3OASysGroup
+  }) => {
+    const { crn } = args.person
+    const { suitabilityStrategy } = args
+
+    const path = paths.people.oasys.riskManagement({ crn })
+    const queryString = createQueryString({ suitabilityStrategy })
+
+    return stubFor({
       request: {
         method: 'GET',
-        url: `/cas3/people/${args.person.crn}/oasys/riskManagement`,
+        url: `${path}?${queryString}`,
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: args.riskManagementPlan,
       },
-    }),
+    })
+  },
 }

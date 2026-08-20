@@ -1,3 +1,4 @@
+import { Cas3OASysAssessmentSuitabilityStrategyDto } from '@approved-premises/api'
 import paths from '../paths/api'
 import {
   acctAlertFactory,
@@ -131,30 +132,37 @@ describeClient('PersonClient', provider => {
   })
 
   describe('oasysRiskManagement', () => {
-    it('should return the OASys risk management ', async () => {
-      const crn = 'crn'
-      const oasysRiskManagement = oasysRiskManagementFactory.build()
+    it.each([
+      ['enabled', 'completed_in_last_six_months'],
+      ['disabled', 'allow_all'],
+    ])(
+      'should return the OASys risk management with the six month rule %s',
+      async (_option: string, suitabilityStrategy: Cas3OASysAssessmentSuitabilityStrategyDto) => {
+        const crn = 'crn'
+        const oasysRiskManagement = oasysRiskManagementFactory.build()
 
-      await provider.addInteraction({
-        state: 'OASys risk management exists for person',
-        uponReceiving: 'a request for OASys risk management',
-        withRequest: {
-          method: 'GET',
-          path: paths.people.oasys.riskManagement({ crn }),
-          headers: {
-            authorization: `Bearer ${callConfig.token}`,
+        await provider.addInteraction({
+          state: 'OASys risk management exists for person',
+          uponReceiving: 'a request for OASys risk management',
+          withRequest: {
+            method: 'GET',
+            path: paths.people.oasys.riskManagement({ crn }),
+            query: { suitabilityStrategy },
+            headers: {
+              authorization: `Bearer ${callConfig.token}`,
+            },
           },
-        },
-        willRespondWith: {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-          body: oasysRiskManagement,
-        },
-      })
+          willRespondWith: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: oasysRiskManagement,
+          },
+        })
 
-      const result = await personClient.oasysRiskManagement(crn)
-      expect(result).toEqual(oasysRiskManagement)
-    })
+        const result = await personClient.oasysRiskManagement(crn, suitabilityStrategy)
+        expect(result).toEqual(oasysRiskManagement)
+      },
+    )
   })
 
   describe('offences', () => {
@@ -196,7 +204,7 @@ describe('PersonClient oasysRiskManagement when integration is disabled', () => 
 
   it('should return the stub dataset with blank responses', async () => {
     const crn = 'crn'
-    const result = await personClient.oasysRiskManagement(crn)
+    const result = await personClient.oasysRiskManagement(crn, 'allow_all')
     expect(result).toEqual(oasysStubs)
   })
 })

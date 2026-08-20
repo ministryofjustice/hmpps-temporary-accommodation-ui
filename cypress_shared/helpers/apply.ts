@@ -1,6 +1,7 @@
 import {
   ActiveOffence,
   Adjudication,
+  Cas3OASysAssessmentSuitabilityStrategyDto,
   OASysQuestion,
   Person,
   PersonAcctAlert,
@@ -111,13 +112,13 @@ export default class ApplyHelper {
     private readonly actingUser?: TemporaryAccommodationUser,
   ) {}
 
-  setupApplicationStubs(uiRisks?: PersonRisksUI) {
+  setupApplicationStubs(uiRisks?: PersonRisksUI, suitabilityStrategy?: Cas3OASysAssessmentSuitabilityStrategyDto) {
     this.uiRisks = uiRisks
     this.stubPersonEndpoints()
     this.stubApplicationEndpoints()
     this.stubAdjudicationEndpoints()
     this.stubAcctAlertsEndpoint()
-    this.stubOasysEndpoints()
+    this.stubOasysEndpoints(suitabilityStrategy)
     this.stubOffences()
   }
 
@@ -215,7 +216,7 @@ export default class ApplyHelper {
     cy.task('stubAcctAlerts', { person: this.person, acctAlerts: this.acctAlerts })
   }
 
-  private stubOasysEndpoints() {
+  private stubOasysEndpoints(suitabilityStrategy: Cas3OASysAssessmentSuitabilityStrategyDto = 'allow_all') {
     // And there are OASys sections in the db
     this.riskManagementPlanSummaries = riskManagementPlanFromJson()
 
@@ -224,6 +225,7 @@ export default class ApplyHelper {
     cy.task('stubOasysRiskManagementPlan', {
       person: this.person,
       riskManagementPlan,
+      suitabilityStrategy,
     })
   }
 

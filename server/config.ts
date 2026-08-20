@@ -55,6 +55,7 @@ export default {
     showGapReportButton: get('SHOW_GAP_REPORT_BUTTON', 'false') === 'true',
     bookingOverstayEnabled: get('BOOKING_OVERSTAY_ENABLED', 'false') === 'true',
     plannedMaintenance: get('PLANNED_MAINTENANCE_BANNER', 'false') === 'true',
+    oasysSixMonthRuleDisabled: get('OASYS_SIX_MONTH_RULE_DISABLED', 'false') === 'true',
   },
   environment,
   sentry: {

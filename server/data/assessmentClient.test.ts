@@ -233,7 +233,7 @@ describeClient('AssessmentClient', provider => {
           },
         },
         willRespondWith: {
-          status: 200,
+          status: 204,
         },
       })
 

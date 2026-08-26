@@ -3,7 +3,7 @@ name: Security CodeQL scan
 on:
   workflow_dispatch:
   schedule:
-    - cron: "22 6 * * MON-FRI" # Every weekday at 06:22 UTC
+    - cron: "0 4 * * MON-FRI" # Every weekday
 
 jobs:
   security-codeql-check:

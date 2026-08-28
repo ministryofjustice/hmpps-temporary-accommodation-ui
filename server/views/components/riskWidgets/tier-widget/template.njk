@@ -1,9 +1,15 @@
+{% if params.value.version === 'V2' %}
+  {% set v2Class="tier-widget-v2" %}
+{% endif %}
+
 {% if params.status === 'retrieved' %}
-  <div class="tier-widget">
+  <div class="tier-widget {{ v2Class }}">
     <h2 class="govuk-heading-m">
       <strong>TIER {{ params.value.level }}</strong>
     </h2>
-    <p class="govuk-hint govuk-body-m">Last updated: {{ formatDate(params.value.lastUpdated) if params.value.lastUpdated else "Not known" }}</p>
+    {% if params.value.version === 'V2' %}
+      <p class="govuk-hint govuk-body-m">Last updated: {{ formatDate(params.value.lastUpdated) if params.value.lastUpdated else "Not known" }}</p>
+    {%  endif %}
   </div>
 {% else %}
   <div class="tier-widget">

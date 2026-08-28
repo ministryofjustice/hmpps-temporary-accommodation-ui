@@ -127,17 +127,23 @@ $mappa-colour: #4c2c92;
 }
 
 .tier-widget {
-  color: govuk-colour('turquoise');
-  border: 2px solid govuk-colour('turquoise');
+  border: 2px solid black;
   padding: govuk-spacing(3);
   margin-bottom: govuk-spacing(4);
 
   & h2 {
-    color: govuk-colour('turquoise');
     margin-bottom: 0;
     font-weight: 400;
   }
+
   & :last-child {
     margin-bottom: 0;
+  }
+
+  &.tier-widget-v2 {
+    border-color: govuk-colour('turquoise');
+    & h2 {
+      color: govuk-colour('turquoise');
+    }
   }
 }

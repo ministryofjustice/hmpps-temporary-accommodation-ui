@@ -308,10 +308,17 @@ export default abstract class Page extends Component {
   }
 
   shouldShowTier = (tier: PersonRisksUI['tier']): void => {
-    const tierValue = tier.value
+    const { lastUpdated, level, version } = tier.value || {}
+    const lastUpdatedString = `Last updated: ${DateFormats.isoDateToUIDate(lastUpdated)}`
 
-    cy.get('h2').contains(`TIER ${tierValue.level}`)
-    cy.get('p').contains(`Last updated: ${DateFormats.isoDateToUIDate(tierValue.lastUpdated)}`)
+    cy.get('h2').contains(`TIER ${level}`).parents('div.tier-widget').as('container')
+    if (version === 'V2') {
+      cy.get('@container').get('p').contains(lastUpdatedString)
+      cy.get('@container').should('have.class', 'tier-widget-v2')
+    } else {
+      cy.get('@container').get('p').contains(lastUpdatedString).should('not.exist')
+      cy.get('@container').should('not.have.class', 'tier-widget-v2')
+    }
   }
 
   shouldShowDeliusRiskFlags = (flags: PersonRisksUI['flags']): void => {

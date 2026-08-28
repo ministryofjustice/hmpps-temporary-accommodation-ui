@@ -20,6 +20,7 @@ import newTurnaroundFactory from './newTurnaround'
 import oasysRiskManagementFactory, { riskManagementPlanFactory } from './oasysRiskManagement'
 import pduFactory from './pdu'
 import { fullPersonFactory as personFactory, restrictedPersonFactory } from './person'
+import { fullPersonSummaryFactory, restrictedPersonSummaryFactory, unknownPersonSummaryFactory } from './personSummary'
 import placeContextFactory from './placeContext'
 import cas3ApplicationFactory from './cas3Application'
 import cas3ApplicationSummaryFactory from './cas3ApplicationSummary'
@@ -157,6 +158,9 @@ export {
   referralHistorySystemNoteFactory,
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
+  fullPersonSummaryFactory,
+  restrictedPersonSummaryFactory,
+  unknownPersonSummaryFactory,
   risksFactory,
   roshRisksFactory,
   tierEnvelopeFactory,

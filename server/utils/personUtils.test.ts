@@ -1,4 +1,10 @@
-import { personFactory, restrictedPersonFactory } from '../testutils/factories'
+import {
+  fullPersonSummaryFactory,
+  personFactory,
+  restrictedPersonFactory,
+  restrictedPersonSummaryFactory,
+  unknownPersonSummaryFactory,
+} from '../testutils/factories'
 import { isFullPerson, personName, statusTag, tierBadge } from './personUtils'
 
 describe('personUtils', () => {
@@ -48,6 +54,24 @@ describe('personUtils', () => {
 
       expect(personName(person, 'Limited access offender')).toEqual('Limited access offender')
     })
+
+    it('returns the name of the given person if the person is a FullPersonSummary', () => {
+      const person = fullPersonSummaryFactory.build({ name: 'John Smith' })
+
+      expect(personName(person)).toEqual('John Smith')
+    })
+
+    it('returns the fallback string if the person is a RestrictedPersonSummary', () => {
+      const person = restrictedPersonSummaryFactory.build()
+
+      expect(personName(person, 'Limited access offender')).toEqual('Limited access offender')
+    })
+
+    it('returns the fallback string if the person is an UnknownPersonSummary', () => {
+      const person = unknownPersonSummaryFactory.build()
+
+      expect(personName(person, 'Limited access offender')).toEqual('Limited access offender')
+    })
   })
 
   describe('isFullPerson', () => {
@@ -61,6 +85,28 @@ describe('personUtils', () => {
       const person = restrictedPersonFactory.build()
 
       expect(isFullPerson(person)).toEqual(false)
+    })
+
+    it('returns true if the person is a FullPersonSummary', () => {
+      const person = fullPersonSummaryFactory.build()
+
+      expect(isFullPerson(person)).toEqual(true)
+    })
+
+    it('returns false if the person is a RestrictedPersonSummary', () => {
+      const person = restrictedPersonSummaryFactory.build()
+
+      expect(isFullPerson(person)).toEqual(false)
+    })
+
+    it('returns false if the person is an UnknownPersonSummary', () => {
+      const person = unknownPersonSummaryFactory.build()
+
+      expect(isFullPerson(person)).toEqual(false)
+    })
+
+    it('returns false if the person is undefined', () => {
+      expect(isFullPerson(undefined)).toEqual(false)
     })
   })
 })

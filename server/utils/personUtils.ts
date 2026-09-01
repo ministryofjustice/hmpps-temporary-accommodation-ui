@@ -1,5 +1,5 @@
 import type { PersonStatus } from '@approved-premises/ui'
-import { FullPerson, Person } from '../@types/shared'
+import { FullPerson, FullPersonSummary, Person, PersonSummary } from '../@types/shared'
 
 const statusTag = (status: PersonStatus): string => {
   if (status === 'InCommunity') {
@@ -19,15 +19,14 @@ const tierBadge = (tier: string): string => {
 
 const personNameFallback = 'the person'
 
-const personName = (person: Person, fallback: string = personNameFallback) => {
+const personName = (person: Person | PersonSummary, fallback: string = personNameFallback) => {
   if (isFullPerson(person)) {
     return person.name
   }
   return fallback
 }
 
-const isFullPerson = (person: Person): person is FullPerson => {
-  return person.type === 'FullPerson'
-}
+const isFullPerson = (person?: Person | PersonSummary): person is FullPerson | FullPersonSummary =>
+  (person as FullPerson)?.type === 'FullPerson' || (person as FullPersonSummary)?.personType === 'FullPersonSummary'
 
 export { isFullPerson, personName, personNameFallback, statusTag, tierBadge }

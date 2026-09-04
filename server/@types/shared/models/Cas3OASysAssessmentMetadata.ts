@@ -6,5 +6,6 @@ export type Cas3OASysAssessmentMetadata = {
     dateCompleted?: string;
     dateStarted?: string;
     hasApplicableAssessment: boolean;
+    lastUpdatedDate?: string;
 };
 

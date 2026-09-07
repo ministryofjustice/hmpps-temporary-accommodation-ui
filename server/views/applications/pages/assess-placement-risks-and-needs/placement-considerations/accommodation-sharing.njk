@@ -92,6 +92,39 @@
         html: detailsHtml
       }) }}
 
+        {% set higherRiskDetail %}
+            {{ formPageTextarea({
+                fieldName: 'higherRiskDetail',
+                label: {
+                    text: "Give details of who is at risk and what the risks are",
+                    classes: "govuk-label--s"
+                }
+            }, fetchContext()) }}
+        {% endset %}
+
+        {{ formPageRadios({
+            fieldName: "higherRisk",
+            fieldset: {
+                legend: {
+                    text: page.questions.higherRisk,
+                    classes: "govuk-fieldset__legend--m"
+                }
+            },
+            items: [
+                {
+                    value: "yes",
+                    text: "Yes",
+                    conditional: {
+                    html: higherRiskDetail
+                }
+                },
+                {
+                    value: "no",
+                    text: "No"
+                }
+            ]
+        }, fetchContext()) }}
+
       {{ govukButton({
         text: "Next",
         preventDoubleClick: true

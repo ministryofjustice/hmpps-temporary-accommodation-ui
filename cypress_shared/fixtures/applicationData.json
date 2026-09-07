@@ -205,7 +205,9 @@
     "accommodation-sharing": {
       "accommodationSharing": "yes",
       "accommodationSharingYesDetail": "Some detail",
-      "accommodationSharingNoDetail": ""
+      "accommodationSharingNoDetail": "",
+      "higherRisk": "yes",
+      "higherRiskDetail": "Higher risk detail"
     },
     "cooperation": {
       "support": "Support detail"

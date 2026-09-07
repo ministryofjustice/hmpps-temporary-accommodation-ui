@@ -11,11 +11,19 @@ type AccommodationSharingBody = {
   accommodationSharing: string
   accommodationSharingYesDetail: string
   accommodationSharingNoDetail: string
+  higherRisk: string
+  higherRiskDetail: string
 }
 
 @Page({
   name: 'accommodation-sharing',
-  bodyProperties: ['accommodationSharing', 'accommodationSharingYesDetail', 'accommodationSharingNoDetail'],
+  bodyProperties: [
+    'accommodationSharing',
+    'accommodationSharingYesDetail',
+    'accommodationSharingNoDetail',
+    'higherRisk',
+    'higherRiskDetail',
+  ],
 })
 export default class AccommodationSharing implements TasklistPage {
   title = 'Accommodation sharing'
@@ -24,6 +32,7 @@ export default class AccommodationSharing implements TasklistPage {
 
   questions: {
     accommodationSharing: string
+    higherRisk: string
   }
 
   risks: PersonRisksUI
@@ -34,22 +43,24 @@ export default class AccommodationSharing implements TasklistPage {
   ) {
     this.questions = {
       accommodationSharing: `Is ${personName(application.person)} suitable to share accommodation with others?`,
+      higherRisk: `Does ${personName(application.person)} pose a higher risk to any specific person or group if accommodated in a CAS3 property during curfew?`,
     }
 
     this.risks = mapApiPersonRisksForUi(application.risks)
   }
 
   response() {
-    const formContent = anonymiseFormContent(this.questions.accommodationSharing, this.application.person)
+    const out: Record<string, string> = {}
+    const qAccommodationSharing = anonymiseFormContent(this.questions.accommodationSharing, this.application.person)
+    out[qAccommodationSharing] =
+      this.body.accommodationSharing === 'yes'
+        ? `Yes - ${this.body.accommodationSharingYesDetail}`
+        : `No - ${this.body.accommodationSharingNoDetail}`
 
-    if (this.body.accommodationSharing === 'yes') {
-      return {
-        [formContent]: `Yes - ${this.body.accommodationSharingYesDetail}`,
-      }
-    }
-    return {
-      [formContent]: `No - ${this.body.accommodationSharingNoDetail}`,
-    }
+    const qHigherRisk = anonymiseFormContent(this.questions.higherRisk, this.application.person)
+    out[qHigherRisk] = this.body.higherRisk === 'yes' ? `Yes - ${this.body.higherRiskDetail}` : `No`
+
+    return out
   }
 
   previous() {
@@ -62,6 +73,15 @@ export default class AccommodationSharing implements TasklistPage {
 
   errors() {
     const errors: TaskListErrors<this> = {}
+    if (this.body.accommodationSharing !== 'yes') {
+      this.body.accommodationSharingYesDetail = ''
+    }
+    if (this.body.accommodationSharing !== 'no') {
+      this.body.accommodationSharingNoDetail = ''
+    }
+    if (this.body.higherRisk !== 'yes') {
+      this.body.higherRiskDetail = ''
+    }
 
     if (!this.body.accommodationSharing) {
       errors.accommodationSharing = `You must specify if ${personName(
@@ -79,6 +99,15 @@ export default class AccommodationSharing implements TasklistPage {
         'You must provide details of why the person is unsuitable to share accommodation with others'
     }
 
+    if (!this.body.higherRisk) {
+      errors.higherRisk = `Select whether ${personName(
+        this.application.person,
+      )} poses a higher risk to any specific person or group if accommodated in a CAS3 property during curfew`
+    }
+
+    if (this.body.higherRisk === 'yes' && !this.body.higherRiskDetail) {
+      errors.higherRiskDetail = 'Enter details of who is at risk and what the risks are'
+    }
     return errors
   }
 }

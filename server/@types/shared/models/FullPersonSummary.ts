@@ -5,6 +5,7 @@
 import type { PersonSummary } from './PersonSummary';
 import type { TierDto } from './TierDto';
 export type FullPersonSummary = (PersonSummary & {
+    dateOfBirth?: string;
     isRestricted?: boolean;
     name?: string;
     /**
@@ -12,6 +13,7 @@ export type FullPersonSummary = (PersonSummary & {
      */
     tier?: TierDto;
 } & {
+    dateOfBirth: string;
     isRestricted: boolean;
     name: string;
 });

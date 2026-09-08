@@ -2,4 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type RiskStatus = 'Retrieved' | 'NotFound' | 'Error';
+export type AvailableTierDto = {
+    tier: string;
+};
+

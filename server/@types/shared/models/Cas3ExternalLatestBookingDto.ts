@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas3ExternalPremisesDto = {
+export type Cas3ExternalLatestBookingDto = {
     addressLine1: string;
     addressLine2?: string;
     endDate?: string;

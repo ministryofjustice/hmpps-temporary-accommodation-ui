@@ -10,6 +10,7 @@ export const fullPersonSummaryFactory = Factory.define<FullPersonSummary>(() => 
   personType: 'FullPersonSummary',
   name: faker.person.fullName(),
   isRestricted: false,
+  dateOfBirth: faker.date.birthdate().toISOString(),
 }))
 
 export const restrictedPersonSummaryFactory = Factory.define<RestrictedPersonSummary>(() => ({

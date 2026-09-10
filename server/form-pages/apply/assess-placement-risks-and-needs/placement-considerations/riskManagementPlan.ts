@@ -10,12 +10,20 @@ export type RiskManagementPlanBody = {
   riskManagementAnswers: Record<string, string>
   riskManagementSummaries: Array<OASysQuestion>
   oasysImported: string
+  oasysUpdated: string
   oasysCompleted: string
 }
 
 @Page({
   name: 'risk-management-plan',
-  bodyProperties: ['version', 'riskManagementAnswers', 'riskManagementSummaries', 'oasysImported', 'oasysCompleted'],
+  bodyProperties: [
+    'version',
+    'riskManagementAnswers',
+    'riskManagementSummaries',
+    'oasysImported',
+    'oasysUpdated',
+    'oasysCompleted',
+  ],
 })
 export default class RiskManagementPlan implements OasysPage {
   riskManagementSummaries: RiskManagementPlanBody['riskManagementSummaries']
@@ -45,7 +53,13 @@ export default class RiskManagementPlan implements OasysPage {
   }
 
   response() {
-    return oasysImportReponse(this.body.riskManagementAnswers, this.body.riskManagementSummaries)
+    return oasysImportReponse(
+      this.body.riskManagementAnswers,
+      this.body.riskManagementSummaries,
+      this.body.oasysImported,
+      this.body.oasysUpdated,
+      this.body.oasysCompleted,
+    )
   }
 
   previous() {

@@ -48,10 +48,8 @@ export const getOasysRiskManagement = async <T extends OasysPage>(
 
   page.body[summaryKey] = summaries
   page.body.oasysImported = body.oasysImported || DateFormats.dateObjToIsoDate(new Date())
-  page.body.oasysCompleted =
-    body.oasysCompleted ||
-    oasysRiskManagement?.assessmentMetadata?.dateCompleted ||
-    oasysRiskManagement?.assessmentMetadata?.dateStarted
+  page.body.oasysCompleted = body.oasysCompleted || oasysRiskManagement?.assessmentMetadata?.dateCompleted
+  page.body.oasysUpdated = body.oasysUpdated || oasysRiskManagement?.assessmentMetadata.lastUpdatedDate
   page.oasysSuccess = oasysSuccess
   page.risks = mapApiPersonRisksForUi(application.risks)
 
@@ -79,8 +77,23 @@ export const questionKeyFromNumber = (questionNumber: string) => `Q${questionNum
 
 export const questionNumberFromKey = (key: string) => key.substring(1)
 
-export const oasysImportReponse = (answers: Record<string, string>, summaries: Array<OASysQuestion>) => {
-  return Object.keys(answers).reduce((prev, key) => {
+export const oasysImportReponse = (
+  answers: Record<string, string>,
+  summaries: Array<OASysQuestion>,
+  oasysImported: string,
+  oasysUpdated: string,
+  oasysCompleted: string,
+) => {
+  const response: Record<string, string> = {}
+
+  if (oasysImported && (oasysUpdated || oasysCompleted)) {
+    response['OASys assessment'] = `Import from OASys ${DateFormats.isoDateToUIDate(oasysImported)}`
+    response['OASys last updated'] = DateFormats.isoDateToUIDate(oasysUpdated || oasysCompleted)
+  } else {
+    response['OASys assessment'] = 'OASys could not be imported'
+  }
+
+  const questionResponse = Object.keys(answers).reduce((prev, key) => {
     const questionNumber = questionNumberFromKey(key)
 
     return {
@@ -88,6 +101,11 @@ export const oasysImportReponse = (answers: Record<string, string>, summaries: A
       [`${questionNumber}: ${findSummary(questionNumber, summaries).label}`]: answers[`${key}`],
     }
   }, {}) as Record<string, string>
+
+  return {
+    ...response,
+    ...questionResponse,
+  }
 }
 
 const findSummary = (questionNumber: string, summaries: Array<OASysQuestion>) => {

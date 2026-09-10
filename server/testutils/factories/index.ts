@@ -17,7 +17,10 @@ import newConfirmationFactory from './newConfirmation'
 import cas3NewDepartureFactory from './cas3NewDeparture'
 import newExtensionFactory from './newExtension'
 import newTurnaroundFactory from './newTurnaround'
-import oasysRiskManagementFactory, { riskManagementPlanFactory } from './oasysRiskManagement'
+import oasysRiskManagementFactory, {
+  riskManagementPlanFactory,
+  oasysAssessmentMetadataFactory,
+} from './oasysRiskManagement'
 import pduFactory from './pdu'
 import { fullPersonFactory as personFactory, restrictedPersonFactory } from './person'
 import { fullPersonSummaryFactory, restrictedPersonSummaryFactory, unknownPersonSummaryFactory } from './personSummary'
@@ -103,6 +106,7 @@ export {
   newTurnaroundFactory,
   oasysRiskManagementFactory,
   riskManagementPlanFactory,
+  oasysAssessmentMetadataFactory,
   pduFactory,
   personFactory,
   placeContextFactory,

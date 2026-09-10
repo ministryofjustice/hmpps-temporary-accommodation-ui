@@ -25,5 +25,11 @@ export default class AccommodationSharingPage extends ApplyPage {
     if (this.tasklistPage.body.accommodationSharing === 'no') {
       this.completeTextInputFromPageBody('accommodationSharingNoDetail')
     }
+
+    this.checkRadioButtonFromPageBody('higherRisk')
+
+    if (this.tasklistPage.body.higherRisk === 'yes') {
+      this.completeTextInputFromPageBody('higherRiskDetail')
+    }
   }
 }

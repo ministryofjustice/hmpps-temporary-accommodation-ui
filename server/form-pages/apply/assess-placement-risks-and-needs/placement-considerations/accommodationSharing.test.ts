@@ -6,7 +6,14 @@ import AccommodationSharing from './accommodationSharing'
 
 jest.mock('../../../../utils/utils')
 
-const body = { accommodationSharing: 'yes' as const, accommodationSharingYesDetail: 'Yes detail' }
+const body = {
+  accommodationSharing: 'yes' as const,
+  accommodationSharingYesDetail: 'Yes detail',
+  accommodationSharingNoDetail: '',
+  higherRisk: 'yes',
+  higherRiskDetail: 'Risk detail',
+}
+
 const personRisksUi = { flags: { value: ['Some flag'] } } as PersonRisksUI
 
 describe('AccommodationSharing', () => {
@@ -33,14 +40,14 @@ describe('AccommodationSharing', () => {
   itShouldHaveNextValue(new AccommodationSharing({}, application), 'cooperation')
 
   describe('errors', () => {
-    it('returns an empty object if the accommodation sharing fields are populated', () => {
+    it('returns an empty object if all mandatory fields are populated', () => {
       const page = new AccommodationSharing(body, application)
       expect(page.errors()).toEqual({})
     })
 
     it('returns an empty object if the accommodation sharing answer is no and the details are populated', () => {
       const page = new AccommodationSharing(
-        { accommodationSharing: 'no', accommodationSharingNoDetail: 'No details' },
+        { ...body, accommodationSharing: 'no', accommodationSharingNoDetail: 'No details' },
         application,
       )
       expect(page.errors()).toEqual({})
@@ -53,11 +60,23 @@ describe('AccommodationSharing', () => {
       })
     })
 
+    it('returns an error if the higher risk answer is not populated', () => {
+      const page = new AccommodationSharing({ ...body, higherRisk: undefined }, application)
+      expect(page.errors()).toEqual({
+        higherRisk:
+          'Select whether John Smith poses a higher risk to any specific person or group if accommodated in a CAS3 property during curfew',
+      })
+    })
+
+    it('returns an error if the higher risk answer is yes but details are not populated', () => {
+      const page = new AccommodationSharing({ ...body, higherRiskDetail: undefined }, application)
+      expect(page.errors()).toEqual({
+        higherRiskDetail: 'Enter details of who is at risk and what the risks are',
+      })
+    })
+
     it('returns an error if the accommodation sharing answer is yes but details are not populated', () => {
-      const page = new AccommodationSharing(
-        { accommodationSharing: 'yes', accommodationSharingYesDetail: undefined },
-        application,
-      )
+      const page = new AccommodationSharing({ ...body, accommodationSharingYesDetail: undefined }, application)
       expect(page.errors()).toEqual({
         accommodationSharingYesDetail:
           "You must provide details of how you will manage the person's risk if they are placed in shared accommodation",
@@ -66,7 +85,7 @@ describe('AccommodationSharing', () => {
 
     it('returns an error if the accommodation sharing answer is no but details are not populated', () => {
       const page = new AccommodationSharing(
-        { accommodationSharing: 'no', accommodationSharingNoDetail: undefined },
+        { ...body, accommodationSharing: 'no', accommodationSharingNoDetail: undefined },
         application,
       )
       expect(page.errors()).toEqual({
@@ -74,23 +93,48 @@ describe('AccommodationSharing', () => {
           'You must provide details of why the person is unsuitable to share accommodation with others',
       })
     })
-  })
 
-  describe('response', () => {
-    it('returns a translated version of the response when the answer is yes', () => {
-      const page = new AccommodationSharing(body, application)
-      expect(page.response()).toEqual({
-        'Is the person suitable to share accommodation with others?': 'Yes - Yes detail',
+    it('removes orphan data', () => {
+      const page = new AccommodationSharing({ ...body, accommodationSharing: 'no', higherRisk: 'no' }, application)
+      page.errors()
+      expect(page.body).toEqual({
+        ...body,
+        accommodationSharing: 'no',
+        higherRisk: 'no',
+        accommodationSharingYesDetail: '',
+        higherRiskDetail: '',
       })
     })
 
-    it('returns a translated version of the response when the answer is no', () => {
+    it('removes orphan data when accommodation sharing answer is yes', () => {
+      const page = new AccommodationSharing({ ...body, accommodationSharingNoDetail: 'Some detail' }, application)
+      page.errors()
+      expect(page.body).toEqual({
+        ...body,
+        accommodationSharingNoDetail: '',
+      })
+    })
+  })
+
+  describe('response', () => {
+    it('returns a translated version of the response when the answers are yes', () => {
+      const page = new AccommodationSharing(body, application)
+      expect(page.response()).toEqual({
+        'Is the person suitable to share accommodation with others?': 'Yes - Yes detail',
+        'Does the person pose a higher risk to any specific person or group if accommodated in a CAS3 property during curfew?':
+          'Yes - Risk detail',
+      })
+    })
+
+    it('returns a translated version of the response when the answers are no', () => {
       const page = new AccommodationSharing(
         { accommodationSharing: 'no', accommodationSharingNoDetail: 'No detail' },
         application,
       )
       expect(page.response()).toEqual({
         'Is the person suitable to share accommodation with others?': 'No - No detail',
+        'Does the person pose a higher risk to any specific person or group if accommodated in a CAS3 property during curfew?':
+          'No',
       })
     })
   })

@@ -28,7 +28,7 @@ export default class AccommodationSharingPage extends ApplyPage {
 
     this.checkRadioButtonFromPageBody('higherRisk')
 
-    if (this.tasklistPage.body.accommodationSharing === 'yes') {
+    if (this.tasklistPage.body.higherRisk === 'yes') {
       this.completeTextInputFromPageBody('higherRiskDetail')
     }
   }

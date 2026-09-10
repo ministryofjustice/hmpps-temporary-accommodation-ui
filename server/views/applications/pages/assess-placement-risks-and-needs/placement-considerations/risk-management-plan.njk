@@ -20,9 +20,10 @@
 
       {% if page.oasysSuccess %}
         <p>Imported from OASys: <strong>{{ formatDate(page.body.oasysImported) }}</strong></p>
-        <p>OASys last updated: <strong>{{ formatDate(page.body.oasysCompleted) }}</strong></p>
+        <p>OASys last updated: <strong>{{ formatDate(page.body.oasysUpdated) }}</strong></p>
 
         <input type="hidden" name="oasysImported" value="{{ page.body.oasysImported }}"/>
+        <input type="hidden" name="oasysUpdated" value="{{ page.body.oasysUpdated }}"/>
         <input type="hidden" name="oasysCompleted" value="{{ page.body.oasysCompleted }}"/>
       {% else %}
         {{ govukWarningText({

@@ -231,8 +231,9 @@
     },
     "risk-management-plan": {
       "version": "2",
-      "oasysImported": "2023-08-02",
-      "oasysCompleted": "2023-08-02",
+      "oasysImported": "2023-08-03",
+      "oasysUpdated": "2023-08-02",
+      "oasysCompleted": "2023-08-01",
       "riskManagementAnswers": {
         "QRM30": "Some answer for the first risk management question. With an extra comment RM30",
         "QRM31": "Some answer for the second risk management question. With an extra comment RM31",

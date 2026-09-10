@@ -48,6 +48,9 @@ context('Apply', () => {
         const releaseDate = faker.date.soon({ days: 90 })
         const accommodationRequiredFromDate = faker.date.soon({ days: 90 })
 
+        applicationData['placement-considerations']['risk-management-plan'].oasysImported =
+          DateFormats.dateObjToIsoDate(new Date())
+
         const person = personFactory.build()
         const application = cas3ApplicationFactory.build({ person })
         const risks = risksFactory.retrived().build({
@@ -188,8 +191,8 @@ context('Apply', () => {
         this.applicationData['placement-considerations']['risk-management-plan'].oasysImported =
           requestBody.data['placement-considerations']['risk-management-plan'].oasysImported
 
-        this.applicationData['placement-considerations']['risk-management-plan'].oasysCompleted =
-          requestBody.data['placement-considerations']['risk-management-plan'].oasysCompleted
+        this.applicationData['placement-considerations']['risk-management-plan'].oasysUpdated =
+          requestBody.data['placement-considerations']['risk-management-plan'].oasysUpdated
 
         cy.task('log', requestBody.data)
         cy.task('log', this.applicationData)

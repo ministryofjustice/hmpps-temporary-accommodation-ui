@@ -7,8 +7,9 @@ jest.mock('../../../../utils/oasysImportUtils')
 
 const body = {
   version: '2',
-  oasysImported: '2023-08-02',
-  oasysCompleted: '2023-08-02',
+  oasysImported: '2023-08-03',
+  oasysUpdated: '2023-08-02',
+  oasysCompleted: '2023-08-01',
   riskManagementAnswers: {
     Q1: 'Some answer for the first risk management question. With an extra comment 1',
     Q2: 'Some answer for the second risk management question. With an extra comment 2',
@@ -104,7 +105,13 @@ describe('RiskManagementPlan', () => {
       })
 
       expect(page.response()).toEqual({ 'A question': 'An answer' })
-      expect(oasysImportReponse).toHaveBeenCalledWith(body.riskManagementAnswers, body.riskManagementSummaries)
+      expect(oasysImportReponse).toHaveBeenCalledWith(
+        body.riskManagementAnswers,
+        body.riskManagementSummaries,
+        body.oasysImported,
+        body.oasysUpdated,
+        body.oasysCompleted,
+      )
     })
   })
 })

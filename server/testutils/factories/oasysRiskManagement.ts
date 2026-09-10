@@ -1,14 +1,10 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
 
-import { Cas3OASysGroup, OASysQuestion } from '@approved-premises/api'
+import { Cas3OASysAssessmentMetadata, Cas3OASysGroup, OASysQuestion } from '@approved-premises/api'
 
 export default Factory.define<Cas3OASysGroup>(() => ({
-  assessmentMetadata: {
-    hasApplicableAssessment: true,
-    dateStarted: faker.date.past({ years: 1 }).toISOString(),
-    dateCompleted: faker.date.past({ years: 1 }).toISOString(),
-  },
+  assessmentMetadata: oasysAssessmentMetadataFactory.build(),
   answers: riskManagementPlanFactory.buildList(5),
 }))
 
@@ -25,4 +21,11 @@ export const riskManagementPlanFactory = Factory.define<OASysQuestion>(() => ({
     'Additional comments',
   ]),
   answer: faker.lorem.paragraph(),
+}))
+
+export const oasysAssessmentMetadataFactory = Factory.define<Cas3OASysAssessmentMetadata>(() => ({
+  hasApplicableAssessment: true,
+  dateStarted: faker.date.past({ years: 1 }).toISOString(),
+  dateCompleted: faker.date.past({ years: 1 }).toISOString(),
+  lastUpdatedDate: faker.date.past({ years: 1 }).toISOString(),
 }))

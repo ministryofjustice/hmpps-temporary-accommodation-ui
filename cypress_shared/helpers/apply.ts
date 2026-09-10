@@ -15,6 +15,7 @@ import {
   acctAlertFactory,
   adjudicationFactory,
   localAuthorityFactory,
+  oasysAssessmentMetadataFactory,
   oasysRiskManagementFactory,
   referenceDataFactory,
 } from '../../server/testutils/factories'
@@ -220,7 +221,14 @@ export default class ApplyHelper {
     // And there are OASys sections in the db
     this.riskManagementPlanSummaries = riskManagementPlanFromJson()
 
-    const riskManagementPlan = oasysRiskManagementFactory.build({ answers: this.riskManagementPlanSummaries })
+    const riskManagementPlan = oasysRiskManagementFactory.build({
+      answers: this.riskManagementPlanSummaries,
+      assessmentMetadata: oasysAssessmentMetadataFactory.build({
+        lastUpdatedDate: '2023-08-02',
+        dateCompleted: '2023-08-01',
+        hasApplicableAssessment: true,
+      }),
+    })
 
     cy.task('stubOasysRiskManagementPlan', {
       person: this.person,

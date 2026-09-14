@@ -77,8 +77,9 @@ describe('OASysImportUtils', () => {
       })
 
       expect(result.oasysSuccess).toEqual(true)
-      expect(result.body.oasysCompleted).toEqual(oasysRiskManagement.assessmentMetadata.dateCompleted)
       expect(result.body.oasysImported).toEqual('2024-05-01')
+      expect(result.body.oasysUpdated).toEqual(oasysRiskManagement.assessmentMetadata.lastUpdatedDate)
+      expect(result.body.oasysCompleted).toEqual(oasysRiskManagement.assessmentMetadata.dateCompleted)
       expect(result.risks).toEqual(mapApiPersonRisksForUi(application.risks))
 
       jest.useRealTimers()
@@ -95,7 +96,7 @@ describe('OASysImportUtils', () => {
 
       const oasysRiskManagement = oasysRiskManagementFactory.build({
         answers: riskManagementQuestions,
-        assessmentMetadata: { dateCompleted: '2023-01-01' },
+        assessmentMetadata: { lastUpdatedDate: '2023-01-01' },
       })
 
       getOasysRiskManagementMock.mockResolvedValue(oasysRiskManagement)
@@ -103,8 +104,9 @@ describe('OASysImportUtils', () => {
       const result = await getOasysRiskManagement(
         {
           riskManagementAnswers: { [questionKeyFromNumber('RM30')]: 'My Response' },
-          oasysImported: '2022-01-01',
-          oasysCompleted: '2022-02-01',
+          oasysImported: '2022-03-01',
+          oasysUpdated: '2022-02-01',
+          oasysCompleted: '2022-01-01',
         },
         application,
         callConfig,
@@ -128,8 +130,10 @@ describe('OASysImportUtils', () => {
           questionNumber: riskManagementQuestions[1].questionNumber,
         },
       ])
-      expect(result.body.oasysImported).toEqual('2022-01-01')
-      expect(result.body.oasysCompleted).toEqual('2022-02-01')
+
+      expect(result.body.oasysImported).toEqual('2022-03-01')
+      expect(result.body.oasysUpdated).toEqual('2022-02-01')
+      expect(result.body.oasysCompleted).toEqual('2022-01-01')
     })
 
     it('filters risk manangement plan questions to an accepted whitelist', async () => {
@@ -231,6 +235,10 @@ describe('OASysImportUtils', () => {
 
   describe('oasysImportReponse', () => {
     it('returns a human readable response for each question', () => {
+      const oasysImported = '2026-09-08'
+      const oasysUpdated = '2026-09-01'
+      const oasysCompleted = ''
+
       const answers = {
         [questionKeyFromNumber('1')]: 'answer 1',
         [questionKeyFromNumber('2')]: 'answer 2',
@@ -253,9 +261,11 @@ describe('OASysImportUtils', () => {
           answer: 'Some answer for the third question',
         },
       ]
-      const result = oasysImportReponse(answers, summaries)
+      const result = oasysImportReponse(answers, summaries, oasysImported, oasysUpdated, oasysCompleted)
 
       expect(result).toEqual({
+        'OASys assessment': 'Import from OASys 8 September 2026',
+        'OASys last updated': '1 September 2026',
         [`1: The first question`]: `answer 1`,
         [`2: The second question`]: `answer 2`,
         [`3: The third question`]: `answer 3`,
@@ -263,9 +273,11 @@ describe('OASysImportUtils', () => {
     })
 
     it('returns no response when there arent any questions', () => {
-      const result = oasysImportReponse({}, [])
+      const result = oasysImportReponse({}, [], '', '', '')
 
-      expect(result).toEqual({})
+      expect(result).toEqual({
+        'OASys assessment': 'OASys could not be imported',
+      })
     })
   })
 

@@ -794,6 +794,9 @@
             "oasysImported": {
               "type": "string"
             },
+            "oasysUpdated": {
+              "type": "string"
+            },
             "oasysCompleted": {
               "type": "string"
             }

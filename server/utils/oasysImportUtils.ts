@@ -87,7 +87,7 @@ export const oasysImportReponse = (
   const response: Record<string, string> = {}
 
   if (oasysImported && (oasysUpdated || oasysCompleted)) {
-    response['OASys assessment'] = `Import from OASys ${DateFormats.isoDateToUIDate(oasysImported)}`
+    response['OASys assessment'] = `Imported from OASys ${DateFormats.isoDateToUIDate(oasysImported)}`
     response['OASys last updated'] = DateFormats.isoDateToUIDate(oasysUpdated || oasysCompleted)
   } else {
     response['OASys assessment'] = 'OASys could not be imported'

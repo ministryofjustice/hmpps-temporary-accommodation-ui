@@ -264,7 +264,7 @@ describe('OASysImportUtils', () => {
       const result = oasysImportReponse(answers, summaries, oasysImported, oasysUpdated, oasysCompleted)
 
       expect(result).toEqual({
-        'OASys assessment': 'Import from OASys 8 September 2026',
+        'OASys assessment': 'Imported from OASys 8 September 2026',
         'OASys last updated': '1 September 2026',
         [`1: The first question`]: `answer 1`,
         [`2: The second question`]: `answer 2`,

@@ -1,5 +1,5 @@
 import { Page, expect } from '@playwright/test'
-import Excel, { CellValue } from 'exceljs'
+import { readSheet } from 'read-excel-file/node'
 import { ProbationRegion } from '@temporary-accommodation-ui/e2e'
 import { visitDashboard } from './signIn'
 import { ReportsPage } from '../pages/reports/reportsPage'
@@ -198,16 +198,10 @@ const downloadReport = async (reportType: ReportType, page: Page) => {
 }
 
 const confirmColumnNames = async (reportType: ReportType, path: string) => {
-  const workbook = new Excel.Workbook()
+  const rows = await readSheet(path, 'Sheet0')
+  const headerCells = rows[0]
 
-  await workbook.xlsx.readFile(path).then(() => {
-    const sh = workbook.getWorksheet('Sheet0')
-
-    const headerCells: CellValue[] = []
-    sh.getRow(1).eachCell(cell => headerCells.push(cell.value))
-
-    reportTypeMetaData[reportType].columnNames.forEach(columnName => {
-      expect(headerCells.includes(columnName)).toBe(true)
-    })
+  reportTypeMetaData[reportType].columnNames.forEach(columnName => {
+    expect(headerCells.includes(columnName)).toBe(true)
   })
 }

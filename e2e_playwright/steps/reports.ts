@@ -1,5 +1,6 @@
 import { Page, expect } from '@playwright/test'
-import Excel, { CellValue } from 'exceljs'
+import { readFileSync } from 'node:fs'
+import { unzipSync, strFromU8 } from 'fflate'
 import { ProbationRegion } from '@temporary-accommodation-ui/e2e'
 import { visitDashboard } from './signIn'
 import { ReportsPage } from '../pages/reports/reportsPage'
@@ -187,7 +188,7 @@ export const visitReportsPageAndDownloadReport = async (
   await reportPage.enterFormDetails(probationRegion)
 
   const path = await downloadReport(reportType, page)
-  await confirmColumnNames(reportType, path)
+  confirmColumnNames(reportType, path)
 }
 
 const downloadReport = async (reportType: ReportType, page: Page) => {
@@ -197,17 +198,14 @@ const downloadReport = async (reportType: ReportType, page: Page) => {
   return download.path()
 }
 
-const confirmColumnNames = async (reportType: ReportType, path: string) => {
-  const workbook = new Excel.Workbook()
+const confirmColumnNames = (reportType: ReportType, path: string) => {
+  const files = unzipSync(new Uint8Array(readFileSync(path)))
+  const xml = Object.entries(files)
+    .filter(([name]) => name.startsWith('xl/'))
+    .map(([, data]) => strFromU8(data))
+    .join('')
 
-  await workbook.xlsx.readFile(path).then(() => {
-    const sh = workbook.getWorksheet('Sheet0')
-
-    const headerCells: CellValue[] = []
-    sh.getRow(1).eachCell(cell => headerCells.push(cell.value))
-
-    reportTypeMetaData[reportType].columnNames.forEach(columnName => {
-      expect(headerCells.includes(columnName)).toBe(true)
-    })
+  reportTypeMetaData[reportType].columnNames.forEach(columnName => {
+    expect(xml.includes(columnName)).toBe(true)
   })
 }

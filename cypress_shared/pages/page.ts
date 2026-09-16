@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import 'cypress-axe'
 import { Result } from 'axe-core'
 import { PersonRisksUI, PlaceContext, ReferenceData } from '../../server/@types/ui'

@@ -27,11 +27,4 @@ export default [
       'no-empty-function': ['error', { allow: ['constructors'] }],
     },
   },
-  {
-    name: 'CAS3-test-dev-dependencies',
-    files: ['e2e_playwright/**/*.ts', 'e2e/**/*.ts', 'cypress_shared/**/*.ts', 'integration_tests/**/*.ts'],
-    rules: {
-      'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-    },
-  },
 ]

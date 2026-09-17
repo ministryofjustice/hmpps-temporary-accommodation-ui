@@ -136,8 +136,8 @@ context('Booking arrival', () => {
 
       page.completeForm(newArrival)
 
-      // // Then I should see error messages for the conflict
-      // page.shouldShowDateConflictErrorMessages(conflictingBooking, 'booking')
+      // Then I should see error messages for the conflict
+      page.shouldShowDateConflictErrorMessages(conflictingBooking, 'booking')
     })
 
     it(

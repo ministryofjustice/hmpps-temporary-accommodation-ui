@@ -165,8 +165,7 @@ jobs:
 
       - name: Running Integration tests
         run: TEST_RUN_ARGS="--spec ${{ steps.split-tests.outputs.test-suite }}" npm run test:integration
-        env:
-          DEBUG: cypress:server:*,cypress:net-stubbing:*
+
       - name: Upload Integration test artefacts
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7

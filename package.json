@@ -232,6 +232,7 @@
   "overrides": {
     "axios": "^1.15.0",
     "diff": "^8.0.3",
-    "proxy-addr": "^2.0.8"
+    "proxy-addr": "^2.0.8",
+    "undici": "^6.28.1"
   }
 }

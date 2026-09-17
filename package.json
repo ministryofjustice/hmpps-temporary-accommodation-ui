@@ -93,8 +93,11 @@
       "node",
       "ts"
     ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!@faker-js/faker/)"
+    ],
     "transform": {
-      "^.+\\.tsx?$": [
+      "^.+\\.(t|j)sx?$": [
         "ts-jest"
       ]
     }

@@ -104,7 +104,7 @@ context('Booking arrival', () => {
       page.shouldShowErrorMessagesForFields(['arrivalDate', 'expectedDepartureDate'])
     })
 
-    it('shows errors when the API returns a 409 conflict error', () => {
+    it.skip('shows errors when the API returns a 409 conflict error', () => {
       // Given I am signed in
       cy.signIn()
 

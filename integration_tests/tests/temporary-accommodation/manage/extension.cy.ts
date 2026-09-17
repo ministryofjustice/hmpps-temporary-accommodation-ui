@@ -99,7 +99,7 @@ context('Booking extension', () => {
     page.shouldShowErrorMessagesForFields(['newDepartureDate'])
   })
 
-  it.skip('shows errors when the API returns a 409 conflict error', () => {
+  it('shows errors when the API returns a 409 conflict error', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -129,6 +129,16 @@ context('Booking extension', () => {
 
     // Then I should see error messages for the conflict
     page.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
+
+    cy.task('verifyExtensionCreate', {
+      premisesId: premises.id,
+      bookingId: booking.id,
+    }).then(requests => {
+      expect(requests).to.have.length(1)
+    })
+
+    cy.get('button[type="submit"]')
+      .should('be.enabled')
   })
 
   it('navigates back from the booking extension page to the show booking page', () => {

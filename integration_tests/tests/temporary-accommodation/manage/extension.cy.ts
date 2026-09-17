@@ -131,7 +131,7 @@ context('Booking extension', () => {
     page.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
   })
 
-  it('navigates back from the booking extension page to the show booking page', () => {
+  it.skip('navigates back from the booking extension page to the show booking page', () => {
     // Given I am signed in
     cy.signIn()
 

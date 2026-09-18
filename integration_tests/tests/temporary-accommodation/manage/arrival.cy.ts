@@ -140,43 +140,33 @@ context('Booking arrival', () => {
       page.shouldShowDateConflictErrorMessages(conflictingBooking, 'booking')
     })
 
-    it(
-      'shows errors if arrival date is in future',
-      {
-        retries: {
-          runMode: 1,
-          openMode: 1,
-        },
-        pageLoadTimeout: 15000,
-      },
-      () => {
-        // Given I am signed in
-        cy.signIn()
+    it('shows errors if arrival date is in future', () => {
+      // Given I am signed in
+      cy.signIn()
 
-        const currentDate = new Date()
-        const futureDate = addDays(currentDate, 7)
+      const currentDate = new Date()
+      const futureDate = addDays(currentDate, 7)
 
-        // And there is a premises, a bedspace, and a confirmed booking in the database
-        const booking = cas3BookingFactory.confirmed().build()
-        const { premises, bedspace } = setupBookingStateStubs(booking)
+      // And there is a premises, a bedspace, and a confirmed booking in the database
+      const booking = cas3BookingFactory.confirmed().build()
+      const { premises, bedspace } = setupBookingStateStubs(booking)
 
-        // When I visit the booking confirmation page
-        const page = BookingArrivalNewPage.visit(premises, bedspace, booking)
-        page.shouldShowBookingDetails()
+      // When I visit the booking confirmation page
+      const page = BookingArrivalNewPage.visit(premises, bedspace, booking)
+      page.shouldShowBookingDetails()
 
-        // And I fill out the form
-        const arrival = cas3ArrivalFactory.build()
-        const newArrival = newArrivalFactory.build({
-          ...arrival,
-          arrivalDate: DateFormats.dateObjToIsoDate(futureDate),
-        })
+      // And I fill out the form
+      const arrival = cas3ArrivalFactory.build()
+      const newArrival = newArrivalFactory.build({
+        ...arrival,
+        arrivalDate: DateFormats.dateObjToIsoDate(futureDate),
+      })
 
-        page.completeForm(newArrival)
+      page.completeForm(newArrival)
 
-        // Then I should see error messages relating to those fields
-        page.shouldShowErrorMessagesForFields(['arrivalDate'], 'todayOrInThePast')
-      },
-    )
+      // Then I should see error messages relating to those fields
+      page.shouldShowErrorMessagesForFields(['arrivalDate'], 'todayOrInThePast')
+    })
 
     it('navigates back from the booking arrival page to the show booking page', () => {
       // Given I am signed in

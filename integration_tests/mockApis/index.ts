@@ -15,7 +15,7 @@ const bulkStub = (body: Record<string, unknown>): SuperAgentRequest =>
 
 const getMatchingRequests = (body: object) => superagent.post(`${url}/requests/find`).send(body)
 
-const resetStubs = (): Promise<Response> =>
-  superagent.post(`${url}/reset`)
+const resetStubs = (): Promise<Array<Response>> =>
+  Promise.all([superagent.delete(`${url}/mappings`), superagent.delete(`${url}/requests`)])
 
 export { stubFor, getMatchingRequests, resetStubs, bulkStub }

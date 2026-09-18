@@ -37,7 +37,6 @@ export default class BedspaceConflictErrorComponent extends Component {
       } else {
         Page.verifyOnPage(LostBedShowPage, this.premises, this.bedspace, conflictingEntity as Cas3VoidBedspace)
       }
-      cy.go('back')
     }
   }
 

@@ -435,3 +435,12 @@ export default abstract class Page extends Component {
     cy.get('main table thead').contains(label).closest('th').should('have.attr', 'aria-sort', order)
   }
 }
+
+// axe-core can throw this if it tries to message a frame that's removed during navigation
+// unrelated to the test, so we can safely ignore it
+Cypress.on('uncaught:exception', err => {
+  if (err.message.includes("Cannot read properties of null (reading 'postMessage')")) {
+    return false
+  }
+  return true
+})

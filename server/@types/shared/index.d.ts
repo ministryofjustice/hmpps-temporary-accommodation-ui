@@ -148,7 +148,6 @@ export type { PersonSummaryDiscriminator } from './models/PersonSummaryDiscrimin
 export type { PersonType } from './models/PersonType';
 export type { PlacementApplicationDecision } from './models/PlacementApplicationDecision';
 export type { PlacementApplicationTask } from './models/PlacementApplicationTask';
-export type { PlacementDates } from './models/PlacementDates';
 export type { PlacementType } from './models/PlacementType';
 export type { PremisesFilters } from './models/PremisesFilters';
 export type { PrisonCaseNote } from './models/PrisonCaseNote';

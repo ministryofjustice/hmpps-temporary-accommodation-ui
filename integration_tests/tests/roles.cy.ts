@@ -18,7 +18,8 @@ context('Roles', () => {
     cy.visit(applyPaths.applications.index({}))
 
     // I am redirected to the not authorised page
-    Page.verifyOnPage(NotAuthorisedPage)
+    const notAuthorisedPath = Page.verifyOnPage(NotAuthorisedPage)
+    notAuthorisedPath.shouldShowPotentialReasons()
   })
 
   it('does not allow a referrer to access manage', () => {
@@ -33,6 +34,7 @@ context('Roles', () => {
     cy.visit(managePaths.dashboard.index({}))
 
     // I am redirected to the not authorised page
-    Page.verifyOnPage(NotAuthorisedPage)
+    const notAuthorisedPath = Page.verifyOnPage(NotAuthorisedPage)
+    notAuthorisedPath.shouldShowPotentialReasons()
   })
 })

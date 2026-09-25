@@ -434,6 +434,20 @@ export default abstract class Page extends Component {
   checkColumnOrder(label: string, order: 'ascending' | 'descending' | 'none') {
     cy.get('main table thead').contains(label).closest('th').should('have.attr', 'aria-sort', order)
   }
+
+  shouldShowBulletPoints(bullets: Array<string>, ordered: boolean = false) {
+    if (bullets.length === 0) return
+    const firstBullet = bullets[0]
+
+    const parentTag = ordered ? 'ol' : 'ul'
+
+    cy.get('main li')
+      .contains(firstBullet)
+      .parent(parentTag)
+      .within(() => {
+        bullets.slice(1).forEach(bullet => cy.get('li').contains(bullet))
+      })
+  }
 }
 
 // axe-core can throw this if it tries to message a frame that's removed during navigation

@@ -59,9 +59,12 @@ export type { Cas3Confirmation } from './models/Cas3Confirmation';
 export type { Cas3CostCentre } from './models/Cas3CostCentre';
 export type { Cas3Departure } from './models/Cas3Departure';
 export type { Cas3Extension } from './models/Cas3Extension';
+export type { Cas3ExternalCurrentApplicationDto } from './models/Cas3ExternalCurrentApplicationDto';
 export type { Cas3ExternalLatestBookingDto } from './models/Cas3ExternalLatestBookingDto';
+export type { Cas3ExternalLatestBookingPremisesDto } from './models/Cas3ExternalLatestBookingPremisesDto';
 export type { Cas3ExternalPreviousBookingCancellationDto } from './models/Cas3ExternalPreviousBookingCancellationDto';
 export type { Cas3ExternalPreviousBookingDto } from './models/Cas3ExternalPreviousBookingDto';
+export type { Cas3ExternalSubmittedApplicationDto } from './models/Cas3ExternalSubmittedApplicationDto';
 export type { Cas3NewApplication } from './models/Cas3NewApplication';
 export type { Cas3NewBedspace } from './models/Cas3NewBedspace';
 export type { Cas3NewBooking } from './models/Cas3NewBooking';
@@ -86,7 +89,6 @@ export type { Cas3ReferralHistoryUserNote } from './models/Cas3ReferralHistoryUs
 export type { Cas3ReportType } from './models/Cas3ReportType';
 export type { Cas3StaffDto } from './models/Cas3StaffDto';
 export type { Cas3SubmitApplication } from './models/Cas3SubmitApplication';
-export type { Cas3SuitableApplication } from './models/Cas3SuitableApplication';
 export type { Cas3Turnaround } from './models/Cas3Turnaround';
 export type { Cas3UnarchiveBedspace } from './models/Cas3UnarchiveBedspace';
 export type { Cas3UnarchivePremises } from './models/Cas3UnarchivePremises';
@@ -148,7 +150,6 @@ export type { PersonSummaryDiscriminator } from './models/PersonSummaryDiscrimin
 export type { PersonType } from './models/PersonType';
 export type { PlacementApplicationDecision } from './models/PlacementApplicationDecision';
 export type { PlacementApplicationTask } from './models/PlacementApplicationTask';
-export type { PlacementDates } from './models/PlacementDates';
 export type { PlacementType } from './models/PlacementType';
 export type { PremisesFilters } from './models/PremisesFilters';
 export type { PrisonCaseNote } from './models/PrisonCaseNote';

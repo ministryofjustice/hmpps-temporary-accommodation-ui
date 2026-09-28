@@ -234,6 +234,7 @@
     "diff": "^8.0.3",
     "moment": "^2.31.0",
     "proxy-addr": "^2.0.8",
-    "undici": "^6.28.1"
+    "undici": "^6.28.1",
+    "@opentelemetry/core": "2.11.0"
   }
 }

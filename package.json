@@ -213,7 +213,7 @@
     "cypress-multi-reporters": "^1.6.4",
     "jest": "^29.5.0",
     "jest-html-reporter": "^3.7.1",
-    "jest-junit": "^16.0.0",
+    "jest-junit": "17.0.0",
     "jest-pact": "^0.13.0",
     "jsonwebtoken": "^9.0.0",
     "lint-staged": "^15.5.2",

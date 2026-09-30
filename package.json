@@ -180,7 +180,7 @@
     "reflect-metadata": "^0.2.2",
     "static-path": "^0.0.4",
     "superagent": "^9.0.0",
-    "typescript-json-schema": "^0.64.0",
+    "typescript-json-schema": "^0.68.0",
     "url-value-parser": "^2.2.0"
   },
   "devDependencies": {

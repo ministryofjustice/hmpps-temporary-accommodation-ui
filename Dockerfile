@@ -58,8 +58,16 @@ COPY --from=build --chown=appuser:appgroup \
 COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
 
+# removes npm/npx from the runtime image as not needed 
+# fixes some security vulnerabilities introduced by npm/npx (undici, brace-expansion, http-cache-semantics)
+RUN rm -rf \
+        /usr/local/lib/node_modules/npm \
+        /usr/local/bin/npm \
+        /usr/local/bin/npx
+
 EXPOSE 3000
 ENV NODE_ENV='production'
 USER 2000
 
-CMD [ "npm", "start" ]
+# same as running `npm start` without requiring npm at runtime
+CMD [ "sh", "-c", "node $NODE_OPTIONS dist/server.js | ./node_modules/.bin/bunyan -o short" ]

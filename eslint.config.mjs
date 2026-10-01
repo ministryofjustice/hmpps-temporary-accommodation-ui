@@ -7,6 +7,13 @@ export default [
     extraIgnorePaths: ['assets/js', 'e2e_playwright/playwright-report'],
   }),
   {
+    name: 'CAS3- e2e rules',
+    files: ['e2e/**/*.ts', 'e2e/**/*.js', 'cypress.config.e2e.ts'],
+    rules: {
+      'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    },
+  },
+  {
     name: 'CAS3-specific rules',
     files: ['**/*.ts'],
     ignores: ['**/*.js'],

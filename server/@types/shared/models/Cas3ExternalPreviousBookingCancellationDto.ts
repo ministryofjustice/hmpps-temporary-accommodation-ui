@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3ExternalPreviousBookingCancellationDto = {
-    cancellationDate?: string;
-    cancellationReason?: string;
+    cancellationDate: string;
+    cancellationReason: string;
 };
 

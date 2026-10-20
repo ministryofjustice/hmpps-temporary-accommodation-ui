@@ -38,4 +38,4 @@ generic-service:
   allowlist: null
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-approved-premises-nonprod
+  targetApplication: hmpps-temporary-accommodation-ui

@@ -24,31 +24,3 @@ const shutdown = async () => {
 
 process.on('SIGTERM', () => shutdown())
 process.on('SIGINT', () => shutdown())
-
-// export function initialiseAppInsights(): void {
-//   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
-//     // eslint-disable-next-line no-console
-//     console.log('Enabling azure application insights')
-//
-//     setup().setDistributedTracingMode(DistributedTracingModes.AI_AND_W3C).start()
-//   }
-// }
-//
-// export function buildAppInsightsClient(name = defaultName()): TelemetryClient {
-//   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
-//     defaultClient.context.tags['ai.cloud.role'] = name
-//     defaultClient.context.tags['ai.application.ver'] = version()
-//
-//     defaultClient.addTelemetryProcessor(({ tags, data }, contextObjects) => {
-//       const operationNameOverride = contextObjects.correlationContext?.customProperties?.getProperty('operationName')
-//       if (operationNameOverride) {
-//         tags['ai.operation.name'] = operationNameOverride
-//         data.baseData.name = operationNameOverride
-//       }
-//       return true
-//     })
-//
-//     return defaultClient
-//   }
-//   return null
-// }

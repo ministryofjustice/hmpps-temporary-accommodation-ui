@@ -46,6 +46,10 @@ const environment = process.env.ENVIRONMENT || 'local'
 export default {
   https: production,
   staticResourceCacheDuration: 20,
+  buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
+  productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
+  gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
+  branchName: get('GIT_BRANCH', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   flags: {
     maintenanceMode: get('IN_MAINTENANCE_MODE', 'false') === 'true',
     oasysDisabled: process.env.OASYS_DISABLED || false,
@@ -74,6 +78,7 @@ export default {
   apis: {
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
+      healthPath: '/health/ping',
       externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
       timeout: {
         response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000)),
@@ -87,6 +92,7 @@ export default {
     },
     tokenVerification: {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
         deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
@@ -96,6 +102,7 @@ export default {
     },
     approvedPremises: {
       url: get('APPROVED_PREMISES_API_URL', 'http://localhost:9092', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('COMMUNITY_ACCOMMODATION_API_TIMEOUT_RESPONSE', 10000)),
         deadline: Number(get('COMMUNITY_ACCOMMODATION_API_TIMEOUT_DEADLINE', 10000)),
@@ -103,12 +110,12 @@ export default {
       agent: new AgentConfig(Number(get('COMMUNITY_ACCOMMODATION_API_TIMEOUT_RESPONSE', 10000))),
       serviceName: 'temporary-accommodation',
     },
-    audit: {
-      region: get('AUDIT_SQS_REGION', 'eu-west-2'),
-      queueUrl: get('AUDIT_SQS_QUEUE_URL', ''),
-      serviceName: get('AUDIT_SERVICE_NAME', 'hmpps-temporary-accommodation-ui'),
-      logErrors: get('AUDIT_LOG_ERRORS', 'false') === 'true',
-    },
+  },
+  audit: {
+    region: get('AUDIT_SQS_REGION', 'eu-west-2'),
+    queueUrl: get('AUDIT_SQS_QUEUE_URL', ''),
+    serviceName: get('AUDIT_SERVICE_NAME', 'hmpps-temporary-accommodation-ui'),
+    logErrors: get('AUDIT_LOG_ERRORS', 'false') === 'true',
   },
   firstDomain: get('FIRST_INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   secondDomain: get('SECOND_INGRESS_URL', 'http://localhost:3000', requiredInProduction),

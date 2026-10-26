@@ -1,21 +1,8 @@
-/* eslint-disable import/first */
-/*
- * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
- * In particular, applicationinsights automatically collects bunyan logs
- */
-/* istanbul ignore file */
-
-import { buildAppInsightsClient, initialiseAppInsights } from '../utils/azureAppInsights'
 import BookingClient from './bookingClient'
-
-initialiseAppInsights()
-buildAppInsightsClient()
-
 import HmppsAuthClient from './hmppsAuthClient'
 import PersonClient from './personClient'
 import PremisesClient from './premisesClient'
 import ReferenceDataClient from './referenceDataClient'
-
 import ApplicationClient from './applicationClient'
 import AssessmentClient from './assessmentClient'
 import BedspaceClient from './bedspaceClient'
@@ -26,10 +13,14 @@ import { CallConfig } from './restClient'
 import TokenStore from './tokenStore'
 import UserClient from './userClient'
 import TimelineClient from './timelineClient'
+import applicationInfoSupplier from '../applicationInfo'
+
+const applicationInfo = applicationInfoSupplier()
 
 type RestClientBuilder<T> = (callConfig: CallConfig) => T
 
 export const dataAccess = () => ({
+  applicationInfo,
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
   premisesClientBuilder: ((callConfig: CallConfig) =>
     new PremisesClient(callConfig)) as RestClientBuilder<PremisesClient>,
@@ -53,6 +44,7 @@ export const dataAccess = () => ({
 export type DataAccess = ReturnType<typeof dataAccess>
 
 export {
+  applicationInfo,
   ApplicationClient,
   AssessmentClient,
   BedspaceClient,

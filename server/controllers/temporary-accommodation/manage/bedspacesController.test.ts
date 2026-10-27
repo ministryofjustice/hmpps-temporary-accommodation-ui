@@ -554,22 +554,6 @@ describe('BedspacesController', () => {
         `/properties/${premisesId}/bedspaces/${bedspaceId}/cancel-archive`,
       )
     })
-    // it('renders the cancel archive page with errors when no selection has been made', async () => {
-    //   request.body = { bedspaceId: null }
-    //   const error = {
-    //     bedspaceId: 'Select yes if you want to cancel the scheduled archive',
-    //   }
-    //   ;(generateErrorMessages as jest.Mock).mockReturnValue(error)
-    //   ;(generateErrorSummary as jest.Mock).mockReturnValue(error)
-    //
-    //   await requestHandler(request, response, next)
-    //
-    //   expect(response.redirect).toHaveBeenCalledWith(`/properties/${premisesId}/bedspaces/${bedspaceId}/cancel-archive`)
-    //   expect(request.flash).toHaveBeenCalledWith('errors', error)
-    //   expect(request.flash).toHaveBeenCalledWith('errorSummary', error)
-    //   expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
-    //
-    // })
   })
 
   describe('cancelArchive', () => {

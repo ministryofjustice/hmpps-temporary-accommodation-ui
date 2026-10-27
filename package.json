@@ -53,7 +53,8 @@
     "collectCoverageFrom": [
       "server/**/*.{ts,js,jsx,mjs}",
       "!server/middleware/*.ts",
-      "!server/authentication/*.ts"
+      "!server/authentication/*.ts",
+      "!server/testutils/**/*.ts"
     ],
     "coverageThreshold": {
       "global": {

@@ -169,6 +169,64 @@ describeClient('BedspaceClient', provider => {
     })
   })
 
+  describe('archive', () => {
+    it('should archive the bedspace', async () => {
+      const premisesId = faker.string.uuid()
+      const bedspace = cas3BedspaceFactory.build()
+      const bedspaceId = bedspace.id
+
+      await provider.addInteraction({
+        state: 'Bedspace can be archived',
+        uponReceiving: 'a request to archive a bedspace',
+        withRequest: {
+          method: 'POST',
+          path: paths.cas3.premises.bedspaces.archive({ premisesId, bedspaceId }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: { endDate: '2024-01-01' },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: bedspace,
+        },
+      })
+
+      const result = await bedspaceClient.archive(premisesId, bedspaceId, { endDate: '2024-01-01' })
+      expect(result).toEqual(bedspace)
+    })
+  })
+
+  describe('unarchive', () => {
+    it('should unarchive the bedspace', async () => {
+      const premisesId = faker.string.uuid()
+      const bedspace = cas3BedspaceFactory.build()
+      const bedspaceId = bedspace.id
+
+      await provider.addInteraction({
+        state: 'Bedspace can be unarchived',
+        uponReceiving: 'a request to unarchive a bedspace',
+        withRequest: {
+          method: 'POST',
+          path: paths.cas3.premises.bedspaces.unarchive({ premisesId, bedspaceId }),
+          headers: {
+            authorization: `Bearer ${callConfig.token}`,
+          },
+          body: { restartDate: '2024-01-01' },
+        },
+        willRespondWith: {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: bedspace,
+        },
+      })
+
+      const result = await bedspaceClient.unarchive(premisesId, bedspaceId, { restartDate: '2024-01-01' })
+      expect(result).toEqual(bedspace)
+    })
+  })
+
   describe('cancelArchive', () => {
     it('should return the bedspace after cancelling the archive', async () => {
       const premisesId = faker.string.uuid()

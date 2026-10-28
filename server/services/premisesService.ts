@@ -54,7 +54,7 @@ export default class PremisesService {
 
   async getCharacteristics(callConfig: CallConfig): Promise<Array<Cas3ReferenceData>> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
-    //
+
     return referenceDataClient.getCas3ReferenceData('PREMISES_CHARACTERISTICS')
   }
 

@@ -8,7 +8,7 @@ context('Healthcheck', () => {
     })
 
     it('Health check page is visible', () => {
-      cy.request({ url: '/health', method: 'GET'}).then(response => {
+      cy.request({ url: '/health', method: 'GET' }).then(response => {
         expect(response.body.components).to.have.property('hmppsAuth')
         expect(response.body.components).to.have.property('tokenVerification')
         expect(response.body.components).to.have.property('approvedPremises')

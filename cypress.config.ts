@@ -23,6 +23,7 @@ import referenceData from './integration_tests/mockApis/referenceData'
 import schemaValidator from './integration_tests/tasks/schemaValidator'
 import bedspace from './integration_tests/mockApis/bedspace'
 import { resetStubs } from './integration_tests/mockApis'
+import approvedPremises from './integration_tests/mockApis/approvedPremises'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -44,6 +45,7 @@ export default defineConfig({
           return null
         },
         reset: resetStubs,
+        ...approvedPremises,
         ...arrival,
         ...nonArrival,
         ...auth,

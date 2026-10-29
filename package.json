@@ -8,7 +8,6 @@
     "build": "npm run compile-sass && tsc && npm run copy-views",
     "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=. ./assets/sass/application.sass:./assets/stylesheets/application.css --style compressed",
     "copy-views": "cp -R server/views dist/server/",
-    "record-build-info": "node ./bin/record-build-info",
     "watch-ts": "tsc -w",
     "watch-views": "nodemon --watch server/views -e html,njk -x npm run copy-views",
     "watch-sass": "npm run compile-sass -- --watch",
@@ -53,7 +52,8 @@
     "collectCoverageFrom": [
       "server/**/*.{ts,js,jsx,mjs}",
       "!server/middleware/*.ts",
-      "!server/authentication/*.ts"
+      "!server/authentication/*.ts",
+      "!server/testutils/**/*.ts"
     ],
     "coverageThreshold": {
       "global": {
@@ -137,13 +137,14 @@
     "@microsoft/applicationinsights-web": "^3.3.5",
     "@ministryofjustice/frontend": "^5.1.2",
     "@ministryofjustice/hmpps-audit-client": "^1.1.1",
+    "@ministryofjustice/hmpps-azure-telemetry": "1.0.2",
+    "@ministryofjustice/hmpps-monitoring": "^2.1.0",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@playwright/test": "^1.56.1",
     "@sentry/node": "^7.14.1",
     "@types/path-to-regexp": "^1.7.0",
     "accessible-autocomplete": "^3.0.0",
     "agentkeepalive": "^4.2.1",
-    "applicationinsights": "^2.9.6",
     "axe-core": "^4.9.1",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
@@ -233,7 +234,6 @@
     "diff": "^8.0.3",
     "moment": "^2.31.0",
     "proxy-addr": "^2.0.8",
-    "undici": "^6.28.1",
-    "@opentelemetry/core": "2.11.0"
+    "undici": "^6.28.1"
   }
 }

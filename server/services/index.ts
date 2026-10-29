@@ -25,6 +25,7 @@ import ReferenceDataService from './referenceDataService'
 
 export const services = () => {
   const {
+    applicationInfo,
     premisesClientBuilder,
     bookingClientBuilder,
     referenceDataClientBuilder,
@@ -60,6 +61,7 @@ export const services = () => {
   const timelineService = new TimelineService(timelineClientBuilder)
 
   return {
+    applicationInfo,
     userService,
     personService,
     bookingService,

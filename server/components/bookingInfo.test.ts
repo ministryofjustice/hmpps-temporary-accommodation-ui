@@ -1,7 +1,13 @@
-import { cas3BookingFactory, cas3CancellationFactory, cas3ExtensionFactory } from '../testutils/factories'
+import {
+  cas3BookingFactory,
+  cas3CancellationFactory,
+  cas3ExtensionFactory,
+  cas3OverstayFactory,
+} from '../testutils/factories'
 import { getLatestExtension, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
 import summaryListRows from './bookingInfo'
+import config from '../config'
 
 jest.mock('../utils/viewUtils')
 jest.mock('../utils/bookingUtils')
@@ -10,6 +16,9 @@ describe('BookingInfo', () => {
   const statusHtml = '<strong>Some status</strong>'
 
   describe('summaryListRows', () => {
+    beforeEach(() => {
+      config.flags.bookingOverstayEnabled = false
+    })
     it('returns summary list rows for a provisional booking', () => {
       const booking = cas3BookingFactory.provisional().build({
         arrivalDate: '2022-03-21',
@@ -225,6 +234,75 @@ describe('BookingInfo', () => {
 
       expect(statusTag).toHaveBeenCalledWith('arrived')
       expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
+    })
+    it('returns summary list rows for an overstay arrived booking', () => {
+      config.flags.bookingOverstayEnabled = true
+      const cas3Overstay = cas3OverstayFactory.build()
+      const booking = cas3BookingFactory.arrived().build({
+        overstays: [cas3Overstay],
+      })
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      const result = summaryListRows(booking)
+      expect(result).toEqual(
+        expect.arrayContaining([
+          {
+            key: {
+              text: 'Overstay',
+            },
+            value: {
+              html: undefined,
+            },
+          },
+        ]),
+      )
+    })
+    it('returns summary list rows for an overstay departed booking', () => {
+      config.flags.bookingOverstayEnabled = true
+      const cas3Overstay = cas3OverstayFactory.build()
+      const booking = cas3BookingFactory.departed().build({
+        overstays: [cas3Overstay],
+      })
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      const result = summaryListRows(booking)
+      expect(result).toEqual(
+        expect.arrayContaining([
+          {
+            key: {
+              text: 'Overstay',
+            },
+            value: {
+              html: undefined,
+            },
+          },
+        ]),
+      )
+    })
+    it('returns summary list rows for an overstay closed booking', () => {
+      config.flags.bookingOverstayEnabled = true
+      const cas3Overstay = cas3OverstayFactory.build()
+      const booking = cas3BookingFactory.closed().build({
+        overstays: [cas3Overstay],
+      })
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      const result = summaryListRows(booking)
+      expect(result).toEqual(
+        expect.arrayContaining([
+          {
+            key: {
+              text: 'Overstay',
+            },
+            value: {
+              html: undefined,
+            },
+          },
+        ]),
+      )
     })
 
     it('returns summary list rows for an arrived and extended booking', () => {

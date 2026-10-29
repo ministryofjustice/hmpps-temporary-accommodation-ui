@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Cas3BookingStatus } from './Cas3BookingStatus';
+import type { Cas3ExternalLatestBookingPremisesDto } from './Cas3ExternalLatestBookingPremisesDto';
+import type { Cas3ExternalPreviousBookingCancellationDto } from './Cas3ExternalPreviousBookingCancellationDto';
 export type Cas3ExternalLatestBookingDto = {
-    addressLine1: string;
-    addressLine2?: string;
-    endDate?: string;
-    name?: string;
-    postcode: string;
-    startDate?: string;
-    town?: string;
+    cancellation?: Cas3ExternalPreviousBookingCancellationDto;
+    premises: Cas3ExternalLatestBookingPremisesDto;
+    provisionalOfferSentDate?: string;
+    status?: Cas3BookingStatus;
 };
 

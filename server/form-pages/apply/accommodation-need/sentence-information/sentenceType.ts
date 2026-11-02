@@ -3,6 +3,7 @@ import type { TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
+import { PrefillMapping } from '../../../../utils/applicationUtils'
 
 export const sentenceTypes = {
   standardDeterminate: 'Standard determinate custody',
@@ -55,5 +56,11 @@ export default class SentenceType implements TasklistPage {
         checked: this.body.sentenceType === key,
       }
     })
+  }
+
+  static getPrefillMapping(): PrefillMapping {
+    return {
+      sentenceType: 'sentenceType',
+    }
   }
 }

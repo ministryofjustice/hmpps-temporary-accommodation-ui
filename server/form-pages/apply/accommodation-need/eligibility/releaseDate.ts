@@ -11,6 +11,7 @@ import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 import { Page } from '../../../utils/decorators'
 import { personName } from '../../../../utils/personUtils'
+import { PrefillMapping } from '../../../../utils/applicationUtils'
 
 type ReleaseDateBody = ObjectWithDateParts<'releaseDate'>
 
@@ -71,5 +72,10 @@ export default class ReleaseDate implements TasklistPage {
     }
 
     return errors as TaskListErrors<this>
+  }
+  static getPrefillMapping(): PrefillMapping {
+    return {
+      releaseDate: {fieldName:'releaseDate',type:'DATE'},
+    }
   }
 }

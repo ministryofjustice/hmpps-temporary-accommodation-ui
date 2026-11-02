@@ -10,6 +10,7 @@ import { CallConfig } from '../data/restClient'
 import Review from '../form-pages/apply/check-your-answers/review'
 import { getBody, getPageName, getTaskName, pageBodyShallowEquals } from '../form-pages/utils'
 import { getApplicationSubmissionData, getApplicationUpdateData } from '../utils/applications/getApplicationData'
+import { getPrefillPageData } from '../utils/applicationUtils'
 
 export default class ApplicationService {
   constructor(private readonly applicationClientFactory: RestClientBuilder<ApplicationClient>) {}
@@ -76,7 +77,24 @@ export default class ApplicationService {
     userInput?: Record<string, unknown>,
   ): Promise<TasklistPage> {
     const application = await this.getApplicationFromSessionOrAPI(callConfig, request)
-    const body = getBody(Page, application, request, userInput)
+
+    // prefill
+    let preFill = {}
+    const mapping = Page.getPrefillMapping && Page.getPrefillMapping()
+    try {
+      if (mapping) {
+        const preFillImport = await dataServices.formDataService.getFormData(
+          request.user.token,
+          `prefill-${application.person.crn}`,
+        )
+
+        preFill = getPrefillPageData(mapping, preFillImport)
+      }
+    } catch {
+      // no pre-fill but it doesn't matter
+    }
+    const body = { ...preFill, ...getBody(Page, application, request, userInput) }
+    // /prefill
 
     const page = Page.initialize
       ? await Page.initialize(body, application, callConfig, dataServices, request.session)

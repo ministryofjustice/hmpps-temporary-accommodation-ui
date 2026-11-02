@@ -245,6 +245,10 @@ export type DataServices = Partial<{
     getPdus: (CallConfig: CallConfig, options: GetPdusOptions = {}) => Promise<Array<ProbationDeliveryUnit>>
     getProbationRegions: (CallConfig: CallConfig) => Promise<Array<ProbationRegion>>
   }
+  formDataService: {
+    getFormData(token: string, id: string, journey?: JourneyType): Promise<TaskData>
+    updateFormData(token: string, id: string, journeyType: JourneyType, data: TaskData)
+  }
 }>
 
 export interface GroupedApplications {
@@ -350,3 +354,6 @@ export type PremisesSearchParameters = {
 
 export type PremisesShowTabs = 'premises' | 'bedspaces'
 export type PremisesSortBy = 'pdu' | 'la'
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export type TaskData = Record<string, any>

@@ -10,6 +10,7 @@ import {
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 import { Page } from '../../../utils/decorators'
+import { PrefillMapping } from '../../../../utils/applicationUtils'
 
 type AccommodationRequiredFromDateBody = ObjectWithDateParts<'accommodationRequiredFromDate'>
 
@@ -66,5 +67,11 @@ export default class AccommodationRequiredFromDate implements TasklistPage {
     }
 
     return errors as TaskListErrors<this>
+  }
+
+  static getPrefillMapping(): PrefillMapping {
+    return {
+      accommodationRequiredFromDate: { fieldName: 'placementDate', type: 'DATE' },
+    }
   }
 }

@@ -8,6 +8,7 @@ import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 import { joinStrings } from '../../../../utils/utils'
+import { PrefillMapping } from '../../../../utils/applicationUtils'
 
 function getOptionsToExclude(): Array<string> {
   const options = ['ecsl']
@@ -267,5 +268,11 @@ export default class ReleaseType implements TasklistPage {
       releaseType => releaseType !== undefined && !validReleaseTypeKeys.includes(releaseType),
     )
     return invalidReleaseTypes.length > 0
+  }
+
+  static getPrefillMapping(): PrefillMapping {
+    return {
+      crdLicenceEndDate: {fieldName:'licenceExpiryDate',type:'DATE'},
+    }
   }
 }

@@ -4,6 +4,7 @@ import { Cas3Assessment, TemporaryAccommodationApplication } from '@approved-pre
 import type { DataServices, PageResponse, TaskListErrors } from '@approved-premises/ui'
 import { SessionData } from 'express-session'
 import { CallConfig } from '../data/restClient'
+import { PrefillMapping } from '../utils/applicationUtils'
 
 export interface TasklistPageInterface {
   new (
@@ -19,6 +20,8 @@ export interface TasklistPageInterface {
     dataServices: DataServices,
     session?: Partial<SessionData>,
   ): Promise<TasklistPage>
+
+  getPrefillMapping?(): PrefillMapping
 }
 
 export default abstract class TasklistPage {

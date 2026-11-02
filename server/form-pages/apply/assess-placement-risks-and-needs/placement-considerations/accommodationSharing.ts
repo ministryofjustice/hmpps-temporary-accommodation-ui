@@ -6,6 +6,7 @@ import { personName } from '../../../../utils/personUtils'
 import { mapApiPersonRisksForUi } from '../../../../utils/utils'
 import TasklistPage from '../../../tasklistPage'
 import anonymiseFormContent from '../../../utils/anonymiseFormContent'
+import { PrefillMapping } from '../../../../utils/applicationUtils'
 
 type AccommodationSharingBody = {
   accommodationSharing: string
@@ -109,5 +110,12 @@ export default class AccommodationSharing implements TasklistPage {
       errors.higherRiskDetail = 'Enter details of who is at risk and what the risks are'
     }
     return errors
+  }
+
+  static getPrefillMapping(): PrefillMapping {
+    return {
+      accommodationSharing: 'roomSharingYesNo',
+      accommodationSharingNoDetail: 'roomSharingNoDetail',
+    }
   }
 }

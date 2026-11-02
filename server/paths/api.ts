@@ -144,4 +144,5 @@ export default {
     },
   },
   referenceData: path('/reference-data/:objectType'),
+  formData: path('/cas1/form-data/:id')
 }

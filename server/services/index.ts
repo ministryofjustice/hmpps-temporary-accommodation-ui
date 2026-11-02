@@ -22,6 +22,7 @@ import TurnaroundService from './turnaroundService'
 import TimelineService from './assessments/timelineService'
 import UserService from './userService'
 import ReferenceDataService from './referenceDataService'
+import FormDataService from './formDataService'
 
 export const services = () => {
   const {
@@ -36,6 +37,7 @@ export const services = () => {
     bedspaceClientBuilder,
     assessmentClientBuilder,
     timelineClientBuilder,
+    formDataClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(userClientBuilder)
@@ -58,6 +60,7 @@ export const services = () => {
   const assessmentsService = new AssessmentsService(assessmentClientBuilder, referenceDataClientBuilder)
   const referenceDataService = new ReferenceDataService(referenceDataClientBuilder)
   const timelineService = new TimelineService(timelineClientBuilder)
+  const formDataService = new FormDataService(formDataClientBuilder)
 
   return {
     userService,
@@ -80,6 +83,7 @@ export const services = () => {
     timelineService,
     premisesService,
     bedspaceService,
+    formDataService
   }
 }
 
@@ -102,4 +106,5 @@ export {
   UserService,
   ReferenceDataService,
   TimelineService,
+  FormDataService
 }

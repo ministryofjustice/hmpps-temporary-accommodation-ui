@@ -4,6 +4,7 @@ import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 import { Page } from '../../../utils/decorators'
+import { PrefillMapping } from '../../../../utils/applicationUtils'
 
 type SentenceExpiryBody = ObjectWithDateParts<'sentenceExpiryDate'>
 
@@ -53,5 +54,11 @@ export default class SentenceExpiry implements TasklistPage {
     }
 
     return errors as TaskListErrors<this>
+  }
+
+  static getPrefillMapping(): PrefillMapping {
+    return {
+      sentenceExpiryDate: { fieldName: 'sentenceExpiryDate', type: 'DATE' },
+    }
   }
 }

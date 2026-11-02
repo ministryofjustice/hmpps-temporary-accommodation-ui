@@ -26,6 +26,7 @@ import { CallConfig } from './restClient'
 import TokenStore from './tokenStore'
 import UserClient from './userClient'
 import TimelineClient from './timelineClient'
+import FormDataClient from './formDataClient'
 
 type RestClientBuilder<T> = (callConfig: CallConfig) => T
 
@@ -48,6 +49,8 @@ export const dataAccess = () => ({
     new AssessmentClient(callConfig)) as RestClientBuilder<AssessmentClient>,
   timelineClientBuilder: ((callConfig: CallConfig) =>
     new TimelineClient(callConfig)) as RestClientBuilder<TimelineClient>,
+  formDataClientBuilder: ((callConfig:CallConfig) =>
+    new FormDataClient(callConfig)) as RestClientBuilder<FormDataClient>
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
@@ -66,4 +69,5 @@ export {
   RestClientBuilder,
   UserClient,
   TimelineClient,
+  FormDataClient
 }

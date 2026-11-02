@@ -191,6 +191,34 @@ const taskResponsesToSummaryListRowItems = (
     .flat()
 }
 
+export type FieldType = 'DATE' | 'STRING'
+export type FieldDefn = string | { fieldName: string; type?: FieldType }
+export type PrefillMapping = Record<string, FieldDefn>
+
+export function getPrefillPageData(pageMap: PrefillMapping, prefillData: Record<string, string>) {
+  let output: Record<string, unknown> = {}
+
+  Object.entries(pageMap).forEach(([key, pageMapping]) => {
+    let preFillField: string
+    let preFillType: FieldType = 'STRING'
+
+    if (pageMapping instanceof Object) {
+      preFillField = pageMapping.fieldName
+      preFillType = pageMapping.type
+    } else {
+      preFillField = pageMapping
+    }
+    const value = prefillData[preFillField]
+    if (value) {
+      output[key] = value
+      if (preFillType === 'DATE') {
+        output = { ...output, ...DateFormats.isoToDateAndTimeInputs(value, key) }
+      }
+    }
+  })
+  return output
+}
+
 export {
   createNameAnchorElement,
   dashboardTableRows,

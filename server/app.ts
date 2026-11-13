@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+import { telemetryMiddleware } from '@ministryofjustice/hmpps-azure-telemetry'
 import path from 'path'
 import express from 'express'
 import flash from 'connect-flash'
@@ -56,6 +57,7 @@ export default function createApp(controllers: Controllers, services: Services):
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
+  app.use(telemetryMiddleware.addUserMetadataToTelemetry())
   nunjucksSetup(app, path)
   app.use(setUpMaintenancePageRedirect())
   app.use((req, res, next) => {

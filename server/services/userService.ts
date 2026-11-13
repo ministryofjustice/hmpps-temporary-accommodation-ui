@@ -1,3 +1,4 @@
+import type { UUID } from 'crypto'
 import { PrimaryNavigationItem } from '@approved-premises/ui'
 import { ProfileResponse, TemporaryAccommodationUser, TemporaryAccommodationUser as User } from '../@types/shared'
 import { RestClientBuilder } from '../data'
@@ -8,6 +9,8 @@ import paths from '../paths/temporary-accommodation/manage'
 
 export type UserDetails = User & {
   displayName: string
+  userId?: string
+  userUuid?: UUID
   primaryNavigationList?: Array<PrimaryNavigationItem>
 }
 

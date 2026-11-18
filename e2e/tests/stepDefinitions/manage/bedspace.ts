@@ -31,6 +31,11 @@ Given('I create a bedspace with all necessary details', () => {
       })
       cy.wrap(bedspace).as('bedspace')
       page.completeForm(newBedspace)
+
+      cy.url().then(url => {
+        bedspace.id = url.split('/').filter(Boolean).pop()
+        cy.wrap(bedspace).as('bedspace')
+      })
     })
   })
 })

@@ -35,6 +35,7 @@ export type Cas3ExternalCurrentApplicationDto = {
      * @deprecated
      */
     bookingStatus?: Cas3BookingStatus;
+    createdAt: string;
     id: string;
     /**
      * This is the most recent booking for the application, could arguably be named 'latestBooking' or 'mostRecentBooking' but 'premises' is the name used in SAS.

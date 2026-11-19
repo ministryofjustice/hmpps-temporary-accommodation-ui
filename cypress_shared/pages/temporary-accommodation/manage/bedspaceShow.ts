@@ -8,6 +8,7 @@ import type {
 } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import { cas3BedspaceCharacteristicsFactory, cas3BedspaceFactory } from '../../../../server/testutils/factories'
 import BookingListingComponent from '../../../components/bookingListing'
 import LostBedListingComponent from '../../../components/lostBedListing'
 import Page from '../../page'
@@ -31,6 +32,42 @@ export default class BedspaceShowPage extends Page {
 
     cy.visit(path)
     return new BedspaceShowPage(premises, bedspace)
+  }
+
+  static visitById(premisesId: string, bedspaceId: string): void {
+    cy.visit(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    cy.get('h1')
+  }
+
+  static getBedspace(alias: string): void {
+    cy.url().then(url => {
+      const id = url.match(/bedspaces\/(.+)/)[1]
+
+      cy.get('h1')
+        .invoke('text')
+        .then(headingText => {
+          const reference = headingText.replace('Bedspace reference:', '').trim()
+
+          cy.get('.govuk-summary-list__key')
+            .contains('Bedspace details')
+            .siblings('.govuk-summary-list__value')
+            .then(detailsElement => {
+              const characteristics = detailsElement
+                .children('.hmpps-tag-filters')
+                .toArray()
+                .map(element => cas3BedspaceCharacteristicsFactory.build({ description: element.innerText.trim() }))
+
+              const bedspace = cas3BedspaceFactory.build({
+                id,
+                reference,
+                bedspaceCharacteristics: characteristics,
+                status: 'online',
+              })
+
+              cy.wrap(bedspace).as(alias)
+            })
+        })
+    })
   }
 
   shouldShowStatus(status: string): void {

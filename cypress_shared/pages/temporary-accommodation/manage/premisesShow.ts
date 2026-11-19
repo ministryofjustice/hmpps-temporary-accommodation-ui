@@ -256,17 +256,23 @@ export default class PremisesShowPage extends Page {
                       .contains('Expected turn around time')
                       .siblings('.govuk-summary-list__value')
                       .then(turnaroundTimeElement => {
-                        cy.get('[data-cy-premises]').then(pduIdElement => {
-                          const premises = PremisesShowPage.parsePremises(
-                            id,
-                            addressElement,
-                            pduElement,
-                            pduIdElement,
-                            attributeElement,
-                            turnaroundTimeElement,
-                          )
-                          cy.wrap(premises).as(alias)
-                        })
+                        cy.get('.govuk-summary-list__key')
+                          .contains('Additional property details')
+                          .siblings('.govuk-summary-list__value')
+                          .then(notesElement => {
+                            cy.get('[data-cy-premises]').then(pduIdElement => {
+                              const premises = PremisesShowPage.parsePremises(
+                                id,
+                                addressElement,
+                                pduElement,
+                                pduIdElement,
+                                attributeElement,
+                                turnaroundTimeElement,
+                                notesElement,
+                              )
+                              cy.wrap(premises).as(alias)
+                            })
+                          })
                       })
                   })
               })
@@ -295,6 +301,7 @@ export default class PremisesShowPage extends Page {
     pduIdElement: JQuery<HTMLElement>,
     attributeElement: JQuery<HTMLElement>,
     turnaroundTimeElement: JQuery<HTMLElement>,
+    notesElement: JQuery<HTMLElement>,
   ) {
     const addressLines = addressElement
       .html()
@@ -317,6 +324,9 @@ export default class PremisesShowPage extends Page {
 
     const turnaroundWorkingDays = Number.parseInt(turnaroundTimeElement.text().trim().split(' ')[0], 10)
 
+    const notesHtml = notesElement.html().trim()
+    const notes = notesHtml === 'None' ? '' : notesHtml.replace(/<br\s*\/?>/gi, '\n').trim()
+
     const premises = cas3PremisesFactory.build({
       id,
       addressLine1: addressLines[0],
@@ -326,6 +336,7 @@ export default class PremisesShowPage extends Page {
       probationDeliveryUnit: pdu,
       premisesCharacteristics: characteristics,
       turnaroundWorkingDays,
+      notes,
     })
 
     return premises

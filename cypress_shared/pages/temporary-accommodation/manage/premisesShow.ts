@@ -230,7 +230,12 @@ export default class PremisesShowPage extends Page {
     cy.get('main .govuk-notification-banner--success').contains('Scheduled unarchive cancelled')
   }
 
-  getPremises(alias: string): void {
+  static visitById(premisesId: string): void {
+    cy.visit(paths.premises.show({ premisesId }))
+    cy.get('h1')
+  }
+
+  static getPremises(alias: string): void {
     cy.url().then(url => {
       const id = url.match(/properties\/(.+)/)[1]
 
@@ -252,7 +257,7 @@ export default class PremisesShowPage extends Page {
                       .siblings('.govuk-summary-list__value')
                       .then(turnaroundTimeElement => {
                         cy.get('[data-cy-premises]').then(pduIdElement => {
-                          const premises = this.parsePremises(
+                          const premises = PremisesShowPage.parsePremises(
                             id,
                             addressElement,
                             pduElement,
@@ -283,7 +288,7 @@ export default class PremisesShowPage extends Page {
     })
   }
 
-  private parsePremises(
+  private static parsePremises(
     id: string,
     addressElement: JQuery<HTMLElement>,
     pduElement: JQuery<HTMLElement>,

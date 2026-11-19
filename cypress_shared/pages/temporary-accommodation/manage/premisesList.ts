@@ -1,7 +1,6 @@
 import { Cas3Premises, Cas3PremisesSearchResult } from '@approved-premises/api'
 import { PremisesSortBy } from '@approved-premises/ui'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { cas3PremisesFactory } from '../../../../server/testutils/factories'
 import Page from '../../page'
 
 export default class PremisesListPage extends Page {
@@ -127,54 +126,7 @@ export default class PremisesListPage extends Page {
     cy.get('main .moj-cas-page-header-actions a').contains('Add a property').click()
   }
 
-  sampleActivePremises(count: number, alias: string): void {
-    cy.get('table')
-      .children('tbody')
-      .children('tr')
-      .then(items => {
-        return Cypress._.sampleSize(items.toArray(), count)
-      })
-      .each((row, index) =>
-        cy.wrap(row).within(_row =>
-          cy
-            .get('td')
-            .eq(0)
-            .then(element => {
-              const addressCellParts = element
-                .html()
-                .split('<br>')
-                .filter(part => !part.includes('govuk-tag'))
-              const addressLine1 = addressCellParts[0]
-              const postcode = addressCellParts[addressCellParts.length - 1]
-              const premises = cas3PremisesFactory.build({
-                id: 'unknown',
-                addressLine1,
-                postcode,
-                status: 'online',
-              })
-
-              if (index === 0) {
-                cy.wrap([premises]).as(alias)
-              } else {
-                cy.then(function _() {
-                  const samples = this[alias]
-                  cy.wrap([...samples, premises]).as(alias)
-                })
-              }
-            }),
-        ),
-      )
-  }
-
   clickAddPremisesButton() {
     cy.get('a').contains('Add a property').click()
-  }
-
-  clickPremisesViewLink(premises: Cas3Premises) {
-    cy.contains(`${premises.addressLine1}`)
-      .parent()
-      .within(() => {
-        cy.get('td').eq(3).contains('Manage').click()
-      })
   }
 }

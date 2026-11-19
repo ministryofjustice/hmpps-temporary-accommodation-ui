@@ -19,6 +19,8 @@ const actingUserProbationRegion = {
   name: actingUserProbationRegionName,
 } as ReferenceData
 
+const knownActivePremisesId = '81a314a6-1d99-4f07-b55e-346e85f5b258'
+
 Given("I'm creating a premises", () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
   dashboardPage.clickPremisesLink()
@@ -28,19 +30,8 @@ Given("I'm creating a premises", () => {
 })
 
 Given('I view an existing active premises', () => {
-  const dashboardPage = Page.verifyOnPage(DashboardPage)
-  dashboardPage.clickPremisesLink()
-
-  const premisesListPage = Page.verifyOnPage(PremisesListPage)
-  premisesListPage.sampleActivePremises(1, 'premisesList')
-
-  cy.then(function _() {
-    const premises = this.premisesList[0]
-    premisesListPage.clickPremisesViewLink(premises)
-
-    const premisesShowPage = Page.verifyOnPage(PremisesShowPage, premises)
-    premisesShowPage.getPremises('premises')
-  })
+  PremisesShowPage.visitById(knownActivePremisesId)
+  PremisesShowPage.getPremises('premises')
 })
 
 Given('I create an active premises with all necessary details', () => {

@@ -62,8 +62,12 @@ Given('I create a booking with all necessary details', () => {
 
         bookingConfirmPage.clickSubmit()
 
-        cy.wrap(booking).as('booking')
-        this.historicBookings.push(booking)
+        cy.url().then(url => {
+          booking.id = url.split('/').filter(Boolean).pop()
+
+          cy.wrap(booking).as('booking')
+          this.historicBookings.push(booking)
+        })
       })
     })
   })

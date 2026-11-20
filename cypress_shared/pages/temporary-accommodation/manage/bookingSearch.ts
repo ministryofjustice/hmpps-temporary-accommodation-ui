@@ -1,11 +1,12 @@
-import type { Cas3Booking, Cas3BookingSearchResult, Cas3Premises } from '@approved-premises/api'
+import type { Cas3Bedspace, Cas3Booking, Cas3BookingSearchResult, Cas3Premises } from '@approved-premises/api'
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { DateFormats } from '../../../../server/utils/dateUtils'
 import { capitaliseStatus } from '../../../../server/utils/bookingSearchUtils'
-import { personName } from '../../../../server/utils/personUtils'
 import { supportLink } from '../../../../server/utils/phaseBannerUtils'
+import BookingShowPage from './bookingShow'
+
+type BookingSearchUiStatus = 'provisional' | 'confirmed' | 'active' | 'departed'
 
 export default class BookingSearchPage extends Page {
   constructor(status: BookingSearchApiStatus = 'provisional') {
@@ -38,25 +39,16 @@ export default class BookingSearchPage extends Page {
     })
   }
 
-  checkBookingDetailsAndClickView(premises: Cas3Premises, booking: Cas3Booking) {
-    cy.get('tr')
-      .filter(
-        `:contains(${personName(booking.person, 'Limited access offender')}):contains(${booking.person.crn}):contains(${
-          premises.addressLine1
-        }):contains(${DateFormats.isoDateToUIDate(booking.arrivalDate)}):contains(${DateFormats.isoDateToUIDate(booking.departureDate)})`,
-      )
-      .should('have.length.gte', 0)
-      .then($row => {
-        if ($row.length) {
-          cy.wrap($row).children().eq(5).contains('View').click()
-          return
-        }
+  checkBookingDetailsAndClickView(
+    premises: Cas3Premises,
+    bedspace: Cas3Bedspace,
+    booking: Cas3Booking,
+    status: BookingSearchUiStatus = 'provisional',
+  ) {
+    this.searchByCrnOrName(booking.person.crn, status)
+    cy.get('main table tbody').should('contain', booking.person.crn)
 
-        cy.get('.moj-pagination__item--next >a').click()
-        cy.then(() => {
-          this.checkBookingDetailsAndClickView(premises, booking)
-        })
-      })
+    BookingShowPage.visit(premises, bedspace, booking)
   }
 
   clickOtherBookingStatusLink(status: BookingSearchApiStatus) {

@@ -16,7 +16,7 @@ Then('I should see a summary of the booking on the provisional bookings page', (
     const bookingSearchPage = Page.verifyOnPage(BookingSearchPage)
     bookingSearchPage.checkBookingStatus('provisional')
 
-    bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.booking)
+    bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.bedspace, this.booking)
   })
 })
 
@@ -28,7 +28,7 @@ Then('I should see a summary of the booking on the confirmed bookings page', () 
     bookingSearchPage.clickOtherBookingStatusLink('confirmed')
     bookingSearchPage.checkBookingStatus('confirmed')
 
-    bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.booking)
+    bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.bedspace, this.booking, 'confirmed')
   })
 })
 
@@ -40,7 +40,7 @@ Then('I should see a summary of the booking on the active bookings page', () => 
     bookingSearchPage.clickOtherBookingStatusLink('active')
     bookingSearchPage.checkBookingStatus('active')
 
-    bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.booking)
+    bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.bedspace, this.booking, 'active')
   })
 })
 
@@ -52,7 +52,7 @@ Then('I should see a summary of the booking on the departed bookings page', () =
     bookingSearchPage.clickOtherBookingStatusLink('departed')
     bookingSearchPage.checkBookingStatus('departed')
 
-    bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.booking)
+    bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.bedspace, this.booking, 'departed')
   })
 })
 
@@ -101,6 +101,6 @@ When('I search for a valid CRN in provisional bookings', () => {
 Then('I see the provisional booking I was searching for', () => {
   cy.then(function _() {
     const bookingSearchPage = Page.verifyOnPage(BookingSearchPage, 'provisional')
-    bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.booking)
+    bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.bedspace, this.booking)
   })
 })

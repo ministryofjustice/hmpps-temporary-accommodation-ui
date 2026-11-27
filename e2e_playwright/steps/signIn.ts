@@ -7,7 +7,6 @@ export const signIn = async (page: Page, user: UserLoginDetails) => {
     throw new Error('Credentials missing, have you set the correct environment variables?')
   }
 
-  await page.goto('/')
   await page.goto('/sign-in')
 
   const signInUrl = new URL(page.url())

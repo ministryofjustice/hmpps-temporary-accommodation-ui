@@ -39,6 +39,12 @@ const signIn = (usernameVariable: string, passwordVariable: string) => {
   }
 
   cy.visit('/')
+  cy.visit('/sign-in')
+
+  cy.location().then(({ origin, pathname, search }) => {
+    cy.visit(`${origin}${pathname.replace(/\/sign-in$/, '/sign-in-other')}${search}`)
+  })
+
   cy.get('input[name="username"]').type(username)
   cy.get('input[name="password"]').type(password, { log: false })
   cy.get('.govuk-button').contains('Sign in').click()
